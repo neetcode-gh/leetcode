@@ -448,10 +448,12 @@ To efficiently check this, we can use a linear-time pattern matching algorithm (
 ### Algorithm
 
 1. **Serialize a tree**
+    - Create one mutable accumulator for the entire serialization.
     - Use preorder traversal.
     - For each node:
         - Append a separator (e.g., `$`) + node value.
     - For each `null` child, append a special marker (e.g., `#$` or just `#`).
+    - Return the accumulator after the traversal is complete.
     - This ensures structure and values are uniquely encoded.
 
 2. **Build strings**
@@ -483,10 +485,20 @@ To efficiently check this, we can use a linear-time pattern matching algorithm (
 
 class Solution:
     def serialize(self, root: Optional[TreeNode]) -> str:
-        if root == None:
-            return "$#"
+        res = []
 
-        return ("$" + str(root.val) + self.serialize(root.left) + self.serialize(root.right))
+        def dfs(node):
+            if node is None:
+                res.append("$#")
+                return
+
+            res.append("$")
+            res.append(str(node.val))
+            dfs(node.left)
+            dfs(node.right)
+
+        dfs(root)
+        return "".join(res)
 
     def z_function(self, s: str) -> list:
         z = [0] * len(s)
@@ -533,10 +545,20 @@ class Solution:
 
 public class Solution {
     public String serialize(TreeNode root) {
+        StringBuilder res = new StringBuilder();
+        serialize(root, res);
+        return res.toString();
+    }
+
+    private void serialize(TreeNode root, StringBuilder res) {
         if (root == null) {
-            return "$#";
+            res.append("$#");
+            return;
         }
-        return "$" + root.val + serialize(root.left) + serialize(root.right);
+
+        res.append("$").append(root.val);
+        serialize(root.left, res);
+        serialize(root.right, res);
     }
 
     public int[] z_function(String s) {
@@ -591,11 +613,21 @@ public class Solution {
 class Solution {
 public:
     string serialize(TreeNode* root) {
+        string res;
+        serialize(root, res);
+        return res;
+    }
+
+    void serialize(TreeNode* root, string& res) {
         if (root == nullptr) {
-            return "$#";
+            res += "$#";
+            return;
         }
-        return "$" + to_string(root->val) +
-                serialize(root->left) + serialize(root->right);
+
+        res += "$";
+        res += to_string(root->val);
+        serialize(root->left, res);
+        serialize(root->right, res);
     }
 
     vector<int> z_function(string s) {
@@ -652,15 +684,22 @@ class Solution {
      * @return {string}
      */
     serialize(root) {
-        if (root === null) {
-            return '$#';
-        }
-        return (
-            '$' +
-            root.val +
-            this.serialize(root.left) +
-            this.serialize(root.right)
-        );
+        const res = [];
+
+        const dfs = (node) => {
+            if (node === null) {
+                res.push('$#');
+                return;
+            }
+
+            res.push("$");
+            res.push(node.val.toString());
+            dfs(node.left);
+            dfs(node.right);
+        };
+
+        dfs(root);
+        return res.join('');
     }
 
     /**
@@ -727,11 +766,20 @@ class Solution {
 
 public class Solution {
     public string Serialize(TreeNode root) {
+        var res = new StringBuilder();
+        Serialize(root, res);
+        return res.ToString();
+    }
+
+    private void Serialize(TreeNode root, StringBuilder res) {
         if (root == null) {
-            return "$#";
+            res.Append("$#");
+            return;
         }
-        return "$" + root.val +
-                Serialize(root.left) + Serialize(root.right);
+
+        res.Append("$").Append(root.val);
+        Serialize(root.left, res);
+        Serialize(root.right, res);
     }
 
     public int[] ZFunction(string s) {
@@ -780,10 +828,23 @@ public class Solution {
  * }
  */
 func serialize(root *TreeNode) string {
-    if root == nil {
-        return "$#"
+    var res strings.Builder
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            res.WriteString("$#")
+            return
+        }
+
+        res.WriteString("$")
+        res.WriteString(strconv.Itoa(node.Val))
+        dfs(node.Left)
+        dfs(node.Right)
     }
-    return "$" + strconv.Itoa(root.Val) + serialize(root.Left) + serialize(root.Right)
+
+    dfs(root)
+    return res.String()
 }
 
 func zFunction(s string) []int {
@@ -843,10 +904,21 @@ func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
  */
 class Solution {
     private fun serialize(root: TreeNode?): String {
-        return when (root) {
-            null -> "$#"
-            else -> "$${root.`val`}${serialize(root.left)}${serialize(root.right)}"
+        val res = StringBuilder()
+
+        fun dfs(node: TreeNode?) {
+            if (node == null) {
+                res.append("$#")
+                return
+            }
+
+            res.append("$").append(node.`val`)
+            dfs(node.left)
+            dfs(node.right)
         }
+
+        dfs(root)
+        return res.toString()
     }
 
     private fun zFunction(s: String): IntArray {
@@ -901,10 +973,22 @@ class Solution {
  */
 class Solution {
     func serialize(_ root: TreeNode?) -> String {
-        guard let root = root else {
-            return "$#"
+        var res = [String]()
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else {
+                res.append("$#")
+                return
+            }
+
+            res.append("$")
+            res.append(String(node.val))
+            dfs(node.left)
+            dfs(node.right)
         }
-        return "$\(root.val)" + serialize(root.left) + serialize(root.right)
+
+        dfs(root)
+        return res.joined()
     }
 
     func zFunction(_ s: String) -> [Int] {
@@ -949,16 +1033,20 @@ class Solution {
 ```rust
 impl Solution {
     fn serialize(root: &Option<Rc<RefCell<TreeNode>>>) -> String {
+        let mut res = String::new();
+        Self::serialize_tree(root, &mut res);
+        res
+    }
+
+    fn serialize_tree(root: &Option<Rc<RefCell<TreeNode>>>, res: &mut String) {
         match root {
-            None => "$#".to_string(),
+            None => res.push_str("$#"),
             Some(node) => {
                 let node = node.borrow();
-                format!(
-                    "${}{}{}",
-                    node.val,
-                    Self::serialize(&node.left),
-                    Self::serialize(&node.right)
-                )
+                res.push_str("$");
+                res.push_str(&node.val.to_string());
+                Self::serialize_tree(&node.left, res);
+                Self::serialize_tree(&node.right, res);
             }
         }
     }

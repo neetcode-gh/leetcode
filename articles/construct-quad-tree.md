@@ -32,7 +32,7 @@ A quad tree recursively divides a 2D grid into four quadrants. If all values in 
 """
 # Definition for a QuadTree node.
 class Node:
-    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+    def __init__(self, val=False, isLeaf=False, topLeft=None, topRight=None, bottomLeft=None, bottomRight=None):
         self.val = val
         self.isLeaf = isLeaf
         self.topLeft = topLeft
@@ -216,7 +216,7 @@ private:
 /**
  * // Definition for a QuadTree node.
  * class Node {
- *     constructor(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight) {
+ *     constructor(val = false, isLeaf = false, topLeft = null, topRight = null, bottomLeft = null, bottomRight = null) {
  *         this.val = val;
  *         this.isLeaf = isLeaf;
  *         this.topLeft = topLeft;
@@ -558,7 +558,7 @@ Instead of checking uniformity before recursing, we can recurse first and check 
 """
 # Definition for a QuadTree node.
 class Node:
-    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+    def __init__(self, val=False, isLeaf=False, topLeft=None, topRight=None, bottomLeft=None, bottomRight=None):
         self.val = val
         self.isLeaf = isLeaf
         self.topLeft = topLeft
@@ -723,7 +723,10 @@ private:
             topLeft->val == topRight->val &&
             topLeft->val == bottomLeft->val &&
             topLeft->val == bottomRight->val) {
-            return new Node(topLeft->val, true);
+            delete topRight;
+            delete bottomLeft;
+            delete bottomRight;
+            return topLeft;
         }
 
         return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
@@ -735,7 +738,7 @@ private:
 /**
  * // Definition for a QuadTree node.
  * class Node {
- *     constructor(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight) {
+ *     constructor(val = false, isLeaf = false, topLeft = null, topRight = null, bottomLeft = null, bottomRight = null) {
  *         this.val = val;
  *         this.isLeaf = isLeaf;
  *         this.topLeft = topLeft;
@@ -1073,7 +1076,7 @@ We can optimize memory by reusing leaf nodes. Since all leaves with value `true`
 """
 # Definition for a QuadTree node.
 class Node:
-    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+    def __init__(self, val=False, isLeaf=False, topLeft=None, topRight=None, bottomLeft=None, bottomRight=None):
         self.val = val
         self.isLeaf = isLeaf
         self.topLeft = topLeft
@@ -1260,7 +1263,7 @@ private:
 /**
  * // Definition for a QuadTree node.
  * class Node {
- *     constructor(val,isLeaf,topLeft,topRight,bottomLeft,bottomRight) {
+ *     constructor(val = false, isLeaf = false, topLeft = null, topRight = null, bottomLeft = null, bottomRight = null) {
  *         this.val = val;
  *         this.isLeaf = isLeaf;
  *         this.topLeft = topLeft;
