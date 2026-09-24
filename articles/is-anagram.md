@@ -375,7 +375,7 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + m)$
+- Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
@@ -603,7 +603,7 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + m)$
+- Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
@@ -619,3 +619,7 @@ If two strings have different lengths, they cannot be anagrams. Skipping this ea
 ### Case Sensitivity Issues
 
 When the problem specifies lowercase letters only (as in this problem), case sensitivity is not an issue. However, if the problem allows mixed case, forgetting to normalize to the same case (e.g., converting both strings to lowercase) will cause incorrect results where "Listen" and "Silent" would wrongly be considered non-anagrams.
+
+### Time Complexity
+
+If you first check the string lengths and only iterate a single string, the time complexity is $O(n)$, not $O(n + m)$.
