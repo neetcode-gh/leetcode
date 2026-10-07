@@ -200,6 +200,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    findDuplicates(nums: number[]): number[] {
+        const n = nums.length;
+        const res: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                if (nums[i] === nums[j]) {
+                    res.push(nums[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -373,6 +393,23 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    findDuplicates(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const res: number[] = [];
+
+        for (let i = 0; i < nums.length - 1; i++) {
+            if (nums[i] === nums[i + 1]) {
+                res.push(nums[i]);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -567,6 +604,25 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    findDuplicates(nums: number[]): number[] {
+        const seen = new Set<number>();
+        const res: number[] = [];
+
+        for (const num of nums) {
+            if (seen.has(num)) {
+                res.push(num);
+            } else {
+                seen.add(num);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -784,6 +840,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    findDuplicates(nums: number[]): number[] {
+        const count = new Map<number, number>();
+        const res: number[] = [];
+
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        for (const [num, freq] of count.entries()) {
+            if (freq === 2) {
+                res.push(num);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -975,6 +1052,24 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    findDuplicates(nums: number[]): number[] {
+        const res: number[] = [];
+
+        for (const num of nums) {
+            const idx = Math.abs(num) - 1;
+            if (nums[idx] < 0) {
+                res.push(Math.abs(num));
+            }
+            nums[idx] = -nums[idx];
+        }
+
+        return res;
     }
 }
 ```
