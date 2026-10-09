@@ -246,6 +246,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findMaxLength(nums: number[]): number {
+        let n = nums.length,
+            res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let zeros = 0,
+                ones = 0;
+            for (let j = i; j < n; j++) {
+                if (nums[j] === 1) {
+                    ones++;
+                } else {
+                    zeros++;
+                }
+                if (ones === zeros && res < j - i + 1) {
+                    res = j - i + 1;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,6 +511,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findMaxLength(nums: number[]): number {
+        const n = nums.length;
+        let res = 0,
+            count = 0;
+        const diffIndex: number[] = new Array(2 * n + 1).fill(-2);
+        diffIndex[n] = -1;
+
+        for (let i = 0; i < n; i++) {
+            count += nums[i] === 1 ? 1 : -1;
+            if (diffIndex[count + n] !== -2) {
+                res = Math.max(res, i - diffIndex[count + n]);
+            } else {
+                diffIndex[count + n] = i;
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -780,6 +837,42 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findMaxLength(nums: number[]): number {
+        let zero = 0,
+            one = 0,
+            res = 0;
+        const diffIndex = new Map<number, number>();
+
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] === 0) {
+                zero++;
+            } else {
+                one++;
+            }
+
+            const diff = one - zero;
+            if (!diffIndex.has(diff)) {
+                diffIndex.set(diff, i);
+            }
+
+            if (one === zero) {
+                res = one + zero;
+            } else {
+                res = Math.max(res, i - diffIndex.get(diff)!);
+            }
+        }
+
+        return res;
     }
 }
 ```
