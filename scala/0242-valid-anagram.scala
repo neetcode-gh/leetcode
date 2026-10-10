@@ -30,4 +30,21 @@ object Solution {
 
     return true
   }
+
+  //by maintaing an array of length 26 and using only 1 for loop
+  def isAnagram2(s: String, t: String): Boolean = {
+    if(s.length != t.length)
+      return false
+
+    val arr = Array.fill[Int](26)(0)
+
+    val idx = (ch: Char) => ch - 'a'  // can alternatively be written as: val idx = (_: Char) - 'a'
+
+    for (i <- s.indices) {
+      arr(idx(s(i))) += 1
+      arr(idx(t(i))) -= 1
+    }
+
+    arr.forall(_ == 0)
+  }
 }
