@@ -79,6 +79,23 @@ class Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string}
+     */
+    firstPalindrome(words: string[]): string {
+        for (let w of words) {
+            if (w === w.split('').reverse().join('')) {
+                return w;
+            }
+        }
+        return '';
+    }
+}
+```
+
 ```csharp
 public class Solution {
     public string FirstPalindrome(string[] words) {
@@ -234,6 +251,27 @@ class Solution {
      * @return {string}
      */
     firstPalindrome(words) {
+        for (let w of words) {
+            let l = 0,
+                r = w.length - 1;
+            while (w.charAt(l) === w.charAt(r)) {
+                if (l >= r) return w;
+                l++;
+                r--;
+            }
+        }
+        return '';
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string}
+     */
+    firstPalindrome(words: string[]): string {
         for (let w of words) {
             let l = 0,
                 r = w.length - 1;
