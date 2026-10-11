@@ -1,19 +1,27 @@
 class Solution {
-
-    public int maxArea(int[] height) {
+    public int trap(int[] height) {
         int left = 0;
         int right = height.length - 1;
-        int res = 0;
+        int leftMax = 0;
+        int rightMax = 0;
+        int waterTrapped = 0;
         while (left < right) {
-            int containerLength = right - left;
-            int area = containerLength * Math.min(height[left], height[right]);
-            res = Math.max(res, area);
             if (height[left] < height[right]) {
+                if (height[left] >= leftMax) {
+                    leftMax = height[left];
+                } else {
+                    waterTrapped += leftMax - height[left];
+                }
                 left++;
             } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right];
+                } else {
+                    waterTrapped += rightMax - height[right];
+                }
                 right--;
             }
         }
-        return res;
+        return waterTrapped;
     }
 }
