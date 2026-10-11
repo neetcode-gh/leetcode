@@ -201,6 +201,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    makeGood(s: string): string {
+        let n = s.length;
+        let i = 0;
+        while (i < n) {
+            if (
+                i > 0 &&
+                s[i] !== s[i - 1] &&
+                s[i].toLowerCase() === s[i - 1].toLowerCase()
+            ) {
+                s = s.slice(0, i - 1) + s.slice(i + 1);
+                n -= 2;
+                i -= 2;
+            }
+            i++;
+        }
+        return s;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,6 +416,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    makeGood(s: string): string {
+        const stack: string[] = [];
+        for (const c of s) {
+            if (
+                stack.length > 0 &&
+                stack[stack.length - 1] !== c &&
+                stack[stack.length - 1].toLowerCase() === c.toLowerCase()
+            ) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,6 +622,31 @@ impl Solution {
             }
         }
         String::from_utf8(stack).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    makeGood(s: string): string {
+        const stack: string[] = [];
+        for (const c of s) {
+            if (
+                stack.length > 0 &&
+                Math.abs(
+                    stack[stack.length - 1].charCodeAt(0) - c.charCodeAt(0),
+                ) === 32
+            ) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.join('');
     }
 }
 ```
@@ -763,6 +838,30 @@ impl Solution {
         }
         arr.truncate(l);
         String::from_utf8(arr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    makeGood(s: string): string {
+        let l = 0;
+        const arr: string[] = s.split('');
+        for (let r = 0; r < arr.length; r++) {
+            if (
+                l > 0 &&
+                Math.abs(arr[r].charCodeAt(0) - arr[l - 1].charCodeAt(0)) === 32
+            ) {
+                l--;
+            } else {
+                arr[l++] = arr[r];
+            }
+        }
+        return arr.slice(0, l).join('');
     }
 }
 ```
