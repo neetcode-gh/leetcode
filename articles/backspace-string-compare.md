@@ -215,6 +215,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    backspaceCompare(s: string, t: string): boolean {
+        const convert = (str: string): string => {
+            const res: string[] = [];
+            for (const char of str) {
+                if (char === '#') {
+                    if (res.length > 0) {
+                        res.pop();
+                    }
+                } else {
+                    res.push(char);
+                }
+            }
+            return res.join('');
+        };
+        return convert(s) === convert(t);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +470,33 @@ impl Solution {
             res
         }
         convert(&s) == convert(&t)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    backspaceCompare(s: string, t: string): boolean {
+        const convert = (s: string): string => {
+            const res: string[] = [];
+            let backspace = 0;
+            for (let i = s.length - 1; i >= 0; i--) {
+                if (s[i] === '#') {
+                    backspace++;
+                } else if (backspace > 0) {
+                    backspace--;
+                } else {
+                    res.push(s[i]);
+                }
+            }
+            return res.join('');
+        };
+        return convert(s) === convert(t);
     }
 }
 ```
@@ -852,6 +905,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    backspaceCompare(s: string, t: string): boolean {
+        const nextValidChar = (str: string, index: number): number => {
+            let backspace = 0;
+
+            while (index >= 0) {
+                if (str[index] === '#') {
+                    backspace++;
+                } else if (backspace > 0) {
+                    backspace--;
+                } else {
+                    break;
+                }
+                index--;
+            }
+
+            return index;
+        };
+
+        let indexS = s.length - 1,
+            indexT = t.length - 1;
+
+        while (indexS >= 0 || indexT >= 0) {
+            indexS = nextValidChar(s, indexS);
+            indexT = nextValidChar(t, indexT);
+
+            const charS = indexS >= 0 ? s[indexS] : '';
+            const charT = indexT >= 0 ? t[indexT] : '';
+
+            if (charS !== charT) return false;
+
+            indexS--;
+            indexT--;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1150,6 +1249,46 @@ impl Solution {
             }
             index_s -= 1;
             index_t -= 1;
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    backspaceCompare(s: string, t: string): boolean {
+        let indexS = s.length - 1,
+            indexT = t.length - 1;
+        let backspaceS = 0,
+            backspaceT = 0;
+
+        while (true) {
+            while (indexS >= 0 && (backspaceS > 0 || s[indexS] === '#')) {
+                backspaceS += s[indexS] === '#' ? 1 : -1;
+                indexS--;
+            }
+
+            while (indexT >= 0 && (backspaceT > 0 || t[indexT] === '#')) {
+                backspaceT += t[indexT] === '#' ? 1 : -1;
+                indexT--;
+            }
+
+            if (
+                !(
+                    indexS >= 0 &&
+                    indexT >= 0 &&
+                    s.charAt(indexS) === t.charAt(indexT)
+                )
+            ) {
+                return indexS === -1 && indexT === -1;
+            }
+            indexS--;
+            indexT--;
         }
     }
 }

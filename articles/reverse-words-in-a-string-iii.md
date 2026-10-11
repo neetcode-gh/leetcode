@@ -79,21 +79,6 @@ class Solution {
 }
 ```
 
-```typescript
-class Solution {
-    /**
-     * @param {string} s
-     * @return {string}
-     */
-    reverseWords(s: string): string {
-        return s
-            .split(' ')
-            .map((w: string) => w.split('').reverse().join(''))
-            .join(' ');
-    }
-}
-```
-
 ```csharp
 public class Solution {
     public string ReverseWords(string s) {
@@ -145,6 +130,21 @@ impl Solution {
             .map(|w| w.chars().rev().collect::<String>())
             .collect::<Vec<_>>()
             .join(" ")
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reverseWords(s: string): string {
+        return s
+            .split(' ')
+            .map((w: string) => w.split('').reverse().join(''))
+            .join(' ');
     }
 }
 ```
@@ -245,32 +245,6 @@ class Solution {
      * @return {string}
      */
     reverseWords(s) {
-        let tmpStr = '';
-        let res = '';
-
-        for (let r = 0; r <= s.length; r++) {
-            if (r === s.length || s[r] === ' ') {
-                res += tmpStr;
-                tmpStr = '';
-                if (r !== s.length) {
-                    res += ' ';
-                }
-            } else {
-                tmpStr = s[r] + tmpStr;
-            }
-        }
-        return res;
-    }
-}
-```
-
-```typescript
-class Solution {
-    /**
-     * @param {string} s
-     * @return {string}
-     */
-    reverseWords(s: string): string {
         let tmpStr = '';
         let res = '';
 
@@ -400,6 +374,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reverseWords(s: string): string {
+        let tmpStr = '';
+        let res = '';
+
+        for (let r = 0; r <= s.length; r++) {
+            if (r === s.length || s[r] === ' ') {
+                res += tmpStr;
+                tmpStr = '';
+                if (r !== s.length) {
+                    res += ' ';
+                }
+            } else {
+                tmpStr = s[r] + tmpStr;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -494,32 +494,6 @@ class Solution {
      * @return {string}
      */
     reverseWords(s) {
-        let chars = s.split('');
-        let l = 0;
-        for (let r = 0; r <= chars.length; r++) {
-            if (r === chars.length || chars[r] === ' ') {
-                let tempL = l,
-                    tempR = r - 1;
-                while (tempL < tempR) {
-                    [chars[tempL], chars[tempR]] = [chars[tempR], chars[tempL]];
-                    tempL++;
-                    tempR--;
-                }
-                l = r + 1;
-            }
-        }
-        return chars.join('');
-    }
-}
-```
-
-```typescript
-class Solution {
-    /**
-     * @param {string} s
-     * @return {string}
-     */
-    reverseWords(s: string): string {
         let chars = s.split('');
         let l = 0;
         for (let r = 0; r <= chars.length; r++) {
@@ -646,6 +620,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reverseWords(s: string): string {
+        let chars = s.split('');
+        let l = 0;
+        for (let r = 0; r <= chars.length; r++) {
+            if (r === chars.length || chars[r] === ' ') {
+                let tempL = l,
+                    tempR = r - 1;
+                while (tempL < tempR) {
+                    [chars[tempL], chars[tempR]] = [chars[tempR], chars[tempL]];
+                    tempL++;
+                    tempR--;
+                }
+                l = r + 1;
+            }
+        }
+        return chars.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -763,37 +763,6 @@ class Solution {
     reverseWords(s) {
         const arr = s.split('');
         const reverse = (i, j) => {
-            while (i < j) {
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-                i++;
-                j--;
-            }
-        };
-
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i] !== ' ') {
-                let j = i;
-                while (j < arr.length && arr[j] !== ' ') {
-                    j++;
-                }
-                reverse(i, j - 1);
-                i = j;
-            }
-        }
-        return arr.join('');
-    }
-}
-```
-
-```typescript
-class Solution {
-    /**
-     * @param {string} s
-     * @return {string}
-     */
-    reverseWords(s: string): string {
-        const arr = s.split('');
-        const reverse = (i: number, j: number): void => {
             while (i < j) {
                 [arr[i], arr[j]] = [arr[j], arr[i]];
                 i++;
@@ -961,6 +930,37 @@ impl Solution {
             i += 1;
         }
         String::from_utf8(arr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reverseWords(s: string): string {
+        const arr = s.split('');
+        const reverse = (i: number, j: number): void => {
+            while (i < j) {
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+                i++;
+                j--;
+            }
+        };
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] !== ' ') {
+                let j = i;
+                while (j < arr.length && arr[j] !== ' ') {
+                    j++;
+                }
+                reverse(i, j - 1);
+                i = j;
+            }
+        }
+        return arr.join('');
     }
 }
 ```
