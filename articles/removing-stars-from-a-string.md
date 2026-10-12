@@ -215,6 +215,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    removeStars(s: string): string {
+        while (true) {
+            let flag = false;
+            for (let i = 1; i < s.length; i++) {
+                if (s[i] === '*' && s[i - 1] !== '*') {
+                    s = s.slice(0, i - 1) + s.slice(i + 1);
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                break;
+            }
+        }
+        return s;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -405,6 +430,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    removeStars(s: string): string {
+        let n = s.length;
+        let i = 0;
+        while (i < n) {
+            if (i > 0 && s[i] === '*' && s[i - 1] !== '*') {
+                s = s.slice(0, i - 1) + s.slice(i + 1);
+                n -= 2;
+                i -= 2;
+            }
+            i++;
+        }
+        return s;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -579,6 +626,26 @@ impl Solution {
             }
         }
         stack.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    removeStars(s: string): string {
+        const stack: string[] = [];
+        for (const c of s) {
+            if (c === '*') {
+                if (stack.length > 0) stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.join('');
     }
 }
 ```
@@ -775,6 +842,29 @@ impl Solution {
         }
         arr.truncate(l);
         String::from_utf8(arr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    removeStars(s: string): string {
+        const arr = s.split('');
+        let l = 0;
+
+        for (let r = 0; r < arr.length; r++) {
+            if (arr[r] === '*') {
+                l--;
+            } else {
+                arr[l] = arr[r];
+                l++;
+            }
+        }
+        return arr.slice(0, l).join('');
     }
 }
 ```
