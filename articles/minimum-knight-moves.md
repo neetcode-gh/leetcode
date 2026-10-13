@@ -707,6 +707,8 @@ We can define a recursive relation: the minimum moves to reach `(x, y)` equals `
 ::tabs-start
 
 ```python
+from functools import lru_cache
+
 class Solution:
     def minKnightMoves(self, x: int, y: int) -> int:
 
