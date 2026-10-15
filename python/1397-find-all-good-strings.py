@@ -17,9 +17,13 @@ class Solution:
         def good(s):
             arr = list(map(ord, s))
             len_a = len(arr)
+            memo = {}
 
-            @cache
             def f(i, skip, reach, e):
+                key = (i, skip, reach, e)
+                if key in memo:
+                    return memo[key]
+
                 if e == len_e:
                     return 0
                 if i == len_a:
@@ -41,7 +45,8 @@ class Solution:
 
                     ans += f(i + 1, False, reach and c == limit, ee)
 
-                return ans % int(1e9 + 7)
+                memo[key] = ans % int(1e9 + 7)
+                return memo[key]
 
             return f(0, True, True, 0)
 

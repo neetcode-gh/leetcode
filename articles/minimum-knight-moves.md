@@ -709,9 +709,12 @@ We can define a recursive relation: the minimum moves to reach `(x, y)` equals `
 ```python
 class Solution:
     def minKnightMoves(self, x: int, y: int) -> int:
+        memo = {}
 
-        @lru_cache(maxsize=None)
         def dfs(x, y):
+            if (x, y) in memo:
+                return memo[(x, y)]
+
             if x + y == 0:
                 # base case: (0, 0)
                 return 0
@@ -719,7 +722,8 @@ class Solution:
                 # base case: (1, 1), (0, 2), (2, 0)
                 return 2
             else:
-                return min(dfs(abs(x - 1), abs(y - 2)), dfs(abs(x - 2), abs(y - 1))) + 1
+                memo[(x, y)] = min(dfs(abs(x - 1), abs(y - 2)), dfs(abs(x - 2), abs(y - 1))) + 1
+                return memo[(x, y)]
 
         return dfs(abs(x), abs(y))
 ```

@@ -16,12 +16,17 @@ class Solution:
             for j in range(1<<i, 1<<n, 1<<(i+1)):
                 last[j] = i
         
-        @lru_cache(None)
+        memo = {}
+
         def dp(m):
+            if m in memo:
+                return memo[m]
+
             if m & (m-1) == 0: return m != 0
             l, f = last[m], first[m]
             lb, fb = 1<<l, 1<<f
-            return max(dp(m-lb), dp(m-fb), dp(m-lb-fb) + (s[l] == s[f]) * 2)
+            memo[m] = max(dp(m-lb), dp(m-fb), dp(m-lb-fb) + (s[l] == s[f]) * 2)
+            return memo[m]
        
         ans = 0
         for m in range(1, 1<<n):
