@@ -110,6 +110,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxVowels(string s, int k) {
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
+        int res = 0;
+
+        for (int i = 0; i <= s.Length - k; i++) {
+            int cnt = 0;
+            for (int j = i; j < i + k; j++) {
+                if (vowels.Contains(s[j])) {
+                    cnt++;
+                }
+            }
+            res = Math.Max(res, cnt);
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxVowels(s string, k int) int {
     vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
@@ -193,6 +214,27 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    maxVowels(s: string, k: number): number {
+        const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+        let res = 0;
+
+        for (let i = 0; i <= s.length - k; i++) {
+            let cnt = 0;
+            for (let j = i; j < i + k; j++) {
+                if (vowels.has(s[j])) {
+                    cnt++;
+                }
+            }
+            res = Math.max(res, cnt);
+        }
+
+        return res;
     }
 }
 ```
@@ -305,6 +347,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxVowels(string s, int k) {
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
+        int[] prefix = new int[s.Length + 1];
+
+        for (int i = 0; i < s.Length; i++) {
+            prefix[i + 1] = prefix[i] + (vowels.Contains(s[i]) ? 1 : 0);
+        }
+
+        int res = 0;
+        for (int i = k; i <= s.Length; i++) {
+            res = Math.Max(res, prefix[i] - prefix[i - k]);
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxVowels(s string, k int) int {
     vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
@@ -388,6 +450,26 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    maxVowels(s: string, k: number): number {
+        const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+        const prefix = new Array(s.length + 1).fill(0);
+
+        for (let i = 0; i < s.length; i++) {
+            prefix[i + 1] = prefix[i] + (vowels.has(s[i]) ? 1 : 0);
+        }
+
+        let res = 0;
+        for (let i = k; i <= s.length; i++) {
+            res = Math.max(res, prefix[i] - prefix[i - k]);
+        }
+
+        return res;
     }
 }
 ```
@@ -502,6 +584,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxVowels(string s, int k) {
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
+
+        int l = 0, cnt = 0, res = 0;
+        for (int r = 0; r < s.Length; r++) {
+            cnt += vowels.Contains(s[r]) ? 1 : 0;
+            if (r - l + 1 > k) {
+                cnt -= vowels.Contains(s[l++]) ? 1 : 0;
+            }
+            res = Math.Max(res, cnt);
+        }
+        return res;
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn max_vowels(s: String, k: i32) -> i32 {
@@ -519,6 +619,26 @@ impl Solution {
             res = res.max(cnt);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    maxVowels(s: string, k: number): number {
+        const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+
+        let l = 0,
+            cnt = 0,
+            res = 0;
+        for (let r = 0; r < s.length; r++) {
+            cnt += vowels.has(s[r]) ? 1 : 0;
+            if (r - l + 1 > k) {
+                cnt -= vowels.has(s[l++]) ? 1 : 0;
+            }
+            res = Math.max(res, cnt);
+        }
+        return res;
     }
 }
 ```
@@ -649,6 +769,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxVowels(string s, int k) {
+        int mask = (1 << ('a' - 'a')) | (1 << ('e' - 'a')) |
+                   (1 << ('i' - 'a')) | (1 << ('o' - 'a')) |
+                   (1 << ('u' - 'a'));
+
+        int l = 0, cnt = 0, res = 0;
+        for (int r = 0; r < s.Length; r++) {
+            cnt += (mask >> (s[r] - 'a')) & 1;
+            if (r - l + 1 > k) {
+                cnt -= (mask >> (s[l] - 'a')) & 1;
+                l++;
+            }
+            res = Math.Max(res, cnt);
+        }
+
+        return res;
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn max_vowels(s: String, k: i32) -> i32 {
@@ -671,6 +813,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    maxVowels(s: string, k: number): number {
+        const getId = (c: string): number => c.charCodeAt(0) - 'a'.charCodeAt(0);
+        const mask =
+            (1 << getId('a')) |
+            (1 << getId('e')) |
+            (1 << getId('i')) |
+            (1 << getId('o')) |
+            (1 << getId('u'));
+
+        let l = 0,
+            cnt = 0,
+            res = 0;
+        for (let r = 0; r < s.length; r++) {
+            cnt += (mask >> getId(s.charAt(r))) & 1;
+            if (r - l + 1 > k) {
+                cnt -= (mask >> getId(s.charAt(l))) & 1;
+                l++;
+            }
+            res = Math.max(res, cnt);
+        }
+
+        return res;
     }
 }
 ```
