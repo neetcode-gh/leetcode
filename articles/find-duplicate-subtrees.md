@@ -478,6 +478,55 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode[]}
+     */
+    findDuplicateSubtrees(root: TreeNode | null): Array<TreeNode | null> {
+        const res: TreeNode[] = [];
+        const seen = new Set<TreeNode>();
+
+        const subTree: TreeNode[] = [];
+        const dfs = (root: TreeNode | null): void => {
+            if (!root) return;
+            subTree.push(root);
+            dfs(root.left);
+            dfs(root.right);
+        };
+        dfs(root);
+
+        const same = (node1: TreeNode | null, node2: TreeNode | null): boolean => {
+            if (!node1 && !node2) return true;
+            if (!node1 || !node2) return false;
+            return (
+                node1.val === node2.val &&
+                same(node1.left, node2.left) &&
+                same(node1.right, node2.right)
+            );
+        };
+
+        for (let i = 0; i < subTree.length; i++) {
+            if (seen.has(subTree[i])) continue;
+            for (let j = i + 1; j < subTree.length; j++) {
+                if (seen.has(subTree[j])) continue;
+
+                if (same(subTree[i], subTree[j])) {
+                    if (!seen.has(subTree[i])) {
+                        res.push(subTree[i]);
+                        seen.add(subTree[i]);
+                    }
+                    seen.add(subTree[j]);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -780,6 +829,35 @@ impl Solution {
                 s
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode[]}
+     */
+    findDuplicateSubtrees(root: TreeNode | null): Array<TreeNode | null> {
+        const subtrees = new Map<string, TreeNode[]>();
+        const res: TreeNode[] = [];
+
+        const dfs = (node: TreeNode | null): string => {
+            if (!node) return 'null';
+            const s = `${node.val},${dfs(node.left)},${dfs(node.right)}`;
+            if (!subtrees.has(s)) {
+                subtrees.set(s, []);
+            }
+            if (subtrees.get(s)!.length === 1) {
+                res.push(node);
+            }
+            subtrees.get(s)!.push(node);
+            return s;
+        };
+
+        dfs(root);
+        return res;
     }
 }
 ```
@@ -1118,6 +1196,40 @@ impl Solution {
                 cur_id as i32
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode[]}
+     */
+    findDuplicateSubtrees(root: TreeNode | null): Array<TreeNode | null> {
+        const idMap = new Map<string, number>();
+        const count = new Map<number, number>();
+        const res: Array<TreeNode | null> = [];
+
+        const dfs = (node: TreeNode | null): number => {
+            if (!node) return -1;
+
+            const cur = `${dfs(node.left)},${node.val},${dfs(node.right)}`;
+            if (!idMap.has(cur)) {
+                idMap.set(cur, idMap.size + 1);
+            }
+
+            const curId = idMap.get(cur)!;
+            count.set(curId, (count.get(curId) || 0) + 1);
+            if (count.get(curId) === 2) {
+                res.push(node);
+            }
+
+            return curId;
+        };
+
+        dfs(root);
+        return res;
     }
 }
 ```
