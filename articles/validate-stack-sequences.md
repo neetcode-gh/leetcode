@@ -182,6 +182,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} pushed
+     * @param {number[]} popped
+     * @return {boolean}
+     */
+    validateStackSequences(pushed: number[], popped: number[]): boolean {
+        const stack: number[] = [];
+        let i = 0;
+        for (const n of pushed) {
+            stack.push(n);
+            while (
+                i < popped.length &&
+                stack.length > 0 &&
+                popped[i] === stack[stack.length - 1]
+            ) {
+                stack.pop();
+                i++;
+            }
+        }
+        return stack.length === 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -359,6 +385,28 @@ impl Solution {
             }
         }
         l == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} pushed
+     * @param {number[]} popped
+     * @return {boolean}
+     */
+    validateStackSequences(pushed: number[], popped: number[]): boolean {
+        let l = 0,
+            r = 0;
+        for (const num of pushed) {
+            pushed[l++] = num;
+            while (l > 0 && pushed[l - 1] === popped[r]) {
+                r++;
+                l--;
+            }
+        }
+        return l === 0;
     }
 }
 ```

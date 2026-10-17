@@ -248,6 +248,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @param {number} k
+     * @return {string}
+     */
+    removeKdigits(num: string, k: number): string {
+        let arr: string[] = num.split('');
+        while (k > 0) {
+            let i = 1;
+            while (i < arr.length && arr[i] >= arr[i - 1]) {
+                i++;
+            }
+            arr.splice(i - 1, 1);
+            k--;
+        }
+
+        let i = 0;
+        while (i < arr.length && arr[i] === '0') {
+            i++;
+        }
+
+        arr = arr.slice(i);
+        return arr.length === 0 ? '0' : arr.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -535,6 +564,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @param {number} k
+     * @return {string}
+     */
+    removeKdigits(num: string, k: number): string {
+        const stack: string[] = [];
+        for (const c of num) {
+            while (k > 0 && stack.length > 0 && stack[stack.length - 1] > c) {
+                stack.pop();
+                k--;
+            }
+            stack.push(c);
+        }
+
+        while (k > 0 && stack.length > 0) {
+            stack.pop();
+            k--;
+        }
+
+        let i = 0;
+        while (i < stack.length && stack[i] === '0') {
+            i++;
+        }
+
+        const res = stack.slice(i).join('');
+        return res === '' ? '0' : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,6 +853,36 @@ impl Solution {
         } else {
             String::from_utf8(num[i..l].to_vec()).unwrap()
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @param {number} k
+     * @return {string}
+     */
+    removeKdigits(num: string, k: number): string {
+        const numArray: string[] = num.split('');
+        let l = 0;
+
+        for (let r = 0; r < numArray.length; r++) {
+            while (l > 0 && k > 0 && numArray[l - 1] > numArray[r]) {
+                l--;
+                k--;
+            }
+            numArray[l++] = numArray[r];
+        }
+
+        l -= k;
+        let i = 0;
+        while (i < l && numArray[i] === '0') {
+            i++;
+        }
+        const res = numArray.slice(i, l).join('');
+        return res.length === 0 ? '0' : res;
     }
 }
 ```
