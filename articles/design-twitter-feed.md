@@ -1386,13 +1386,13 @@ public:
                 if (!tweetMap.count(f)) continue;
                 int idx = tweetMap[f].size() - 1;
                 auto &p = tweetMap[f][idx];
-                maxHeap.push({-p.first, p.second, f, idx - 1});
+                maxHeap.push({p.first, p.second, f, idx - 1});
                 if (maxHeap.size() > 10) maxHeap.pop();
             }
             while (!maxHeap.empty()) {
                 auto t = maxHeap.top();
                 maxHeap.pop();
-                minHeap.push({-t[0], t[1], t[2], t[3]});
+                minHeap.push({t[0], t[1], t[2], t[3]});
             }
         } else {
             for (auto f : followMap[userId]) {
