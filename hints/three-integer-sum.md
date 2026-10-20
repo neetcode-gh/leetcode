@@ -2,7 +2,10 @@
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
     <p>
-    You should aim for a solution with <code>O(n^2)</code> time and <code>O(1)</code> space, where <code>n</code> is the size of the input array.
+    You should aim for a solution with <code>O(n^2)</code> time and <code>O(1)</code> auxiliary space, plus the space used by the sorting algorithm, where <code>n</code> is the size of the input array. This excludes the space used for the output list.
+    </p>
+    <p>
+    In Python (CPython), <code>nums.sort()</code> modifies the list in place but can use <code>O(n)</code> auxiliary space in the worst case.
     </p>
 </details>
 
