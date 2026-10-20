@@ -921,7 +921,6 @@ public class Solution {
 ```cpp
 class Solution {
 public:
-    vector<string> board;
     vector<bool> col, posDiag, negDiag;
 
     int totalNQueens(int n) {
@@ -1280,7 +1279,6 @@ public class Solution {
 class Solution {
 public:
     int col = 0, posDiag = 0, negDiag = 0;
-    vector<string> board;
 
     int totalNQueens(int n) {
         int res = 0;
