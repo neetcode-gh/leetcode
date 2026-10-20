@@ -9,7 +9,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Brute Force (Backtracking)
+## 1. Brute Force (Backtracking) (Time Limit Exceeded)
 
 ### Intuition
 

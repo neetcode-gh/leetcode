@@ -9,7 +9,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Depth First Search
+## 1. Depth First Search (Time Limit Exceeded)
 
 ### Intuition
 
@@ -332,7 +332,9 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2)$
-- Space complexity: $O(n)$
+- Space complexity:
+    - $O(n ^ 2)$ for Python and other implementations that copy subarrays. On a skewed tree, recursive calls retain slices of sizes $n - 1, n - 2, \ldots, 1$.
+    - $O(n)$ for implementations that use slice views without copying, such as Go.
 
 ---
 
