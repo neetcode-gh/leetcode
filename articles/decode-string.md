@@ -364,10 +364,14 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + N)$
+- Time complexity: $O(nN)$, using the problem's fixed upper bound of $300$ on repeat counts
+
+    - The Java, C++, Kotlin, Swift, and Rust versions use growing string buffers and have the tighter bound $O(n + (d + 1)N)$. A decoded substring can be copied at every enclosing bracket, even when the repeat count is $1$. For example, nesting the pattern `1[a...]` $d$ times produces $d$ letters but builds intermediate results of lengths $1, 2, \ldots, d$, requiring $\Theta(d^2)$ character copying. Thus $O(n + N)$ is not a general time bound.
+    - The $O(nN)$ bound also accounts for copying accumulated prefixes during string concatenation. Python and JavaScript runtimes may optimize some of these copies. The C# and Go versions additionally concatenate immutable strings inside their repetition loops: for `k[a]`, they build strings of lengths $1$ through $k$. If repeat counts are allowed to grow without the problem's cap, a conservative bound for those two versions is $O(nN + N^2)$.
+
 - Space complexity: $O(n + N)$
 
-> Where $n$ is the length of the input string and $N$ is the length of the output string.
+> Where $n$ is the length of the input string, $N$ is the length of the output string, and $d$ is the maximum bracket nesting depth.
 
 ---
 
@@ -685,7 +689,10 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + N ^ 2)$
+- Time complexity: $O(nN)$
+
+    - There are $O(n)$ stack pushes and pops because each closing bracket pushes one decoded block, not its individual characters. Prepending a popped block or expanding a bracket can copy up to $O(N)$ characters. This accounts for both repeated front concatenation and copying the same decoded block through nested brackets. An $O(n + N^2)$ bound alone misses the latter when the nesting depth is much larger than the output length.
+
 - Space complexity: $O(n + N)$
 
 > Where $n$ is the length of the input string and $N$ is the length of the output string.
@@ -1008,10 +1015,14 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + N)$
+- Time complexity: $O(nN)$, using the problem's fixed upper bound of $300$ on repeat counts
+
+    - The Java, C++, Swift, and Rust versions use growing string buffers and have the tighter bound $O(n + (d + 1)N)$. Closing a bracket copies the decoded inner string into its parent's result, so the same characters can be copied at each of the $d$ levels, including levels with repeat count $1$.
+    - The $O(nN)$ bound also allows for copying accumulated prefixes; Python and JavaScript runtimes may optimize some copies. Unlike the recursive Kotlin version, this Kotlin version uses immutable strings, as do the C# and Go versions. Their repetition loops repeatedly copy the growing result. Without the fixed cap on repeat counts, a conservative bound for these three versions is $O(nN + N^2)$.
+
 - Space complexity: $O(n + N)$
 
-> Where $n$ is the length of the input string and $N$ is the length of the output string.
+> Where $n$ is the length of the input string, $N$ is the length of the output string, and $d$ is the maximum bracket nesting depth.
 
 ---
 
