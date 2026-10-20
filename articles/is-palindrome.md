@@ -101,12 +101,13 @@ class Solution {
 ```csharp
 public class Solution {
     public bool IsPalindrome(string s) {
-        string newStr = "";
+        StringBuilder builder = new StringBuilder();
         foreach (char c in s) {
             if (char.IsLetterOrDigit(c)) {
-                newStr += char.ToLower(c);
+                builder.Append(char.ToLower(c));
             }
         }
+        string newStr = builder.ToString();
         return newStr == new string(newStr.Reverse().ToArray());
     }
 }
