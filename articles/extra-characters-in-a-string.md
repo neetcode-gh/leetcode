@@ -10,7 +10,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Recursion (Time Limit Exceeded)
+## 1. Recursion (May Exceed Time Limit)
 
 ### Intuition
 

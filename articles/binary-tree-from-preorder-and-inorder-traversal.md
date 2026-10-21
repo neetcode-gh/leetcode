@@ -9,7 +9,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Depth First Search (Time Limit Exceeded)
+## 1. Depth First Search (May Exceed Time Limit)
 
 ### Intuition
 

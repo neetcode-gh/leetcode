@@ -8,7 +8,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Brute Force
+## 1. Brute Force (May Exceed Time Limit)
 
 ### Intuition
 
