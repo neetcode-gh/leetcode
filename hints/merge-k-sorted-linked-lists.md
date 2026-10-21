@@ -2,7 +2,7 @@
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
     <p>
-    You should aim for a solution with <code>O(n log k)</code> time and <code>O(k)</code> auxiliary space, where <code>k</code> is the total number of lists and <code>n</code> is the total number of nodes across all lists. Visiting the input list heads also takes <code>O(k)</code> time, including empty lists. The hints below use iterative divide and conquer with arrays of merged list heads.
+    You should aim for a solution with <code>O(k + n log k)</code> time and <code>O(k)</code> auxiliary space, where <code>k</code> is the total number of lists and <code>n</code> is the total number of nodes across all lists. The <code>O(k)</code> term accounts for visiting all input list heads, including empty lists. The hints below use iterative divide and conquer with arrays of merged list heads.
     </p>
 </details>
 

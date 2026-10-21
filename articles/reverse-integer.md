@@ -81,6 +81,9 @@ public class Solution {
 class Solution {
 public:
     int reverse(int x) {
+        if (x == INT_MIN) {
+            return 0;
+        }
         int org = x;
         x = abs(x);
         string strX = to_string(x);
@@ -319,6 +322,9 @@ public class Solution {
 class Solution {
 public:
     int reverse(int x) {
+        if (x == INT_MIN) {
+            return 0;
+        }
         long res = rec(abs(x), 0) * (x < 0 ? -1 : 1);
         if (res < INT_MIN || res > INT_MAX) {
             return 0;
