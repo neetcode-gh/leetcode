@@ -58,6 +58,9 @@ class Solution:
 ```java
 public class Solution {
     public int reverse(int x) {
+        if (x == Integer.MIN_VALUE) {
+            return 0;
+        }
         int org = x;
         x = Math.abs(x);
         long res = Long.parseLong(new StringBuilder(
@@ -78,6 +81,9 @@ public class Solution {
 class Solution {
 public:
     int reverse(int x) {
+        if (x == INT_MIN) {
+            return 0;
+        }
         int org = x;
         x = abs(x);
         string strX = to_string(x);
@@ -118,6 +124,9 @@ class Solution {
 ```csharp
 public class Solution {
     public int Reverse(int x) {
+        if (x == int.MinValue) {
+            return 0;
+        }
         int org = x;
         x = Math.Abs(x);
         char[] arr = x.ToString().ToCharArray();
@@ -313,6 +322,9 @@ public class Solution {
 class Solution {
 public:
     int reverse(int x) {
+        if (x == INT_MIN) {
+            return 0;
+        }
         long res = rec(abs(x), 0) * (x < 0 ? -1 : 1);
         if (res < INT_MIN || res > INT_MAX) {
             return 0;
@@ -363,6 +375,9 @@ class Solution {
 ```csharp
 public class Solution {
     public int Reverse(int x) {
+        if (x == int.MinValue) {
+            return 0;
+        }
         long res = Rec(Math.Abs(x), 0) * (x < 0 ? -1 : 1);
         if (res < int.MinValue || res > int.MaxValue) {
             return 0;

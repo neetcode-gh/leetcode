@@ -864,9 +864,10 @@ public class Solution {
             for (int i = 0; i < size; i++) {
                 int cur = q.poll();
                 for (int coin : coins) {
+                    if (coin > amount - cur) continue;
                     int nxt = cur + coin;
                     if (nxt == amount) return res;
-                    if (nxt > amount || seen[nxt]) continue;
+                    if (seen[nxt]) continue;
                     seen[nxt] = true;
                     q.add(nxt);
                 }
@@ -897,9 +898,10 @@ public:
                 int cur = q.front();
                 q.pop();
                 for (int coin : coins) {
+                    if (coin > amount - cur) continue;
                     int nxt = cur + coin;
                     if (nxt == amount) return res;
-                    if (nxt > amount || seen[nxt]) continue;
+                    if (seen[nxt]) continue;
                     seen[nxt] = true;
                     q.push(nxt);
                 }
@@ -963,9 +965,10 @@ public class Solution {
             for (int i = 0; i < size; i++) {
                 int cur = q.Dequeue();
                 foreach (int coin in coins) {
+                    if (coin > amount - cur) continue;
                     int nxt = cur + coin;
                     if (nxt == amount) return res;
-                    if (nxt > amount || seen[nxt]) continue;
+                    if (seen[nxt]) continue;
                     seen[nxt] = true;
                     q.Enqueue(nxt);
                 }
@@ -1022,9 +1025,10 @@ class Solution {
             repeat(queue.size) {
                 val cur = queue.removeFirst()
                 for (coin in coins) {
+                    if (coin > amount - cur) continue
                     val next = cur + coin
                     if (next == amount) return res
-                    if (next > amount || seen[next]) continue
+                    if (seen[next]) continue
                     seen[next] = true
                     queue.addLast(next)
                 }

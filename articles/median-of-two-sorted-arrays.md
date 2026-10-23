@@ -572,15 +572,17 @@ If we can find the k-th smallest element efficiently, then:
 
 - The median is just the middle element (or the average of the two middle elements).
 
-To find the k-th smallest:
+To find the k-th smallest, treat `k` as a **1-based rank** in the remaining arrays `A` and `B`. Handle an empty array or `k == 1` directly. Otherwise:
 
-- We compare the **k/2-th element** of each array.
-- The smaller one (and everything before it in that array) **cannot** be the k-th element,
-  because there are at least `k/2` elements smaller than or equal to it.
-- So we discard that many elements from one array and **reduce k** accordingly.
-- We repeat this process, shrinking the problem each time.
+- Let `i = min(len(A), k // 2)` and `j = min(len(B), k // 2)`, then compare `A[i-1]` and `B[j-1]`.
+- Suppose `A[i-1] <= B[j-1]`. For equal values, imagine merging elements from `A` before those from `B`, while preserving the order within each array.
+- At most `i` elements from `A` and `j - 1` from `B` can appear at or before `A[i-1]`. Its merged position is therefore at most `i + j - 1 <= 2 * (k // 2) - 1 < k`.
+- The first `i` elements of `A` all come before rank `k`, so discard them and search for rank `k - i` in the remaining arrays.
+- If `A[i-1] > B[j-1]`, the same argument lets us discard the first `j` elements of `B` and search for rank `k - j`.
 
-This is like a binary search on k: every step cuts off about half of the remaining elements, giving an `O(log(k))` (or `O(log(m + n))`) solution.
+This reasoning also handles duplicates: discarded occurrences may equal the answer, but the occurrence at rank `k` remains and moves to the reduced rank.
+
+Each step either reduces `k` by `k // 2` or empties one array, after which the answer can be read directly. This gives an `O(log(k))` (or `O(log(m + n))`) solution.
 
 ### Algorithm
 
@@ -588,11 +590,11 @@ This is like a binary search on k: every step cuts off about half of the remaini
     1. Always make sure `A` is the shorter array (swap if needed).
     2. If `A` is empty, the k-th element is simply `B[k-1]`.
     3. If `k == 1`, return `min(A[0], B[0])`.
-    4. Let `i = min(len(A), k/2)` and `j = min(len(B), k/2)`.
+    4. Let `i = min(len(A), k // 2)` and `j = min(len(B), k // 2)`.
     5. Compare `A[i-1]` and `B[j-1]`:
-        - If `A[i-1] <= B[j-1]`, then the first `i` elements of `A` can't contain the k-th smallest.
+        - If `A[i-1] <= B[j-1]`, discard the first `i` elements of `A`, which lie before rank `k` in the merged ordering described above.
           Call `getKth(A[i:], B, k - i)`.
-        - Else, the first `j` elements of `B` can't contain the k-th smallest.
+        - Else, discard the first `j` elements of `B`, which lie before rank `k` in that ordering.
           Call `getKth(A, B[j:], k - j)`.
 
 2. To find the median:

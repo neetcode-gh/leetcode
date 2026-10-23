@@ -683,10 +683,12 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + (m * k))$
+- Time complexity: $O(n + (k + 1) \cdot (n + m))$
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
+
+Initializing `prices` takes $O(n)$ time. Each of the $k + 1$ iterations copies the $n$ prices and scans all $m$ flights, taking $O(n + m)$ time per iteration. The current and temporary price arrays use $O(n)$ auxiliary space.
 
 ---
 

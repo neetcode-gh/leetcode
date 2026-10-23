@@ -213,7 +213,7 @@ impl KthLargest {
 To maintain the **k-th largest element** in a stream of numbers, we do **not** need to store all values.  
 Instead, we only need to keep track of the **k largest elements seen so far**.
 
-A **min-heap of size `k`** is perfect for this:
+A **min-heap of size at most `k`** is perfect for this:
 
 - A min-heap always keeps the **smallest value at the top**.
 - If the heap contains the `k` largest elements,
@@ -222,7 +222,7 @@ A **min-heap of size `k`** is perfect for this:
     - If we add it and the heap grows beyond `k`,
       we remove the smallest element - because it cannot be in the top `k` anymore.
 
-This way, the heap always holds exactly the **top `k` elements**, and retrieving the k-th largest is `O(1)`.
+After trimming, the heap holds at most `k` elements. Once at least `k` values have arrived, it holds exactly the **top `k` elements**, and retrieving the k-th largest takes `O(1)`.
 
 ### Algorithm
 
@@ -230,7 +230,7 @@ This way, the heap always holds exactly the **top `k` elements**, and retrieving
 
 1. Insert all initial numbers into a min-heap.
 2. If the heap size becomes greater than `k`, repeatedly remove the smallest element.
-    - After this, the heap contains exactly `k` elements.
+    - After this, the heap contains at most `k` elements.
 
 #### add(value)
 
@@ -499,10 +499,17 @@ impl KthLargest {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m * \log k)$
-- Space complexity: $O(k)$
+- Time complexity:
+    - Python: $O(n + (n-k) \log n + m \log(k + 1))$ when $n > k$, or $O(n + m \log(k + 1))$ otherwise. Heapifying takes $O(n)$, followed by $n-k$ heap removals when $n > k$.
+    - Java, C++, C#, Swift, Rust: $O((n + m) \log(k + 1))$. Trimming after each initial insertion keeps the heap at most $k+1$ elements during insertion and at most $k$ afterward.
+    - JavaScript, Go, Kotlin: $O(n \log(n + 1) + m \log(k + 1))$. These versions insert all $n$ initial values before trimming the heap, so initialization takes $O(n \log(n + 1))$.
+- Space complexity (peak heap storage):
+    - Java, C++, C#, Swift, Rust: $O(k)$, since the heap is trimmed after each initial insertion.
+    - Python, JavaScript, Go, Kotlin: $O(n + k)$, equivalently $O(\max(n, k))$, since the heap initially holds all $n$ values and can later grow to $k+1$ during an insertion. Python reuses the input list, so its peak heap storage includes that existing list rather than a separate $n$-element heap.
 
-> Where $m$ is the number of calls made to $add()$.
+Each $add()$ call takes $O(\log(k + 1))$ amortized time, accounting for occasional backing-array resizing. Using $\log(k + 1)$ also covers $k = 1$.
+
+> Where $n$ is the initial array length, $m$ is the number of calls made to $add()$, and $k$ is the rank being tracked.
 
 ---
 
@@ -514,4 +521,4 @@ A common mistake is using a max-heap to find the k-th largest element. While it 
 
 ### Forgetting to Maintain Heap Size
 
-When using a min-heap, it is essential to remove the smallest element whenever the heap size exceeds k. Failing to do so means the heap grows unbounded, and the root no longer represents the k-th largest element. Always check and pop after each insertion to keep exactly k elements in the heap.
+When using a min-heap, it is essential to remove the smallest element whenever the heap size exceeds k. Failing to do so means the heap grows unbounded, and the root no longer represents the k-th largest element. Always check and pop after each insertion to keep at most k elements in the heap.

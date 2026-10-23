@@ -255,8 +255,12 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n * m\log n)$
-- Space complexity: $O(n * m)$
+- Time complexity:
+    - $O(n * m\log n)$
+    - $O(n * m)$ in C++, since `is_sorted` compares adjacent words directly without sorting the array.
+- Space complexity:
+    - $O(n * m)$
+    - $O(1)$ in C++.
 
 > Where $n$ is the number of words and $m$ is the average length of a word.
 
@@ -333,7 +337,7 @@ public:
             orderIndex[order[i] - 'a'] = i;
 
         for (int i = 0; i < words.size() - 1; ++i) {
-            string w1 = words[i], w2 = words[i + 1];
+            const string &w1 = words[i], &w2 = words[i + 1];
             int j = 0;
 
             for (; j < w1.size(); ++j) {

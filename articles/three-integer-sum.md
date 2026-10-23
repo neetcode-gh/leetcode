@@ -941,7 +941,8 @@ impl Solution {
 - Time complexity: $O(n^2)$
 - Space complexity: $O(1)$, plus the space used by the sorting algorithm.
     - This excludes the space used for the output list.
-    - If the output list is included, the space is $O(m)$, which is $O(n^2)$ in the worst case.
+    - In Python (CPython), `nums.sort()` modifies the list in place but uses $O(n)$ auxiliary space in the worst case, so the Python solution uses $O(n)$ auxiliary space.
+    - If the output list is included, the space is $O(m)$ plus sorting space ($O(n + m)$ in Python), which is $O(n^2)$ in the worst case.
 
 > Where $m$ is the number of unique triplets and $n$ is the length of the given array.
 

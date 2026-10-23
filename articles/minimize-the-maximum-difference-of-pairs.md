@@ -9,7 +9,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Greedy + Dynamic Programming (Top-Down)
+## 1. Greedy + Dynamic Programming (Top-Down) (May Exceed Time Limit)
 
 ### Intuition
 

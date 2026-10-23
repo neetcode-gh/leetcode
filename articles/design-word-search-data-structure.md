@@ -347,7 +347,10 @@ impl WordDictionary {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(1)$ for $addWord()$, $O(m * n)$ for $search()$.
+- Time complexity:
+    - C++: $O(n)$ amortized for $addWord()$, since `store.push_back(word)` copies the string.
+    - Python, Java, JavaScript, C#, Go, Kotlin, Swift, Rust: $O(1)$ amortized for $addWord()$, since adding a word does not copy its characters.
+    - All languages: $O(m * n)$ for $search()$.
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of words added and $n$ is the length of the string.

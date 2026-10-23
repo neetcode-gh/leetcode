@@ -455,12 +455,14 @@ After processing all characters, some opening brackets might remain unmatched. T
 
 ### Mixing Up Opening and Closing Brackets
 
-When building the bracket mapping, ensure closing brackets map to their corresponding opening brackets, not the other way around. The lookup should happen when you encounter a closing bracket.
+In the stack implementation above, the stack stores opening brackets, so the mapping goes from closing brackets to their corresponding opening brackets. Look up the mapping when you encounter a closing bracket.
 
 ```python
-# Correct mapping: closing -> opening
+# Mapping used above: closing -> opening
 closeToOpen = {")": "(", "]": "[", "}": "{"}
 ```
+
+An opening-to-closing mapping is also valid if you instead push the expected closing bracket for each opening bracket. When a closing bracket arrives, reject an empty stack or a mismatch with the stack's top, then pop on a match. The stack must still be empty at the end.
 
 ### Using Wrong Data Structure
 
