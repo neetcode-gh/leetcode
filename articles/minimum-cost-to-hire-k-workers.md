@@ -377,6 +377,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} quality
+     * @param {number[]} wage
+     * @param {number} k
+     * @return {number}
+     */
+    mincostToHireWorkers(quality: number[], wage: number[], k: number): number {
+        const n = quality.length;
+        const workers: [number, number][] = [];
+        for (let i = 0; i < n; i++) {
+            workers.push([wage[i] / quality[i], quality[i]]);
+        }
+
+        workers.sort((a, b) => a[0] - b[0]);
+        const maxHeap = new MaxPriorityQueue();
+        let totalQuality = 0,
+            res = Number.MAX_VALUE;
+
+        for (const [ratio, q] of workers) {
+            maxHeap.enqueue(q);
+            totalQuality += q;
+
+            if (maxHeap.size() > k) {
+                totalQuality -= maxHeap.dequeue();
+            }
+
+            if (maxHeap.size() === k) {
+                res = Math.min(res, totalQuality * ratio);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

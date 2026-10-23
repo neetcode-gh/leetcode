@@ -207,6 +207,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const res: number[] = [];
+        let l = 0,
+            r = nums.length - 1;
+
+        while (res.length !== nums.length) {
+            res.push(nums[l++]);
+            if (l <= r) {
+                res.push(nums[r--]);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -344,6 +368,22 @@ impl Solution {
             i += 2;
         }
         nums
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        for (let i = 1; i < nums.length; i += 2) {
+            [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
+        }
+        return nums;
     }
 }
 ```
@@ -581,6 +621,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        const n = nums.length;
+
+        for (let i = 1; i < n - 1; i++) {
+            if (2 * nums[i] === nums[i - 1] + nums[i + 1]) {
+                [nums[i], nums[i + 1]] = [nums[i + 1], nums[i]];
+            }
+        }
+
+        for (let i = n - 2; i > 0; i--) {
+            if (2 * nums[i] === nums[i - 1] + nums[i + 1]) {
+                [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
+            }
+        }
+
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -756,6 +822,28 @@ impl Solution {
             increase = !increase;
         }
         nums
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        let increase = nums[0] < nums[1];
+        for (let i = 1; i < nums.length - 1; i++) {
+            if (
+                (increase && nums[i] < nums[i + 1]) ||
+                (!increase && nums[i] > nums[i + 1])
+            ) {
+                [nums[i], nums[i + 1]] = [nums[i + 1], nums[i]];
+            }
+            increase = !increase;
+        }
+        return nums;
     }
 }
 ```

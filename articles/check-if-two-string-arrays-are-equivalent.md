@@ -98,6 +98,19 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} word1
+     * @param {string[]} word2
+     * @return {boolean}
+     */
+    arrayStringsAreEqual(word1: string[], word2: string[]): boolean {
+        return word1.join('') === word2.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -297,6 +310,30 @@ impl Solution {
             }
         }
         i == s1_bytes.len()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} word1
+     * @param {string[]} word2
+     * @return {boolean}
+     */
+    arrayStringsAreEqual(word1: string[], word2: string[]): boolean {
+        let s1 = word1.join('');
+        let i = 0;
+
+        for (let w of word2) {
+            for (let c of w) {
+                if (i === s1.length || s1[i] !== c) {
+                    return false;
+                }
+                i++;
+            }
+        }
+        return i === s1.length;
     }
 }
 ```
@@ -584,6 +621,41 @@ impl Solution {
             }
         }
         w1 == w1_bytes.len() && w2 == w2_bytes.len()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} word1
+     * @param {string[]} word2
+     * @return {boolean}
+     */
+    arrayStringsAreEqual(word1: string[], word2: string[]): boolean {
+        let w1 = 0,
+            w2 = 0; // Index of word
+        let i = 0,
+            j = 0; // Index of character
+
+        while (w1 < word1.length && w2 < word2.length) {
+            if (word1[w1][i] !== word2[w2][j]) {
+                return false;
+            }
+
+            i++;
+            j++;
+
+            if (i === word1[w1].length) {
+                w1++;
+                i = 0;
+            }
+            if (j === word2[w2].length) {
+                w2++;
+                j = 0;
+            }
+        }
+        return w1 === word1.length && w2 === word2.length;
     }
 }
 ```
