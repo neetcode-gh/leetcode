@@ -240,6 +240,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} dist
+     * @param {number[]} speed
+     * @return {number}
+     */
+    eliminateMaximum(dist: number[], speed: number[]): number {
+        let n = dist.length;
+        let minReach: number[] = new Array(n);
+
+        for (let i = 0; i < n; i++) {
+            minReach[i] = Math.ceil(dist[i] / speed[i]);
+        }
+
+        minReach.sort((a, b) => a - b);
+
+        let res = 0;
+        for (let minute = 0; minute < n; minute++) {
+            if (minute >= minReach[minute]) {
+                return res;
+            }
+            res++;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +375,85 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int EliminateMaximum(int[] dist, int[] speed) {
+        int n = dist.Length;
+        for (int i = 0; i < n; i++) {
+            dist[i] = (int)Math.Ceiling((double)dist[i] / speed[i]);
+        }
+
+        Array.Sort(dist);
+        for (int minute = 0; minute < n; minute++) {
+            if (minute >= dist[minute]) {
+                return minute;
+            }
+        }
+
+        return n;
+    }
+}
+```
+
+```go
+func eliminateMaximum(dist []int, speed []int) int {
+    n := len(dist)
+    for i := 0; i < n; i++ {
+        dist[i] = int(math.Ceil(float64(dist[i]) / float64(speed[i])))
+    }
+
+    sort.Ints(dist)
+    for minute := 0; minute < n; minute++ {
+        if minute >= dist[minute] {
+            return minute
+        }
+    }
+
+    return n
+}
+```
+
+```kotlin
+class Solution {
+    fun eliminateMaximum(dist: IntArray, speed: IntArray): Int {
+        val n = dist.size
+        for (i in 0 until n) {
+            dist[i] = Math.ceil(dist[i].toDouble() / speed[i]).toInt()
+        }
+
+        dist.sort()
+        for (minute in 0 until n) {
+            if (minute >= dist[minute]) {
+                return minute
+            }
+        }
+
+        return n
+    }
+}
+```
+
+```swift
+class Solution {
+    func eliminateMaximum(_ dist: [Int], _ speed: [Int]) -> Int {
+        let n = dist.count
+        var dist = dist
+        for i in 0..<n {
+            dist[i] = Int(ceil(Double(dist[i]) / Double(speed[i])))
+        }
+
+        dist.sort()
+        for minute in 0..<n {
+            if minute >= dist[minute] {
+                return minute
+            }
+        }
+
+        return n
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn eliminate_maximum(mut dist: Vec<i32>, speed: Vec<i32>) -> i32 {
@@ -361,6 +470,31 @@ impl Solution {
         }
 
         n as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} dist
+     * @param {number[]} speed
+     * @return {number}
+     */
+    eliminateMaximum(dist: number[], speed: number[]): number {
+        let n = dist.length;
+        for (let i = 0; i < n; i++) {
+            dist[i] = Math.ceil(dist[i] / speed[i]);
+        }
+
+        dist.sort((a, b) => a - b);
+        for (let minute = 0; minute < n; minute++) {
+            if (minute >= dist[minute]) {
+                return minute;
+            }
+        }
+
+        return n;
     }
 }
 ```
@@ -467,13 +601,110 @@ class Solution {
 
         let res = 0;
         while (!minHeap.isEmpty()) {
-            if (res >= minHeap.dequeue().element) {
+            if (res >= minHeap.dequeue()) {
                 return res;
             }
             res++;
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int EliminateMaximum(int[] dist, int[] speed) {
+        PriorityQueue<double, double> minHeap = new PriorityQueue<double, double>();
+        for (int i = 0; i < dist.Length; i++) {
+            double t = (double)dist[i] / speed[i];
+            minHeap.Enqueue(t, t);
+        }
+
+        int res = 0;
+        while (minHeap.Count > 0) {
+            if (res >= minHeap.Dequeue()) {
+                return res;
+            }
+            res++;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+type MinHeap []float64
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(float64)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
+func eliminateMaximum(dist []int, speed []int) int {
+    minHeap := &MinHeap{}
+    for i := 0; i < len(dist); i++ {
+        heap.Push(minHeap, float64(dist[i])/float64(speed[i]))
+    }
+
+    res := 0
+    for minHeap.Len() > 0 {
+        if float64(res) >= heap.Pop(minHeap).(float64) {
+            return res
+        }
+        res++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun eliminateMaximum(dist: IntArray, speed: IntArray): Int {
+        val minHeap = PriorityQueue<Double>()
+        for (i in dist.indices) {
+            minHeap.add(dist[i].toDouble() / speed[i])
+        }
+
+        var res = 0
+        while (minHeap.isNotEmpty()) {
+            if (res >= minHeap.poll()) {
+                return res
+            }
+            res++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func eliminateMaximum(_ dist: [Int], _ speed: [Int]) -> Int {
+        var minHeap = Heap<Double>()
+        for i in 0..<dist.count {
+            minHeap.insert(Double(dist[i]) / Double(speed[i]))
+        }
+
+        var res = 0
+        while !minHeap.isEmpty {
+            if Double(res) >= minHeap.popMin()! {
+                return res
+            }
+            res += 1
+        }
+
+        return res
     }
 }
 ```
@@ -499,6 +730,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} dist
+     * @param {number[]} speed
+     * @return {number}
+     */
+    eliminateMaximum(dist: number[], speed: number[]): number {
+        const minHeap = new MinPriorityQueue();
+        for (let i = 0; i < dist.length; i++) {
+            minHeap.enqueue(dist[i] / speed[i]);
+        }
+
+        let res = 0;
+        while (!minHeap.isEmpty()) {
+            if (res >= minHeap.dequeue()) {
+                return res;
+            }
+            res++;
+        }
+
+        return res;
     }
 }
 ```

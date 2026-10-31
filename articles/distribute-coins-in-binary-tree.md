@@ -364,6 +364,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    distributeCoins(root: TreeNode | null): number {
+        let res = 0;
+
+        const dfs = (cur: TreeNode | null): number[] => {
+            if (!cur) {
+                return [0, 0]; // [size, coins]
+            }
+
+            let [lSize, lCoins] = dfs(cur.left);
+            let [rSize, rCoins] = dfs(cur.right);
+
+            let size = 1 + lSize + rSize;
+            let coins = cur.val + lCoins + rCoins;
+            res += Math.abs(size - coins);
+
+            return [size, coins];
+        };
+
+        dfs(root);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -686,6 +716,34 @@ impl Solution {
         } else {
             0
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    distributeCoins(root: TreeNode | null): number {
+        let res = 0;
+
+        const dfs = (cur: TreeNode | null): number => {
+            if (!cur) {
+                return 0; // extra_coins
+            }
+
+            let lExtra = dfs(cur.left);
+            let rExtra = dfs(cur.right);
+
+            let extraCoins = cur.val - 1 + lExtra + rExtra;
+            res += Math.abs(extraCoins);
+            return extraCoins;
+        };
+
+        dfs(root);
+        return res;
     }
 }
 ```
@@ -1126,6 +1184,46 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    distributeCoins(root: TreeNode | null): number {
+        let res = 0;
+        let q = new Queue();
+        let parentMap = new Map<TreeNode, TreeNode>();
+        let nodes: TreeNode[] = [];
+
+        q.push(root);
+        while (!q.isEmpty()) {
+            let node: TreeNode = q.pop();
+            nodes.push(node);
+            if (node.left) {
+                parentMap.set(node.left, node);
+                q.push(node.left);
+            }
+            if (node.right) {
+                parentMap.set(node.right, node);
+                q.push(node.right);
+            }
+        }
+
+        for (let i = nodes.length - 1; i >= 0; i--) {
+            let node = nodes[i];
+            if (parentMap.has(node)) {
+                let parent = parentMap.get(node)!;
+                parent.val += node.val - 1;
+                res += Math.abs(node.val - 1);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1593,6 +1691,49 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    distributeCoins(root: TreeNode | null): number {
+        let stack: TreeNode[] = [root!];
+        let visit = new Set<TreeNode>();
+        let res = 0;
+
+        while (stack.length) {
+            let node = stack.pop()!;
+
+            if (!visit.has(node)) {
+                stack.push(node);
+                visit.add(node);
+
+                if (node.right) {
+                    stack.push(node.right);
+                }
+                if (node.left) {
+                    stack.push(node.left);
+                }
+            } else {
+                if (node.left) {
+                    node.val += node.left.val;
+                }
+                if (node.right) {
+                    node.val += node.right.val;
+                }
+
+                visit.delete(node);
+                node.val -= 1;
+                res += Math.abs(node.val);
+            }
+        }
+
+        return res;
     }
 }
 ```

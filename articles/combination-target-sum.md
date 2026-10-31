@@ -287,6 +287,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @returns {number[][]}
+     */
+    combinationSum(nums: number[], target: number): number[][] {
+        let ans: number[][] = [];
+        let cur: number[] = [];
+        this.backtrack(nums, target, ans, cur, 0);
+        return ans;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @param {number[][]} ans
+     * @param {number[]} cur
+     * @param {number} index
+     */
+    backtrack(nums: number[], target: number, ans: number[][], cur: number[], index: number): void {
+        if (target === 0) {
+            ans.push([...cur]);
+        } else if (target < 0 || index >= nums.length) {
+            return;
+        } else {
+            cur.push(nums[index]);
+            this.backtrack(nums, target - nums[index], ans, cur, index);
+
+            cur.pop();
+            this.backtrack(nums, target, ans, cur, index + 1);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -579,6 +616,39 @@ impl Solution {
 
         dfs(&nums, target, 0, &mut vec![], 0, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @returns {number[][]}
+     */
+    combinationSum(nums: number[], target: number): number[][] {
+        const res: number[][] = [];
+        nums.sort((a, b) => a - b);
+
+        const dfs = (i: number, cur: number[], total: number): void => {
+            if (total === target) {
+                res.push([...cur]);
+                return;
+            }
+
+            for (let j = i; j < nums.length; j++) {
+                if (total + nums[j] > target) {
+                    return;
+                }
+                cur.push(nums[j]);
+                dfs(j, cur, total + nums[j]);
+                cur.pop();
+            }
+        };
+
+        dfs(0, [], 0);
+        return res;
     }
 }
 ```

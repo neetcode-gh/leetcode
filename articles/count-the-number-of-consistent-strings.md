@@ -218,6 +218,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} allowed
+     * @param {string[]} words
+     * @return {number}
+     */
+    countConsistentStrings(allowed: string, words: string[]): number {
+        let res = 0;
+
+        for (let w of words) {
+            let flag = 1;
+            for (let c of w) {
+                if (!allowed.includes(c)) {
+                    flag = 0;
+                    break;
+                }
+            }
+            res += flag;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -427,6 +453,31 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} allowed
+     * @param {string[]} words
+     * @return {number}
+     */
+    countConsistentStrings(allowed: string, words: string[]): number {
+        const allowedSet = new Set<string>(allowed);
+        let res = words.length;
+
+        for (let w of words) {
+            for (let c of w) {
+                if (!allowedSet.has(c)) {
+                    res--;
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -661,6 +712,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} allowed
+     * @param {string[]} words
+     * @return {number}
+     */
+    countConsistentStrings(allowed: string, words: string[]): number {
+        const allowedArr: boolean[] = new Array(26).fill(false);
+        for (let c of allowed) {
+            allowedArr[c.charCodeAt(0) - 97] = true;
+        }
+
+        let res = words.length;
+        for (let w of words) {
+            for (let c of w) {
+                if (!allowedArr[c.charCodeAt(0) - 97]) {
+                    res--;
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -905,6 +984,35 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} allowed
+     * @param {string[]} words
+     * @return {number}
+     */
+    countConsistentStrings(allowed: string, words: string[]): number {
+        let bitMask = 0;
+        for (let c of allowed) {
+            bitMask |= 1 << (c.charCodeAt(0) - 97);
+        }
+
+        let res = words.length;
+        for (let w of words) {
+            for (let c of w) {
+                const bit = 1 << (c.charCodeAt(0) - 97);
+                if ((bit & bitMask) === 0) {
+                    res--;
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

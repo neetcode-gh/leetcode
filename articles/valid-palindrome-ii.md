@@ -283,6 +283,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    validPalindrome(s: string): boolean {
+        if (this.isPalindrome(s)) {
+            return true;
+        }
+
+        for (let i = 0; i < s.length; i++) {
+            const newS = s.slice(0, i) + s.slice(i + 1);
+            if (this.isPalindrome(newS)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    isPalindrome(s: string): boolean {
+        let left = 0,
+            right = s.length - 1;
+        while (left < right) {
+            if (s[left] !== s[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +630,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    validPalindrome(s: string): boolean {
+        let l = 0,
+            r = s.length - 1;
+
+        while (l < r) {
+            if (s[l] !== s[r]) {
+                return (
+                    this.isPalindrome(s.slice(0, l) + s.slice(l + 1)) ||
+                    this.isPalindrome(s.slice(0, r) + s.slice(r + 1))
+                );
+            }
+            l++;
+            r--;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    isPalindrome(s: string): boolean {
+        let left = 0,
+            right = s.length - 1;
+        while (left < right) {
+            if (s[left] !== s[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -882,6 +965,49 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    validPalindrome(s: string): boolean {
+        let l = 0,
+            r = s.length - 1;
+
+        while (l < r) {
+            if (s[l] !== s[r]) {
+                return (
+                    this.isPalindrome(s, l + 1, r) ||
+                    this.isPalindrome(s, l, r - 1)
+                );
+            }
+            l++;
+            r--;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} l
+     * @param {number} r
+     * @return {boolean}
+     */
+    isPalindrome(s: string, l: number, r: number): boolean {
+        while (l < r) {
+            if (s[l] !== s[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
     }
 }
 ```

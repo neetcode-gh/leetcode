@@ -259,7 +259,7 @@ class Solution {
 //     val: i32,
 //     left: Option<Rc<RefCell<Node>>>,
 //     right: Option<Rc<RefCell<Node>>>,
-//     parent: Option<Rc<RefCell<Node>>>,
+//     parent: Option<Weak<RefCell<Node>>>,
 // }
 
 impl Solution {
@@ -271,16 +271,38 @@ impl Solution {
         let mut cur = p.clone();
         while let Some(node) = cur {
             seen.insert(Rc::as_ptr(&node) as usize);
-            cur = node.borrow().parent.clone();
+            cur = node.borrow().parent.as_ref().and_then(|w| w.upgrade());
         }
         let mut cur = q.clone();
         while let Some(node) = cur {
             if seen.contains(&(Rc::as_ptr(&node) as usize)) {
                 return Some(node);
             }
-            cur = node.borrow().parent.clone();
+            cur = node.borrow().parent.as_ref().and_then(|w| w.upgrade());
         }
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} p
+     * @param {Node} q
+     * @return {Node}
+     */
+    lowestCommonAncestor(p: Node | null, q: Node | null): Node | null {
+        const seen = new Set<Node>();
+        while (p) {
+            seen.add(p);
+            p = p.parent;
+        }
+        while (q) {
+            if (seen.has(q)) return q;
+            q = q.parent;
+        }
+        return null;
     }
 }
 ```
@@ -670,7 +692,7 @@ class Solution {
 //     val: i32,
 //     left: Option<Rc<RefCell<Node>>>,
 //     right: Option<Rc<RefCell<Node>>>,
-//     parent: Option<Rc<RefCell<Node>>>,
+//     parent: Option<Weak<RefCell<Node>>>,
 // }
 
 impl Solution {
@@ -683,7 +705,7 @@ impl Solution {
             let mut cur = node.clone();
             while let Some(n) = cur {
                 h += 1;
-                cur = n.borrow().parent.clone();
+                cur = n.borrow().parent.as_ref().and_then(|w| w.upgrade());
             }
             h
         }
@@ -698,7 +720,7 @@ impl Solution {
         let mut diff = (h1 - h2).abs();
         while diff > 0 {
             if let Some(node) = b {
-                b = node.borrow().parent.clone();
+                b = node.borrow().parent.as_ref().and_then(|w| w.upgrade());
             }
             diff -= 1;
         }
@@ -706,12 +728,50 @@ impl Solution {
             if Rc::ptr_eq(a.as_ref().unwrap(), b.as_ref().unwrap()) {
                 return a;
             }
-            let next_a = a.as_ref().unwrap().borrow().parent.clone();
-            let next_b = b.as_ref().unwrap().borrow().parent.clone();
+            let next_a = a.as_ref().unwrap().borrow().parent.as_ref().and_then(|w| w.upgrade());
+            let next_b = b.as_ref().unwrap().borrow().parent.as_ref().and_then(|w| w.upgrade());
             a = next_a;
             b = next_b;
         }
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} p
+     * @param {Node} q
+     * @return {Node}
+     */
+    lowestCommonAncestor(p: Node | null, q: Node | null): Node | null {
+        const height = (node: Node | null): number => {
+            let h = 0;
+            while (node) {
+                h++;
+                node = node.parent;
+            }
+            return h;
+        };
+
+        let h1 = height(p),
+            h2 = height(q);
+        if (h2 < h1) {
+            [p, q] = [q, p];
+            [h1, h2] = [h2, h1];
+        }
+
+        let diff = h2 - h1;
+        while (diff-- > 0) {
+            q = q!.parent;
+        }
+
+        while (p !== q) {
+            p = p!.parent;
+            q = q!.parent;
+        }
+        return p;
     }
 }
 ```
@@ -949,7 +1009,7 @@ class Solution {
 //     val: i32,
 //     left: Option<Rc<RefCell<Node>>>,
 //     right: Option<Rc<RefCell<Node>>>,
-//     parent: Option<Rc<RefCell<Node>>>,
+//     parent: Option<Weak<RefCell<Node>>>,
 // }
 
 impl Solution {
@@ -969,14 +1029,39 @@ impl Solution {
                 return ptr1;
             }
             ptr1 = match ptr1 {
-                Some(node) => node.borrow().parent.clone(),
+                Some(node) => {
+                    let parent = node.borrow().parent.as_ref().and_then(|w| w.upgrade());
+                    parent
+                }
                 None => q.clone(),
             };
             ptr2 = match ptr2 {
-                Some(node) => node.borrow().parent.clone(),
+                Some(node) => {
+                    let parent = node.borrow().parent.as_ref().and_then(|w| w.upgrade());
+                    parent
+                }
                 None => p.clone(),
             };
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} p
+     * @param {Node} q
+     * @return {Node}
+     */
+    lowestCommonAncestor(p: Node | null, q: Node | null): Node | null {
+        let ptr1 = p,
+            ptr2 = q;
+        while (ptr1 !== ptr2) {
+            ptr1 = ptr1 ? ptr1.parent : q;
+            ptr2 = ptr2 ? ptr2.parent : p;
+        }
+        return ptr1;
     }
 }
 ```

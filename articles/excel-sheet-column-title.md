@@ -141,6 +141,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} columnNumber
+     * @return {string}
+     */
+    convertToTitle(columnNumber: number): string {
+        if (columnNumber === 0) {
+            return '';
+        }
+        const n = columnNumber - 1;
+        return (
+            this.convertToTitle(Math.floor(n / 26)) +
+            String.fromCharCode('A'.charCodeAt(0) + (n % 26))
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -312,6 +331,25 @@ impl Solution {
             num /= 26;
         }
         res.iter().rev().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} columnNumber
+     * @return {string}
+     */
+    convertToTitle(columnNumber: number): string {
+        let res: string[] = [];
+        while (columnNumber > 0) {
+            columnNumber--;
+            const offset = columnNumber % 26;
+            res.push(String.fromCharCode('A'.charCodeAt(0) + offset));
+            columnNumber = Math.floor(columnNumber / 26);
+        }
+        return res.reverse().join('');
     }
 }
 ```

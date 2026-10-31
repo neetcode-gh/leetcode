@@ -310,6 +310,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @param {number} bricks
+     * @param {number} ladders
+     * @return {number}
+     */
+    furthestBuilding(heights: number[], bricks: number, ladders: number): number {
+        let n = heights.length;
+
+        for (let i = 1; i < n; i++) {
+            if (ladders >= i) {
+                continue;
+            }
+
+            let diffs: number[] = [];
+            for (let j = 0; j < i; j++) {
+                if (heights[j + 1] > heights[j]) {
+                    diffs.push(heights[j + 1] - heights[j]);
+                }
+            }
+
+            diffs.sort((a, b) => a - b);
+            let brickSum = 0;
+            for (let j = 0; j < diffs.length - ladders; j++) {
+                brickSum += diffs[j];
+            }
+
+            if (brickSum > bricks) {
+                return i - 1;
+            }
+        }
+
+        return n - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -621,7 +660,7 @@ class Solution {
 
         func canReach(_ mid: Int) -> Bool {
             var diffs = [Int]()
-            for i in 0..<mid {
+            for i in stride(from: 0, to: mid, by: 1) {
                 if heights[i + 1] > heights[i] {
                     diffs.append(heights[i + 1] - heights[i])
                 }
@@ -630,7 +669,7 @@ class Solution {
             diffs.sort()
             var brickSum = 0
 
-            for j in 0..<(diffs.count - ladders) {
+            for j in stride(from: 0, to: diffs.count - ladders, by: 1) {
                 brickSum += diffs[j]
                 if brickSum > bricks { return false }
             }
@@ -686,6 +725,53 @@ impl Solution {
         }
 
         l - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @param {number} bricks
+     * @param {number} ladders
+     * @return {number}
+     */
+    furthestBuilding(heights: number[], bricks: number, ladders: number): number {
+        let l = ladders - 1,
+            r = heights.length - 1;
+
+        const canReach = (mid: number): boolean => {
+            let diffs: number[] = [];
+            for (let i = 0; i < mid; i++) {
+                if (heights[i + 1] > heights[i]) {
+                    diffs.push(heights[i + 1] - heights[i]);
+                }
+            }
+
+            diffs.sort((a, b) => a - b);
+            let brickSum = 0;
+
+            for (let j = 0; j < diffs.length - ladders; j++) {
+                brickSum += diffs[j];
+                if (brickSum > bricks) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
+        while (l <= r) {
+            let mid = Math.floor((l + r) / 2);
+            if (canReach(mid)) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        return l - 1;
     }
 }
 ```
@@ -1124,6 +1210,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @param {number} bricks
+     * @param {number} ladders
+     * @return {number}
+     */
+    furthestBuilding(heights: number[], bricks: number, ladders: number): number {
+        let diffs: number[][] = [];
+        for (let i = 1; i < heights.length; i++) {
+            if (heights[i] > heights[i - 1]) {
+                diffs.push([heights[i] - heights[i - 1], i]);
+            }
+        }
+
+        diffs.sort((a, b) => b[0] - a[0]);
+
+        const canReach = (index: number): boolean => {
+            let useLadders = 0,
+                useBricks = 0;
+            for (let [diff, i] of diffs) {
+                if (i > index) continue;
+
+                if (useLadders < ladders) {
+                    useLadders++;
+                } else {
+                    useBricks += diff;
+                    if (useBricks > bricks) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+
+        let l = 1,
+            r = heights.length - 1;
+        while (l <= r) {
+            let mid = (l + r) >> 1;
+            if (canReach(mid)) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        return l - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1244,7 +1382,7 @@ class Solution {
             if (bricks < 0) {
                 if (ladders === 0) return i;
                 ladders--;
-                bricks += maxHeap.dequeue().element;
+                bricks += maxHeap.dequeue();
             }
         }
 
@@ -1353,24 +1491,73 @@ class Solution {
     func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
         var bricks = bricks
         var ladders = ladders
-        var maxHeap = [Int]()
+        var maxHeap = Heap<Int>(sort: >)
 
         for i in 0..<(heights.count - 1) {
             let diff = heights[i + 1] - heights[i]
             if diff <= 0 { continue }
 
             bricks -= diff
-            maxHeap.append(diff)
-            maxHeap.sort(by: >)
+            maxHeap.insert(diff)
 
             if bricks < 0 {
                 if ladders == 0 { return i }
                 ladders -= 1
-                bricks += maxHeap.removeFirst()
+                bricks += maxHeap.remove()!
             }
         }
 
         return heights.count - 1
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let sort: (T, T) -> Bool
+
+    init(sort: @escaping (T, T) -> Bool) {
+        self.sort = sort
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+    var peek: T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && sort(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < count && sort(elements[left], elements[candidate]) { candidate = left }
+            if right < count && sort(elements[right], elements[candidate]) { candidate = right }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -1401,6 +1588,36 @@ impl Solution {
         }
 
         heights.len() as i32 - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @param {number} bricks
+     * @param {number} ladders
+     * @return {number}
+     */
+    furthestBuilding(heights: number[], bricks: number, ladders: number): number {
+        const maxHeap = new MaxPriorityQueue();
+
+        for (let i = 0; i < heights.length - 1; i++) {
+            let diff = heights[i + 1] - heights[i];
+            if (diff <= 0) continue;
+
+            bricks -= diff;
+            maxHeap.enqueue(diff);
+
+            if (bricks < 0) {
+                if (ladders === 0) return i;
+                ladders--;
+                bricks += maxHeap.dequeue();
+            }
+        }
+
+        return heights.length - 1;
     }
 }
 ```
@@ -1511,7 +1728,7 @@ class Solution {
 
             minHeap.enqueue(diff);
             if (minHeap.size() > ladders) {
-                bricks -= minHeap.dequeue().element;
+                bricks -= minHeap.dequeue();
                 if (bricks < 0) return i;
             }
         }
@@ -1610,21 +1827,70 @@ class Solution {
 class Solution {
     func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
         var bricks = bricks
-        var minHeap = [Int]()
+        var minHeap = Heap<Int>(sort: <)
 
         for i in 0..<(heights.count - 1) {
             let diff = heights[i + 1] - heights[i]
             if diff <= 0 { continue }
 
-            minHeap.append(diff)
-            minHeap.sort()
+            minHeap.insert(diff)
             if minHeap.count > ladders {
-                bricks -= minHeap.removeFirst()
+                bricks -= minHeap.remove()!
                 if bricks < 0 { return i }
             }
         }
 
         return heights.count - 1
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let sort: (T, T) -> Bool
+
+    init(sort: @escaping (T, T) -> Bool) {
+        self.sort = sort
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+    var peek: T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && sort(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < count && sort(elements[left], elements[candidate]) { candidate = left }
+            if right < count && sort(elements[right], elements[candidate]) { candidate = right }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -1651,6 +1917,33 @@ impl Solution {
         }
 
         heights.len() as i32 - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @param {number} bricks
+     * @param {number} ladders
+     * @return {number}
+     */
+    furthestBuilding(heights: number[], bricks: number, ladders: number): number {
+        const minHeap = new MinPriorityQueue();
+
+        for (let i = 0; i < heights.length - 1; i++) {
+            let diff = heights[i + 1] - heights[i];
+            if (diff <= 0) continue;
+
+            minHeap.enqueue(diff);
+            if (minHeap.size() > ladders) {
+                bricks -= minHeap.dequeue();
+                if (bricks < 0) return i;
+            }
+        }
+
+        return heights.length - 1;
     }
 }
 ```

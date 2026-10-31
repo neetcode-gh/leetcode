@@ -259,6 +259,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        let n = nums.length;
+        for (let i = 0; i < n; i++) {
+            if ((i % 2 === 0 && nums[i] > 0) || (i % 2 === 1 && nums[i] < 0)) {
+                continue;
+            }
+
+            let j = i + 1;
+            while (j < n && nums[j] > 0 === nums[i] > 0) {
+                j++;
+            }
+
+            let temp = nums[j];
+            while (j > i) {
+                nums[j] = nums[j - 1];
+                j--;
+            }
+            nums[i] = temp;
+        }
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +525,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        const pos: number[] = [],
+            neg: number[] = [];
+        for (const num of nums) {
+            if (num > 0) {
+                pos.push(num);
+            } else {
+                neg.push(num);
+            }
+        }
+
+        let i = 0;
+        while (2 * i < nums.length) {
+            nums[2 * i] = pos[i];
+            nums[2 * i + 1] = neg[i];
+            i++;
+        }
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,6 +750,30 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    rearrangeArray(nums: number[]): number[] {
+        let i = 0,
+            j = 1;
+        const res: number[] = new Array(nums.length);
+        for (let k = 0; k < nums.length; k++) {
+            if (nums[k] > 0) {
+                res[i] = nums[k];
+                i += 2;
+            } else {
+                res[j] = nums[k];
+                j += 2;
+            }
+        }
+        return res;
     }
 }
 ```

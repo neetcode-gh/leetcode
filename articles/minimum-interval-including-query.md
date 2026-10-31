@@ -234,6 +234,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} queries
+     * @return {number[]}
+     */
+    minInterval(intervals: number[][], queries: number[]): number[] {
+        const res: number[] = [];
+        for (const q of queries) {
+            let cur = -1;
+            for (const [l, r] of intervals) {
+                if (l <= q && q <= r) {
+                    if (cur === -1 || r - l + 1 < cur) {
+                        cur = r - l + 1;
+                    }
+                }
+            }
+            res.push(cur);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,10 +544,10 @@ public class Solution {
 
 ```go
 type Event struct {
-	time int
-	typ  int // 0: interval start, 1: query, 2: interval end
-	val  int // interval size or query index
-	idx  int // interval index
+    time int
+    typ  int // 0: interval start, 1: query, 2: interval end
+    val  int // interval size or query index
+    idx  int // interval index
 }
 
 type MinHeap [][]int
@@ -532,63 +557,63 @@ func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
 func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
 func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([]int)) }
 func (h *MinHeap) Pop() interface{} {
-	old := *h
-	n := len(old)
-	x := old[n-1]
-	*h = old[:n-1]
-	return x
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
 }
 
 func minInterval(intervals [][]int, queries []int) []int {
-	events := []Event{}
+    events := []Event{}
 
-	// Create events for intervals
-	for idx, interval := range intervals {
-		start, end := interval[0], interval[1]
-		size := end - start + 1
-		events = append(events, Event{start, 0, size, idx})
-		events = append(events, Event{end, 2, size, idx})
-	}
+    // Create events for intervals
+    for idx, interval := range intervals {
+        start, end := interval[0], interval[1]
+        size := end - start + 1
+        events = append(events, Event{start, 0, size, idx})
+        events = append(events, Event{end, 2, size, idx})
+    }
 
-	// Create events for queries
-	for i, q := range queries {
-		events = append(events, Event{q, 1, i, -1})
-	}
+    // Create events for queries
+    for i, q := range queries {
+        events = append(events, Event{q, 1, i, -1})
+    }
 
-	// Sort events by time and type
-	sort.Slice(events, func(i, j int) bool {
-		if events[i].time == events[j].time {
-			return events[i].typ < events[j].typ
-		}
-		return events[i].time < events[j].time
-	})
+    // Sort events by time and type
+    sort.Slice(events, func(i, j int) bool {
+        if events[i].time == events[j].time {
+            return events[i].typ < events[j].typ
+        }
+        return events[i].time < events[j].time
+    })
 
-	// Priority queue to store intervals with the smallest size on top
-	sizes := &MinHeap{}
-	heap.Init(sizes)
-	ans := make([]int, len(queries))
-	for i := range ans {
-		ans[i] = -1
-	}
-	inactive := make([]bool, len(intervals))
+    // Priority queue to store intervals with the smallest size on top
+    sizes := &MinHeap{}
+    heap.Init(sizes)
+    ans := make([]int, len(queries))
+    for i := range ans {
+        ans[i] = -1
+    }
+    inactive := make([]bool, len(intervals))
 
-	for _, event := range events {
-		switch event.typ {
-		case 0: // Interval start
-			heap.Push(sizes, []int{event.val, event.idx})
-		case 2: // Interval end
-			inactive[event.idx] = true
-		case 1: // Query
-			queryIdx := event.val
-			for sizes.Len() > 0 && inactive[(*sizes)[0][1]] {
-				heap.Pop(sizes)
-			}
-			if sizes.Len() > 0 {
-				ans[queryIdx] = (*sizes)[0][0]
-			}
-		}
-	}
-	return ans
+    for _, event := range events {
+        switch event.typ {
+        case 0: // Interval start
+            heap.Push(sizes, []int{event.val, event.idx})
+        case 2: // Interval end
+            inactive[event.idx] = true
+        case 1: // Query
+            queryIdx := event.val
+            for sizes.Len() > 0 && inactive[(*sizes)[0][1]] {
+                heap.Pop(sizes)
+            }
+            if sizes.Len() > 0 {
+                ans[queryIdx] = (*sizes)[0][0]
+            }
+        }
+    }
+    return ans
 }
 ```
 
@@ -759,6 +784,57 @@ impl Solution {
         }
 
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} queries
+     * @return {number[]}
+     */
+    minInterval(intervals: number[][], queries: number[]): number[] {
+        let events: number[][] = [];
+        // Create events for intervals
+        for (let i = 0; i < intervals.length; i++) {
+            const [start, end] = intervals[i];
+            events.push([start, 0, end - start + 1, i]);
+            events.push([end, 2, end - start + 1, i]);
+        }
+
+        // Create events for queries
+        queries.forEach((q, i) => {
+            events.push([q, 1, i]);
+        });
+        // Sort by time and type (end before query)
+        events.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+
+        const ans: number[] = Array(queries.length).fill(-1);
+        // Min heap storing [size, index]
+        const pq = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]);
+        const inactive: boolean[] = Array(intervals.length).fill(false);
+
+        for (const [time, type, ...rest] of events) {
+            if (type === 0) {
+                // Interval start
+                pq.push([rest[0], rest[1]]);
+            } else if (type === 2) {
+                // Interval end
+                inactive[rest[1]] = true;
+            } else {
+                // Query
+                while (!pq.isEmpty() && inactive[pq.front()[1]]) {
+                    pq.pop();
+                }
+                if (!pq.isEmpty()) {
+                    ans[rest[0]] = pq.front()[0];
+                }
+            }
+        }
+
+        return ans;
     }
 }
 ```
@@ -1140,6 +1216,40 @@ impl Solution {
         }
 
         queries.iter().map(|q| *res.get(q).unwrap()).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} queries
+     * @return {number[]}
+     */
+    minInterval(intervals: number[][], queries: number[]): number[] {
+        intervals.sort((a, b) => a[0] - b[0]);
+        const minHeap = new MinPriorityQueue((entry: number[]) => entry[0]);
+        const res: { [key: number]: number } = {};
+        let i = 0;
+
+        const sortedQueries = [...queries].sort((a, b) => a - b);
+
+        for (const q of sortedQueries) {
+            while (i < intervals.length && intervals[i][0] <= q) {
+                const [l, r] = intervals[i];
+                minHeap.enqueue([r - l + 1, r]);
+                i += 1;
+            }
+
+            while (!minHeap.isEmpty() && minHeap.front()[1] < q) {
+                minHeap.dequeue();
+            }
+
+            res[q] = !minHeap.isEmpty() ? minHeap.front()[0] : -1;
+        }
+
+        return queries.map((q) => res[q]);
     }
 }
 ```
@@ -2098,6 +2208,149 @@ impl Solution {
                 if res == i32::MAX { -1 } else { res }
             })
             .collect()
+    }
+}
+```
+
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+    private lazy: number[];
+
+    constructor(N: number) {
+        this.n = N;
+        this.tree = new Array(4 * N).fill(Infinity);
+        this.lazy = new Array(4 * N).fill(Infinity);
+    }
+
+    /**
+     * @param {number} treeidx
+     * @param {number} lo
+     * @param {number} hi
+     * @return {void}
+     */
+    propagate(treeidx: number, lo: number, hi: number): void {
+        if (this.lazy[treeidx] !== Infinity) {
+            this.tree[treeidx] = Math.min(
+                this.tree[treeidx],
+                this.lazy[treeidx],
+            );
+            if (lo !== hi) {
+                this.lazy[2 * treeidx + 1] = Math.min(
+                    this.lazy[2 * treeidx + 1],
+                    this.lazy[treeidx],
+                );
+                this.lazy[2 * treeidx + 2] = Math.min(
+                    this.lazy[2 * treeidx + 2],
+                    this.lazy[treeidx],
+                );
+            }
+            this.lazy[treeidx] = Infinity;
+        }
+    }
+
+    /**
+     * @param {number} treeidx
+     * @param {number} lo
+     * @param {number} hi
+     * @param {number} left
+     * @param {number} right
+     * @param {number} val
+     * @return {void}
+     */
+    update(
+        treeidx: number,
+        lo: number,
+        hi: number,
+        left: number,
+        right: number,
+        val: number,
+    ): void {
+        this.propagate(treeidx, lo, hi);
+        if (lo > right || hi < left) return;
+        if (lo >= left && hi <= right) {
+            this.lazy[treeidx] = Math.min(this.lazy[treeidx], val);
+            this.propagate(treeidx, lo, hi);
+            return;
+        }
+        const mid = Math.floor((lo + hi) / 2);
+        this.update(2 * treeidx + 1, lo, mid, left, right, val);
+        this.update(2 * treeidx + 2, mid + 1, hi, left, right, val);
+        this.tree[treeidx] = Math.min(
+            this.tree[2 * treeidx + 1],
+            this.tree[2 * treeidx + 2],
+        );
+    }
+
+    /**
+     * @param {number} treeidx
+     * @param {number} lo
+     * @param {number} hi
+     * @param {number} idx
+     * @return {number}
+     */
+    query(treeidx: number, lo: number, hi: number, idx: number): number {
+        this.propagate(treeidx, lo, hi);
+        if (lo === hi) return this.tree[treeidx];
+        const mid = Math.floor((lo + hi) / 2);
+        if (idx <= mid) return this.query(2 * treeidx + 1, lo, mid, idx);
+        else return this.query(2 * treeidx + 2, mid + 1, hi, idx);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @param {number} val
+     * @return {number}
+     */
+    updateRange(left: number, right: number, val: number): void {
+        this.update(0, 0, this.n - 1, left, right, val);
+    }
+
+    /**
+     * @param {number} idx
+     * @return {number}
+     */
+    queryPoint(idx: number): number {
+        return this.query(0, 0, this.n - 1, idx);
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} queries
+     * @return {number[]}
+     */
+    minInterval(intervals: number[][], queries: number[]): number[] {
+        const points: number[] = [];
+        for (const interval of intervals) {
+            points.push(interval[0]);
+            points.push(interval[1]);
+        }
+        for (const q of queries) {
+            points.push(q);
+        }
+        const uniquePoints = [...new Set(points)].sort((a, b) => a - b);
+        const compress = new Map<number, number>();
+        uniquePoints.forEach((point, idx) => {
+            compress.set(point, idx);
+        });
+        const segTree = new SegmentTree(uniquePoints.length);
+        for (const interval of intervals) {
+            const start = compress.get(interval[0])!;
+            const end = compress.get(interval[1])!;
+            const length = interval[1] - interval[0] + 1;
+            segTree.updateRange(start, end, length);
+        }
+        const ans: number[] = [];
+        for (const q of queries) {
+            const idx = compress.get(q)!;
+            const res = segTree.queryPoint(idx);
+            ans.push(res === Infinity ? -1 : res);
+        }
+        return ans;
     }
 }
 ```

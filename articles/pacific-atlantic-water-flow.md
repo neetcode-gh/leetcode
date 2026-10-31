@@ -506,6 +506,66 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number[][]}
+     */
+    pacificAtlantic(heights: number[][]): number[][] {
+        let ROWS = heights.length,
+            COLS = heights[0].length;
+        let directions: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        let pacific = false,
+            atlantic = false;
+
+        const dfs = (r: number, c: number, prevVal: number): void => {
+            if (r < 0 || c < 0) {
+                pacific = true;
+                return;
+            }
+            if (r >= ROWS || c >= COLS) {
+                atlantic = true;
+                return;
+            }
+            if (heights[r][c] > prevVal) {
+                return;
+            }
+
+            let tmp = heights[r][c];
+            heights[r][c] = Infinity;
+            for (let [dx, dy] of directions) {
+                dfs(r + dx, c + dy, tmp);
+                if (pacific && atlantic) {
+                    break;
+                }
+            }
+            heights[r][c] = tmp;
+        };
+
+        let res: number[][] = [];
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                pacific = false;
+                atlantic = false;
+                dfs(r, c, Infinity);
+                if (pacific && atlantic) {
+                    res.push([r, c]);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -953,6 +1013,68 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number[][]}
+     */
+    pacificAtlantic(heights: number[][]): number[][] {
+        let ROWS = heights.length,
+            COLS = heights[0].length;
+        let pac: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+        let atl: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+
+        const dfs = (r: number, c: number, ocean: boolean[][]): void => {
+            ocean[r][c] = true;
+            let directions: number[][] = [
+                [1, 0],
+                [-1, 0],
+                [0, 1],
+                [0, -1],
+            ];
+            for (let [dr, dc] of directions) {
+                let nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nr < ROWS &&
+                    nc >= 0 &&
+                    nc < COLS &&
+                    !ocean[nr][nc] &&
+                    heights[nr][nc] >= heights[r][c]
+                ) {
+                    dfs(nr, nc, ocean);
+                }
+            }
+        };
+
+        for (let c = 0; c < COLS; c++) {
+            dfs(0, c, pac);
+            dfs(ROWS - 1, c, atl);
+        }
+        for (let r = 0; r < ROWS; r++) {
+            dfs(r, 0, pac);
+            dfs(r, COLS - 1, atl);
+        }
+
+        let res: number[][] = [];
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (pac[r][c] && atl[r][c]) {
+                    res.push([r, c]);
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1492,6 +1614,75 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number[][]}
+     */
+    pacificAtlantic(heights: number[][]): number[][] {
+        let ROWS = heights.length,
+            COLS = heights[0].length;
+        let directions: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        let pac: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+        let atl: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+
+        let pacQueue = new Queue();
+        let atlQueue = new Queue();
+        for (let c = 0; c < COLS; c++) {
+            pacQueue.push([0, c]);
+            atlQueue.push([ROWS - 1, c]);
+        }
+        for (let r = 0; r < ROWS; r++) {
+            pacQueue.push([r, 0]);
+            atlQueue.push([r, COLS - 1]);
+        }
+
+        const bfs = (queue: any, ocean: boolean[][], heights: number[][]): void => {
+            while (!queue.isEmpty()) {
+                let [r, c]: number[] = queue.pop();
+                ocean[r][c] = true;
+                for (let [dr, dc] of directions) {
+                    let nr = r + dr,
+                        nc = c + dc;
+                    if (
+                        nr >= 0 &&
+                        nr < ROWS &&
+                        nc >= 0 &&
+                        nc < COLS &&
+                        !ocean[nr][nc] &&
+                        heights[nr][nc] >= heights[r][c]
+                    ) {
+                        queue.push([nr, nc]);
+                    }
+                }
+            }
+        };
+        bfs(pacQueue, pac, heights);
+        bfs(atlQueue, atl, heights);
+
+        let res: number[][] = [];
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (pac[r][c] && atl[r][c]) {
+                    res.push([r, c]);
+                }
+            }
+        }
+        return res;
     }
 }
 ```

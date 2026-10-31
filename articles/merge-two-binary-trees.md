@@ -313,6 +313,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {TreeNode}
+     */
+    mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {
+        if (!root1 && !root2) {
+            return null;
+        }
+
+        const v1 = root1 ? root1.val : 0;
+        const v2 = root2 ? root2.val : 0;
+        const root = new TreeNode(v1 + v2);
+
+        root.left = this.mergeTrees(
+            root1 ? root1.left : null,
+            root2 ? root2.left : null,
+        );
+        root.right = this.mergeTrees(
+            root1 ? root1.right : null,
+            root2 ? root2.right : null,
+        );
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -583,6 +613,25 @@ impl Solution {
                 Some(n1)
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {TreeNode}
+     */
+    mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {
+        if (!root1) return root2;
+        if (!root2) return root1;
+
+        root1.val += root2.val;
+        root1.left = this.mergeTrees(root1.left, root2.left);
+        root1.right = this.mergeTrees(root1.right, root2.right);
+        return root1;
     }
 }
 ```
@@ -1064,6 +1113,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {TreeNode}
+     */
+    mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {
+        if (!root1 && !root2) return null;
+
+        let val = (root1 ? root1.val : 0) + (root2 ? root2.val : 0);
+        let root = new TreeNode(val);
+        let stack: [TreeNode | null, TreeNode | null, TreeNode][] = [
+            [root1, root2, root],
+        ];
+
+        while (stack.length) {
+            let [node1, node2, node] = stack.pop()!;
+
+            let left1 = node1 ? node1.left : null;
+            let left2 = node2 ? node2.left : null;
+            if (left1 || left2) {
+                let leftVal = (left1 ? left1.val : 0) + (left2 ? left2.val : 0);
+                node.left = new TreeNode(leftVal);
+                stack.push([left1, left2, node.left]);
+            }
+
+            let right1 = node1 ? node1.right : null;
+            let right2 = node2 ? node2.right : null;
+            if (right1 || right2) {
+                let rightVal =
+                    (right1 ? right1.val : 0) + (right2 ? right2.val : 0);
+                node.right = new TreeNode(rightVal);
+                stack.push([right1, right2, node.right]);
+            }
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1496,6 +1587,43 @@ impl Solution {
         }
 
         root1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {TreeNode}
+     */
+    mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {
+        if (!root1) return root2;
+        if (!root2) return root1;
+
+        let stack: [TreeNode | null, TreeNode | null][] = [[root1, root2]];
+
+        while (stack.length) {
+            let [node1, node2] = stack.pop()!;
+            if (!node1 || !node2) continue;
+
+            node1.val += node2.val;
+
+            if (node1.left && node2.left) {
+                stack.push([node1.left, node2.left]);
+            } else if (!node1.left) {
+                node1.left = node2.left;
+            }
+
+            if (node1.right && node2.right) {
+                stack.push([node1.right, node2.right]);
+            } else if (!node1.right) {
+                node1.right = node2.right;
+            }
+        }
+
+        return root1;
     }
 }
 ```

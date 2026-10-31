@@ -280,6 +280,9 @@ impl Solution {
         let k = k as usize;
         let mut s = s.into_bytes();
         loop {
+            if s.is_empty() {
+                break;
+            }
             let mut flag = false;
             let mut cur = s[0];
             let mut cnt = 1usize;
@@ -303,6 +306,42 @@ impl Solution {
         }
 
         String::from_utf8(s).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    removeDuplicates(s: string, k: number): string {
+        while (s) {
+            let flag = false;
+            let cur = s[0];
+            let cnt = 1;
+
+            for (let i = 1; i < s.length; i++) {
+                if (cur !== s[i]) {
+                    cnt = 0;
+                    cur = s[i];
+                }
+                cnt++;
+                if (cnt === k) {
+                    s = s.slice(0, i - cnt + 1) + s.slice(i + 1);
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag) {
+                break;
+            }
+        }
+
+        return s;
     }
 }
 ```
@@ -585,6 +624,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    removeDuplicates(s: string, k: number): string {
+        let stack: number[] = [];
+        let arr = s.split('');
+        let i = 0;
+
+        while (i < arr.length) {
+            if (i === 0 || arr[i] !== arr[i - 1]) {
+                stack.push(1);
+            } else {
+                stack[stack.length - 1]++;
+                if (stack[stack.length - 1] === k) {
+                    stack.pop();
+                    arr.splice(i - k + 1, k);
+                    i -= k;
+                }
+            }
+            i++;
+        }
+
+        return arr.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -854,6 +924,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    removeDuplicates(s: string, k: number): string {
+        const stack: [string, number][] = []; // [char, count]
+
+        for (const c of s) {
+            if (stack.length && stack[stack.length - 1][0] === c) {
+                stack[stack.length - 1][1]++;
+            } else {
+                stack.push([c, 1]);
+            }
+            if (stack[stack.length - 1][1] === k) {
+                stack.pop();
+            }
+        }
+
+        let res = '';
+        for (const [char, count] of stack) {
+            res += char.repeat(count);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1095,6 +1196,34 @@ impl Solution {
 
         arr.truncate(i);
         String::from_utf8(arr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    removeDuplicates(s: string, k: number): string {
+        let i = 0;
+        const n = s.length;
+        const count: number[] = new Array(n).fill(0);
+        const arr = s.split('');
+        for (let j = 0; j < n; j++) {
+            arr[i] = arr[j];
+            count[i] = 1;
+            if (i > 0 && arr[i - 1] === arr[j]) {
+                count[i] += count[i - 1];
+            }
+            if (count[i] === k) {
+                i -= k;
+            }
+            i++;
+        }
+        return arr.slice(0, i).join('');
     }
 }
 ```

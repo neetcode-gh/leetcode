@@ -189,6 +189,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} blocks
+     * @param {number} k
+     * @return {number}
+     */
+    minimumRecolors(blocks: string, k: number): number {
+        let res = blocks.length;
+        for (let i = 0; i <= blocks.length - k; i++) {
+            let count_w = 0;
+            for (let j = i; j < i + k; j++) {
+                if (blocks[j] === 'W') {
+                    count_w++;
+                }
+            }
+            res = Math.min(res, count_w);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +467,37 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} blocks
+     * @param {number} k
+     * @return {number}
+     */
+    minimumRecolors(blocks: string, k: number): number {
+        let count_w = 0;
+        for (let i = 0; i < k; i++) {
+            if (blocks[i] === 'W') {
+                count_w++;
+            }
+        }
+
+        let res = count_w;
+        for (let i = k; i < blocks.length; i++) {
+            if (blocks[i - k] === 'W') {
+                count_w--;
+            }
+            if (blocks[i] === 'W') {
+                count_w++;
+            }
+            res = Math.min(res, count_w);
+        }
+
+        return res;
     }
 }
 ```

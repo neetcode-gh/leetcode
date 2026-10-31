@@ -332,6 +332,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} obstacles
+     * @return {number[]}
+     */
+    longestObstacleCourseAtEachPosition(obstacles: number[]): number[] {
+        const n = obstacles.length;
+        const dp: number[][] = Array.from({ length: n }, () => new Array(n + 1).fill(-1));
+
+        const dfs = (i: number, prev: number): number => {
+            if (i < 0) {
+                return 0;
+            }
+            if (dp[i][prev] !== -1) {
+                return dp[i][prev];
+            }
+
+            let res = dfs(i - 1, prev);
+            if (prev === n || obstacles[prev] >= obstacles[i]) {
+                res = Math.max(res, 1 + dfs(i - 1, i));
+            }
+            dp[i][prev] = res;
+            return res;
+        };
+
+        dfs(n - 1, n);
+
+        const res: number[] = new Array(n).fill(1);
+        for (let i = 1; i < n; i++) {
+            res[i] = 1 + dp[i - 1][i];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -360,6 +397,9 @@ We can optimize the LIS approach using binary search. Maintain a `dp` array wher
 ::tabs-start
 
 ```python
+import bisect
+
+
 class Solution:
     def longestObstacleCourseAtEachPosition(self, obstacles: List[int]) -> List[int]:
         res = []
@@ -493,8 +533,6 @@ public class Solution {
 ```
 
 ```go
-import "sort"
-
 func longestObstacleCourseAtEachPosition(obstacles []int) []int {
     n := len(obstacles)
     res := make([]int, n)
@@ -597,6 +635,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} obstacles
+     * @return {number[]}
+     */
+    longestObstacleCourseAtEachPosition(obstacles: number[]): number[] {
+        let n = obstacles.length;
+        let res: number[] = new Array(n).fill(0);
+        let dp: number[] = new Array(n + 1).fill(1e8);
+
+        const upperBound = (dp: number[], target: number): number => {
+            let left = 0,
+                right = dp.length;
+            while (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                if (dp[mid] > target) {
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            return left;
+        };
+
+        for (let i = 0; i < n; i++) {
+            let index = upperBound(dp, obstacles[i]);
+            res[i] = index + 1;
+            dp[index] = obstacles[i];
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -625,6 +699,9 @@ This is a space-optimized version of the previous approach. Instead of prealloca
 ::tabs-start
 
 ```python
+import bisect
+
+
 class Solution:
     def longestObstacleCourseAtEachPosition(self, obstacles: List[int]) -> List[int]:
         res = []
@@ -780,8 +857,6 @@ public class Solution {
 ```
 
 ```go
-import "sort"
-
 func longestObstacleCourseAtEachPosition(obstacles []int) []int {
     n := len(obstacles)
     res := make([]int, n)
@@ -897,6 +972,47 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} obstacles
+     * @return {number[]}
+     */
+    longestObstacleCourseAtEachPosition(obstacles: number[]): number[] {
+        let n = obstacles.length;
+        let res: number[] = new Array(n).fill(0);
+        let dp: number[] = [];
+
+        const upperBound = (dp: number[], target: number): number => {
+            let left = 0,
+                right = dp.length;
+            while (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                if (dp[mid] > target) {
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            return left;
+        };
+
+        for (let i = 0; i < n; i++) {
+            let index = upperBound(dp, obstacles[i]);
+            res[i] = index + 1;
+
+            if (index === dp.length) {
+                dp.push(obstacles[i]);
+            } else {
+                dp[index] = obstacles[i];
+            }
+        }
+
+        return res;
     }
 }
 ```

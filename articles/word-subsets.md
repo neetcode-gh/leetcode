@@ -50,7 +50,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<String> wordSubsets(String[] words1, String[] words2) {
+    public String[] wordSubsets(String[] words1, String[] words2) {
         List<String> res = new ArrayList<>();
 
         for (String w1 : words1) {
@@ -75,7 +75,7 @@ public class Solution {
             if (isSubset) res.add(w1);
         }
 
-        return res;
+        return res.toArray(new String[0]);
     }
 }
 ```
@@ -152,7 +152,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<string> WordSubsets(string[] words1, string[] words2) {
+    public string[] WordSubsets(string[] words1, string[] words2) {
         List<string> res = new List<string>();
 
         foreach (string w1 in words1) {
@@ -177,7 +177,7 @@ public class Solution {
             if (isSubset) res.Add(w1);
         }
 
-        return res;
+        return res.ToArray();
     }
 }
 ```
@@ -330,6 +330,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words1
+     * @param {string[]} words2
+     * @return {string[]}
+     */
+    wordSubsets(words1: string[], words2: string[]): string[] {
+        const res: string[] = [];
+
+        for (const w1 of words1) {
+            const count1: number[] = Array(26).fill(0);
+            for (const c of w1) count1[c.charCodeAt(0) - 97]++;
+
+            let isSubset = true;
+            for (const w2 of words2) {
+                const count2: number[] = Array(26).fill(0);
+                for (const c of w2) count2[c.charCodeAt(0) - 97]++;
+
+                for (let i = 0; i < 26; i++) {
+                    if (count2[i] > count1[i]) {
+                        isSubset = false;
+                        break;
+                    }
+                }
+
+                if (!isSubset) break;
+            }
+
+            if (isSubset) res.push(w1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -385,7 +422,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<String> wordSubsets(String[] words1, String[] words2) {
+    public String[] wordSubsets(String[] words1, String[] words2) {
         int[] count2 = new int[26];
         for (String w : words2) {
             int[] countW = new int[26];
@@ -417,7 +454,7 @@ public class Solution {
             }
         }
 
-        return res;
+        return res.toArray(new String[0]);
     }
 }
 ```
@@ -499,7 +536,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<string> WordSubsets(string[] words1, string[] words2) {
+    public string[] WordSubsets(string[] words1, string[] words2) {
         int[] count2 = new int[26];
         foreach (string w in words2) {
             int[] countW = new int[26];
@@ -531,7 +568,7 @@ public class Solution {
             }
         }
 
-        return res;
+        return res.ToArray();
     }
 }
 ```
@@ -688,6 +725,48 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words1
+     * @param {string[]} words2
+     * @return {string[]}
+     */
+    wordSubsets(words1: string[], words2: string[]): string[] {
+        const count2: number[] = new Array(26).fill(0);
+        for (let w of words2) {
+            const countW: number[] = new Array(26).fill(0);
+            for (let c of w) {
+                countW[c.charCodeAt(0) - 97]++;
+            }
+            for (let i = 0; i < 26; i++) {
+                count2[i] = Math.max(count2[i], countW[i]);
+            }
+        }
+
+        const res: string[] = [];
+        for (let w of words1) {
+            const countW: number[] = new Array(26).fill(0);
+            for (let c of w) {
+                countW[c.charCodeAt(0) - 97]++;
+            }
+
+            let flag = true;
+            for (let i = 0; i < 26; i++) {
+                if (countW[i] < count2[i]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) res.push(w);
+        }
+
+        return res;
     }
 }
 ```

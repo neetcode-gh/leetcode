@@ -194,6 +194,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} flowerbed
+     * @param {number} n
+     * @return {boolean}
+     */
+    canPlaceFlowers(flowerbed: number[], n: number): boolean {
+        const f = [0, ...flowerbed, 0];
+
+        for (let i = 1; i < f.length - 1; i++) {
+            if (f[i - 1] === 0 && f[i] === 0 && f[i + 1] === 0) {
+                f[i] = 1;
+                n--;
+            }
+        }
+        return n <= 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,6 +423,31 @@ impl Solution {
 
         n -= empty / 2;
         n <= 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} flowerbed
+     * @param {number} n
+     * @return {boolean}
+     */
+    canPlaceFlowers(flowerbed: number[], n: number): boolean {
+        let empty = flowerbed[0] === 0 ? 1 : 0;
+
+        for (let f of flowerbed) {
+            if (f === 1) {
+                n -= Math.floor(Math.max(0, empty - 1) / 2);
+                empty = 0;
+            } else {
+                empty++;
+            }
+        }
+
+        n -= Math.floor(empty / 2);
+        return n <= 0;
     }
 }
 ```

@@ -243,6 +243,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} pairs
+     * @return {number}
+     */
+    findLongestChain(pairs: number[][]): number {
+        pairs.sort((a, b) => a[1] - b[1]);
+        let n = pairs.length;
+
+        const dfs = (i: number, j: number): number => {
+            if (i === n) {
+                return 0;
+            }
+
+            let res = dfs(i + 1, j);
+            if (j === -1 || pairs[j][1] < pairs[i][0]) {
+                res = Math.max(res, 1 + dfs(i + 1, i));
+            }
+
+            return res;
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -553,6 +581,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} pairs
+     * @return {number}
+     */
+    findLongestChain(pairs: number[][]): number {
+        pairs.sort((a, b) => a[1] - b[1]);
+        let n = pairs.length;
+        let dp: number[][] = Array.from({ length: n }, () =>
+            new Array(n + 1).fill(-1),
+        );
+
+        const dfs = (i: number, j: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (dp[i][j + 1] !== -1) {
+                return dp[i][j + 1];
+            }
+
+            let res = dfs(i + 1, j);
+            if (j === -1 || pairs[j][1] < pairs[i][0]) {
+                res = Math.max(res, 1 + dfs(i + 1, i));
+            }
+
+            dp[i][j + 1] = res;
+            return res;
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -774,6 +837,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} pairs
+     * @return {number}
+     */
+    findLongestChain(pairs: number[][]): number {
+        let n = pairs.length;
+        pairs.sort((a, b) => a[1] - b[1]);
+        let dp: number[] = new Array(n).fill(1);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < i; j++) {
+                if (pairs[j][1] < pairs[i][0]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+
+        return Math.max(...dp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -800,6 +887,9 @@ This approach is similar to the Longest Increasing Subsequence optimization. We 
 ::tabs-start
 
 ```python
+from bisect import bisect_left
+
+
 class Solution:
     def findLongestChain(self, pairs: List[List[int]]) -> int:
         pairs.sort(key=lambda x: x[0])
@@ -1063,6 +1153,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} pairs
+     * @return {number}
+     */
+    findLongestChain(pairs: number[][]): number {
+        pairs.sort((a, b) => a[0] - b[0]);
+        let dp: number[] = [];
+
+        const binarySearch = (target: number): number => {
+            let left = 0,
+                right = dp.length - 1;
+            while (left <= right) {
+                let mid = Math.floor((left + right) / 2);
+                if (dp[mid] < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+            return left;
+        };
+
+        for (let i = 0; i < pairs.length; i++) {
+            let pos = binarySearch(pairs[i][0]);
+            if (pos === dp.length) {
+                dp.push(pairs[i][1]);
+            } else {
+                dp[pos] = Math.min(dp[pos], pairs[i][1]);
+            }
+        }
+
+        return dp.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1258,6 +1386,29 @@ impl Solution {
         }
 
         length
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} pairs
+     * @return {number}
+     */
+    findLongestChain(pairs: number[][]): number {
+        pairs.sort((a, b) => a[1] - b[1]);
+        let length = 1;
+        let end = pairs[0][1];
+
+        for (let i = 1; i < pairs.length; i++) {
+            if (end < pairs[i][0]) {
+                length++;
+                end = pairs[i][1];
+            }
+        }
+
+        return length;
     }
 }
 ```

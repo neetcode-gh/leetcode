@@ -391,6 +391,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode[]}
+     */
+    splitListToParts(head: ListNode | null, k: number): Array<ListNode | null> {
+        let arr: ListNode[] = [];
+        for (let cur = head; cur !== null; cur = cur.next) {
+            arr.push(cur);
+        }
+
+        let N = arr.length;
+        let base_len = Math.floor(N / k),
+            remainder = N % k;
+
+        let res: Array<ListNode | null> = new Array(k).fill(null);
+        let start = 0;
+        for (let i = 0; i < k; i++) {
+            if (start < N) {
+                res[i] = arr[start];
+                let tail = start + base_len - 1;
+                if (remainder > 0) {
+                    tail++;
+                    remainder--;
+                }
+                arr[tail].next = null;
+                start = tail + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -737,7 +774,7 @@ class Solution {
         for i in 0..<k {
             res[i] = curr
             let extra = remainder > 0 ? 1 : 0
-            for _ in 0..<(baseLen - 1 + extra) {
+            for _ in stride(from: 0, to: baseLen - 1 + extra, by: 1) {
                 if curr == nil { break }
                 curr = curr?.next
             }
@@ -789,6 +826,44 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode[]}
+     */
+    splitListToParts(head: ListNode | null, k: number): Array<ListNode | null> {
+        let length = 0,
+            curr = head;
+        while (curr) {
+            curr = curr.next;
+            length++;
+        }
+
+        let baseLen = Math.floor(length / k),
+            remainder = length % k;
+        let res: Array<ListNode | null> = new Array(k).fill(null);
+        curr = head;
+
+        for (let i = 0; i < k; i++) {
+            res[i] = curr;
+            for (let j = 0; j < baseLen - 1 + (remainder > 0 ? 1 : 0); j++) {
+                if (!curr) break;
+                curr = curr.next;
+            }
+            if (curr) {
+                let temp = curr.next;
+                curr.next = null;
+                curr = temp;
+            }
+            remainder--;
+        }
+        return res;
     }
 }
 ```

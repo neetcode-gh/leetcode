@@ -282,6 +282,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} chars
+     * @return {number}
+     */
+    countCharacters(words: string[], chars: string): number {
+        const count: { [key: string]: number } = {};
+        for (const c of chars) {
+            count[c] = (count[c] || 0) + 1;
+        }
+        let res = 0;
+        for (const w of words) {
+            const curWord: { [key: string]: number } = {};
+            for (const c of w) {
+                curWord[c] = (curWord[c] || 0) + 1;
+            }
+            let good = true;
+            for (const c in curWord) {
+                if (curWord[c] > (count[c] || 0)) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+                res += w.length;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,6 +584,38 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} chars
+     * @return {number}
+     */
+    countCharacters(words: string[], chars: string): number {
+        const count: { [key: string]: number } = {};
+        for (const c of chars) {
+            count[c] = (count[c] || 0) + 1;
+        }
+        let res = 0;
+        for (const w of words) {
+            const curWord: { [key: string]: number } = {};
+            let good = true;
+            for (const c of w) {
+                curWord[c] = (curWord[c] || 0) + 1;
+                if (curWord[c] > (count[c] || 0)) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+                res += w.length;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -871,6 +937,45 @@ impl Solution {
             count = org;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} chars
+     * @return {number}
+     */
+    countCharacters(words: string[], chars: string): number {
+        const count: number[] = new Array(26).fill(0);
+        for (let c of chars) {
+            count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        const org = [...count];
+        let res = 0;
+
+        for (let w of words) {
+            let good = true;
+            for (let c of w) {
+                const i = c.charCodeAt(0) - 'a'.charCodeAt(0);
+                count[i]--;
+                if (count[i] < 0) {
+                    good = false;
+                    break;
+                }
+            }
+
+            if (good) {
+                res += w.length;
+            }
+            for (let i = 0; i < 26; i++) {
+                count[i] = org[i];
+            }
+        }
+        return res;
     }
 }
 ```

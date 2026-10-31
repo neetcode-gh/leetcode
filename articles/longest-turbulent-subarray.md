@@ -312,6 +312,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maxTurbulenceSize(arr: number[]): number {
+        const n = arr.length;
+        let res = 1;
+
+        for (let i = 0; i < n - 1; i++) {
+            if (arr[i] === arr[i + 1]) continue;
+
+            let sign = arr[i] > arr[i + 1] ? 1 : 0;
+            let j = i + 1;
+
+            while (j < n - 1) {
+                if (arr[j] === arr[j + 1]) break;
+
+                let curSign = arr[j] > arr[j + 1] ? 1 : 0;
+                if (sign === curSign) break;
+
+                sign = curSign;
+                j++;
+            }
+
+            res = Math.max(res, j - i + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,6 +700,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maxTurbulenceSize(arr: number[]): number {
+        const n = arr.length;
+        const memo: number[][] = Array.from({ length: n }, () => [-1, -1]);
+
+        const dfs = (i: number, sign: boolean): number => {
+            const signIndex = sign ? 1 : 0;
+            if (i === n - 1) return 1;
+            if (memo[i][signIndex] !== -1) {
+                return memo[i][signIndex];
+            }
+
+            let res = 1;
+            if (
+                (sign && arr[i] > arr[i + 1]) ||
+                (!sign && arr[i] < arr[i + 1])
+            ) {
+                res = 1 + dfs(i + 1, !sign);
+            }
+
+            memo[i][signIndex] = res;
+            return res;
+        };
+
+        let maxLen = 1;
+        for (let i = 0; i < n; i++) {
+            maxLen = Math.max(maxLen, dfs(i, true), dfs(i, false));
+        }
+
+        return maxLen;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -920,6 +993,33 @@ impl Solution {
             max_len = max_len.max(dp[i][0].max(dp[i][1]));
         }
         max_len
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maxTurbulenceSize(arr: number[]): number {
+        const n = arr.length;
+        if (n === 1) return 1;
+
+        const dp: number[][] = Array.from({ length: n }, () => [1, 1]);
+
+        let maxLen = 1;
+        for (let i = 1; i < n; i++) {
+            if (arr[i] > arr[i - 1]) {
+                dp[i][1] = dp[i - 1][0] + 1;
+            } else if (arr[i] < arr[i - 1]) {
+                dp[i][0] = dp[i - 1][1] + 1;
+            }
+            maxLen = Math.max(maxLen, dp[i][0], dp[i][1]);
+        }
+
+        return maxLen;
     }
 }
 ```
@@ -1207,6 +1307,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maxTurbulenceSize(arr: number[]): number {
+        let l = 0,
+            r = 1,
+            res = 1,
+            prev = '';
+
+        while (r < arr.length) {
+            if (arr[r - 1] > arr[r] && prev !== '>') {
+                res = Math.max(res, r - l + 1);
+                r++;
+                prev = '>';
+            } else if (arr[r - 1] < arr[r] && prev !== '<') {
+                res = Math.max(res, r - l + 1);
+                r++;
+                prev = '<';
+            } else {
+                r = arr[r] === arr[r - 1] ? r + 1 : r;
+                l = r - 1;
+                prev = '';
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1480,6 +1613,38 @@ impl Solution {
             res = res.max(cnt);
         }
         res + 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maxTurbulenceSize(arr: number[]): number {
+        const n = arr.length;
+        let res = 0,
+            cnt = 0,
+            sign = -1;
+
+        for (let i = 0; i < n - 1; i++) {
+            if (arr[i] > arr[i + 1]) {
+                cnt = sign === 0 ? cnt + 1 : 1;
+                sign = 1;
+            } else if (arr[i] < arr[i + 1]) {
+                cnt = sign === 1 ? cnt + 1 : 1;
+                sign = 0;
+            } else {
+                cnt = 0;
+                sign = -1;
+            }
+
+            res = Math.max(res, cnt);
+        }
+
+        return res + 1;
     }
 }
 ```

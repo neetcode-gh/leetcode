@@ -387,6 +387,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} vals
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    numberOfGoodPaths(vals: number[], edges: number[][]): number {
+        const n = vals.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const dfs = (node: number, startNode: number, parent: number): number => {
+            if (vals[node] > vals[startNode]) {
+                return 0;
+            }
+
+            let res = 0;
+            if (vals[node] === vals[startNode] && node >= startNode) {
+                res += 1;
+            }
+
+            for (const child of adj[node]) {
+                if (child === parent) continue;
+                res += dfs(child, startNode, node);
+            }
+            return res;
+        };
+
+        let res = 0;
+        for (let node = 0; node < n; node++) {
+            res += dfs(node, node, -1);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,8 +590,8 @@ class Solution {
             const visited = new Set([startNode]);
             let count = 0;
 
-            while (q.length) {
-                let node = q.shift();
+            while (!q.isEmpty()) {
+                let node = q.pop();
                 if (vals[node] === vals[startNode] && node >= startNode) {
                     count++;
                 }
@@ -765,6 +807,49 @@ impl Solution {
             res += count;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} vals
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    numberOfGoodPaths(vals: number[], edges: number[][]): number {
+        const n = vals.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        let res = 0;
+        for (let startNode = 0; startNode < n; startNode++) {
+            const q = new Queue([startNode]);
+            const visited = new Set<number>([startNode]);
+            let count = 0;
+
+            while (!q.isEmpty()) {
+                let node: number = q.pop();
+                if (vals[node] === vals[startNode] && node >= startNode) {
+                    count++;
+                }
+
+                for (const child of adj[node]) {
+                    if (!visited.has(child) && vals[child] <= vals[startNode]) {
+                        visited.add(child);
+                        q.push(child);
+                    }
+                }
+            }
+
+            res += count;
+        }
+        return res;
     }
 }
 ```
@@ -1448,6 +1533,96 @@ impl Solution {
 }
 ```
 
+```typescript
+class DSU {
+    private parent: number[];
+    private size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.size = new Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} u=v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.size[pu] >= this.size[pv]) {
+            this.size[pu] += this.size[pv];
+            this.parent[pv] = pu;
+        } else {
+            this.size[pv] += this.size[pu];
+            this.parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} vals
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    numberOfGoodPaths(vals: number[], edges: number[][]): number {
+        const n = vals.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const valToIndex = new Map<number, number[]>();
+        for (let i = 0; i < n; i++) {
+            if (!valToIndex.has(vals[i])) valToIndex.set(vals[i], []);
+            valToIndex.get(vals[i])!.push(i);
+        }
+
+        const dsu = new DSU(n);
+        let res = 0;
+
+        for (const [val, nodes] of [...valToIndex.entries()].sort(
+            (a, b) => a[0] - b[0],
+        )) {
+            for (const i of nodes) {
+                for (const nei of adj[i]) {
+                    if (vals[nei] <= vals[i]) dsu.union(nei, i);
+                }
+            }
+
+            const count = new Map<number, number>();
+            for (const i of nodes) {
+                const root = dsu.find(i);
+                count.set(root, (count.get(root) || 0) + 1);
+                res += count.get(root)!;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1996,6 +2171,86 @@ impl Solution {
             res += dsu.union(edge[0] as usize, edge[1] as usize);
         }
         res
+    }
+}
+```
+
+```typescript
+class DSU {
+    private parent: number[];
+    private vals: number[];
+    private count: number[];
+
+    /**
+     * @param {number} n
+     * @param {number[]} vals
+     */
+    constructor(n: number, vals: number[]) {
+        this.parent = Array(n)
+            .fill(0)
+            .map((_, i) => i);
+        this.vals = vals;
+        this.count = Array(n).fill(1); // count of nodes with max value of the component
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {number}
+     */
+    union(u: number, v: number): number {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) {
+            return 0;
+        }
+        if (this.vals[pu] < this.vals[pv]) {
+            this.parent[pu] = pv;
+        } else if (this.vals[pu] > this.vals[pv]) {
+            this.parent[pv] = pu;
+        } else {
+            this.parent[pv] = pu;
+            let result = this.count[pu] * this.count[pv];
+            this.count[pu] += this.count[pv];
+            return result;
+        }
+        return 0;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} vals
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    numberOfGoodPaths(vals: number[], edges: number[][]): number {
+        let n = vals.length;
+        let dsu = new DSU(n, vals);
+
+        // Sort edges based on max value of the two nodes
+        edges.sort(
+            (a, b) =>
+                Math.max(vals[a[0]], vals[a[1]]) -
+                Math.max(vals[b[0]], vals[b[1]]),
+        );
+
+        let res = n; // Each node alone is a good path
+        for (let [u, v] of edges) {
+            res += dsu.union(u, v);
+        }
+        return res;
     }
 }
 ```

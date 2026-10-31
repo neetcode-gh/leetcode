@@ -461,6 +461,53 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} equations
+     * @param {number[]} values
+     * @param {string[][]} queries
+     * @return {number[]}
+     */
+    calcEquation(equations: string[][], values: number[], queries: string[][]): number[] {
+        const adj = new Map<string, [string, number][]>(); // Map a -> list of [b, a/b]
+
+        for (let i = 0; i < equations.length; i++) {
+            const [a, b] = equations[i];
+            if (!adj.has(a)) adj.set(a, []);
+            if (!adj.has(b)) adj.set(b, []);
+            adj.get(a)!.push([b, values[i]]);
+            adj.get(b)!.push([a, 1 / values[i]]);
+        }
+
+        const bfs = (src: string, target: string): number => {
+            if (!adj.has(src) || !adj.has(target)) return -1;
+
+            const queue = new Queue([[src, 1.0]]);
+            const visited = new Set<string>();
+            visited.add(src);
+
+            while (!queue.isEmpty()) {
+                const [node, weight]: [string, number] = queue.pop();
+
+                if (node === target) return weight;
+
+                for (const [nei, neiWeight] of adj.get(node)!) {
+                    if (!visited.has(nei)) {
+                        visited.add(nei);
+                        queue.push([nei, weight * neiWeight]);
+                    }
+                }
+            }
+
+            return -1;
+        };
+
+        return queries.map(([src, target]) => bfs(src, target));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -886,6 +933,48 @@ impl Solution {
                 dfs(&q[0], &q[1], &adj, &mut visited)
             })
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} equations
+     * @param {number[]} values
+     * @param {string[][]} queries
+     * @return {number[]}
+     */
+    calcEquation(equations: string[][], values: number[], queries: string[][]): number[] {
+        const adj = new Map<string, [string, number][]>(); // Map a -> list of [b, a/b]
+
+        for (let i = 0; i < equations.length; i++) {
+            const [a, b] = equations[i];
+            if (!adj.has(a)) adj.set(a, []);
+            if (!adj.has(b)) adj.set(b, []);
+            adj.get(a)!.push([b, values[i]]);
+            adj.get(b)!.push([a, 1 / values[i]]);
+        }
+
+        const dfs = (src: string, target: string, visited: Set<string>): number => {
+            if (!adj.has(src) || !adj.has(target)) return -1;
+            if (src === target) return 1;
+
+            visited.add(src);
+
+            for (const [nei, weight] of adj.get(src)!) {
+                if (!visited.has(nei)) {
+                    const result = dfs(nei, target, visited);
+                    if (result !== -1) {
+                        return weight * result;
+                    }
+                }
+            }
+
+            return -1;
+        };
+
+        return queries.map(([src, target]) => dfs(src, target, new Set()));
     }
 }
 ```
@@ -1501,6 +1590,101 @@ impl Solution {
 }
 ```
 
+```typescript
+class UnionFind {
+    private parent: Map<string, string>;
+    private weight: Map<string, number>;
+
+    constructor() {
+        this.parent = new Map();
+        this.weight = new Map();
+    }
+
+    /**
+     * @param {string} x
+     * @return {void}
+     */
+    add(x: string): void {
+        if (!this.parent.has(x)) {
+            this.parent.set(x, x);
+            this.weight.set(x, 1.0);
+        }
+    }
+
+    /**
+     * @param {string} x
+     * @return {string}
+     */
+    find(x: string): string {
+        if (x !== this.parent.get(x)) {
+            const origParent = this.parent.get(x)!;
+            this.parent.set(x, this.find(origParent));
+            this.weight.set(
+                x,
+                this.weight.get(x)! * this.weight.get(origParent)!,
+            );
+        }
+        return this.parent.get(x)!;
+    }
+
+    /**
+     * @param {string} x
+     * @param {string} y
+     * @param {number} value
+     * @return {number}
+     */
+    union(x: string, y: string, value: number): void {
+        this.add(x);
+        this.add(y);
+        const rootX = this.find(x);
+        const rootY = this.find(y);
+
+        if (rootX !== rootY) {
+            this.parent.set(rootX, rootY);
+            this.weight.set(
+                rootX,
+                (value * this.weight.get(y)!) / this.weight.get(x)!,
+            );
+        }
+    }
+
+    /**
+     * @param {string} x
+     * @param {string} y
+     * @return {number}
+     */
+    getRatio(x: string, y: string): number {
+        if (
+            !this.parent.has(x) ||
+            !this.parent.has(y) ||
+            this.find(x) !== this.find(y)
+        ) {
+            return -1.0;
+        }
+        return this.weight.get(x)! / this.weight.get(y)!;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[][]} equations
+     * @param {number[]} values
+     * @param {string[][]} queries
+     * @return {number[]}
+     */
+    calcEquation(equations: string[][], values: number[], queries: string[][]): number[] {
+        const uf = new UnionFind();
+
+        for (let i = 0; i < equations.length; i++) {
+            const [a, b] = equations[i];
+            uf.union(a, b, values[i]);
+        }
+
+        return queries.map(([a, b]) => uf.getRatio(a, b));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1878,6 +2062,49 @@ impl Solution {
                     .unwrap_or(-1.0)
             })
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} equations
+     * @param {number[]} values
+     * @param {string[][]} queries
+     * @return {number[]}
+     */
+    calcEquation(equations: string[][], values: number[], queries: string[][]): number[] {
+        const graph = new Map<string, Map<string, number>>();
+
+        for (let i = 0; i < equations.length; i++) {
+            const [a, b] = equations[i];
+            const value = values[i];
+            if (!graph.has(a)) graph.set(a, new Map());
+            if (!graph.has(b)) graph.set(b, new Map());
+            graph.get(a)!.set(b, value);
+            graph.get(b)!.set(a, 1 / value);
+        }
+
+        for (const k of graph.keys()) {
+            for (const i of graph.get(k)!.keys()) {
+                for (const j of graph.get(k)!.keys()) {
+                    if (!graph.get(i)!.has(j)) {
+                        graph
+                            .get(i)!
+                            .set(j, graph.get(i)!.get(k)! * graph.get(k)!.get(j)!);
+                    }
+                }
+            }
+        }
+
+        return queries.map(([a, b]) => {
+            if (graph.has(a) && graph.get(a)!.has(b)) {
+                return graph.get(a)!.get(b)!;
+            } else {
+                return -1.0;
+            }
+        });
     }
 }
 ```

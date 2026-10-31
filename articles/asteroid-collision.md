@@ -255,6 +255,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} asteroids
+     * @return {number[]}
+     */
+    asteroidCollision(asteroids: number[]): number[] {
+        const stack: number[] = [];
+        for (let a of asteroids) {
+            while (stack.length && a < 0 && stack[stack.length - 1] > 0) {
+                const diff = a + stack[stack.length - 1];
+                if (diff < 0) {
+                    stack.pop();
+                } else if (diff > 0) {
+                    a = 0;
+                } else {
+                    a = 0;
+                    stack.pop();
+                }
+            }
+            if (a !== 0) {
+                stack.push(a);
+            }
+        }
+        return stack;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -514,7 +543,7 @@ class Solution {
             }
         }
 
-        return Array(asteroids[0...(j >= 0 ? j : -1)])
+        return Array(asteroids[0..<(j + 1)])
     }
 }
 ```
@@ -546,6 +575,39 @@ impl Solution {
         }
 
         arr[..((j + 1) as usize)].to_vec()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} asteroids
+     * @return {number[]}
+     */
+    asteroidCollision(asteroids: number[]): number[] {
+        let n = asteroids.length;
+        let j = -1;
+
+        for (let a of asteroids) {
+            while (j >= 0 && asteroids[j] > 0 && a < 0) {
+                if (asteroids[j] > Math.abs(a)) {
+                    a = 0;
+                    break;
+                } else if (asteroids[j] === Math.abs(a)) {
+                    j--;
+                    a = 0;
+                    break;
+                } else {
+                    j--;
+                }
+            }
+            if (a !== 0) {
+                asteroids[++j] = a;
+            }
+        }
+
+        return asteroids.slice(0, j + 1);
     }
 }
 ```

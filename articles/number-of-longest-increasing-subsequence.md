@@ -270,7 +270,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+    pub fn find_number_of_l_i_s(nums: Vec<i32>) -> i32 {
         let mut lis = 0;
         let mut res = 0;
 
@@ -294,6 +294,38 @@ impl Solution {
             dfs(&nums, i, 1, &mut lis, &mut res);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findNumberOfLIS(nums: number[]): number {
+        let LIS = 0;
+        let res = 0;
+
+        const dfs = (i: number, length: number): void => {
+            if (LIS < length) {
+                LIS = length;
+                res = 1;
+            } else if (LIS === length) {
+                res++;
+            }
+
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[j] <= nums[i]) continue;
+                dfs(j, length + 1);
+            }
+        };
+
+        for (let i = 0; i < nums.length; i++) {
+            dfs(i, 1);
+        }
+        return res;
     }
 }
 ```
@@ -658,7 +690,7 @@ class Solution {
                 lenLIS = maxLen
                 res = maxCnt
             } else if maxLen == lenLIS {
-                res += maxCnt
+                res &+= maxCnt
             }
         }
         return res
@@ -678,7 +710,7 @@ class Solution {
                     maxLen = 1 + length
                     maxCnt = count
                 } else if 1 + length == maxLen {
-                    maxCnt += count
+                    maxCnt &+= count
                 }
             }
         }
@@ -690,7 +722,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+    pub fn find_number_of_l_i_s(nums: Vec<i32>) -> i32 {
         let n = nums.len();
         let mut dp = vec![[-1i32, -1i32]; n];
 
@@ -730,6 +762,52 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findNumberOfLIS(nums: number[]): number {
+        const dp = new Map<number, number[]>();
+
+        const dfs = (i: number): void => {
+            if (dp.has(i)) return;
+
+            let maxLen = 1,
+                maxCnt = 1;
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[j] > nums[i]) {
+                    dfs(j);
+                    const [length, count] = dp.get(j)!;
+                    if (1 + length > maxLen) {
+                        maxLen = 1 + length;
+                        maxCnt = count;
+                    } else if (1 + length === maxLen) {
+                        maxCnt += count;
+                    }
+                }
+            }
+            dp.set(i, [maxLen, maxCnt]);
+        };
+
+        let lenLIS = 0,
+            res = 0;
+        for (let i = 0; i < nums.length; i++) {
+            dfs(i);
+            const [maxLen, maxCnt] = dp.get(i)!;
+            if (maxLen > lenLIS) {
+                lenLIS = maxLen;
+                res = maxCnt;
+            } else if (maxLen === lenLIS) {
+                res += maxCnt;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1032,7 +1110,7 @@ class Solution {
                         maxLen = length + 1
                         maxCnt = count
                     } else if length + 1 == maxLen {
-                        maxCnt += count
+                        maxCnt &+= count
                     }
                 }
             }
@@ -1041,7 +1119,7 @@ class Solution {
                 lenLIS = maxLen
                 res = maxCnt
             } else if maxLen == lenLIS {
-                res += maxCnt
+                res &+= maxCnt
             }
             dp[i][0] = maxLen
             dp[i][1] = maxCnt
@@ -1053,7 +1131,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+    pub fn find_number_of_l_i_s(nums: Vec<i32>) -> i32 {
         let n = nums.len();
         let mut dp = vec![[0i32; 2]; n];
         let mut len_lis = 0;
@@ -1085,6 +1163,46 @@ impl Solution {
             dp[i][1] = max_cnt;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findNumberOfLIS(nums: number[]): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n }, () => [0, 0]);
+        let lenLIS = 0,
+            res = 0;
+
+        for (let i = n - 1; i >= 0; i--) {
+            let maxLen = 1,
+                maxCnt = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (nums[j] > nums[i]) {
+                    const [length, count] = dp[j];
+                    if (length + 1 > maxLen) {
+                        maxLen = length + 1;
+                        maxCnt = count;
+                    } else if (length + 1 === maxLen) {
+                        maxCnt += count;
+                    }
+                }
+            }
+
+            if (maxLen > lenLIS) {
+                lenLIS = maxLen;
+                res = maxCnt;
+            } else if (maxLen === lenLIS) {
+                res += maxCnt;
+            }
+            dp[i] = [maxLen, maxCnt];
+        }
+        return res;
     }
 }
 ```
@@ -1327,7 +1445,7 @@ class Solution {
                     r = mid - 1;
                 }
             }
-            return dp[i][dp[i].length - 1][1] - dp[i][j][1];
+            return (dp[i][dp[i].length - 1][1] - dp[i][j][1]) | 0;
         };
 
         for (let i = 1; i < nums.length; i++) {
@@ -1342,7 +1460,7 @@ class Solution {
             } else {
                 const j = bs1(num);
                 const count = bs2(j - 1, num);
-                dp[j].push([num, dp[j][dp[j].length - 1][1] + count]);
+                dp[j].push([num, (dp[j][dp[j].length - 1][1] + count) | 0]);
             }
         }
 
@@ -1552,7 +1670,7 @@ class Solution {
                 let j = bs1(num)
                 let count = bs2(j - 1, num)
                 let last = dp[j][dp[j].count - 1]
-                dp[j].append([num, last[1] + count])
+                dp[j].append([num, last[1] &+ count])
             }
         }
 
@@ -1589,14 +1707,14 @@ class Solution {
                 r = mid - 1
             }
         }
-        return dp[i][dp[i].count - 1][1] - dp[i][j][1]
+        return dp[i][dp[i].count - 1][1] &- dp[i][j][1]
     }
 }
 ```
 
 ```rust
 impl Solution {
-    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+    pub fn find_number_of_l_i_s(nums: Vec<i32>) -> i32 {
         let mut dp: Vec<Vec<[i32; 2]>> = vec![vec![[0, 0], [nums[0], 1]]];
         let mut lis = 1usize;
 
@@ -1649,6 +1767,75 @@ impl Solution {
         }
 
         dp.last().unwrap().last().unwrap()[1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findNumberOfLIS(nums: number[]): number {
+        const dp: number[][][] = [
+            [
+                [0, 0],
+                [nums[0], 1],
+            ],
+        ];
+        let LIS = 1;
+
+        const bs1 = (num: number): number => {
+            let l = 0,
+                r = dp.length - 1,
+                j = dp.length - 1;
+            while (l <= r) {
+                const mid = Math.floor((l + r) / 2);
+                if (dp[mid][dp[mid].length - 1][0] < num) {
+                    l = mid + 1;
+                } else {
+                    j = mid;
+                    r = mid - 1;
+                }
+            }
+            return j;
+        };
+
+        const bs2 = (i: number, num: number): number => {
+            if (i < 0) return 1;
+            let l = 1,
+                r = dp[i].length - 1,
+                j = 0;
+            while (l <= r) {
+                const mid = Math.floor((l + r) / 2);
+                if (dp[i][mid][0] >= num) {
+                    j = mid;
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            return (dp[i][dp[i].length - 1][1] - dp[i][j][1]) | 0;
+        };
+
+        for (let i = 1; i < nums.length; i++) {
+            const num = nums[i];
+            if (num > dp[dp.length - 1][dp[dp.length - 1].length - 1][0]) {
+                const count = bs2(LIS - 1, num);
+                dp.push([
+                    [0, 0],
+                    [num, count],
+                ]);
+                LIS++;
+            } else {
+                const j = bs1(num);
+                const count = bs2(j - 1, num);
+                dp[j].push([num, (dp[j][dp[j].length - 1][1] + count) | 0]);
+            }
+        }
+
+        return dp[dp.length - 1][dp[dp.length - 1].length - 1][1];
     }
 }
 ```

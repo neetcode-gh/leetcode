@@ -164,6 +164,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    containsNearbyDuplicate(nums: number[], k: number): boolean {
+        for (let L = 0; L < nums.length; L++) {
+            for (let R = L + 1; R < Math.min(nums.length, L + k + 1); R++) {
+                if (nums[L] === nums[R]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,6 +363,28 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    containsNearbyDuplicate(nums: number[], k: number): boolean {
+        const map = new Map<number, number>();
+
+        for (let i = 0; i < nums.length; i++) {
+            if (map.has(nums[i]) && i - map.get(nums[i])! <= k) {
+                return true;
+            }
+            map.set(nums[i], i);
+        }
+
+        return false;
     }
 }
 ```
@@ -566,6 +608,32 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    containsNearbyDuplicate(nums: number[], k: number): boolean {
+        let window = new Set<number>();
+        let L = 0;
+
+        for (let R = 0; R < nums.length; R++) {
+            if (R - L > k) {
+                window.delete(nums[L]);
+                L++;
+            }
+            if (window.has(nums[R])) {
+                return true;
+            }
+            window.add(nums[R]);
+        }
+        return false;
     }
 }
 ```

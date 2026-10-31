@@ -312,6 +312,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    rob(root: TreeNode | null): number {
+        if (!root) {
+            return 0;
+        }
+
+        let res = root.val;
+        if (root.left) {
+            res += this.rob(root.left.left) + this.rob(root.left.right);
+        }
+        if (root.right) {
+            res += this.rob(root.right.left) + this.rob(root.right.right);
+        }
+
+        res = Math.max(res, this.rob(root.left) + this.rob(root.right));
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -706,6 +731,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    rob(root: TreeNode | null): number {
+        const cache = new Map<TreeNode | null, number>();
+        cache.set(null, 0);
+
+        const dfs = (root: TreeNode | null): number => {
+            if (cache.has(root)) {
+                return cache.get(root)!;
+            }
+
+            let res = root!.val;
+            if (root!.left) {
+                res += dfs(root!.left.left) + dfs(root!.left.right);
+            }
+            if (root!.right) {
+                res += dfs(root!.right.left) + dfs(root!.right.right);
+            }
+
+            res = Math.max(res, dfs(root!.left) + dfs(root!.right));
+            cache.set(root, res);
+            return res;
+        };
+
+        return dfs(root);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1039,6 +1097,33 @@ impl Solution {
         }
         let result = dfs(&root);
         result.0.max(result.1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    rob(root: TreeNode | null): number {
+        const dfs = (node: TreeNode | null): number[] => {
+            if (!node) {
+                return [0, 0];
+            }
+
+            const leftPair = dfs(node.left);
+            const rightPair = dfs(node.right);
+
+            const withRoot = node.val + leftPair[1] + rightPair[1];
+            const withoutRoot = Math.max(...leftPair) + Math.max(...rightPair);
+
+            return [withRoot, withoutRoot];
+        };
+
+        const result = dfs(root);
+        return Math.max(...result);
     }
 }
 ```

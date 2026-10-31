@@ -343,6 +343,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    tree2str(root: TreeNode | null): string {
+        if (!root) {
+            return '';
+        }
+
+        const cur = root.val.toString();
+        const left = this.tree2str(root.left);
+        const right = this.tree2str(root.right);
+
+        if (left && right) {
+            return `${cur}(${left})(${right})`;
+        }
+
+        if (right) {
+            return `${cur}()(${right})`;
+        }
+
+        if (left) {
+            return `${cur}(${left})`;
+        }
+
+        return cur;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -624,6 +656,34 @@ impl Solution {
         preorder(&root, &mut res);
         // Remove outer parentheses
         res[1..res.len() - 1].to_string()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    tree2str(root: TreeNode | null): string {
+        let res: string[] = [];
+
+        const preorder = (root: TreeNode | null): void => {
+            if (!root) return;
+
+            res.push('(');
+            res.push(root.val.toString());
+            if (!root.left && root.right) {
+                res.push('()');
+            }
+            preorder(root.left);
+            preorder(root.right);
+            res.push(')');
+        };
+
+        preorder(root);
+        return res.join('').slice(1, -1);
     }
 }
 ```
@@ -945,7 +1005,7 @@ class Solution {
                 stack.addLast(cur)
                 cur = cur.left
             } else {
-                val top = stack.last()
+                val top = stack.peekLast()
                 if (top.right != null && lastVisited != top.right) {
                     cur = top.right
                 } else {
@@ -1047,6 +1107,48 @@ impl Solution {
         }
 
         res[1..res.len() - 1].to_string()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    tree2str(root: TreeNode | null): string {
+        if (!root) {
+            return '';
+        }
+
+        let res: string[] = [];
+        let stack: TreeNode[] = [];
+        let lastVisited: TreeNode | null = null;
+        let cur: TreeNode | null = root;
+
+        while (cur || stack.length > 0) {
+            if (cur) {
+                res.push(`(${cur.val}`);
+                if (!cur.left && cur.right) {
+                    res.push('()');
+                }
+
+                stack.push(cur);
+                cur = cur.left;
+            } else {
+                let top = stack[stack.length - 1];
+                if (top.right && lastVisited !== top.right) {
+                    cur = top.right;
+                } else {
+                    stack.pop();
+                    res.push(')');
+                    lastVisited = top;
+                }
+            }
+        }
+
+        return res.join('').slice(1, -1);
     }
 }
 ```

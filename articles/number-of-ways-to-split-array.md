@@ -263,6 +263,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    waysToSplitArray(nums: number[]): number {
+        let n = nums.length;
+        let res = 0;
+
+        for (let i = 0; i < n - 1; i++) {
+            let leftSum = 0;
+            for (let j = 0; j <= i; j++) {
+                leftSum += nums[j];
+            }
+
+            let rightSum = 0;
+            for (let j = i + 1; j < n; j++) {
+                rightSum += nums[j];
+            }
+
+            if (leftSum >= rightSum) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -503,6 +534,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    waysToSplitArray(nums: number[]): number {
+        const n = nums.length;
+        const prefix: number[] = Array(n + 1).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        let res = 0;
+        for (let i = 1; i < n; i++) {
+            const left = prefix[i];
+            const right = prefix[n] - prefix[i];
+            if (left >= right) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,6 +769,30 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    waysToSplitArray(nums: number[]): number {
+        let right = nums.reduce((a, b) => a + b, 0);
+        let left = 0,
+            res = 0;
+
+        for (let i = 0; i < nums.length - 1; i++) {
+            left += nums[i];
+            right -= nums[i];
+            if (left >= right) {
+                res++;
+            }
+        }
+
+        return res;
     }
 }
 ```

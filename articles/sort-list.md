@@ -157,6 +157,42 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SortList(ListNode head) {
+        if (head == null) return null;
+
+        List<int> arr = new List<int>();
+        ListNode cur = head;
+
+        while (cur != null) {
+            arr.Add(cur.val);
+            cur = cur.next;
+        }
+
+        arr.Sort();
+        cur = head;
+        foreach (int val in arr) {
+            cur.val = val;
+            cur = cur.next;
+        }
+
+        return head;
+    }
+}
+```
+
 ```go
 /**
  * Definition for singly-linked list.
@@ -282,6 +318,35 @@ impl Solution {
             tail = tail.next.as_mut().unwrap();
         }
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    sortList(head: ListNode | null): ListNode | null {
+        if (!head) return null;
+
+        let arr: number[] = [];
+        let cur: ListNode | null = head;
+
+        while (cur) {
+            arr.push(cur.val);
+            cur = cur.next;
+        }
+
+        arr.sort((a, b) => a - b);
+        cur = head;
+        for (let val of arr) {
+            cur!.val = val;
+            cur = cur!.next;
+        }
+
+        return head;
     }
 }
 ```
@@ -875,6 +940,74 @@ impl Solution {
         }
         tail.next = if l1.is_some() { l1 } else { l2 };
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    sortList(head: ListNode | null): ListNode | null {
+        if (!head || !head.next) {
+            return head;
+        }
+
+        let left: ListNode | null = head;
+        let right: ListNode | null = this.getMid(head);
+        let temp = right.next;
+        right.next = null;
+        right = temp;
+
+        left = this.sortList(left);
+        right = this.sortList(right);
+        return this.merge(left, right);
+    }
+
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    getMid(head: ListNode): ListNode {
+        let slow = head,
+            fast = head.next;
+        while (fast && fast.next) {
+            slow = slow.next!;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    /**
+     * @param {ListNode} list1
+     * @param {ListNode} list2
+     * @return {ListNode}
+     */
+    merge(list1: ListNode | null, list2: ListNode | null): ListNode | null {
+        let dummy = new ListNode(0);
+        let tail = dummy;
+
+        while (list1 && list2) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+            }
+            tail = tail.next;
+        }
+
+        if (list1) {
+            tail.next = list1;
+        }
+        if (list2) {
+            tail.next = list2;
+        }
+
+        return dummy.next;
     }
 }
 ```
@@ -1599,6 +1732,88 @@ impl Solution {
         }
         tail.next = if l1.is_some() { l1 } else { l2 };
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    sortList(head: ListNode | null): ListNode | null {
+        if (!head || !head.next) {
+            return head;
+        }
+
+        let length = 0;
+        let cur: ListNode | null = head;
+        while (cur) {
+            length++;
+            cur = cur.next;
+        }
+
+        let dummy = new ListNode(0);
+        dummy.next = head;
+        let step = 1;
+
+        while (step < length) {
+            let prev: ListNode = dummy,
+                curr = dummy.next;
+            while (curr) {
+                let left: ListNode | null = curr;
+                let right = this.split(left, step);
+                curr = this.split(right, step);
+                let merged = this.merge(left, right);
+                prev.next = merged;
+                while (prev.next) {
+                    prev = prev.next;
+                }
+            }
+            step *= 2;
+        }
+
+        return dummy.next;
+    }
+
+    /**
+     * @param {ListNode} head
+     * @param {number} step
+     * @return {ListNode}
+     */
+    split(head: ListNode | null, step: number): ListNode | null {
+        if (!head) return null;
+        for (let i = 0; i < step - 1 && head.next; i++) {
+            head = head.next;
+        }
+        let nextPart = head.next;
+        head.next = null;
+        return nextPart;
+    }
+
+    /**
+     * @param {ListNode} list1
+     * @param {ListNode} list2
+     * @return {ListNode}
+     */
+    merge(list1: ListNode | null, list2: ListNode | null): ListNode | null {
+        let dummy = new ListNode(0);
+        let tail = dummy;
+
+        while (list1 && list2) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+            }
+            tail = tail.next;
+        }
+
+        tail.next = list1 || list2;
+        return dummy.next;
     }
 }
 ```

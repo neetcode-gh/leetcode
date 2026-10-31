@@ -267,6 +267,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const dfs = (i: number, buying: boolean): number => {
+            if (i >= prices.length) {
+                return 0;
+            }
+
+            let cooldown = dfs(i + 1, buying);
+            if (buying) {
+                let buy = dfs(i + 1, false) - prices[i];
+                return Math.max(buy, cooldown);
+            } else {
+                let sell = dfs(i + 2, true) + prices[i];
+                return Math.max(sell, cooldown);
+            }
+        };
+
+        return dfs(0, true);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -606,6 +633,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const dp: { [key: string]: number } = {};
+        const dfs = (i: number, buying: boolean): number => {
+            if (i >= prices.length) {
+                return 0;
+            }
+            let key = `${i}-${buying}`;
+            if (key in dp) {
+                return dp[key];
+            }
+
+            let cooldown = dfs(i + 1, buying);
+            if (buying) {
+                let buy = dfs(i + 1, false) - prices[i];
+                dp[key] = Math.max(buy, cooldown);
+            } else {
+                let sell = dfs(i + 2, true) + prices[i];
+                dp[key] = Math.max(sell, cooldown);
+            }
+            return dp[key];
+        };
+
+        return dfs(0, true);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -895,6 +955,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const n = prices.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => [0, 0]);
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let buying = 1; buying >= 0; buying--) {
+                if (buying === 1) {
+                    let buy = dp[i + 1][0] - prices[i];
+                    let cooldown = dp[i + 1][1];
+                    dp[i][1] = Math.max(buy, cooldown);
+                } else {
+                    let sell = i + 2 < n ? dp[i + 2][1] + prices[i] : prices[i];
+                    let cooldown = dp[i + 1][0];
+                    dp[i][0] = Math.max(sell, cooldown);
+                }
+            }
+        }
+
+        return dp[0][1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1125,6 +1214,31 @@ impl Solution {
         }
 
         dp1_buy
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const n = prices.length;
+        let dp1_buy = 0,
+            dp1_sell = 0;
+        let dp2_buy = 0;
+
+        for (let i = n - 1; i >= 0; i--) {
+            let dp_buy = Math.max(dp1_sell - prices[i], dp1_buy);
+            let dp_sell = Math.max(dp2_buy + prices[i], dp1_sell);
+            dp2_buy = dp1_buy;
+            dp1_buy = dp_buy;
+            dp1_sell = dp_sell;
+        }
+
+        return dp1_buy;
     }
 }
 ```

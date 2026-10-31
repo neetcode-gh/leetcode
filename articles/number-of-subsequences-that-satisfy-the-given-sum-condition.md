@@ -245,6 +245,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    numSubseq(nums: number[], target: number): number {
+        const MOD = 1000000007;
+
+        const dfs = (maxi: number, mini: number, i: number): number => {
+            if (i === nums.length) {
+                if (mini !== Infinity && maxi + mini <= target) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            const skip = dfs(maxi, mini, i + 1);
+            const include = dfs(
+                Math.max(maxi, nums[i]),
+                Math.min(mini, nums[i]),
+                i + 1,
+            );
+            return (skip + include) % MOD;
+        };
+
+        return dfs(-Infinity, Infinity, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -619,6 +651,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    numSubseq(nums: number[], target: number): number {
+        nums.sort((a, b) => a - b);
+        const MOD = BigInt(1000000007);
+        let res = 0n;
+
+        const powerMod = (base: number, exp: number, mod: bigint): bigint => {
+            let result = 1n,
+                b = BigInt(base);
+            while (exp > 0) {
+                if (exp & 1) result = (result * b) % mod;
+                b = (b * b) % mod;
+                exp >>= 1;
+            }
+            return result;
+        };
+
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] * 2 > target) break;
+
+            let l = i,
+                r = nums.length - 1;
+            while (l <= r) {
+                const mid = Math.floor((l + r) / 2);
+                if (nums[i] + nums[mid] <= target) {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+
+            const count = powerMod(2, r - i, MOD);
+            res = (res + count) % MOD;
+        }
+
+        return Number(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -930,6 +1008,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    numSubseq(nums: number[], target: number): number {
+        nums.sort((a, b) => a - b);
+        const mod = BigInt(1000000007);
+        let res = 0n;
+
+        const power = (base: number, exp: number, mod: bigint): bigint => {
+            let result = 1n,
+                b = BigInt(base);
+            while (exp > 0) {
+                if (exp & 1) result = (result * b) % mod;
+                b = (b * b) % mod;
+                exp >>= 1;
+            }
+            return result;
+        };
+
+        for (let i = 0, r = nums.length - 1; i < nums.length; i++) {
+            while (nums[i] + nums[r] > target && i <= r) {
+                r--;
+            }
+            if (i <= r) {
+                res = (res + power(2, r - i, mod)) % mod;
+            }
+        }
+
+        return Number(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1204,6 +1319,39 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    numSubseq(nums: number[], target: number): number {
+        nums.sort((a, b) => a - b);
+        const MOD = 1000000007;
+        let res = 0,
+            l = 0,
+            r = nums.length - 1;
+        const power: number[] = Array(nums.length).fill(1);
+
+        for (let i = 1; i < nums.length; i++) {
+            power[i] = (power[i - 1] * 2) % MOD;
+        }
+
+        while (l <= r) {
+            if (nums[l] + nums[r] <= target) {
+                res = (res + power[r - l]) % MOD;
+                l++;
+            } else {
+                r--;
+            }
+        }
+
+        return res;
     }
 }
 ```

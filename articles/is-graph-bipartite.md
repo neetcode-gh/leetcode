@@ -296,6 +296,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} graph
+     * @return {boolean}
+     */
+    isBipartite(graph: number[][]): boolean {
+        let n = graph.length;
+        let color: number[] = new Array(n).fill(0); // Map node i -> odd=1, even=-1
+
+        const dfs = (i: number, c: number): boolean => {
+            color[i] = c;
+            for (let nei of graph[i]) {
+                if (color[nei] === c) {
+                    return false;
+                }
+                if (color[nei] === 0 && !dfs(nei, -c)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        for (let i = 0; i < n; i++) {
+            if (color[i] === 0 && !dfs(i, 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +623,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} graph
+     * @return {boolean}
+     */
+    isBipartite(graph: number[][]): boolean {
+        let n = graph.length;
+        let color: number[] = new Array(n).fill(0); // Map node i -> odd=1, even=-1
+
+        for (let i = 0; i < n; i++) {
+            if (color[i] !== 0) continue;
+            let q = new Queue([i]);
+            color[i] = -1;
+
+            while (!q.isEmpty()) {
+                let node: number = q.pop();
+                for (let nei of graph[node]) {
+                    if (color[nei] === color[node]) {
+                        return false;
+                    } else if (color[nei] === 0) {
+                        q.push(nei);
+                        color[nei] = -color[node];
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -868,6 +933,37 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} graph
+     * @return {boolean}
+     */
+    isBipartite(graph: number[][]): boolean {
+        let n = graph.length;
+        let color: number[] = new Array(n).fill(0); // Map node i -> odd=1, even=-1
+        let stack: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            if (color[i] !== 0) continue;
+            color[i] = -1;
+            stack.push(i);
+            while (stack.length > 0) {
+                let node = stack.pop()!;
+                for (let nei of graph[node]) {
+                    if (color[node] === color[nei]) return false;
+                    if (color[nei] === 0) {
+                        stack.push(nei);
+                        color[nei] = -color[node];
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
 ```
@@ -1369,6 +1465,73 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class DSU {
+    private parent: number[];
+    private size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.size = new Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} u=v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.size[pu] >= this.size[pv]) {
+            this.size[pu] += this.size[pv];
+            this.parent[pv] = pu;
+        } else {
+            this.size[pv] += this.size[pu];
+            this.parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} graph
+     * @return {boolean}
+     */
+    isBipartite(graph: number[][]): boolean {
+        let n = graph.length;
+        let dsu = new DSU(n);
+
+        for (let node = 0; node < n; node++) {
+            for (let nei of graph[node]) {
+                if (dsu.find(node) === dsu.find(nei)) {
+                    return false;
+                }
+                dsu.union(graph[node][0], nei);
+            }
+        }
+        return true;
     }
 }
 ```

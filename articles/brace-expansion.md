@@ -477,6 +477,59 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    expand(s: string): string[] {
+        const storeFirstOptions = (startPos: number, firstOptions: string[]): number => {
+            // If the first character is not '{', it means a single character
+            if (s[startPos] !== '{') {
+                firstOptions.push(s[startPos]);
+            } else {
+                // Store all the characters between '{' and '}'
+                while (s[startPos] !== '}') {
+                    if (s[startPos] >= 'a' && s[startPos] <= 'z') {
+                        firstOptions.push(s[startPos]);
+                    }
+                    startPos++;
+                }
+                // Sort the list
+                firstOptions.sort();
+            }
+            // Increment it to point to the next character to be considered
+            return startPos + 1;
+        };
+
+        const findAllWords = (startPos: number): string[] => {
+            // Return empty string list if the string is empty
+            if (startPos === s.length) {
+                return [''];
+            }
+
+            const firstOptions: string[] = [];
+            // Store the characters for the first index as string in firstOptions
+            const remStringStartPos = storeFirstOptions(startPos, firstOptions);
+            const wordsWithRemString = findAllWords(remStringStartPos);
+
+            const expandedWords: string[] = [];
+            // Create new words by adding the character at the beginning
+            for (const c of firstOptions) {
+                for (const word of wordsWithRemString) {
+                    expandedWords.push(c + word);
+                }
+            }
+
+            return expandedWords;
+        };
+
+        return findAllWords(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -935,6 +988,58 @@ impl Solution {
         }
 
         expanded_words
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    expand(s: string): string[] {
+        const storeFirstOptions = (startPos: number, firstOptions: string[]): number => {
+            // If the first character is not '{', it means a single character
+            if (s[startPos] !== '{') {
+                firstOptions.push(s[startPos]);
+            } else {
+                // Store all the characters between '{' and '}'
+                while (s[startPos] !== '}') {
+                    if (s[startPos] >= 'a' && s[startPos] <= 'z') {
+                        firstOptions.push(s[startPos]);
+                    }
+                    startPos++;
+                }
+                // Sort the list
+                firstOptions.sort();
+            }
+            // Increment it to point to the next character to be considered
+            return startPos + 1;
+        };
+
+        let expandedWords: string[] = [''];
+        let startPos = 0;
+        while (startPos < s.length) {
+            const firstOptions: string[] = [];
+            // Store the characters for the first index as string in firstOptions
+            const remStringStartPos = storeFirstOptions(startPos, firstOptions);
+
+            const currWords: string[] = [];
+            // Append the string in the list firstOptions to string in expandedWords
+            for (const word of expandedWords) {
+                for (const c of firstOptions) {
+                    currWords.push(word + c);
+                }
+            }
+
+            // Update the list expandedWords to have all the words
+            expandedWords = currWords;
+            // Pointing to the next character to be considered
+            startPos = remStringStartPos;
+        }
+
+        return expandedWords;
     }
 }
 ```
@@ -1471,6 +1576,67 @@ impl Solution {
             Self::generate_words(all_options, curr_string, expanded_words);
             curr_string.pop();
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    expand(s: string): string[] {
+        const allOptions: string[][] = [];
+
+        // Store all options for each position
+        const storeAllOptions = (): void => {
+            let pos = 0;
+            while (pos < s.length) {
+                const currOptions: string[] = [];
+                // If the first character is not '{', it means a single character
+                if (s[pos] !== '{') {
+                    currOptions.push(s[pos]);
+                } else {
+                    // Store all the characters between '{' and '}'
+                    while (s[pos] !== '}') {
+                        if (s[pos] >= 'a' && s[pos] <= 'z') {
+                            currOptions.push(s[pos]);
+                        }
+                        pos++;
+                    }
+                    // Sort the list
+                    currOptions.sort();
+                }
+                allOptions.push(currOptions);
+                pos++;
+            }
+        };
+
+        const generateWords = (currString: string[], expandedWords: string[]): void => {
+            // If the currString is complete, we can store and return
+            if (currString.length === allOptions.length) {
+                expandedWords.push(currString.join(''));
+                return;
+            }
+
+            // Fetch the options for the current index
+            const currOptions = allOptions[currString.length];
+
+            // Add the character and go into recursion
+            for (const c of currOptions) {
+                currString.push(c);
+                generateWords(currString, expandedWords);
+                // Backtrack to previous state
+                currString.pop();
+            }
+        };
+
+        // Store the character options for different indices
+        storeAllOptions();
+        const expandedWords: string[] = [];
+        generateWords([], expandedWords);
+        return expandedWords;
     }
 }
 ```

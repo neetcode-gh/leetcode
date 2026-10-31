@@ -219,6 +219,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones: number[]): number {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.ceil(stoneSum / 2);
+
+        const dfs = (i: number, total: number): number => {
+            if (total >= target || i === stones.length) {
+                return Math.abs(total - (stoneSum - total));
+            }
+            return Math.min(dfs(i + 1, total), dfs(i + 1, total + stones[i]));
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,6 +541,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones: number[]): number {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.ceil(stoneSum / 2);
+        const dp: number[][] = Array.from({ length: stones.length }, () =>
+            Array(target + 1).fill(-1),
+        );
+
+        const dfs = (i: number, total: number): number => {
+            if (total >= target || i === stones.length) {
+                return Math.abs(total - (stoneSum - total));
+            }
+            if (dp[i][total] !== -1) {
+                return dp[i][total];
+            }
+
+            dp[i][total] = Math.min(
+                dfs(i + 1, total),
+                dfs(i + 1, total + stones[i]),
+            );
+            return dp[i][total];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -786,6 +841,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones: number[]): number {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.floor(stoneSum / 2);
+        const n = stones.length;
+
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(target + 1).fill(0),
+        );
+
+        for (let i = 1; i <= n; i++) {
+            for (let t = 0; t <= target; t++) {
+                if (t >= stones[i - 1]) {
+                    dp[i][t] = Math.max(
+                        dp[i - 1][t],
+                        dp[i - 1][t - stones[i - 1]] + stones[i - 1],
+                    );
+                } else {
+                    dp[i][t] = dp[i - 1][t];
+                }
+            }
+        }
+
+        return stoneSum - 2 * dp[n][target];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -982,6 +1070,28 @@ impl Solution {
         }
 
         stone_sum - 2 * dp[target]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones: number[]): number {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.floor(stoneSum / 2);
+        const dp: number[] = new Array(target + 1).fill(0);
+
+        for (const stone of stones) {
+            for (let t = target; t >= stone; t--) {
+                dp[t] = Math.max(dp[t], dp[t - stone] + stone);
+            }
+        }
+
+        return stoneSum - 2 * dp[target];
     }
 }
 ```
@@ -1282,6 +1392,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones: number[]): number {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.floor(stoneSum / 2);
+
+        let dp = new Set<number>([0]);
+
+        for (const stone of stones) {
+            const newDp = new Set<number>(dp);
+            for (const val of dp) {
+                if (val + stone === target) {
+                    return stoneSum - 2 * target;
+                }
+                if (val + stone < target) {
+                    newDp.add(val + stone);
+                }
+            }
+            dp = newDp;
+        }
+
+        return stoneSum - 2 * Math.max(...dp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1323,6 +1463,30 @@ class Solution:
                 return stoneSum - 2 * t
 ```
 
+```java
+public class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int stoneSum = 0;
+        for (int stone : stones) {
+            stoneSum += stone;
+        }
+        int target = stoneSum / 2;
+        java.math.BigInteger dp = java.math.BigInteger.ONE;
+
+        for (int stone : stones) {
+            dp = dp.or(dp.shiftLeft(stone));
+        }
+
+        for (int t = target; t >= 0; t--) {
+            if (dp.testBit(t)) {
+                return stoneSum - 2 * t;
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ```cpp
 class Solution {
 public:
@@ -1344,6 +1508,212 @@ public:
         return 0;
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones) {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.floor(stoneSum / 2);
+        let dp = BigInt(1);
+
+        for (const stone of stones) {
+            dp |= dp << BigInt(stone);
+        }
+
+        for (let t = target; t >= 0; t--) {
+            if ((dp >> BigInt(t)) & BigInt(1)) {
+                return stoneSum - 2 * t;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LastStoneWeightII(int[] stones) {
+        int stoneSum = stones.Sum();
+        int target = stoneSum / 2;
+
+        // dp is a bitset stored in 64-bit words
+        int words = stoneSum / 64 + 1;
+        ulong[] dp = new ulong[words];
+        dp[0] = 1;
+
+        foreach (int stone in stones) {
+            int q = stone / 64, r = stone % 64;
+            // dp |= dp << stone (from high words to low so we read old values)
+            for (int i = words - 1; i >= q; i--) {
+                ulong shifted = dp[i - q] << r;
+                if (r > 0 && i - q - 1 >= 0) {
+                    shifted |= dp[i - q - 1] >> (64 - r);
+                }
+                dp[i] |= shifted;
+            }
+        }
+
+        for (int t = target; t >= 0; t--) {
+            if (((dp[t / 64] >> (t % 64)) & 1UL) == 1UL) {
+                return stoneSum - 2 * t;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+```go
+func lastStoneWeightII(stones []int) int {
+    stoneSum := 0
+    for _, stone := range stones {
+        stoneSum += stone
+    }
+    target := stoneSum / 2
+
+    // dp is a bitset stored in 64-bit words
+    words := stoneSum/64 + 1
+    dp := make([]uint64, words)
+    dp[0] = 1
+
+    for _, stone := range stones {
+        q, r := stone/64, uint(stone%64)
+        // dp |= dp << stone (from high words to low so we read old values)
+        for i := words - 1; i >= q; i-- {
+            shifted := dp[i-q] << r
+            if r > 0 && i-q-1 >= 0 {
+                shifted |= dp[i-q-1] >> (64 - r)
+            }
+            dp[i] |= shifted
+        }
+    }
+
+    for t := target; t >= 0; t-- {
+        if (dp[t/64]>>(uint(t%64)))&1 == 1 {
+            return stoneSum - 2*t
+        }
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeightII(stones: IntArray): Int {
+        val stoneSum = stones.sum()
+        val target = stoneSum / 2
+        var dp = java.math.BigInteger.ONE
+
+        for (stone in stones) {
+            dp = dp.or(dp.shiftLeft(stone))
+        }
+
+        for (t in target downTo 0) {
+            if (dp.testBit(t)) {
+                return stoneSum - 2 * t
+            }
+        }
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeightII(_ stones: [Int]) -> Int {
+        let stoneSum = stones.reduce(0, +)
+        let target = stoneSum / 2
+
+        // dp is a bitset stored in 64-bit words
+        let words = stoneSum / 64 + 1
+        var dp = [UInt64](repeating: 0, count: words)
+        dp[0] = 1
+
+        for stone in stones {
+            let q = stone / 64, r = UInt64(stone % 64)
+            // dp |= dp << stone (from high words to low so we read old values)
+            var i = words - 1
+            while i >= q {
+                var shifted = dp[i - q] << r
+                if r > 0 && i - q - 1 >= 0 {
+                    shifted |= dp[i - q - 1] >> (64 - r)
+                }
+                dp[i] |= shifted
+                i -= 1
+            }
+        }
+
+        for t in stride(from: target, through: 0, by: -1) {
+            if (dp[t / 64] >> UInt64(t % 64)) & 1 == 1 {
+                return stoneSum - 2 * t
+            }
+        }
+        return 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+        let stone_sum: usize = stones.iter().map(|&s| s as usize).sum();
+        let target = stone_sum / 2;
+
+        // dp is a bitset stored in 64-bit words
+        let words = stone_sum / 64 + 1;
+        let mut dp = vec![0u64; words];
+        dp[0] = 1;
+
+        for &stone in &stones {
+            let (q, r) = (stone as usize / 64, stone as u32 % 64);
+            // dp |= dp << stone (from high words to low so we read old values)
+            for i in (q..words).rev() {
+                let mut shifted = dp[i - q] << r;
+                if r > 0 && i >= q + 1 {
+                    shifted |= dp[i - q - 1] >> (64 - r);
+                }
+                dp[i] |= shifted;
+            }
+        }
+
+        for t in (0..=target).rev() {
+            if (dp[t / 64] >> (t % 64)) & 1 == 1 {
+                return (stone_sum - 2 * t) as i32;
+            }
+        }
+        0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeightII(stones: number[]): number {
+        const stoneSum = stones.reduce((a, b) => a + b, 0);
+        const target = Math.floor(stoneSum / 2);
+        let dp = BigInt(1);
+
+        for (const stone of stones) {
+            dp |= dp << BigInt(stone);
+        }
+
+        for (let t = target; t >= 0; t--) {
+            if ((dp >> BigInt(t)) & BigInt(1)) {
+                return stoneSum - 2 * t;
+            }
+        }
+        return 0;
+    }
+}
 ```
 
 ::tabs-end

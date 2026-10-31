@@ -264,6 +264,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} customers
+     * @param {number[]} grumpy
+     * @param {number} minutes
+     * @return {number}
+     */
+    maxSatisfied(customers: number[], grumpy: number[], minutes: number): number {
+        let res = 0,
+            n = customers.length;
+        for (let i = 0; i < n; i++) {
+            if (grumpy[i] === 0) {
+                res += customers[i];
+            }
+        }
+
+        let satisfied = res;
+        for (let i = 0; i <= n - minutes; i++) {
+            let cur = 0;
+            for (let j = i; j < i + minutes; j++) {
+                if (grumpy[j] === 1) {
+                    cur += customers[j];
+                }
+            }
+            res = Math.max(res, satisfied + cur);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +584,42 @@ impl Solution {
         }
 
         satisfied + max_window
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} customers
+     * @param {number[]} grumpy
+     * @param {number} minutes
+     * @return {number}
+     */
+    maxSatisfied(customers: number[], grumpy: number[], minutes: number): number {
+        let l = 0,
+            window = 0,
+            maxWindow = 0,
+            satisfied = 0;
+
+        for (let r = 0; r < customers.length; r++) {
+            if (grumpy[r] === 1) {
+                window += customers[r];
+            } else {
+                satisfied += customers[r];
+            }
+
+            if (r - l + 1 > minutes) {
+                if (grumpy[l] === 1) {
+                    window -= customers[l];
+                }
+                l++;
+            }
+
+            maxWindow = Math.max(window, maxWindow);
+        }
+
+        return satisfied + maxWindow;
     }
 }
 ```

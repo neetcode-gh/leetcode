@@ -849,7 +849,7 @@ class Solution {
      */
     sequentialDigits(low: number, high: number): number[] {
         const res: number[] = [];
-        const queue = new Queue<number>();
+        const queue = new Queue();
         for (let i = 1; i < 9; i++) {
             queue.push(i);
         }

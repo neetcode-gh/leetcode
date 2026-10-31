@@ -308,6 +308,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    isPalindrome(head: ListNode | null): boolean {
+        const arr: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            arr.push(cur.val);
+            cur = cur.next;
+        }
+
+        let l = 0,
+            r = arr.length - 1;
+        while (l < r) {
+            if (arr[l] !== arr[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -628,6 +658,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    isPalindrome(head: ListNode | null): boolean {
+        let cur = head;
+
+        const rec = (node: ListNode | null): boolean => {
+            if (node !== null) {
+                if (!rec(node.next)) {
+                    return false;
+                }
+                if (cur!.val !== node.val) {
+                    return false;
+                }
+                cur = cur!.next;
+            }
+            return true;
+        };
+
+        return rec(head);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -916,6 +973,31 @@ impl Solution {
             cur = &node.next;
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    isPalindrome(head: ListNode | null): boolean {
+        const stack: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            stack.push(cur.val);
+            cur = cur.next;
+        }
+
+        cur = head;
+        while (cur && cur.val === stack.pop()) {
+            cur = cur.next;
+        }
+
+        return cur === null;
     }
 }
 ```
@@ -1322,6 +1404,47 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    isPalindrome(head: ListNode | null): boolean {
+        let fast = head,
+            slow = head;
+
+        // find middle (slow)
+        while (fast && fast.next) {
+            fast = fast.next.next;
+            slow = slow!.next;
+        }
+
+        // reverse second half
+        let prev: ListNode | null = null;
+        while (slow) {
+            let tmp = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = tmp;
+        }
+
+        // check palindrome
+        let left = head,
+            right = prev;
+        while (right) {
+            if (left!.val !== right.val) {
+                return false;
+            }
+            left = left!.next;
+            right = right.next;
+        }
+
+        return true;
     }
 }
 ```

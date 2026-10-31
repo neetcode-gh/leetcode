@@ -162,7 +162,7 @@ public class NestedIterator {
     private List<int> arr;
     private int ptr;
 
-    public NestedIterator(IList<NestedInteger> nestedList) {
+    public NestedIterator(IList<INestedInteger> nestedList) {
         arr = new List<int>();
         ptr = 0;
         Dfs(nestedList);
@@ -176,7 +176,7 @@ public class NestedIterator {
         return ptr < arr.Count;
     }
 
-    private void Dfs(IList<NestedInteger> nestedArr) {
+    private void Dfs(IList<INestedInteger> nestedArr) {
         foreach (var num in nestedArr) {
             if (num.IsInteger()) {
                 arr.Add(num.GetInteger());
@@ -194,13 +194,13 @@ type NestedIterator struct {
     ptr int
 }
 
-func Constructor(nestedList []*NestedInteger) *NestedIterator {
+func Constructor(nestedList []NestedInteger) *NestedIterator {
     it := &NestedIterator{arr: []int{}, ptr: 0}
     it.dfs(nestedList)
     return it
 }
 
-func (it *NestedIterator) dfs(nestedArr []*NestedInteger) {
+func (it *NestedIterator) dfs(nestedArr []NestedInteger) {
     for _, num := range nestedArr {
         if num.IsInteger() {
             it.arr = append(it.arr, num.GetInteger())
@@ -272,7 +272,7 @@ class NestedIterator {
     private func dfs(_ nestedArr: [NestedInteger]) {
         for num in nestedArr {
             if num.isInteger() {
-                arr.append(num.getInteger())
+                arr.append(num.getInteger() ?? 0)
             } else {
                 dfs(num.getList())
             }
@@ -282,6 +282,11 @@ class NestedIterator {
 ```
 
 ```rust
+// #[derive(Debug, PartialEq, Eq)]
+// pub enum NestedInteger {
+//   Int(i32),
+//   List(Vec<NestedInteger>)
+// }
 struct NestedIterator {
     arr: Vec<i32>,
     ptr: usize,
@@ -296,10 +301,9 @@ impl NestedIterator {
 
     fn dfs(nested_arr: &[NestedInteger], arr: &mut Vec<i32>) {
         for num in nested_arr {
-            if num.is_integer() {
-                arr.push(num.get_integer());
-            } else {
-                Self::dfs(&num.get_list(), arr);
+            match num {
+                NestedInteger::Int(val) => arr.push(*val),
+                NestedInteger::List(list) => Self::dfs(list, arr),
             }
         }
     }
@@ -312,6 +316,52 @@ impl NestedIterator {
 
     fn has_next(&self) -> bool {
         self.ptr < self.arr.len()
+    }
+}
+```
+
+```typescript
+class NestedIterator {
+    private arr: number[];
+    private ptr: number;
+
+    /**
+     * @constructor
+     * @param {NestedInteger[]} nestedList
+     */
+    constructor(nestedList: NestedInteger[]) {
+        this.arr = [];
+        this.ptr = 0;
+        this.dfs(nestedList);
+    }
+
+    /**
+     * @param {NestedInteger[]} nestedArr
+     */
+    dfs(nestedArr: NestedInteger[]): void {
+        for (let num of nestedArr) {
+            if (num.isInteger()) {
+                this.arr.push(num.getInteger());
+            } else {
+                this.dfs(num.getList());
+            }
+        }
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {integer}
+     */
+    next(): number {
+        return this.arr[this.ptr++];
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {boolean}
+     */
+    hasNext(): boolean {
+        return this.ptr < this.arr.length;
     }
 }
 ```
@@ -487,12 +537,12 @@ public class NestedIterator {
     private List<int> arr;
     private int ptr;
 
-    public NestedIterator(IList<NestedInteger> nestedList) {
+    public NestedIterator(IList<INestedInteger> nestedList) {
         arr = Dfs(nestedList);
         ptr = 0;
     }
 
-    private List<int> Dfs(IList<NestedInteger> nestedArr) {
+    private List<int> Dfs(IList<INestedInteger> nestedArr) {
         List<int> res = new List<int>();
         foreach (var num in nestedArr) {
             if (num.IsInteger()) {
@@ -520,13 +570,13 @@ type NestedIterator struct {
     ptr int
 }
 
-func Constructor(nestedList []*NestedInteger) *NestedIterator {
+func Constructor(nestedList []NestedInteger) *NestedIterator {
     it := &NestedIterator{ptr: 0}
     it.arr = it.dfs(nestedList)
     return it
 }
 
-func (it *NestedIterator) dfs(nestedArr []*NestedInteger) []int {
+func (it *NestedIterator) dfs(nestedArr []NestedInteger) []int {
     res := []int{}
     for _, num := range nestedArr {
         if num.IsInteger() {
@@ -593,7 +643,7 @@ class NestedIterator {
         var res = [Int]()
         for num in nestedArr {
             if num.isInteger() {
-                res.append(num.getInteger())
+                res.append(num.getInteger() ?? 0)
             } else {
                 res.append(contentsOf: dfs(num.getList()))
             }
@@ -614,6 +664,11 @@ class NestedIterator {
 ```
 
 ```rust
+// #[derive(Debug, PartialEq, Eq)]
+// pub enum NestedInteger {
+//   Int(i32),
+//   List(Vec<NestedInteger>)
+// }
 struct NestedIterator {
     arr: Vec<i32>,
     ptr: usize,
@@ -628,10 +683,9 @@ impl NestedIterator {
     fn dfs(nested_arr: &[NestedInteger]) -> Vec<i32> {
         let mut res = Vec::new();
         for num in nested_arr {
-            if num.is_integer() {
-                res.push(num.get_integer());
-            } else {
-                res.extend(Self::dfs(&num.get_list()));
+            match num {
+                NestedInteger::Int(val) => res.push(*val),
+                NestedInteger::List(list) => res.extend(Self::dfs(list)),
             }
         }
         res
@@ -645,6 +699,53 @@ impl NestedIterator {
 
     fn has_next(&self) -> bool {
         self.ptr < self.arr.len()
+    }
+}
+```
+
+```typescript
+class NestedIterator {
+    private arr: number[];
+    private ptr: number;
+
+    /**
+     * @constructor
+     * @param {NestedInteger[]} nestedList
+     */
+    constructor(nestedList: NestedInteger[]) {
+        this.arr = this.dfs(nestedList);
+        this.ptr = 0;
+    }
+
+    /**
+     * @param {NestedInteger[]} nestedArr
+     */
+    dfs(nestedArr: NestedInteger[]): number[] {
+        let res: number[] = [];
+        for (let num of nestedArr) {
+            if (num.isInteger()) {
+                res.push(num.getInteger());
+            } else {
+                res.push(...this.dfs(num.getList()));
+            }
+        }
+        return res;
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {integer}
+     */
+    next(): number {
+        return this.arr[this.ptr++];
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {boolean}
+     */
+    hasNext(): boolean {
+        return this.ptr < this.arr.length;
     }
 }
 ```
@@ -810,7 +911,7 @@ class NestedIterator {
 public class NestedIterator {
     private Stack<int> stack;
 
-    public NestedIterator(IList<NestedInteger> nestedList) {
+    public NestedIterator(IList<INestedInteger> nestedList) {
         stack = new Stack<int>();
         List<int> temp = new List<int>();
         Dfs(nestedList, temp);
@@ -820,7 +921,7 @@ public class NestedIterator {
         }
     }
 
-    private void Dfs(IList<NestedInteger> nested, List<int> temp) {
+    private void Dfs(IList<INestedInteger> nested, List<int> temp) {
         foreach (var num in nested) {
             if (num.IsInteger()) {
                 temp.Add(num.GetInteger());
@@ -845,7 +946,7 @@ type NestedIterator struct {
     stack []int
 }
 
-func Constructor(nestedList []*NestedInteger) *NestedIterator {
+func Constructor(nestedList []NestedInteger) *NestedIterator {
     it := &NestedIterator{stack: []int{}}
     it.dfs(nestedList)
     for i, j := 0, len(it.stack)-1; i < j; i, j = i+1, j-1 {
@@ -854,7 +955,7 @@ func Constructor(nestedList []*NestedInteger) *NestedIterator {
     return it
 }
 
-func (it *NestedIterator) dfs(nested []*NestedInteger) {
+func (it *NestedIterator) dfs(nested []NestedInteger) {
     for _, num := range nested {
         if num.IsInteger() {
             it.stack = append(it.stack, num.GetInteger())
@@ -920,7 +1021,7 @@ class NestedIterator {
     private func dfs(_ nested: [NestedInteger]) {
         for num in nested {
             if num.isInteger() {
-                stack.append(num.getInteger())
+                stack.append(num.getInteger() ?? 0)
             } else {
                 dfs(num.getList())
             }
@@ -938,6 +1039,11 @@ class NestedIterator {
 ```
 
 ```rust
+// #[derive(Debug, PartialEq, Eq)]
+// pub enum NestedInteger {
+//   Int(i32),
+//   List(Vec<NestedInteger>)
+// }
 struct NestedIterator {
     stack: Vec<i32>,
 }
@@ -952,10 +1058,9 @@ impl NestedIterator {
 
     fn dfs(nested: &[NestedInteger], stack: &mut Vec<i32>) {
         for num in nested {
-            if num.is_integer() {
-                stack.push(num.get_integer());
-            } else {
-                Self::dfs(&num.get_list(), stack);
+            match num {
+                NestedInteger::Int(val) => stack.push(*val),
+                NestedInteger::List(list) => Self::dfs(list, stack),
             }
         }
     }
@@ -966,6 +1071,51 @@ impl NestedIterator {
 
     fn has_next(&self) -> bool {
         !self.stack.is_empty()
+    }
+}
+```
+
+```typescript
+class NestedIterator {
+    private stack: number[];
+
+    /**
+     * @constructor
+     * @param {NestedInteger[]} nestedList
+     */
+    constructor(nestedList: NestedInteger[]) {
+        this.stack = [];
+        this.dfs(nestedList);
+        this.stack.reverse();
+    }
+
+    /**
+     * @param {NestedInteger[]} nested
+     */
+    dfs(nested: NestedInteger[]): void {
+        for (let num of nested) {
+            if (num.isInteger()) {
+                this.stack.push(num.getInteger());
+            } else {
+                this.dfs(num.getList());
+            }
+        }
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {number}
+     */
+    next(): number {
+        return this.stack.pop()!;
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {boolean}
+     */
+    hasNext(): boolean {
+        return this.stack.length > 0;
     }
 }
 ```
@@ -1124,10 +1274,10 @@ class NestedIterator {
 
 ```csharp
 public class NestedIterator {
-    private List<NestedInteger> stack;
+    private List<INestedInteger> stack;
 
-    public NestedIterator(IList<NestedInteger> nestedList) {
-        stack = new List<NestedInteger>(nestedList);
+    public NestedIterator(IList<INestedInteger> nestedList) {
+        stack = new List<INestedInteger>(nestedList);
         stack.Reverse();
     }
 
@@ -1155,11 +1305,11 @@ public class NestedIterator {
 
 ```go
 type NestedIterator struct {
-    stack []*NestedInteger
+    stack []NestedInteger
 }
 
-func Constructor(nestedList []*NestedInteger) *NestedIterator {
-    stack := make([]*NestedInteger, len(nestedList))
+func Constructor(nestedList []NestedInteger) *NestedIterator {
+    stack := make([]NestedInteger, len(nestedList))
     copy(stack, nestedList)
     for i, j := 0, len(stack)-1; i < j; i, j = i+1, j-1 {
         stack[i], stack[j] = stack[j], stack[i]
@@ -1225,7 +1375,7 @@ class NestedIterator {
     }
 
     func next() -> Int {
-        return stack.removeLast().getInteger()
+        return stack.removeLast().getInteger() ?? 0
     }
 
     func hasNext() -> Bool {
@@ -1244,6 +1394,11 @@ class NestedIterator {
 ```
 
 ```rust
+// #[derive(Debug, PartialEq, Eq)]
+// pub enum NestedInteger {
+//   Int(i32),
+//   List(Vec<NestedInteger>)
+// }
 struct NestedIterator {
     stack: Vec<NestedInteger>,
 }
@@ -1256,20 +1411,64 @@ impl NestedIterator {
     }
 
     fn next(&mut self) -> i32 {
-        self.stack.pop().unwrap().get_integer()
+        match self.stack.pop().unwrap() {
+            NestedInteger::Int(val) => val,
+            NestedInteger::List(_) => unreachable!(),
+        }
     }
 
     fn has_next(&mut self) -> bool {
         while let Some(top) = self.stack.last() {
-            if top.is_integer() {
+            if let NestedInteger::Int(_) = top {
                 return true;
             }
-            let top = self.stack.pop().unwrap();
-            let mut nested_list = top.get_list();
-            nested_list.reverse();
-            self.stack.extend(nested_list);
+            if let Some(NestedInteger::List(mut nested_list)) = self.stack.pop() {
+                nested_list.reverse();
+                self.stack.extend(nested_list);
+            }
         }
         false
+    }
+}
+```
+
+```typescript
+class NestedIterator {
+    private stack: NestedInteger[];
+
+    /**
+     * @constructor
+     * @param {NestedInteger[]} nestedList
+     */
+    constructor(nestedList: NestedInteger[]) {
+        this.stack = nestedList;
+        this.stack.reverse();
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {number}
+     */
+    next(): number {
+        return this.stack.pop()!.getInteger();
+    }
+
+    /**
+     * @this NestedIterator
+     * @returns {boolean}
+     */
+    hasNext(): boolean {
+        while (this.stack.length > 0) {
+            const top = this.stack[this.stack.length - 1];
+            if (top.isInteger()) {
+                return true;
+            }
+            this.stack.pop();
+            const nestedList = top.getList();
+            nestedList.reverse();
+            this.stack.push(...nestedList);
+        }
+        return false;
     }
 }
 ```

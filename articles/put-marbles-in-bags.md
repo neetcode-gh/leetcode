@@ -174,7 +174,7 @@ public class Solution {
     public long PutMarbles(int[] weights, int k) {
         int n = weights.Length;
         long[] ans = Dfs(0, k - 1, weights, n);
-        return (int)(ans[0] - ans[1]);
+        return ans[0] - ans[1];
     }
 
     private long[] Dfs(int i, int k, int[] weights, int n) {
@@ -349,6 +349,43 @@ impl Solution {
 
         let ans = dfs(0, k - 1, &weights, n, &mut cache);
         ans[0] - ans[1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} weights
+     * @param {number} k
+     * @return {number}
+     */
+    putMarbles(weights: number[], k: number): number {
+        const n = weights.length;
+        const cache = new Map<string, number[]>();
+
+        const dfs = (i: number, k: number): number[] => {
+            const key = `${i},${k}`;
+            if (cache.has(key)) return cache.get(key)!;
+            if (k === 0) return [0, 0];
+            if (i === n - 1 || n - i - 1 < k) return [-1e15, 1e15];
+
+            let res = [0, 1e15];
+
+            let cur = dfs(i + 1, k - 1);
+            res[0] = Math.max(res[0], weights[i] + weights[i + 1] + cur[0]);
+            res[1] = Math.min(res[1], weights[i] + weights[i + 1] + cur[1]);
+
+            cur = dfs(i + 1, k);
+            res[0] = Math.max(res[0], cur[0]);
+            res[1] = Math.min(res[1], cur[1]);
+
+            cache.set(key, res);
+            return res;
+        };
+
+        const ans = dfs(0, k - 1);
+        return ans[0] - ans[1];
     }
 }
 ```
@@ -611,6 +648,36 @@ impl Solution {
         let max_score: i64 = splits[splits.len() - cnt..].iter().map(|&x| x as i64).sum();
 
         max_score - min_score
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} weights
+     * @param {number} k
+     * @return {number}
+     */
+    putMarbles(weights: number[], k: number): number {
+        if (k === 1) return 0;
+
+        const splits: number[] = [];
+        for (let i = 0; i < weights.length - 1; i++) {
+            splits.push(weights[i] + weights[i + 1]);
+        }
+
+        splits.sort((a, b) => a - b);
+        const i = k - 1;
+
+        let minScore = 0,
+            maxScore = 0;
+        for (let j = 0; j < i; j++) minScore += splits[j];
+        for (let j = splits.length - i; j < splits.length; j++) {
+            maxScore += splits[j];
+        }
+
+        return maxScore - minScore;
     }
 }
 ```
@@ -963,6 +1030,39 @@ impl Solution {
         let min_score: i64 = max_heap.iter().map(|&x| x as i64).sum();
 
         max_score - min_score
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} weights
+     * @param {number} k
+     * @return {number}
+     */
+    putMarbles(weights: number[], k: number): number {
+        if (k === 1) return 0;
+
+        const minHeap = new MinPriorityQueue();
+        const maxHeap = new MaxPriorityQueue();
+
+        for (let i = 0; i < weights.length - 1; i++) {
+            const sum = weights[i] + weights[i + 1];
+
+            minHeap.enqueue(sum);
+            if (minHeap.size() > k - 1) minHeap.dequeue();
+
+            maxHeap.enqueue(sum);
+            if (maxHeap.size() > k - 1) maxHeap.dequeue();
+        }
+
+        let maxScore = 0,
+            minScore = 0;
+        while (!minHeap.isEmpty()) maxScore += minHeap.dequeue();
+        while (!maxHeap.isEmpty()) minScore += maxHeap.dequeue();
+
+        return maxScore - minScore;
     }
 }
 ```

@@ -208,6 +208,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    pivotIndex(nums: number[]): number {
+        const n = nums.length;
+        for (let i = 0; i < n; i++) {
+            let leftSum = 0,
+                rightSum = 0;
+            for (let l = 0; l < i; l++) {
+                leftSum += nums[l];
+            }
+            for (let r = i + 1; r < n; r++) {
+                rightSum += nums[r];
+            }
+            if (leftSum === rightSum) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -420,6 +446,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    pivotIndex(nums: number[]): number {
+        const n = nums.length;
+        const prefixSum: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        for (let i = 0; i < n; i++) {
+            const leftSum = prefixSum[i];
+            const rightSum = prefixSum[n] - prefixSum[i + 1];
+            if (leftSum === rightSum) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -622,6 +673,31 @@ impl Solution {
             left_sum += nums[i];
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    pivotIndex(nums: number[]): number {
+        let total = 0;
+        for (let num of nums) {
+            total += num;
+        }
+
+        let leftSum = 0;
+        for (let i = 0; i < nums.length; i++) {
+            let rightSum = total - leftSum - nums[i];
+            if (leftSum === rightSum) {
+                return i;
+            }
+            leftSum += nums[i];
+        }
+        return -1;
     }
 }
 ```

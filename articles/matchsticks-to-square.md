@@ -291,6 +291,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} matchsticks
+     * @return {boolean}
+     */
+    makesquare(matchsticks: number[]): boolean {
+        const sum = matchsticks.reduce((a, b) => a + b, 0);
+        if (sum % 4 !== 0) return false;
+
+        const sides: number[] = Array(4).fill(0);
+        const dfs = (i: number): boolean => {
+            if (i === matchsticks.length) {
+                return (
+                    sides[0] === sides[1] &&
+                    sides[1] === sides[2] &&
+                    sides[2] === sides[3]
+                );
+            }
+
+            for (let j = 0; j < 4; j++) {
+                sides[j] += matchsticks[i];
+                if (dfs(i + 1)) return true;
+                sides[j] -= matchsticks[i];
+            }
+
+            return false;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -647,6 +681,43 @@ impl Solution {
         }
 
         dfs(&matchsticks, &mut sides, 0, length)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} matchsticks
+     * @return {boolean}
+     */
+    makesquare(matchsticks: number[]): boolean {
+        const totalLength = matchsticks.reduce((a, b) => a + b, 0);
+        if (totalLength % 4 !== 0) return false;
+
+        const length = totalLength / 4;
+        const sides: number[] = Array(4).fill(0);
+        matchsticks.sort((a, b) => b - a);
+
+        const dfs = (index: number): boolean => {
+            if (index === matchsticks.length) {
+                return true;
+            }
+
+            for (let i = 0; i < 4; i++) {
+                if (sides[i] + matchsticks[index] <= length) {
+                    sides[i] += matchsticks[index];
+                    if (dfs(index + 1)) return true;
+                    sides[i] -= matchsticks[index];
+                }
+
+                if (sides[i] === 0) break;
+            }
+
+            return false;
+        };
+
+        return dfs(0);
     }
 }
 ```
@@ -1092,6 +1163,51 @@ impl Solution {
         }
 
         dfs(&matchsticks, &mut dp, (1 << n) - 1, n, length) == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} matchsticks
+     * @return {boolean}
+     */
+    makesquare(matchsticks: number[]): boolean {
+        const totalLength = matchsticks.reduce((a, b) => a + b, 0);
+        if (totalLength % 4 !== 0) return false;
+
+        const length = totalLength / 4;
+        if (Math.max(...matchsticks) > length) return false;
+
+        matchsticks.sort((a, b) => b - a);
+        const n = matchsticks.length;
+        const dp: number[] = new Array(1 << n).fill(-Infinity);
+
+        const dfs = (mask: number): number => {
+            if (mask === 0) return 0;
+            if (dp[mask] !== -Infinity) return dp[mask];
+
+            for (let i = 0; i < n; i++) {
+                if (mask & (1 << i)) {
+                    const res = dfs(mask ^ (1 << i));
+                    if (res >= 0 && res + matchsticks[i] <= length) {
+                        dp[mask] = (res + matchsticks[i]) % length;
+                        return dp[mask];
+                    }
+
+                    if (mask === (1 << n) - 1) {
+                        dp[mask] = -1;
+                        return -1;
+                    }
+                }
+            }
+
+            dp[mask] = -1;
+            return dp[mask];
+        };
+
+        return dfs((1 << n) - 1) === 0;
     }
 }
 ```

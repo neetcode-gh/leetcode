@@ -261,6 +261,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @return {string}
+     */
+    findDifferentBinaryString(nums: string[]): string {
+        const strSet = new Set<string>(nums);
+        const n = nums.length;
+
+        const backtrack = (i: number, cur: string[]): string | null => {
+            if (i === n) {
+                const res = cur.join('');
+                return strSet.has(res) ? null : res;
+            }
+
+            let res = backtrack(i + 1, cur);
+            if (res) return res;
+
+            cur[i] = '1';
+            return backtrack(i + 1, cur);
+        };
+
+        return backtrack(0, Array(n).fill('0'))!;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -466,6 +494,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @return {string}
+     */
+    findDifferentBinaryString(nums: string[]): string {
+        const strSet = new Set<string>(nums);
+        const n = nums.length;
+
+        for (let num = 0; num < n + 1; num++) {
+            let res = num.toString(2).padStart(n, '0');
+            if (!strSet.has(res)) {
+                return res;
+            }
+        }
+
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -608,6 +658,22 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @return {string}
+     */
+    findDifferentBinaryString(nums: string[]): string {
+        let res: string[] = [];
+        for (let i = 0; i < nums.length; i++) {
+            res.push(nums[i][i] === '0' ? '1' : '0');
+        }
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -636,6 +702,9 @@ Since there are `2^n` possible strings but only `n` are in the input, randomly g
 ::tabs-start
 
 ```python
+import random
+
+
 class Solution:
     def findDifferentBinaryString(self, nums: List[str]) -> str:
         strSet = set(nums)
@@ -736,6 +805,8 @@ public class Solution {
 ```
 
 ```go
+import "math/rand"
+
 func findDifferentBinaryString(nums []string) string {
     strSet := make(map[string]bool)
     for _, s := range nums {
@@ -814,6 +885,28 @@ impl Solution {
                 .map(|_| if rng.gen_bool(0.5) { '1' } else { '0' })
                 .collect();
             if !str_set.contains(&res) {
+                return res;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @return {string}
+     */
+    findDifferentBinaryString(nums: string[]): string {
+        const strSet = new Set<string>(nums);
+        const n = nums.length;
+
+        while (true) {
+            let res = Array.from({ length: n }, () =>
+                Math.random() < 0.5 ? '0' : '1',
+            ).join('');
+            if (!strSet.has(res)) {
                 return res;
             }
         }
@@ -1491,6 +1584,105 @@ impl Solution {
         }
 
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Node {
+    children: (Node | null)[];
+
+    constructor() {
+        this.children = [null, null];
+    }
+
+    /**
+     * @param {number} bit
+     * @return {boolean}
+     */
+    containsBit(bit: number): boolean {
+        return this.children[bit] !== null;
+    }
+
+    /**
+     * @param {number} bit
+     */
+    put(bit: number): void {
+        this.children[bit] = new Node();
+    }
+
+    /**
+     * @param {number} bit
+     * @return {Node}
+     */
+    get(bit: number): Node {
+        return this.children[bit]!;
+    }
+}
+
+class Trie {
+    root: Node;
+
+    constructor() {
+        this.root = new Node();
+    }
+
+    /**
+     * @param {string} s
+     */
+    insert(s: string): void {
+        let curr = this.root;
+        for (const c of s) {
+            let bit = c === '1' ? 1 : 0;
+            if (!curr.containsBit(bit)) {
+                curr.put(bit);
+            }
+            curr = curr.get(bit);
+        }
+    }
+
+    /**
+     * @param {string[]} res
+     * @param {Node} curr
+     * @return {boolean}
+     */
+    search(res: string[], curr: Node): boolean {
+        while (curr.containsBit(0) || curr.containsBit(1)) {
+            if (!curr.containsBit(0)) {
+                res.push('0');
+                return true;
+            }
+            if (!curr.containsBit(1)) {
+                res.push('1');
+                return true;
+            }
+
+            res.push('1');
+            curr = curr.get(1);
+        }
+        return false;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @return {string}
+     */
+    findDifferentBinaryString(nums: string[]): string {
+        let trie = new Trie();
+        for (const s of nums) {
+            trie.insert(s);
+        }
+
+        let res: string[] = [];
+        trie.search(res, trie.root);
+
+        while (res.length < nums.length) {
+            res.push('1');
+        }
+
+        return res.join('');
     }
 }
 ```

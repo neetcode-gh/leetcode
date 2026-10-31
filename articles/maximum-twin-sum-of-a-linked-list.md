@@ -320,6 +320,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {number}
+     */
+    pairSum(head: ListNode | null): number {
+        let arr: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            arr.push(cur.val);
+            cur = cur.next;
+        }
+
+        let i = 0,
+            j = arr.length - 1,
+            res = 0;
+        while (i < j) {
+            res = Math.max(res, arr[i] + arr[j]);
+            i++;
+            j--;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -698,6 +727,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {number}
+     */
+    pairSum(head: ListNode | null): number {
+        let slow = head,
+            fast = head;
+        while (fast && fast.next) {
+            slow = slow!.next;
+            fast = fast.next.next;
+        }
+
+        let prev: ListNode | null = null,
+            cur = slow;
+        while (cur) {
+            let nxt = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = nxt;
+        }
+
+        let res = 0,
+            first = head,
+            second = prev;
+        while (second) {
+            res = Math.max(res, first!.val + second.val);
+            first = first!.next;
+            second = second.next;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1032,6 +1098,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {number}
+     */
+    pairSum(head: ListNode | null): number {
+        let slow = head,
+            fast = head,
+            prev: ListNode | null = null;
+
+        while (fast && fast.next) {
+            fast = fast.next.next;
+            let tmp = slow!.next;
+            slow!.next = prev;
+            prev = slow;
+            slow = tmp;
+        }
+
+        let res = 0;
+        while (slow) {
+            res = Math.max(res, prev!.val + slow.val);
+            prev = prev!.next;
+            slow = slow.next;
+        }
+
+        return res;
     }
 }
 ```

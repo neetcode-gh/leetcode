@@ -413,6 +413,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    minDiffInBST(root: TreeNode | null): number {
+        const dfs = (node: TreeNode | null): number => {
+            if (!node) {
+                return Infinity;
+            }
+            let res = dfs1(root, node);
+            res = Math.min(res, dfs(node.left));
+            res = Math.min(res, dfs(node.right));
+            return res;
+        };
+
+        const dfs1 = (root: TreeNode | null, node: TreeNode): number => {
+            if (!root) {
+                return Infinity;
+            }
+            let res = Infinity;
+            if (root !== node) {
+                res = Math.abs(root.val - node.val);
+            }
+            res = Math.min(res, dfs1(root.left, node));
+            res = Math.min(res, dfs1(root.right, node));
+            return res;
+        };
+
+        return dfs(root);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -733,6 +768,32 @@ impl Solution {
             arr.push(n.val);
             Self::dfs(&n.right, arr);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    minDiffInBST(root: TreeNode | null): number {
+        const arr: number[] = [];
+
+        const dfs = (node: TreeNode | null): void => {
+            if (!node) return;
+            dfs(node.left);
+            arr.push(node.val);
+            dfs(node.right);
+        };
+
+        dfs(root);
+        let res = arr[1] - arr[0];
+        for (let i = 2; i < arr.length; i++) {
+            res = Math.min(res, arr[i] - arr[i - 1]);
+        }
+        return res;
     }
 }
 ```
@@ -1067,6 +1128,33 @@ impl Solution {
             *prev = Some(n.val);
             Self::dfs(&n.right, prev, res);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    minDiffInBST(root: TreeNode | null): number {
+        let prev: TreeNode | null = null;
+        let res = Infinity;
+
+        const dfs = (node: TreeNode | null): void => {
+            if (!node) return;
+
+            dfs(node.left);
+            if (prev !== null) {
+                res = Math.min(res, node.val - prev.val);
+            }
+            prev = node;
+            dfs(node.right);
+        };
+
+        dfs(root);
+        return res;
     }
 }
 ```
@@ -1431,6 +1519,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    minDiffInBST(root: TreeNode | null): number {
+        let stack: TreeNode[] = [];
+        let prev: TreeNode | null = null;
+        let res = Infinity;
+        let cur = root;
+
+        while (stack.length > 0 || cur !== null) {
+            while (cur !== null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+
+            cur = stack.pop()!;
+            if (prev !== null) {
+                res = Math.min(res, cur.val - prev.val);
+            }
+            prev = cur;
+            cur = cur.right;
+        }
+
+        return res;
     }
 }
 ```
@@ -1887,6 +2006,49 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    minDiffInBST(root: TreeNode | null): number {
+        let prevVal = Infinity,
+            res = Infinity;
+        let cur = root;
+
+        while (cur !== null) {
+            if (cur.left === null) {
+                if (prevVal !== Infinity) {
+                    res = Math.min(res, cur.val - prevVal);
+                }
+                prevVal = cur.val;
+                cur = cur.right;
+            } else {
+                let prev = cur.left;
+                while (prev.right !== null && prev.right !== cur) {
+                    prev = prev.right;
+                }
+
+                if (prev.right === null) {
+                    prev.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    if (prevVal !== Infinity) {
+                        res = Math.min(res, cur.val - prevVal);
+                    }
+                    prevVal = cur.val;
+                    cur = cur.right;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

@@ -330,6 +330,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    checkRecord(n: number): number {
+        const MOD = 1000000007;
+        let cache: number[][][] = Array.from({ length: n + 1 }, () =>
+            Array.from({ length: 2 }, () => new Array(3).fill(-1)),
+        );
+
+        const dfs = (i: number, cntA: number, cntL: number): number => {
+            if (i === 0) return 1;
+            if (cache[i][cntA][cntL] !== -1) return cache[i][cntA][cntL];
+
+            let res = dfs(i - 1, cntA, 0) % MOD;
+
+            if (cntA === 0) {
+                res = (res + dfs(i - 1, 1, 0)) % MOD;
+            }
+
+            if (cntL < 2) {
+                res = (res + dfs(i - 1, cntA, cntL + 1)) % MOD;
+            }
+
+            return (cache[i][cntA][cntL] = res);
+        };
+
+        return dfs(n, 0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -800,6 +834,60 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    checkRecord(n: number): number {
+        const MOD = 1000000007;
+        const baseCase = [
+            [1, 1, 0], // (A = 0, L = 0, 1, 2)
+            [1, 0, 0], // (A = 1, L = 0, 1, 2)
+        ];
+        let cache: number[][][] = Array.from({ length: n + 1 }, () =>
+            Array.from({ length: 2 }, () => new Array(3).fill(-1)),
+        );
+
+        const count = (n: number): number[][] => {
+            if (n === 1) return baseCase;
+            if (cache[n][0][0] !== -1) return cache[n];
+
+            const prev = count(n - 1);
+            const res = cache[n];
+
+            // Choose P
+            res[0][0] = (((prev[0][0] + prev[0][1]) % MOD) + prev[0][2]) % MOD;
+            res[1][0] = (((prev[1][0] + prev[1][1]) % MOD) + prev[1][2]) % MOD;
+
+            // Choose L
+            res[0][1] = prev[0][0];
+            res[0][2] = prev[0][1];
+            res[1][1] = prev[1][0];
+            res[1][2] = prev[1][1];
+
+            // Choose A
+            res[1][0] =
+                (res[1][0] +
+                    ((((prev[0][0] + prev[0][1]) % MOD) + prev[0][2]) % MOD)) %
+                MOD;
+
+            return res;
+        };
+
+        const result = count(n);
+        let total = 0;
+        for (const row of result) {
+            for (const val of row) {
+                total = (total + val) % MOD;
+            }
+        }
+        return total;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1179,6 +1267,55 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    checkRecord(n: number): number {
+        const MOD = 1000000007;
+        const dp: number[][][] = Array.from({ length: n + 1 }, () =>
+            Array.from({ length: 2 }, () => new Array(3).fill(0)),
+        );
+
+        dp[0][0][0] = 1;
+
+        for (let i = 1; i <= n; i++) {
+            for (let cntA = 0; cntA < 2; cntA++) {
+                for (let cntL = 0; cntL < 3; cntL++) {
+                    // Choose P
+                    dp[i][cntA][0] =
+                        (dp[i][cntA][0] + dp[i - 1][cntA][cntL]) % MOD;
+
+                    // Choose A
+                    if (cntA > 0) {
+                        dp[i][cntA][0] =
+                            (dp[i][cntA][0] + dp[i - 1][cntA - 1][cntL]) % MOD;
+                    }
+
+                    // Choose L
+                    if (cntL > 0) {
+                        dp[i][cntA][cntL] =
+                            (dp[i][cntA][cntL] + dp[i - 1][cntA][cntL - 1]) %
+                            MOD;
+                    }
+                }
+            }
+        }
+
+        let result = 0;
+        for (let cntA = 0; cntA < 2; cntA++) {
+            for (let cntL = 0; cntL < 3; cntL++) {
+                result = (result + dp[n][cntA][cntL]) % MOD;
+            }
+        }
+
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1552,6 +1689,56 @@ impl Solution {
             }
         }
         total as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    checkRecord(n: number): number {
+        if (n === 1) return 3;
+
+        const MOD = 1000000007;
+        let dp = [
+            [1, 1, 0],
+            [1, 0, 0],
+        ];
+
+        for (let i = 0; i < n - 1; i++) {
+            let ndp: number[][] = Array.from({ length: 2 }, () =>
+                new Array(3).fill(0),
+            );
+
+            // Choose P
+            ndp[0][0] = (((dp[0][0] + dp[0][1]) % MOD) + dp[0][2]) % MOD;
+            ndp[1][0] = (((dp[1][0] + dp[1][1]) % MOD) + dp[1][2]) % MOD;
+
+            // Choose L
+            ndp[0][1] = dp[0][0];
+            ndp[1][1] = dp[1][0];
+            ndp[0][2] = dp[0][1];
+            ndp[1][2] = dp[1][1];
+
+            // Choose A
+            ndp[1][0] =
+                (ndp[1][0] +
+                    ((((dp[0][0] + dp[0][1]) % MOD) + dp[0][2]) % MOD)) %
+                MOD;
+
+            [dp, ndp] = [ndp, dp];
+        }
+
+        let total = 0;
+        for (let row of dp) {
+            for (let val of row) {
+                total = (total + val) % MOD;
+            }
+        }
+        return total;
     }
 }
 ```
@@ -1963,6 +2150,59 @@ impl Solution {
         }
 
         result as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    checkRecord(n: number): number {
+        const MOD = 1000000007;
+        let dp: number[][] = Array.from({ length: 2 }, () =>
+            new Array(3).fill(0),
+        );
+
+        dp[0][0] = 1;
+
+        for (let i = 1; i <= n; i++) {
+            let nextDp: number[][] = Array.from({ length: 2 }, () =>
+                new Array(3).fill(0),
+            );
+
+            for (let cntA = 0; cntA < 2; cntA++) {
+                for (let cntL = 0; cntL < 3; cntL++) {
+                    // Choose P
+                    nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA][cntL]) % MOD;
+
+                    // Choose A
+                    if (cntA > 0) {
+                        nextDp[cntA][0] =
+                            (nextDp[cntA][0] + dp[cntA - 1][cntL]) % MOD;
+                    }
+
+                    // Choose L
+                    if (cntL > 0) {
+                        nextDp[cntA][cntL] =
+                            (nextDp[cntA][cntL] + dp[cntA][cntL - 1]) % MOD;
+                    }
+                }
+            }
+
+            dp = nextDp;
+        }
+
+        let result = 0;
+        for (let cntA = 0; cntA < 2; cntA++) {
+            for (let cntL = 0; cntL < 3; cntL++) {
+                result = (result + dp[cntA][cntL]) % MOD;
+            }
+        }
+
+        return result;
     }
 }
 ```

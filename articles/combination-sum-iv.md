@@ -232,6 +232,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    combinationSum4(nums: number[], target: number): number {
+        nums.sort((a, b) => a - b);
+
+        const dfs = (total: number): number => {
+            if (total === 0) return 1;
+
+            let res = 0;
+            for (let num of nums) {
+                if (total < num) break;
+                res += dfs(total - num);
+            }
+            return res;
+        };
+
+        return dfs(target);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -499,6 +525,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    combinationSum4(nums: number[], target: number): number {
+        nums.sort((a, b) => a - b);
+        const memo: { [key: number]: number } = { 0: 1 };
+
+        const dfs = (total: number): number => {
+            if (memo[total] !== undefined) {
+                return memo[total];
+            }
+
+            let res = 0;
+            for (let num of nums) {
+                if (total < num) break;
+                res += dfs(total - num);
+            }
+            memo[total] = res;
+            return res;
+        };
+
+        return dfs(target);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -685,6 +741,26 @@ impl Solution {
         }
 
         *dp.get(&target).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    combinationSum4(nums: number[], target: number): number {
+        let dp: { [key: number]: number } = { 0: 1 };
+        for (let total = 1; total <= target; total++) {
+            dp[total] = 0;
+            for (let num of nums) {
+                dp[total] += dp[total - num] || 0;
+            }
+        }
+        return dp[target];
     }
 }
 ```
@@ -899,6 +975,32 @@ impl Solution {
         }
 
         *dp.get(&0).unwrap_or(&0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    combinationSum4(nums: number[], target: number): number {
+        nums.sort((a, b) => a - b);
+        const dp = new Map<number, number>();
+        dp.set(target, 1);
+
+        for (let total = target; total > 0; total--) {
+            for (const num of nums) {
+                if (total < num) break;
+                dp.set(
+                    total - num,
+                    (dp.get(total - num) || 0) + (dp.get(total) || 0),
+                );
+            }
+        }
+        return dp.get(0) || 0;
     }
 }
 ```

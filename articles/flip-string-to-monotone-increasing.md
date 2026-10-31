@@ -288,6 +288,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlipsMonoIncr(s: string): number {
+        const n = s.length;
+        const dp: number[][] = Array.from({ length: n }, () => Array(2).fill(-1));
+
+        const dfs = (i: number, mono: number): number => {
+            if (i === n) return 0;
+            if (dp[i][mono] !== -1) return dp[i][mono];
+
+            if (mono === 1 && s[i] === '0') {
+                dp[i][mono] = Math.min(1 + dfs(i + 1, 0), dfs(i + 1, mono));
+            } else if (mono === 1 && s[i] === '1') {
+                dp[i][mono] = Math.min(1 + dfs(i + 1, mono), dfs(i + 1, 0));
+            } else if (mono === 0 && s[i] === '1') {
+                dp[i][mono] = dfs(i + 1, mono);
+            } else {
+                dp[i][mono] = 1 + dfs(i + 1, mono);
+            }
+            return dp[i][mono];
+        };
+
+        return dfs(0, 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -510,6 +541,32 @@ impl Solution {
         }
 
         dp[0][1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlipsMonoIncr(s: string): number {
+        const n = s.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => [0, 0]);
+
+        for (let i = n - 1; i >= 0; i--) {
+            if (s[i] === '0') {
+                dp[i][1] = Math.min(1 + dp[i + 1][0], dp[i + 1][1]);
+                dp[i][0] = 1 + dp[i + 1][0];
+            } else {
+                // s[i] === '1'
+                dp[i][1] = Math.min(1 + dp[i + 1][1], dp[i + 1][0]);
+                dp[i][0] = dp[i + 1][0];
+            }
+        }
+
+        return dp[0][1];
     }
 }
 ```
@@ -758,6 +815,35 @@ impl Solution {
         }
 
         dp[1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlipsMonoIncr(s: string): number {
+        let dp = [0, 0];
+
+        for (let i = s.length - 1; i >= 0; i--) {
+            let newDp1: number, newDp0: number;
+            if (s[i] === '0') {
+                newDp1 = Math.min(1 + dp[0], dp[1]);
+                newDp0 = dp[0] + 1;
+            } else {
+                // s[i] === '1'
+                newDp1 = Math.min(1 + dp[1], dp[0]);
+                newDp0 = dp[0];
+            }
+
+            dp[1] = newDp1;
+            dp[0] = newDp0;
+        }
+
+        return dp[1];
     }
 }
 ```
@@ -1018,6 +1104,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlipsMonoIncr(s: string): number {
+        const n = s.length;
+        const leftOnes: number[] = Array(n + 1).fill(0);
+        const rightZeros: number[] = Array(n + 1).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            leftOnes[i + 1] = leftOnes[i] + (s[i] === '1' ? 1 : 0);
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            rightZeros[i] = rightZeros[i + 1] + (s[i] === '0' ? 1 : 0);
+        }
+
+        let res = Infinity;
+        for (let i = 0; i <= n; i++) {
+            res = Math.min(res, leftOnes[i] + rightZeros[i]);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1190,6 +1305,27 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlipsMonoIncr(s: string): number {
+        let res = 0,
+            cntOne = 0;
+        for (let c of s) {
+            if (c === '1') {
+                cntOne++;
+            } else {
+                res = Math.min(res + 1, cntOne);
+            }
+        }
+        return res;
     }
 }
 ```

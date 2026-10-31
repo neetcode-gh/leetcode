@@ -127,8 +127,6 @@ public class Solution {
 ```
 
 ```go
-import "sort"
-
 func findAnagrams(s string, p string) []int {
     n, m := len(s), len(p)
     res := []int{}
@@ -174,7 +172,7 @@ class Solution {
         let sortedP = String(p.sorted())
         let sArr = Array(s)
 
-        for i in 0...(n - m) {
+        for i in stride(from: 0, through: n - m, by: 1) {
             let sub = String(sArr[i..<(i + m)].sorted())
             if sub == sortedP {
                 res.append(i)
@@ -184,7 +182,6 @@ class Solution {
     }
 }
 ```
-
 
 ```rust
 impl Solution {
@@ -207,6 +204,34 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {number[]}
+     */
+    findAnagrams(s: string, p: string): number[] {
+        const n = s.length,
+            m = p.length;
+        const res: number[] = [];
+        const sortedP = p.split('').sort().join('');
+
+        for (let i = 0; i <= n - m; i++) {
+            const sub = s
+                .substring(i, i + m)
+                .split('')
+                .sort()
+                .join('');
+            if (sub === sortedP) {
+                res.push(i);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -549,7 +574,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
@@ -590,6 +614,52 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {number[]}
+     */
+    findAnagrams(s: string, p: string): number[] {
+        const n = s.length,
+            m = p.length;
+        if (m > n) return [];
+
+        const pCount: number[] = Array(26).fill(0);
+        for (const c of p) {
+            pCount[c.charCodeAt(0) - 97]++;
+        }
+
+        const prefix: number[][] = Array.from({ length: n + 1 }, () => Array(26).fill(0));
+        for (let i = 1; i <= n; i++) {
+            for (let j = 0; j < 26; j++) {
+                prefix[i][j] = prefix[i - 1][j];
+            }
+            prefix[i][s.charCodeAt(i - 1) - 97]++;
+        }
+
+        const res: number[] = [];
+        let i = 0,
+            j = m - 1;
+        while (j < n) {
+            let isValid = true;
+            for (let c = 0; c < 26; c++) {
+                if (prefix[j + 1][c] - prefix[i][c] !== pCount[c]) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) res.push(i);
+            i++;
+            j++;
+        }
+
+        return res;
     }
 }
 ```
@@ -895,7 +965,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
@@ -931,6 +1000,44 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {number[]}
+     */
+    findAnagrams(s: string, p: string): number[] {
+        if (p.length > s.length) return [];
+
+        const pCount: number[] = new Array(26).fill(0);
+        const sCount: number[] = new Array(26).fill(0);
+
+        for (const char of p) {
+            pCount[char.charCodeAt(0) - 97]++;
+        }
+        for (let i = 0; i < p.length; i++) {
+            sCount[s.charCodeAt(i) - 97]++;
+        }
+
+        const res: number[] = [];
+        if (pCount.toString() === sCount.toString()) res.push(0);
+
+        let l = 0;
+        for (let r = p.length; r < s.length; r++) {
+            sCount[s.charCodeAt(r) - 97]++;
+            sCount[s.charCodeAt(l) - 97]--;
+            l++;
+            if (pCount.toString() === sCount.toString()) {
+                res.push(l);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1323,7 +1430,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
@@ -1373,6 +1479,55 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {number[]}
+     */
+    findAnagrams(s: string, p: string): number[] {
+        const n = s.length,
+            m = p.length;
+        if (m > n) return [];
+
+        const pCount: number[] = new Array(26).fill(0);
+        const sCount: number[] = new Array(26).fill(0);
+
+        for (let i = 0; i < m; i++) {
+            pCount[p.charCodeAt(i) - 97]++;
+            sCount[s.charCodeAt(i) - 97]++;
+        }
+
+        let match = 0;
+        for (let i = 0; i < 26; i++) {
+            if (pCount[i] === sCount[i]) match++;
+        }
+
+        const res: number[] = [];
+        if (match === 26) res.push(0);
+
+        let l = 0;
+        for (let r = m; r < n; r++) {
+            let c = s.charCodeAt(l) - 97;
+            if (sCount[c] === pCount[c]) match--;
+            sCount[c]--;
+            l++;
+            if (sCount[c] === pCount[c]) match++;
+
+            c = s.charCodeAt(r) - 97;
+            if (sCount[c] === pCount[c]) match--;
+            sCount[c]++;
+            if (sCount[c] === pCount[c]) match++;
+
+            if (match === 26) res.push(l);
+        }
+
+        return res;
     }
 }
 ```

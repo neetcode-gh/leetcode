@@ -382,6 +382,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numEnclaves(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+        const direct = [0, 1, 0, -1, 0];
+
+        const dfs = (r: number, c: number): number => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r === ROWS ||
+                c === COLS ||
+                grid[r][c] === 0 ||
+                visit[r][c]
+            ) {
+                return 0;
+            }
+            visit[r][c] = true;
+            let res = 1;
+            for (let d = 0; d < 4; d++) {
+                res += dfs(r + direct[d], c + direct[d + 1]);
+            }
+            return res;
+        };
+
+        let land = 0,
+            borderLand = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                land += grid[r][c];
+                if (
+                    grid[r][c] === 1 &&
+                    !visit[r][c] &&
+                    (r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1)
+                ) {
+                    borderLand += dfs(r, c);
+                }
+            }
+        }
+        return land - borderLand;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,6 +843,61 @@ impl Solution {
         }
 
         land - border_land
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numEnclaves(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const direct = [0, 1, 0, -1, 0];
+        const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+        const q = new Queue();
+
+        let land = 0,
+            borderLand = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                land += grid[r][c];
+                if (
+                    grid[r][c] === 1 &&
+                    (r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1)
+                ) {
+                    q.push([r, c]);
+                    visit[r][c] = true;
+                }
+            }
+        }
+
+        while (!q.isEmpty()) {
+            let [r, c]: number[] = q.pop();
+            borderLand++;
+            for (let d = 0; d < 4; d++) {
+                let nr = r + direct[d],
+                    nc = c + direct[d + 1];
+                if (
+                    nr >= 0 &&
+                    nc >= 0 &&
+                    nr < ROWS &&
+                    nc < COLS &&
+                    grid[nr][nc] === 1 &&
+                    !visit[nr][nc]
+                ) {
+                    q.push([nr, nc]);
+                    visit[nr][nc] = true;
+                }
+            }
+        }
+
+        return land - borderLand;
     }
 }
 ```
@@ -1411,8 +1518,91 @@ impl Solution {
             }
         }
 
-        let border_land = dsu.size[dsu.find(n)] as i32;
+        let root = dsu.find(n);
+        let border_land = dsu.size[root] as i32;
         land - border_land + 1
+    }
+}
+```
+
+```typescript
+class DSU {
+    parent: number[];
+    size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.size = new Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} u=v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.size[pu] >= this.size[pv]) {
+            this.size[pu] += this.size[pv];
+            this.parent[pv] = pu;
+        } else {
+            this.size[pv] += this.size[pu];
+            this.parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numEnclaves(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const N = ROWS * COLS;
+        const dsu = new DSU(N);
+        const directions = [0, 1, 0, -1, 0];
+        let land = 0;
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 0) continue;
+                land++;
+                for (let d = 0; d < 4; d++) {
+                    let nr = r + directions[d],
+                        nc = c + directions[d + 1];
+                    if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS) {
+                        if (grid[nr][nc] === 1) {
+                            dsu.union(r * COLS + c, nr * COLS + nc);
+                        }
+                    } else {
+                        dsu.union(N, r * COLS + c);
+                    }
+                }
+            }
+        }
+
+        const borderLand = dsu.size[dsu.find(N)];
+        return land - borderLand + 1;
     }
 }
 ```

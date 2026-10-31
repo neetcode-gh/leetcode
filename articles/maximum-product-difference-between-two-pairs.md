@@ -225,6 +225,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProductDifference(nums: number[]): number {
+        const n = nums.length;
+        let res = 0;
+        for (let a = 0; a < n; a++) {
+            for (let b = 0; b < n; b++) {
+                if (a === b) continue;
+                for (let c = 0; c < n; c++) {
+                    if (a === c || b === c) continue;
+                    for (let d = 0; d < n; d++) {
+                        if (a === d || b === d || c === d) continue;
+                        res = Math.max(
+                            res,
+                            nums[a] * nums[b] - nums[c] * nums[d],
+                        );
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -333,6 +362,21 @@ impl Solution {
         nums.sort_unstable();
         let n = nums.len();
         nums[n - 1] * nums[n - 2] - nums[0] * nums[1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProductDifference(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+        return (
+            nums[nums.length - 1] * nums[nums.length - 2] - nums[0] * nums[1]
+        );
     }
 }
 ```
@@ -576,6 +620,36 @@ impl Solution {
             }
         }
         (max1 * max2) - (min1 * min2)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProductDifference(nums: number[]): number {
+        let max1 = 0,
+            max2 = 0;
+        let min1 = Infinity,
+            min2 = Infinity;
+        for (const num of nums) {
+            if (num > max1) {
+                max2 = max1;
+                max1 = num;
+            } else if (num > max2) {
+                max2 = num;
+            }
+            if (num < min1) {
+                min2 = min1;
+                min1 = num;
+            } else if (num < min2) {
+                min2 = num;
+            }
+        }
+        return max1 * max2 - min1 * min2;
     }
 }
 ```

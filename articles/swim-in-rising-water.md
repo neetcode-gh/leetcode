@@ -289,7 +289,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
@@ -318,6 +317,40 @@ impl Solution {
         }
 
         dfs(&grid, &mut visit, 0, 0, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    swimInWater(grid: number[][]): number {
+        const n = grid.length;
+        const visit: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+
+        const dfs = (r: number, c: number, t: number): number => {
+            if (r < 0 || c < 0 || r >= n || c >= n || visit[r][c]) {
+                return 1000000;
+            }
+            if (r === n - 1 && c === n - 1) {
+                return Math.max(t, grid[r][c]);
+            }
+            visit[r][c] = true;
+            t = Math.max(t, grid[r][c]);
+            const res = Math.min(
+                Math.min(dfs(r + 1, c, t), dfs(r - 1, c, t)),
+                Math.min(dfs(r, c + 1, t), dfs(r, c - 1, t)),
+            );
+            visit[r][c] = false;
+            return res;
+        };
+
+        return dfs(0, 0, 0);
     }
 }
 ```
@@ -711,7 +744,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
@@ -757,6 +789,63 @@ impl Solution {
             }
         }
         max_h
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    swimInWater(grid: number[][]): number {
+        const n = grid.length;
+        const visit: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+        let minH = grid[0][0],
+            maxH = grid[0][0];
+        for (let row = 0; row < n; row++) {
+            for (let col = 0; col < n; col++) {
+                maxH = Math.max(maxH, grid[row][col]);
+                minH = Math.min(minH, grid[row][col]);
+            }
+        }
+
+        const dfs = (node: number[], t: number): boolean => {
+            const [r, c] = node;
+            if (
+                Math.min(r, c) < 0 ||
+                Math.max(r, c) >= n ||
+                visit[r][c] ||
+                grid[r][c] > t
+            ) {
+                return false;
+            }
+            if (r === n - 1 && c === n - 1) {
+                return true;
+            }
+            visit[r][c] = true;
+            return (
+                dfs([r + 1, c], t) ||
+                dfs([r - 1, c], t) ||
+                dfs([r, c + 1], t) ||
+                dfs([r, c - 1], t)
+            );
+        };
+
+        for (let t = minH; t < maxH; t++) {
+            if (dfs([0, 0], t)) {
+                return t;
+            }
+            for (let r = 0; r < n; r++) {
+                for (let c = 0; c < n; c++) {
+                    visit[r][c] = false;
+                }
+            }
+        }
+        return maxH;
     }
 }
 ```
@@ -1190,7 +1279,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
@@ -1240,6 +1328,68 @@ impl Solution {
             }
         }
         hi
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    swimInWater(grid: number[][]): number {
+        const n = grid.length;
+        const visit: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+        let minH = grid[0][0],
+            maxH = grid[0][0];
+        for (let row = 0; row < n; row++) {
+            for (let col = 0; col < n; col++) {
+                maxH = Math.max(maxH, grid[row][col]);
+                minH = Math.min(minH, grid[row][col]);
+            }
+        }
+
+        const dfs = (node: number[], t: number): boolean => {
+            const [r, c] = node;
+            if (
+                Math.min(r, c) < 0 ||
+                Math.max(r, c) >= n ||
+                visit[r][c] ||
+                grid[r][c] > t
+            ) {
+                return false;
+            }
+            if (r === n - 1 && c === n - 1) {
+                return true;
+            }
+            visit[r][c] = true;
+            return (
+                dfs([r + 1, c], t) ||
+                dfs([r - 1, c], t) ||
+                dfs([r, c + 1], t) ||
+                dfs([r, c - 1], t)
+            );
+        };
+
+        let l = minH,
+            r = maxH;
+        while (l < r) {
+            let m = (l + r) >> 1;
+            if (dfs([0, 0], m)) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+            for (let row = 0; row < n; row++) {
+                for (let col = 0; col < n; col++) {
+                    visit[row][col] = false;
+                }
+            }
+        }
+        return r;
     }
 }
 ```
@@ -1610,7 +1760,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
@@ -1639,6 +1788,52 @@ impl Solution {
             }
         }
         n as i32 * n as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    swimInWater(grid: number[][]): number {
+        const N = grid.length;
+        const visit = new Set<string>();
+        const minPQ = new MinPriorityQueue((entry: number[]) => entry[0]);
+        const directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+
+        minPQ.push([grid[0][0], 0, 0]);
+        visit.add('0,0');
+
+        while (!minPQ.isEmpty()) {
+            const [t, r, c]: number[] = minPQ.pop();
+            if (r === N - 1 && c === N - 1) {
+                return t;
+            }
+            for (const [dr, dc] of directions) {
+                const neiR = r + dr;
+                const neiC = c + dc;
+                if (
+                    neiR < 0 ||
+                    neiC < 0 ||
+                    neiR >= N ||
+                    neiC >= N ||
+                    visit.has(`${neiR},${neiC}`)
+                ) {
+                    continue;
+                }
+                visit.add(`${neiR},${neiC}`);
+                minPQ.push([Math.max(t, grid[neiR][neiC]), neiR, neiC]);
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -2191,7 +2386,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 struct DSU {
     parent: Vec<usize>,
@@ -2260,6 +2454,95 @@ impl Solution {
             }
         }
         n as i32 * n as i32
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+
+    /**
+     * @param {number} n
+     * @param {number} n
+     * @return {boolean}
+     */
+    connected(u: number, v: number): boolean {
+        return this.find(u) == this.find(v);
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    swimInWater(grid: number[][]): number {
+        const N = grid.length;
+        const dsu = new DSU(N * N);
+        const positions: number[][] = [];
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                positions.push([grid[r][c], r, c]);
+            }
+        }
+        positions.sort((a, b) => a[0] - b[0]);
+        const directions: number[][] = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+        ];
+
+        for (const [t, r, c] of positions) {
+            for (const [dr, dc] of directions) {
+                const nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nr < N &&
+                    nc >= 0 &&
+                    nc < N &&
+                    grid[nr][nc] <= t
+                ) {
+                    dsu.union(r * N + c, nr * N + nc);
+                }
+            }
+            if (dsu.connected(0, N * N - 1)) return t;
+        }
+        return N * N;
     }
 }
 ```

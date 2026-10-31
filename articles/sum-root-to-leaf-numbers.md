@@ -279,6 +279,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    sumNumbers(root: TreeNode | null): number {
+        const dfs = (cur: TreeNode | null, num: number): number => {
+            if (!cur) return 0;
+
+            num = num * 10 + cur.val;
+            if (!cur.left && !cur.right) return num;
+
+            return dfs(cur.left, num) + dfs(cur.right, num);
+        };
+
+        return dfs(root, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,6 +637,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    sumNumbers(root: TreeNode | null): number {
+        let res = 0;
+        const q = new Queue([[root, 0]]);
+        while (!q.isEmpty()) {
+            const [cur, num]: [TreeNode, number] = q.pop();
+            const newNum = num * 10 + cur.val;
+            if (!cur.left && !cur.right) {
+                res += newNum;
+                continue;
+            }
+
+            if (cur.left) q.push([cur.left, newNum]);
+            if (cur.right) q.push([cur.right, newNum]);
+        }
+
+        return res;
     }
 }
 ```
@@ -972,6 +1019,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    sumNumbers(root: TreeNode | null): number {
+        let res = 0,
+            num = 0;
+        let stack: [TreeNode | null, number][] = [];
+        let cur: TreeNode | null = root;
+
+        while (cur || stack.length) {
+            if (cur) {
+                num = num * 10 + cur.val;
+                if (!cur.left && !cur.right) res += num;
+
+                stack.push([cur.right, num]);
+                cur = cur.left;
+            } else {
+                [cur, num] = stack.pop()!;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1485,6 +1560,51 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    sumNumbers(root: TreeNode | null): number {
+        let res = 0,
+            num = 0;
+        let power: number[] = Array(10).fill(1);
+        for (let i = 1; i < 10; i++) {
+            power[i] = power[i - 1] * 10;
+        }
+
+        let cur = root;
+        while (cur) {
+            if (!cur.left) {
+                num = num * 10 + cur.val;
+                if (!cur.right) res += num;
+                cur = cur.right;
+            } else {
+                let prev: TreeNode = cur.left,
+                    steps = 1;
+                while (prev.right && prev.right !== cur) {
+                    prev = prev.right;
+                    steps++;
+                }
+
+                if (!prev.right) {
+                    prev.right = cur;
+                    num = num * 10 + cur.val;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    if (!prev.left) res += num;
+                    num = Math.floor(num / power[steps]);
+                    cur = cur.right;
+                }
+            }
+        }
+        return res;
     }
 }
 ```

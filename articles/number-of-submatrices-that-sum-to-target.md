@@ -276,6 +276,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {number}
+     */
+    numSubmatrixSumTarget(matrix: number[][], target: number): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let res = 0;
+
+        for (let r1 = 0; r1 < ROWS; r1++) {
+            for (let r2 = r1; r2 < ROWS; r2++) {
+                for (let c1 = 0; c1 < COLS; c1++) {
+                    for (let c2 = c1; c2 < COLS; c2++) {
+                        let subSum = 0;
+                        for (let r = r1; r <= r2; r++) {
+                            for (let c = c1; c <= c2; c++) {
+                                subSum += matrix[r][c];
+                            }
+                        }
+                        if (subSum === target) {
+                            res++;
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,6 +678,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {number}
+     */
+    numSubmatrixSumTarget(matrix: number[][], target: number): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        const subSum: number[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(0),
+        );
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                let top = r > 0 ? subSum[r - 1][c] : 0;
+                let left = c > 0 ? subSum[r][c - 1] : 0;
+                let topLeft = Math.min(r, c) > 0 ? subSum[r - 1][c - 1] : 0;
+                subSum[r][c] = matrix[r][c] + top + left - topLeft;
+            }
+        }
+
+        let res = 0;
+        for (let r1 = 0; r1 < ROWS; r1++) {
+            for (let r2 = r1; r2 < ROWS; r2++) {
+                for (let c1 = 0; c1 < COLS; c1++) {
+                    for (let c2 = c1; c2 < COLS; c2++) {
+                        let top = r1 > 0 ? subSum[r1 - 1][c2] : 0;
+                        let left = c1 > 0 ? subSum[r2][c1 - 1] : 0;
+                        let topLeft =
+                            Math.min(r1, c1) > 0 ? subSum[r1 - 1][c1 - 1] : 0;
+                        let curSum = subSum[r2][c2] - top - left + topLeft;
+                        if (curSum === target) {
+                            res++;
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -975,6 +1054,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {number}
+     */
+    numSubmatrixSumTarget(matrix: number[][], target: number): number {
+        let ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let subSum: number[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(0),
+        );
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                let top = r > 0 ? subSum[r - 1][c] : 0;
+                let left = c > 0 ? subSum[r][c - 1] : 0;
+                let topLeft = Math.min(r, c) > 0 ? subSum[r - 1][c - 1] : 0;
+                subSum[r][c] = matrix[r][c] + top + left - topLeft;
+            }
+        }
+
+        let res = 0;
+        for (let r1 = 0; r1 < ROWS; r1++) {
+            for (let r2 = r1; r2 < ROWS; r2++) {
+                let count = new Map<number, number>();
+                count.set(0, 1);
+                for (let c = 0; c < COLS; c++) {
+                    let curSum =
+                        subSum[r2][c] - (r1 > 0 ? subSum[r1 - 1][c] : 0);
+                    res += count.get(curSum - target) || 0;
+                    count.set(curSum, (count.get(curSum) || 0) + 1);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1253,6 +1373,41 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {number}
+     */
+    numSubmatrixSumTarget(matrix: number[][], target: number): number {
+        let ROWS = matrix.length,
+            COLS = matrix[0].length,
+            res = 0;
+
+        for (let c1 = 0; c1 < COLS; c1++) {
+            let rowPrefix: number[] = new Array(ROWS).fill(0);
+            for (let c2 = c1; c2 < COLS; c2++) {
+                for (let r = 0; r < ROWS; r++) {
+                    rowPrefix[r] += matrix[r][c2];
+                }
+
+                let count = new Map<number, number>();
+                count.set(0, 1);
+                let curSum = 0;
+
+                for (let r = 0; r < ROWS; r++) {
+                    curSum += rowPrefix[r];
+                    res += count.get(curSum - target) || 0;
+                    count.set(curSum, (count.get(curSum) || 0) + 1);
+                }
+            }
+        }
+        return res;
     }
 }
 ```

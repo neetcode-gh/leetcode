@@ -31,7 +31,7 @@ class Solution:
             if self.is_celebrity(i):
                 return i
         return -1
-    
+
     def is_celebrity(self, i):
         for j in range(self.n):
             if i == j: continue # Don't ask if they know themselves.
@@ -42,9 +42,9 @@ class Solution:
 
 ```java
 public class Solution extends Relation {
-    
+
     private int numberOfPeople;
-    
+
     public int findCelebrity(int n) {
         numberOfPeople = n;
         for (int i = 0; i < n; i++) {
@@ -54,7 +54,7 @@ public class Solution extends Relation {
         }
         return -1;
     }
-    
+
     private boolean isCelebrity(int i) {
         for (int j = 0; j < numberOfPeople; j++) {
             if (i == j) continue; // Don't ask if they know themselves.
@@ -65,6 +65,37 @@ public class Solution extends Relation {
         return true;
     }
 }
+```
+
+```cpp
+/* The knows API is defined for you.
+      bool knows(int a, int b); */
+
+class Solution {
+private:
+    int numberOfPeople;
+
+    bool isCelebrity(int i) {
+        for (int j = 0; j < numberOfPeople; j++) {
+            if (i == j) continue; // Don't ask if they know themselves.
+            if (knows(i, j) || !knows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+public:
+    int findCelebrity(int n) {
+        numberOfPeople = n;
+        for (int i = 0; i < n; i++) {
+            if (isCelebrity(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
 ```
 
 ```javascript
@@ -120,30 +151,28 @@ public class Solution : Relation {
 ```
 
 ```go
-/* The knows API is already defined for you.
-      knows := func(a, b int) bool */
+/* The knows API is defined in the driver.
+   func knows(a, b int) bool */
 
-func solution(knows func(a, b int) bool) func(n int) int {
-    return func(n int) int {
-        isCelebrity := func(i int) bool {
-            for j := 0; j < n; j++ {
-                if i == j {
-                    continue
-                }
-                if knows(i, j) || !knows(j, i) {
-                    return false
-                }
+func findCelebrity(n int) int {
+    isCelebrity := func(i int) bool {
+        for j := 0; j < n; j++ {
+            if i == j {
+                continue
             }
-            return true
-        }
-
-        for i := 0; i < n; i++ {
-            if isCelebrity(i) {
-                return i
+            if knows(i, j) || !knows(j, i) {
+                return false
             }
         }
-        return -1
+        return true
     }
+
+    for i := 0; i < n; i++ {
+        if isCelebrity(i) {
+            return i
+        }
+    }
+    return -1
 }
 ```
 
@@ -206,27 +235,50 @@ class Solution : Relation {
 ```
 
 ```rust
-/* The knows API is defined somewhere else.
-       fn knows(a: i32, b: i32) -> bool; */
+// The knows API is provided on Solution.
+// fn self.knows(&self, a: i32, b: i32) -> bool;
 
 impl Solution {
-    pub fn find_celebrity(n: i32) -> i32 {
+    pub fn find_celebrity(&self, n: i32) -> i32 {
         for i in 0..n {
-            if Self::is_celebrity(i, n) {
+            if self.is_celebrity(i, n) {
                 return i;
             }
         }
         -1
     }
 
-    fn is_celebrity(i: i32, n: i32) -> bool {
+    fn is_celebrity(&self, i: i32, n: i32) -> bool {
         for j in 0..n {
             if i == j { continue; }
-            if knows(i, j) || !knows(j, i) {
+            if self.knows(i, j) || !self.knows(j, i) {
                 return false;
             }
         }
         true
+    }
+}
+```
+
+```typescript
+function solution(knows: (a: number, b: number) => boolean) {
+    function isCelebrity(i: number, n: number): boolean {
+        for (let j = 0; j < n; j++) {
+            if (i === j) continue;
+            if (knows(i, j) || !knows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    return function findCelebrity(n: number): number {
+        for (let i = 0; i < n; i++) {
+            if (isCelebrity(i, n)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -284,9 +336,9 @@ class Solution:
 
 ```java
 public class Solution extends Relation {
-    
+
     private int numberOfPeople;
-    
+
     public int findCelebrity(int n) {
         numberOfPeople = n;
         int celebrityCandidate = 0;
@@ -300,7 +352,7 @@ public class Solution extends Relation {
         }
         return -1;
     }
-    
+
     private boolean isCelebrity(int i) {
         for (int j = 0; j < numberOfPeople; j++) {
             if (i == j) continue; // Don't ask if they know themselves.
@@ -317,7 +369,7 @@ public class Solution extends Relation {
 class Solution {
 private:
     int n;
-    
+
     bool is_celebrity(int i) {
         for (int j = 0; j < n; j++) {
             if (i == j) continue;
@@ -327,18 +379,18 @@ private:
         }
         return true;
     }
-    
+
 public:
     int findCelebrity(int n) {
         this->n = n;
         int celebrity_candidate = 0;
-        
+
         for (int i = 1; i < n; i++) {
             if (knows(celebrity_candidate, i)) {
                 celebrity_candidate = i;
             }
         }
-        
+
         if (is_celebrity(celebrity_candidate)) {
             return celebrity_candidate;
         }
@@ -408,34 +460,32 @@ public class Solution : Relation {
 ```
 
 ```go
-/* The knows API is already defined for you.
-      knows := func(a, b int) bool */
+/* The knows API is defined in the driver.
+   func knows(a, b int) bool */
 
-func solution(knows func(a, b int) bool) func(n int) int {
-    return func(n int) int {
-        isCelebrity := func(i int) bool {
-            for j := 0; j < n; j++ {
-                if i == j {
-                    continue
-                }
-                if knows(i, j) || !knows(j, i) {
-                    return false
-                }
+func findCelebrity(n int) int {
+    isCelebrity := func(i int) bool {
+        for j := 0; j < n; j++ {
+            if i == j {
+                continue
             }
-            return true
-        }
-
-        celebrityCandidate := 0
-        for i := 1; i < n; i++ {
-            if knows(celebrityCandidate, i) {
-                celebrityCandidate = i
+            if knows(i, j) || !knows(j, i) {
+                return false
             }
         }
-        if isCelebrity(celebrityCandidate) {
-            return celebrityCandidate
-        }
-        return -1
+        return true
     }
+
+    celebrityCandidate := 0
+    for i := 1; i < n; i++ {
+        if knows(celebrityCandidate, i) {
+            celebrityCandidate = i
+        }
+    }
+    if isCelebrity(celebrityCandidate) {
+        return celebrityCandidate
+    }
+    return -1
 }
 ```
 
@@ -506,31 +556,58 @@ class Solution : Relation {
 ```
 
 ```rust
-/* The knows API is defined somewhere else.
-       fn knows(a: i32, b: i32) -> bool; */
+// The knows API is provided on Solution.
+// fn self.knows(&self, a: i32, b: i32) -> bool;
 
 impl Solution {
-    pub fn find_celebrity(n: i32) -> i32 {
+    pub fn find_celebrity(&self, n: i32) -> i32 {
         let mut celebrity_candidate = 0;
         for i in 0..n {
-            if knows(celebrity_candidate, i) {
+            if self.knows(celebrity_candidate, i) {
                 celebrity_candidate = i;
             }
         }
-        if Self::is_celebrity(celebrity_candidate, n) {
+        if self.is_celebrity(celebrity_candidate, n) {
             return celebrity_candidate;
         }
         -1
     }
 
-    fn is_celebrity(i: i32, n: i32) -> bool {
+    fn is_celebrity(&self, i: i32, n: i32) -> bool {
         for j in 0..n {
             if i == j { continue; }
-            if knows(i, j) || !knows(j, i) {
+            if self.knows(i, j) || !self.knows(j, i) {
                 return false;
             }
         }
         true
+    }
+}
+```
+
+```typescript
+function solution(knows: (a: number, b: number) => boolean) {
+    function isCelebrity(i: number, n: number): boolean {
+        for (let j = 0; j < n; j++) {
+            if (i === j) continue;
+            if (knows(i, j) || !knows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    return function findCelebrity(n: number): number {
+        let celebrityCandidate = 0;
+        for (let i = 0; i < n; i++) {
+            if (knows(celebrityCandidate, i)) {
+                celebrityCandidate = i;
+            }
+        }
+        if (isCelebrity(celebrityCandidate, n)) {
+            return celebrityCandidate;
+        }
+        return -1;
     }
 }
 ```
@@ -567,11 +644,11 @@ The logical deduction approach may call `knows(a, b)` multiple times with the sa
 from functools import lru_cache
 
 class Solution:
-    
+
     @lru_cache(maxsize=None)
     def cachedKnows(self, a, b):
         return knows(a, b)
-    
+
     def findCelebrity(self, n: int) -> int:
         self.n = n
         celebrity_candidate = 0
@@ -592,10 +669,10 @@ class Solution:
 
 ```java
 public class Solution extends Relation {
-    
+
     private int numberOfPeople;
-    private Map<Pair<Integer, Integer>, Boolean> cache = new HashMap<>(); 
-    
+    private Map<Pair<Integer, Integer>, Boolean> cache = new HashMap<>();
+
     @Override
     public boolean knows(int a, int b) {
         if (!cache.containsKey(new Pair(a, b))) {
@@ -603,7 +680,7 @@ public class Solution extends Relation {
         }
         return cache.get(new Pair(a, b));
     }
-    
+
     public int findCelebrity(int n) {
         numberOfPeople = n;
         int celebrityCandidate = 0;
@@ -617,7 +694,7 @@ public class Solution extends Relation {
         }
         return -1;
     }
-    
+
     private boolean isCelebrity(int i) {
         for (int j = 0; j < numberOfPeople; j++) {
             if (i == j) continue; // Don't ask if they know themselves.
@@ -628,6 +705,51 @@ public class Solution extends Relation {
         return true;
     }
 }
+```
+
+```cpp
+/* The knows API is defined for you.
+      bool knows(int a, int b); */
+
+class Solution {
+private:
+    int numberOfPeople;
+    unordered_map<long long, bool> cache;
+
+    bool cachedKnows(int a, int b) {
+        long long key = (long long)a * numberOfPeople + b;
+        auto it = cache.find(key);
+        if (it == cache.end()) {
+            it = cache.emplace(key, knows(a, b)).first;
+        }
+        return it->second;
+    }
+
+    bool isCelebrity(int i) {
+        for (int j = 0; j < numberOfPeople; j++) {
+            if (i == j) continue; // Don't ask if they know themselves.
+            if (cachedKnows(i, j) || !cachedKnows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+public:
+    int findCelebrity(int n) {
+        numberOfPeople = n;
+        int celebrityCandidate = 0;
+        for (int i = 0; i < n; i++) {
+            if (cachedKnows(celebrityCandidate, i)) {
+                celebrityCandidate = i;
+            }
+        }
+        if (isCelebrity(celebrityCandidate)) {
+            return celebrityCandidate;
+        }
+        return -1;
+    }
+};
 ```
 
 ```javascript
@@ -714,10 +836,10 @@ public class Solution : Relation {
 ```
 
 ```go
-/* The knows API is already defined for you.
-      knows := func(a, b int) bool */
+/* The knows API is defined in the driver.
+   func knows(a, b int) bool */
 
-func solution(knows func(a, b int) bool) func(n int) int {
+func findCelebrity(n int) int {
     cache := make(map[[2]int]bool)
 
     cachedKnows := func(a, b int) bool {
@@ -730,30 +852,28 @@ func solution(knows func(a, b int) bool) func(n int) int {
         return result
     }
 
-    return func(n int) int {
-        isCelebrity := func(i int) bool {
-            for j := 0; j < n; j++ {
-                if i == j {
-                    continue
-                }
-                if cachedKnows(i, j) || !cachedKnows(j, i) {
-                    return false
-                }
+    isCelebrity := func(i int) bool {
+        for j := 0; j < n; j++ {
+            if i == j {
+                continue
             }
-            return true
-        }
-
-        celebrityCandidate := 0
-        for i := 1; i < n; i++ {
-            if cachedKnows(celebrityCandidate, i) {
-                celebrityCandidate = i
+            if cachedKnows(i, j) || !cachedKnows(j, i) {
+                return false
             }
         }
-        if isCelebrity(celebrityCandidate) {
-            return celebrityCandidate
-        }
-        return -1
+        return true
     }
+
+    celebrityCandidate := 0
+    for i := 1; i < n; i++ {
+        if cachedKnows(celebrityCandidate, i) {
+            celebrityCandidate = i
+        }
+    }
+    if isCelebrity(celebrityCandidate) {
+        return celebrityCandidate
+    }
+    return -1
 }
 ```
 
@@ -840,18 +960,18 @@ class Solution : Relation {
 ```
 
 ```rust
-/* The knows API is defined somewhere else.
-       fn knows(a: i32, b: i32) -> bool; */
+// The knows API is provided on Solution.
+// fn self.knows(&self, a: i32, b: i32) -> bool;
 
 impl Solution {
-    pub fn find_celebrity(n: i32) -> i32 {
+    pub fn find_celebrity(&self, n: i32) -> i32 {
         let mut cache: HashMap<(i32, i32), bool> = HashMap::new();
 
         let mut cached_knows = |a: i32, b: i32| -> bool {
             if let Some(&val) = cache.get(&(a, b)) {
                 return val;
             }
-            let result = knows(a, b);
+            let result = self.knows(a, b);
             cache.insert((a, b), result);
             result
         };
@@ -873,6 +993,48 @@ impl Solution {
         }
 
         if is_celeb { celebrity_candidate } else { -1 }
+    }
+}
+```
+
+```typescript
+function cached(f: (...args: number[]) => boolean) {
+    const cache = new Map<string, boolean>();
+    return function(...args: number[]): boolean {
+        const cacheKey = args.join(',');
+        if (!cache.has(cacheKey)) {
+            const value = f(...args);
+            cache.set(cacheKey, value);
+        }
+
+        return cache.get(cacheKey)!;
+    }
+}
+
+function solution(knows: (a: number, b: number) => boolean) {
+    knows = cached(knows);
+
+    function isCelebrity(i: number, n: number): boolean {
+        for (let j = 0; j < n; j++) {
+            if (i === j) continue;
+            if (knows(i, j) || !knows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    return function findCelebrity(n: number): number {
+        let celebrityCandidate = 0;
+        for (let i = 0; i < n; i++) {
+            if (knows(celebrityCandidate, i)) {
+                celebrityCandidate = i;
+            }
+        }
+        if (isCelebrity(celebrityCandidate, n)) {
+            return celebrityCandidate;
+        }
+        return -1;
     }
 }
 ```

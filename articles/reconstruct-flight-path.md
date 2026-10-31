@@ -409,6 +409,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} tickets
+     * @return {string[]}
+     */
+    findItinerary(tickets: string[][]): string[] {
+        const adj: { [key: string]: string[] } = {};
+        for (const [src, dst] of tickets) {
+            if (!adj[src]) adj[src] = [];
+        }
+
+        tickets.sort();
+        for (const [src, dst] of tickets) {
+            adj[src].push(dst);
+        }
+
+        const res = ['JFK'];
+        const dfs = (src: string): boolean => {
+            if (res.length === tickets.length + 1) return true;
+            if (!adj[src]) return false;
+
+            const temp = [...adj[src]];
+            for (let i = 0; i < temp.length; i++) {
+                const v = temp[i];
+                adj[src].splice(i, 1);
+                res.push(v);
+                if (dfs(v)) return true;
+                res.pop();
+                adj[src].splice(i, 0, v);
+            }
+            return false;
+        };
+
+        dfs('JFK');
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -716,6 +756,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} tickets
+     * @return {string[]}
+     */
+    findItinerary(tickets: string[][]): string[] {
+        const adj = new Map<string, string[]>();
+        const res: string[] = [];
+
+        tickets
+            .sort()
+            .reverse()
+            .forEach(([src, dst]) => {
+                if (!adj.has(src)) adj.set(src, []);
+                adj.get(src)!.push(dst);
+            });
+
+        function dfs(src: string): void {
+            while (adj.has(src) && adj.get(src)!.length > 0) {
+                const dst = adj.get(src)!.pop()!;
+                dfs(dst);
+            }
+            res.push(src);
+        }
+
+        dfs('JFK');
+        return res.reverse();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -908,33 +980,33 @@ public class Solution {
 
 ```go
 func findItinerary(tickets [][]string) []string {
-	adj := make(map[string][]string)
-	for _, ticket := range tickets {
-		src, dst := ticket[0], ticket[1]
-		adj[src] = append(adj[src], dst)
-	}
-	for src := range adj {
-		sort.Sort(sort.Reverse(sort.StringSlice(adj[src])))
-	}
+    adj := make(map[string][]string)
+    for _, ticket := range tickets {
+        src, dst := ticket[0], ticket[1]
+        adj[src] = append(adj[src], dst)
+    }
+    for src := range adj {
+        sort.Sort(sort.Reverse(sort.StringSlice(adj[src])))
+    }
 
-	stack := []string{"JFK"}
-	var res []string
+    stack := []string{"JFK"}
+    var res []string
 
-	for len(stack) > 0 {
-		curr := stack[len(stack)-1]
-		if len(adj[curr]) == 0 {
-			res = append(res, stack[len(stack)-1])
-			stack = stack[:len(stack)-1]
-		} else {
-			stack = append(stack, adj[curr][len(adj[curr])-1])
-			adj[curr] = adj[curr][:len(adj[curr])-1]
-		}
-	}
+    for len(stack) > 0 {
+        curr := stack[len(stack)-1]
+        if len(adj[curr]) == 0 {
+            res = append(res, stack[len(stack)-1])
+            stack = stack[:len(stack)-1]
+        } else {
+            stack = append(stack, adj[curr][len(adj[curr])-1])
+            adj[curr] = adj[curr][:len(adj[curr])-1]
+        }
+    }
 
-	for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
-		res[i], res[j] = res[j], res[i]
-	}
-	return res
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return res
 }
 ```
 
@@ -952,7 +1024,7 @@ class Solution {
         val res = mutableListOf<String>()
 
         while (stack.isNotEmpty()) {
-            val curr = stack.last()
+            val curr = stack.peekLast()
             if (adj[curr].isNullOrEmpty()) {
                 res.add(stack.removeLast())
             } else {
@@ -1015,6 +1087,39 @@ impl Solution {
 
         res.reverse();
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} tickets
+     * @return {string[]}
+     */
+    findItinerary(tickets: string[][]): string[] {
+        const adj = new Map<string, string[]>();
+        tickets
+            .sort()
+            .reverse()
+            .forEach(([src, dst]) => {
+                if (!adj.has(src)) adj.set(src, []);
+                adj.get(src)!.push(dst);
+            });
+
+        const res: string[] = [];
+        const stack = ['JFK'];
+
+        while (stack.length > 0) {
+            let curr = stack[stack.length - 1];
+            if (!adj.has(curr) || adj.get(curr)!.length === 0) {
+                res.unshift(stack.pop()!);
+            } else {
+                stack.push(adj.get(curr)!.pop()!);
+            }
+        }
+
+        return res;
     }
 }
 ```

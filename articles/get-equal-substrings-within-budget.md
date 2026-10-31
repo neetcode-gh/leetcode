@@ -232,6 +232,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @param {number} maxCost
+     * @return {number}
+     */
+    equalSubstring(s: string, t: string, maxCost: number): number {
+        const n = s.length;
+        let res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let curCost = 0;
+            for (let j = i; j < n; j++) {
+                curCost += Math.abs(t.charCodeAt(j) - s.charCodeAt(j));
+                if (curCost > maxCost) {
+                    break;
+                }
+                res = Math.max(res, j - i + 1);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -453,6 +481,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @param {number} maxCost
+     * @return {number}
+     */
+    equalSubstring(s: string, t: string, maxCost: number): number {
+        let curCost = 0,
+            l = 0,
+            res = 0;
+
+        for (let r = 0; r < s.length; r++) {
+            curCost += Math.abs(s.charCodeAt(r) - t.charCodeAt(r));
+            while (curCost > maxCost) {
+                curCost -= Math.abs(s.charCodeAt(l) - t.charCodeAt(l));
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -636,6 +691,28 @@ impl Solution {
             }
         }
         (s.len() - l) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @param {number} maxCost
+     * @return {number}
+     */
+    equalSubstring(s: string, t: string, maxCost: number): number {
+        let l = 0;
+        for (let r = 0; r < s.length; r++) {
+            maxCost -= Math.abs(s.charCodeAt(r) - t.charCodeAt(r));
+            if (maxCost < 0) {
+                maxCost += Math.abs(s.charCodeAt(l) - t.charCodeAt(l));
+                l++;
+            }
+        }
+        return s.length - l;
     }
 }
 ```

@@ -448,6 +448,70 @@ impl ZigzagIterator {
 }
 ```
 
+```typescript
+class ZigzagIterator {
+    private vectors: number[][];
+    private p_elem: number;
+    private p_vec: number;
+    private total_num: number;
+    private output_count: number;
+
+    /**
+     * @param {Integer[]} v1
+     * @param {Integer[]} v2
+     */
+    constructor(v1: number[], v2: number[]) {
+        this.vectors = [v1, v2];
+        this.p_elem = 0; // pointer to the index of element
+        this.p_vec = 0; // pointer to the vector
+
+        // variables for hasNext() function
+        this.total_num = v1.length + v2.length;
+        this.output_count = 0;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    hasNext(): boolean {
+        return this.output_count < this.total_num;
+    }
+
+    /**
+     * @returns {integer}
+     */
+    next(): number {
+        let iter_num = 0;
+        let ret: number | null = null;
+
+        // Iterate over the vectors
+        while (iter_num < this.vectors.length) {
+            let curr_vec = this.vectors[this.p_vec];
+
+            if (this.p_elem < curr_vec.length) {
+                ret = curr_vec[this.p_elem];
+            }
+
+            iter_num++;
+            this.p_vec = (this.p_vec + 1) % this.vectors.length;
+
+            // increment the element pointer once iterating all vectors
+            if (this.p_vec === 0) {
+                this.p_elem++;
+            }
+
+            if (ret !== null) {
+                this.output_count++;
+                return ret;
+            }
+        }
+
+        // no more element to output
+        throw new Error('No more elements');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -822,6 +886,58 @@ impl ZigzagIterator {
 
     fn has_next(&self) -> bool {
         !self.queue.is_empty()
+    }
+}
+```
+
+```typescript
+class ZigzagIterator {
+    private vectors: number[][];
+    private queue: any;
+
+    /**
+     * @param {Integer[]} v1
+     * @param {Integer[]} v2
+     */
+    constructor(v1: number[], v2: number[]) {
+        this.vectors = [v1, v2];
+        this.queue = new Deque(); // Using @datastructures-js/deque
+
+        for (let index = 0; index < this.vectors.length; index++) {
+            const vector = this.vectors[index];
+            // <index_of_vector, index_of_element_to_output>
+            if (vector.length > 0) {
+                this.queue.pushBack([index, 0]);
+            }
+        }
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    hasNext(): boolean {
+        return !this.queue.isEmpty();
+    }
+
+    /**
+     * @returns {integer}
+     */
+    next(): number {
+        if (!this.queue.isEmpty()) {
+            const [vecIndex, elemIndex]: number[] = this.queue.popFront();
+            const nextElemIndex = elemIndex + 1;
+
+            if (nextElemIndex < this.vectors[vecIndex].length) {
+                // append the pointer for the next round
+                // if there are some elements left
+                this.queue.pushBack([vecIndex, nextElemIndex]);
+            }
+
+            return this.vectors[vecIndex][elemIndex];
+        }
+
+        // no more element to output
+        throw new Error('No more elements');
     }
 }
 ```

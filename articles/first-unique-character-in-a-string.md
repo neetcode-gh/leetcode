@@ -200,6 +200,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    firstUniqChar(s: string): number {
+        for (let i = 0; i < s.length; i++) {
+            let flag = true;
+            for (let j = 0; j < s.length; j++) {
+                if (i === j) continue;
+                if (s[i] === s[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) return i;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -383,6 +406,28 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    firstUniqChar(s: string): number {
+        const count = new Map<string, number>();
+        for (const c of s) {
+            count.set(c, (count.get(c) || 0) + 1);
+        }
+
+        for (let i = 0; i < s.length; i++) {
+            if (count.get(s[i]) === 1) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -638,6 +683,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    firstUniqChar(s: string): number {
+        const n = s.length;
+        const count = new Map<string, number>();
+
+        for (let i = 0; i < n; i++) {
+            const c = s[i];
+            if (!count.has(c)) {
+                count.set(c, i);
+            } else {
+                count.set(c, n);
+            }
+        }
+
+        let res = n;
+        for (const index of count.values()) {
+            res = Math.min(res, index);
+        }
+
+        return res === n ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -825,6 +899,28 @@ impl Solution {
         }
 
         if res == n { -1 } else { res as i32 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    firstUniqChar(s: string): number {
+        let res = s.length;
+
+        for (let ch = 'a'.charCodeAt(0); ch <= 'z'.charCodeAt(0); ch++) {
+            const char = String.fromCharCode(ch);
+            const firstIndex = s.indexOf(char);
+            if (firstIndex !== -1 && s.lastIndexOf(char) === firstIndex) {
+                res = Math.min(res, firstIndex);
+            }
+        }
+
+        return res === s.length ? -1 : res;
     }
 }
 ```

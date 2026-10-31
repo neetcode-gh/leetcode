@@ -182,6 +182,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    rotate(nums: number[], k: number): void {
+        const n = nums.length;
+        k %= n;
+        while (k > 0) {
+            const tmp = nums[n - 1];
+            for (let i = n - 1; i > 0; i--) {
+                nums[i] = nums[i - 1];
+            }
+            nums[0] = tmp;
+            k--;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -340,6 +362,26 @@ impl Solution {
             tmp[(i + k) % n] = nums[i];
         }
         nums.copy_from_slice(&tmp);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    rotate(nums: number[], k: number): void {
+        const n = nums.length;
+        const tmp: number[] = new Array(n);
+        for (let i = 0; i < n; i++) {
+            tmp[(i + k) % n] = nums[i];
+        }
+        for (let i = 0; i < n; i++) {
+            nums[i] = tmp[i];
+        }
     }
 }
 ```
@@ -595,6 +637,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    rotate(nums: number[], k: number): void {
+        const n = nums.length;
+        k %= n;
+        let count = 0;
+
+        for (let start = 0; count < n; start++) {
+            let current = start;
+            let prev = nums[start];
+            do {
+                const nextIdx = (current + k) % n;
+                const temp = nums[nextIdx];
+                nums[nextIdx] = prev;
+                prev = temp;
+                current = nextIdx;
+                count++;
+            } while (start !== current);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -814,8 +884,36 @@ impl Solution {
             }
         }
         reverse(nums, 0, n - 1);
-        reverse(nums, 0, k - 1);
+        if k > 0 {
+            reverse(nums, 0, k - 1);
+        }
         reverse(nums, k, n - 1);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    rotate(nums: number[], k: number): void {
+        const n = nums.length;
+        k %= n;
+
+        const reverse = (l: number, r: number): void => {
+            while (l < r) {
+                [nums[l], nums[r]] = [nums[r], nums[l]];
+                l++;
+                r--;
+            }
+        };
+
+        reverse(0, n - 1);
+        reverse(0, k - 1);
+        reverse(k, n - 1);
     }
 }
 ```
@@ -939,6 +1037,19 @@ impl Solution {
         let k = k as usize % n;
         let rotated = [&nums[n - k..], &nums[..n - k]].concat();
         nums.copy_from_slice(&rotated);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    rotate(nums: number[], k: number): void {
+        nums.splice(0, 0, ...nums.splice(nums.length - (k % nums.length)));
     }
 }
 ```

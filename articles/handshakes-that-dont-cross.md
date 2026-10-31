@@ -106,6 +106,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int m = 1000000007;
+
+    public int NumberOfWays(int numPeople) {
+        int[] dp = new int[numPeople / 2 + 1];
+        dp[0] = 1;
+
+        for (int i = 1; i <= numPeople / 2; i++) {
+            for (int j = 0; j < i; j++) {
+                dp[i] = (int)((dp[i] + (long)dp[j] * dp[i - j - 1] % m) % m);
+            }
+        }
+
+        return dp[numPeople / 2];
+    }
+}
+```
+
 ```go
 func numberOfWays(numPeople int) int {
     m := 1000000007
@@ -180,6 +199,30 @@ impl Solution {
         }
 
         dp[n] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numPeople
+     * @return {number}
+     */
+    numberOfWays(numPeople: number): number {
+        const m = 1000000007n;
+        const n = Math.floor(numPeople / 2);
+        const dp: bigint[] = new Array(n + 1).fill(0n);
+        dp[0] = 1n;
+
+        for (let i = 1; i <= n; i++) {
+            for (let j = 0; j < i; j++) {
+                dp[i] += dp[j] * dp[i - j - 1];
+                dp[i] %= m;
+            }
+        }
+
+        return Number(dp[n]);
     }
 }
 ```
@@ -316,6 +359,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int m = 1000000007;
+    private int[] dp;
+
+    public int NumberOfWays(int numPeople) {
+        dp = new int[numPeople / 2 + 1];
+        Array.Fill(dp, -1);
+        dp[0] = 1;
+        return CalculateDP(numPeople / 2);
+    }
+
+    private int CalculateDP(int i) {
+        if (dp[i] != -1) {
+            return dp[i];
+        }
+
+        dp[i] = 0;
+        for (int j = 0; j < i; j++) {
+            dp[i] = (int)((dp[i] + (long)CalculateDP(j) * CalculateDP(i - j - 1) % m) % m);
+        }
+
+        return dp[i];
+    }
+}
+```
+
 ```go
 func numberOfWays(numPeople int) int {
     m := 1000000007
@@ -415,6 +485,37 @@ impl Solution {
         }
 
         calculate_dp(n, &mut dp, m) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numPeople
+     * @return {number}
+     */
+    numberOfWays(numPeople: number): number {
+        const m = 1000000007n;
+        const n = Math.floor(numPeople / 2);
+        const dp: bigint[] = new Array(n + 1).fill(-1n);
+        dp[0] = 1n;
+
+        const calculate_dp = (i: number): bigint => {
+            if (dp[i] !== -1n) {
+                return dp[i];
+            }
+
+            dp[i] = 0n;
+            for (let j = 0; j < i; j++) {
+                dp[i] += calculate_dp(j) * calculate_dp(i - j - 1);
+                dp[i] %= m;
+            }
+
+            return dp[i];
+        };
+
+        return Number(calculate_dp(n));
     }
 }
 ```
@@ -547,6 +648,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int m = 1000000007;
+
+    private int Mul(int a, int b) {
+        return (int)((long)a * b % m);
+    }
+
+    public int NumberOfWays(int numPeople) {
+        int n = numPeople / 2;
+        int[] inv = new int[numPeople / 2 + 2];
+        inv[1] = 1;
+        for (int i = 2; i < n + 2; i++) {
+            int k = m / i, r = m % i;
+            inv[i] = m - Mul(k, inv[r]);
+        }
+
+        int C = 1;
+        for (int i = 0; i < n; i++) {
+            C = Mul(Mul(2 * (2 * i + 1), inv[i + 2]), C);
+        }
+
+        return C;
+    }
+}
+```
+
 ```go
 func numberOfWays(numPeople int) int {
     m := 1000000007
@@ -652,6 +780,35 @@ impl Solution {
         }
 
         c as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numPeople
+     * @return {number}
+     */
+    numberOfWays(numPeople: number): number {
+        const m = 1000000007n;
+        const n = Math.floor(numPeople / 2);
+
+        const inv: bigint[] = new Array(n + 2);
+        inv[1] = 1n;
+        for (let i = 2; i < n + 2; i++) {
+            const bi = BigInt(i);
+            const k = m / bi;
+            const r = m % bi;
+            inv[i] = (m - ((k * inv[Number(r)]) % m)) % m;
+        }
+
+        let C = 1n;
+        for (let i = 0; i < n; i++) {
+            C = (((2n * BigInt(2 * i + 1) * inv[i + 2]) % m) * C) % m;
+        }
+
+        return Number(C);
     }
 }
 ```

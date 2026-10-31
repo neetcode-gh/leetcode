@@ -195,6 +195,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    uniquePaths(m: number, n: number): number {
+        const dfs = (i: number, j: number): number => {
+            if (i == m - 1 && j == n - 1) {
+                return 1;
+            }
+            if (i >= m || j >= n) return 0;
+            return dfs(i, j + 1) + dfs(i + 1, j);
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,6 +476,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    uniquePaths(m: number, n: number): number {
+        const memo: number[][] = Array.from({ length: m }, () => Array(n).fill(-1));
+        const dfs = (i: number, j: number): number => {
+            if (i == m - 1 && j == n - 1) {
+                return 1;
+            }
+            if (i >= m || j >= n) return 0;
+            if (memo[i][j] != -1) {
+                return memo[i][j];
+            }
+            memo[i][j] = dfs(i, j + 1) + dfs(i + 1, j);
+            return memo[i][j];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -647,6 +694,28 @@ impl Solution {
         }
 
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    uniquePaths(m: number, n: number): number {
+        let dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+        dp[m - 1][n - 1] = 1;
+
+        for (let i = m - 1; i >= 0; i--) {
+            for (let j = n - 1; j >= 0; j--) {
+                dp[i][j] += dp[i + 1][j] + dp[i][j + 1];
+            }
+        }
+
+        return dp[0][0];
     }
 }
 ```
@@ -855,6 +924,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    uniquePaths(m: number, n: number): number {
+        let row: number[] = new Array(n).fill(1);
+
+        for (let i = 0; i < m - 1; i++) {
+            const newRow: number[] = new Array(n).fill(1);
+            for (let j = n - 2; j >= 0; j--) {
+                newRow[j] = newRow[j + 1] + row[j];
+            }
+            row = newRow;
+        }
+        return row[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1043,6 +1134,27 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    uniquePaths(m: number, n: number): number {
+        let dp: number[] = new Array(n).fill(1);
+
+        for (let i = m - 2; i >= 0; i--) {
+            for (let j = n - 2; j >= 0; j--) {
+                dp[j] += dp[j + 1];
+            }
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1299,6 +1411,34 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    uniquePaths(m: number, n: number): number {
+        if (m === 1 || n === 1) {
+            return 1;
+        }
+        if (m < n) {
+            [m, n] = [n, m];
+        }
+
+        let res = 1,
+            j = 1;
+        for (let i = m; i < m + n - 1; i++) {
+            res *= i;
+            res = Math.floor(res / j);
+            j++;
+        }
+
+        return res;
     }
 }
 ```

@@ -212,6 +212,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        if (nums.length === 1) return nums[0];
+
+        const dfs = (i: number, flag: boolean): number => {
+            if (i >= nums.length || (flag && i === nums.length - 1)) return 0;
+
+            return Math.max(
+                dfs(i + 1, flag),
+                nums[i] + dfs(i + 2, flag || i === 0),
+            );
+        };
+
+        return Math.max(dfs(0, true), dfs(1, false));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -494,6 +517,34 @@ impl Solution {
             memo[i][flag]
         }
         dfs(&nums, 0, 1, &mut memo).max(dfs(&nums, 1, 0, &mut memo))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        if (nums.length === 1) return nums[0];
+
+        const n = nums.length;
+        const memo: number[][] = Array.from({ length: n }, () => Array(2).fill(-1));
+
+        const dfs = (i: number, flag: number): number => {
+            if (i >= n || (flag && i === n - 1)) return 0;
+            if (memo[i][flag] !== -1) return memo[i][flag];
+
+            memo[i][flag] = Math.max(
+                dfs(i + 1, flag),
+                nums[i] + dfs(i + 2, flag | (i === 0 ? 1 : 0)),
+            );
+            return memo[i][flag];
+        };
+
+        return Math.max(dfs(0, 1), dfs(1, 0));
     }
 }
 ```
@@ -801,6 +852,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        if (nums.length === 0) return 0;
+        if (nums.length === 1) return nums[0];
+
+        return Math.max(
+            this.helper(nums.slice(1)),
+            this.helper(nums.slice(0, -1)),
+        );
+    }
+
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    helper(nums: number[]): number {
+        if (nums.length === 0) return 0;
+        if (nums.length === 1) return nums[0];
+
+        const dp: number[] = new Array(nums.length);
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+
+        for (let i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i - 1], nums[i] + dp[i - 2]);
+        }
+
+        return dp[nums.length - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1060,6 +1148,39 @@ impl Solution {
             rob2 = new_rob;
         }
         rob2
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        return Math.max(
+            nums[0],
+            Math.max(
+                this.helper(nums.slice(1)),
+                this.helper(nums.slice(0, -1)),
+            ),
+        );
+    }
+
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    helper(nums: number[]): number {
+        let rob1 = 0;
+        let rob2 = 0;
+        for (const num of nums) {
+            const newRob = Math.max(rob1 + num, rob2);
+            rob1 = rob2;
+            rob2 = newRob;
+        }
+        return rob2;
     }
 }
 ```

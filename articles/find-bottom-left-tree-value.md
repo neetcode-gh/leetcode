@@ -256,7 +256,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -275,6 +274,26 @@ impl Solution {
             }
         }
         val
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    findBottomLeftValue(root: TreeNode | null): number {
+        const q = new Queue([root]);
+        let node: TreeNode | null = null;
+
+        while (!q.isEmpty()) {
+            node = q.pop();
+            if (node!.right) q.push(node!.right);
+            if (node!.left) q.push(node!.left);
+        }
+        return node!.val;
     }
 }
 ```
@@ -584,7 +603,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -610,6 +628,33 @@ impl Solution {
 
         dfs(&root, 0, &mut max_depth, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    findBottomLeftValue(root: TreeNode | null): number {
+        let maxDepth = -1,
+            res = root!.val;
+
+        const dfs = (node: TreeNode | null, depth: number): void => {
+            if (!node) return;
+            if (depth > maxDepth) {
+                maxDepth = depth;
+                res = node.val;
+            }
+
+            dfs(node.left, depth + 1);
+            dfs(node.right, depth + 1);
+        };
+
+        dfs(root, 0);
+        return res;
     }
 }
 ```
@@ -947,7 +992,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -970,6 +1014,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    findBottomLeftValue(root: TreeNode | null): number {
+        let res = root!.val,
+            maxDepth = -1;
+        const stack: [TreeNode, number][] = [[root!, 0]];
+
+        while (stack.length) {
+            const [node, depth] = stack.pop()!;
+            if (depth > maxDepth) {
+                maxDepth = depth;
+                res = node.val;
+            }
+
+            if (node.right) stack.push([node.right, depth + 1]);
+            if (node.left) stack.push([node.left, depth + 1]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1400,7 +1471,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -1450,6 +1520,50 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    findBottomLeftValue(root: TreeNode | null): number {
+        let res = root!.val,
+            maxDepth = -1,
+            curDepth = 0;
+        let cur = root;
+
+        while (cur) {
+            if (!cur.left) {
+                if (curDepth > maxDepth) {
+                    maxDepth = curDepth;
+                    res = cur.val;
+                }
+                cur = cur.right;
+                curDepth++;
+            } else {
+                let prev = cur.left,
+                    steps = 1;
+                while (prev.right && prev.right !== cur) {
+                    prev = prev.right;
+                    steps++;
+                }
+
+                if (!prev.right) {
+                    prev.right = cur;
+                    cur = cur.left;
+                    curDepth++;
+                } else {
+                    prev.right = null;
+                    curDepth -= steps;
+                    cur = cur.right;
+                }
+            }
+        }
+        return res;
     }
 }
 ```

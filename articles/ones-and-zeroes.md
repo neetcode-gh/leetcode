@@ -267,6 +267,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    findMaxForm(strs: string[], m: number, n: number): number {
+        const arr: number[][] = Array.from({ length: strs.length }, () => [0, 0]);
+        for (let i = 0; i < strs.length; i++) {
+            for (const c of strs[i]) {
+                arr[i][Number(c)]++;
+            }
+        }
+
+        const dfs = (i: number, m: number, n: number): number => {
+            if (i === strs.length) {
+                return 0;
+            }
+
+            let res = dfs(i + 1, m, n);
+            if (m >= arr[i][0] && n >= arr[i][1]) {
+                res = Math.max(
+                    res,
+                    1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]),
+                );
+            }
+            return res;
+        };
+
+        return dfs(0, m, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -635,6 +671,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    findMaxForm(strs: string[], m: number, n: number): number {
+        const arr: number[][] = Array.from({ length: strs.length }, () => [0, 0]);
+        for (let i = 0; i < strs.length; i++) {
+            for (const c of strs[i]) {
+                arr[i][Number(c)]++;
+            }
+        }
+
+        const dp: number[][][] = Array.from({ length: strs.length }, () =>
+            Array.from({ length: m + 1 }, () => Array(n + 1).fill(-1)),
+        );
+
+        const dfs = (i: number, m: number, n: number): number => {
+            if (i === strs.length) return 0;
+            if (m === 0 && n === 0) return 0;
+            if (dp[i][m][n] !== -1) return dp[i][m][n];
+
+            let res = dfs(i + 1, m, n);
+            if (m >= arr[i][0] && n >= arr[i][1]) {
+                res = Math.max(
+                    res,
+                    1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]),
+                );
+            }
+            dp[i][m][n] = res;
+            return res;
+        };
+
+        return dfs(0, m, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -932,6 +1009,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    findMaxForm(strs: string[], m: number, n: number): number {
+        const arr = strs.map((s) => {
+            const zeros = s.split('').filter((c) => c === '0').length;
+            const ones = s.length - zeros;
+            return [zeros, ones];
+        });
+
+        const dp: number[][][] = Array.from({ length: strs.length + 1 }, () =>
+            Array.from({ length: m + 1 }, () => Array(n + 1).fill(0)),
+        );
+
+        for (let i = 1; i <= strs.length; i++) {
+            for (let j = 0; j <= m; j++) {
+                for (let k = 0; k <= n; k++) {
+                    dp[i][j][k] = dp[i - 1][j][k];
+                    if (j >= arr[i - 1][0] && k >= arr[i - 1][1]) {
+                        dp[i][j][k] = Math.max(
+                            dp[i][j][k],
+                            1 + dp[i - 1][j - arr[i - 1][0]][k - arr[i - 1][1]],
+                        );
+                    }
+                }
+            }
+        }
+
+        return dp[strs.length][m][n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1196,6 +1311,39 @@ impl Solution {
         }
 
         dp[m][n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    findMaxForm(strs: string[], m: number, n: number): number {
+        const arr: number[][] = Array.from({ length: strs.length }, () => [0, 0]);
+        for (let i = 0; i < strs.length; i++) {
+            for (const c of strs[i]) {
+                arr[i][Number(c)]++;
+            }
+        }
+
+        const dp: number[][] = Array.from({ length: m + 1 }, () =>
+            Array(n + 1).fill(0),
+        );
+
+        for (const [zeros, ones] of arr) {
+            for (let j = m; j >= zeros; j--) {
+                for (let k = n; k >= ones; k--) {
+                    dp[j][k] = Math.max(dp[j][k], 1 + dp[j - zeros][k - ones]);
+                }
+            }
+        }
+
+        return dp[m][n];
     }
 }
 ```

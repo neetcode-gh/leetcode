@@ -539,6 +539,69 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    calculate(s: string): number {
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {string} operator
+         * @return {number}
+         */
+        function evaluate(x: number, y: number, operator: string): number {
+            if (operator === '+') {
+                return x;
+            }
+            if (operator === '-') {
+                return -x;
+            }
+            if (operator === '*') {
+                return x * y;
+            }
+            return Math.trunc(x / y);
+        }
+
+        const stack: (number | string)[] = [];
+        let curr = 0;
+        let previousOperator = '+';
+        s += '@';
+
+        for (const c of s) {
+            if (c >= '0' && c <= '9') {
+                curr = curr * 10 + parseInt(c);
+            } else if (c === '(') {
+                stack.push(previousOperator);
+                previousOperator = '+';
+            } else {
+                if (previousOperator === '*' || previousOperator === '/') {
+                    stack.push(evaluate(stack.pop() as number, curr, previousOperator));
+                } else {
+                    stack.push(evaluate(curr, 0, previousOperator));
+                }
+
+                curr = 0;
+                previousOperator = c;
+
+                if (c === ')') {
+                    while (typeof stack[stack.length - 1] === 'number') {
+                        curr += stack.pop() as number;
+                    }
+                    previousOperator = stack.pop() as string;
+                }
+            }
+        }
+
+        return (stack as number[]).reduce(function (sum, val) {
+            return sum + val;
+        }, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1095,6 +1158,80 @@ impl Solution {
         s.push(b'@');
         let mut i = 0;
         solve(&s, &mut i)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    calculate(s: string): number {
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {string} operator
+         * @return {number}
+         */
+        function evaluate(x: number, y: number, operator: string): number {
+            if (operator === '+') {
+                return x;
+            }
+            if (operator === '-') {
+                return -x;
+            }
+            if (operator === '*') {
+                return x * y;
+            }
+            return Math.trunc(x / y);
+        }
+
+        /**
+         * @param {number[]} i
+         * @return {number}
+         */
+        function solve(i: number[]): number {
+            const stack: number[] = [];
+            let curr = 0;
+            let previousOperator = '+';
+
+            while (i[0] < s.length) {
+                const c = s[i[0]];
+
+                if (c === '(') {
+                    i[0] += 1;
+                    curr = solve(i);
+                } else if (c >= '0' && c <= '9') {
+                    curr = curr * 10 + parseInt(c);
+                } else {
+                    if (previousOperator === '*' || previousOperator === '/') {
+                        stack.push(
+                            evaluate(stack.pop()!, curr, previousOperator),
+                        );
+                    } else {
+                        stack.push(evaluate(curr, 0, previousOperator));
+                    }
+
+                    if (c === ')') {
+                        break;
+                    }
+
+                    curr = 0;
+                    previousOperator = c;
+                }
+
+                i[0] += 1;
+            }
+
+            return stack.reduce(function (sum, val) {
+                return sum + val;
+            }, 0);
+        }
+
+        s += '@';
+        return solve([0]);
     }
 }
 ```

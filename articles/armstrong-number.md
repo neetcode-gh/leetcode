@@ -207,6 +207,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isArmstrong(n: number): boolean {
+        const getSumOfKthPowerOfDigits = (num: number, k: number): number => {
+            let result = 0;
+            while (num !== 0) {
+                result += Math.pow(num % 10, k);
+                num = Math.floor(num / 10);
+            }
+            return result;
+        };
+
+        const length = String(n).length;
+
+        return getSumOfKthPowerOfDigits(n, length) === n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -416,6 +439,31 @@ impl Solution {
 
         let length = (n as f64).log10() as u32 + 1;
         get_sum_of_kth_power_of_digits(n, length) == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isArmstrong(n: number): boolean {
+        const getSumOfKthPowerOfDigits = (num: number, k: number): number => {
+            let result = 0;
+
+            while (num !== 0) {
+                result += Math.pow(num % 10, k);
+                num = Math.floor(num / 10);
+            }
+
+            return result;
+        };
+
+        const length = Math.floor(Math.log10(n)) + 1;
+
+        return getSumOfKthPowerOfDigits(n, length) === n;
     }
 }
 ```
@@ -675,6 +723,37 @@ impl Solution {
             temp_n /= 10;
         }
         get_sum_of_kth_power_of_digits(n, length) == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isArmstrong(n: number): boolean {
+        const getSumOfKthPowerOfDigits = (num: number, k: number): number => {
+            let result = 0;
+
+            while (num !== 0) {
+                result += Math.pow(num % 10, k);
+                num = Math.floor(num / 10);
+            }
+
+            return result;
+        };
+
+        let length = 0;
+        let tempN = n;
+
+        while (tempN !== 0) {
+            length++;
+            tempN = Math.floor(tempN / 10);
+        }
+
+        return getSumOfKthPowerOfDigits(n, length) === n;
     }
 }
 ```

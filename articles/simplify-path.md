@@ -252,6 +252,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} path
+     * @return {string}
+     */
+    simplifyPath(path: string): string {
+        const stack: string[] = [];
+        let cur = '';
+
+        for (const c of path + '/') {
+            if (c === '/') {
+                if (cur === '..') {
+                    if (stack.length) stack.pop();
+                } else if (cur !== '' && cur !== '.') {
+                    stack.push(cur);
+                }
+                cur = '';
+            } else {
+                cur += c;
+            }
+        }
+
+        return '/' + stack.join('/');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,6 +487,31 @@ impl Solution {
         }
 
         format!("/{}", stack.join("/"))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} path
+     * @return {string}
+     */
+    simplifyPath(path: string): string {
+        const stack: string[] = [];
+        const paths = path.split('/');
+
+        for (const cur of paths) {
+            if (cur === '..') {
+                if (stack.length) {
+                    stack.pop();
+                }
+            } else if (cur !== '' && cur !== '.') {
+                stack.push(cur);
+            }
+        }
+
+        return '/' + stack.join('/');
     }
 }
 ```

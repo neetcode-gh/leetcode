@@ -199,6 +199,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    getSumAbsoluteDifferences(nums: number[]): number[] {
+        const n = nums.length;
+        const res: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            let sum = 0;
+            for (let j = 0; j < n; j++) {
+                sum += Math.abs(nums[i] - nums[j]);
+            }
+            res.push(sum);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -498,6 +521,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    getSumAbsoluteDifferences(nums: number[]): number[] {
+        const n = nums.length;
+        const prefixSum: number[] = Array(n).fill(0);
+        const suffixSum: number[] = Array(n).fill(0);
+        const res: number[] = Array(n).fill(0);
+
+        prefixSum[0] = nums[0];
+        for (let i = 1; i < n; i++) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i];
+        }
+
+        suffixSum[n - 1] = nums[n - 1];
+        for (let i = n - 2; i >= 0; i--) {
+            suffixSum[i] = suffixSum[i + 1] + nums[i];
+        }
+
+        for (let i = 0; i < n; i++) {
+            const leftSum = i > 0 ? i * nums[i] - prefixSum[i - 1] : 0;
+            const rightSum =
+                i < n - 1 ? suffixSum[i + 1] - (n - i - 1) * nums[i] : 0;
+            res[i] = leftSum + rightSum;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -747,6 +804,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    getSumAbsoluteDifferences(nums: number[]): number[] {
+        const n = nums.length;
+        const res: number[] = Array(n).fill(0);
+
+        res[n - 1] = nums[n - 1];
+        for (let i = n - 2; i >= 0; i--) {
+            res[i] = res[i + 1] + nums[i];
+        }
+
+        let prefixSum = 0;
+        for (let i = 0; i < n; i++) {
+            const leftSum = i * nums[i] - prefixSum;
+            const rightSum = i < n - 1 ? res[i + 1] - (n - i - 1) * nums[i] : 0;
+            res[i] = leftSum + rightSum;
+            prefixSum += nums[i];
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -979,6 +1064,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    getSumAbsoluteDifferences(nums: number[]): number[] {
+        const n = nums.length;
+        const res: number[] = Array(n).fill(0);
+
+        let totalSum = nums.reduce((sum, num) => sum + num, 0);
+        let prefixSum = 0;
+
+        for (let i = 0; i < n; i++) {
+            totalSum -= nums[i];
+            const leftSum = i * nums[i] - prefixSum;
+            const rightSum = totalSum - (n - i - 1) * nums[i];
+            res[i] = leftSum + rightSum;
+            prefixSum += nums[i];
+        }
+
+        return res;
     }
 }
 ```

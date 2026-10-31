@@ -352,6 +352,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    insertGreatestCommonDivisors(head: ListNode | null): ListNode | null {
+        if (!head) return null;
+        const gcd = (a: number, b: number): number => {
+            while (b > 0) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        };
+
+        let cur = head;
+
+        while (cur.next) {
+            const n1 = cur.val,
+                n2 = cur.next.val;
+            const gcdValue = gcd(n1, n2);
+            const newNode = new ListNode(gcdValue, cur.next);
+            cur.next = newNode;
+            cur = newNode.next!;
+        }
+
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

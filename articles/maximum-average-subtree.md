@@ -406,6 +406,54 @@ impl Solution {
 }
 ```
 
+```typescript
+// for each node in the tree, we will maintain three values
+class State {
+    nodeCount: number;
+    valueSum: number;
+    maxAverage: number;
+
+    constructor(nodes: number, sum: number, maxAverage: number) {
+        // count of nodes in the subtree
+        this.nodeCount = nodes;
+        // sum of values in the subtree
+        this.valueSum = sum;
+        // max average found in the subtree
+        this.maxAverage = maxAverage;
+    }
+}
+
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maximumAverageSubtree(root: TreeNode | null): number {
+        return this.maxAverage(root).maxAverage;
+    }
+
+    maxAverage(root: TreeNode | null): State {
+        if (root === null) {
+            return new State(0, 0, 0);
+        }
+
+        // postorder traversal, solve for both child nodes first.
+        const left = this.maxAverage(root.left);
+        const right = this.maxAverage(root.right);
+
+        // now find nodeCount, valueSum and maxAverage for current node `root`
+        const nodeCount = left.nodeCount + right.nodeCount + 1;
+        const sum = left.valueSum + right.valueSum + root.val;
+        const maxAverage = Math.max(
+            (1.0 * sum) / nodeCount, // average for current node
+            Math.max(right.maxAverage, left.maxAverage), // max average from child nodes
+        );
+
+        return new State(nodeCount, sum, maxAverage);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

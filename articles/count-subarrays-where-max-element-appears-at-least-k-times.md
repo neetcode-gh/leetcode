@@ -256,6 +256,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    countSubarrays(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+        let maxi = Math.max(...nums);
+
+        for (let i = 0; i < n; i++) {
+            let cnt = 0;
+            for (let j = i; j < n; j++) {
+                if (nums[j] === maxi) {
+                    cnt++;
+                }
+
+                if (cnt >= k) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,6 +578,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    countSubarrays(nums: number[], k: number): number {
+        let maxN = Math.max(...nums);
+        let maxCnt = 0,
+            l = 0,
+            res = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            if (nums[r] === maxN) {
+                maxCnt++;
+            }
+
+            while (maxCnt > k || (l <= r && maxCnt === k && nums[l] !== maxN)) {
+                if (nums[l] === maxN) {
+                    maxCnt--;
+                }
+                l++;
+            }
+
+            if (maxCnt === k) {
+                res += l + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -807,6 +872,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    countSubarrays(nums: number[], k: number): number {
+        let max_n = Math.max(...nums),
+            max_cnt = 0,
+            l = 0,
+            res = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            if (nums[r] === max_n) {
+                max_cnt++;
+            }
+            while (max_cnt === k) {
+                if (nums[l] === max_n) {
+                    max_cnt--;
+                }
+                l++;
+            }
+            res += l;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1030,7 +1126,7 @@ class Solution {
         }
 
         var res = 0
-        for i in 1...(maxIndexes.count - k) {
+        for i in stride(from: 1, through: maxIndexes.count - k, by: 1) {
             let cur = (maxIndexes[i] - maxIndexes[i - 1]) *
                       (n - maxIndexes[i + k - 1])
             res += cur
@@ -1063,6 +1159,36 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    countSubarrays(nums: number[], k: number): number {
+        const n = nums.length;
+        const max_n = Math.max(...nums);
+        const max_indexes: number[] = [-1];
+
+        for (let i = 0; i < n; i++) {
+            if (nums[i] === max_n) {
+                max_indexes.push(i);
+            }
+        }
+
+        let res = 0;
+        for (let i = 1; i <= max_indexes.length - k; i++) {
+            res +=
+                (max_indexes[i] - max_indexes[i - 1]) *
+                (n - max_indexes[i + k - 1]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1329,6 +1455,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    countSubarrays(nums: number[], k: number): number {
+        const maxN = Math.max(...nums);
+        const maxIndexes = new Queue();
+        let res = 0;
+
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] === maxN) {
+                maxIndexes.push(i);
+            }
+
+            if (maxIndexes.size() > k) {
+                maxIndexes.pop();
+            }
+
+            if (maxIndexes.size() === k) {
+                res += maxIndexes.front() + 1;
+            }
+        }
+
+        return res;
     }
 }
 ```

@@ -239,6 +239,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    eraseOverlapIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[0] - b[0]);
+
+        const dfs = (i: number, prev: number): number => {
+            if (i === intervals.length) return 0;
+            let res = dfs(i + 1, prev);
+            if (prev === -1 || intervals[prev][1] <= intervals[i][0]) {
+                res = Math.max(res, 1 + dfs(i + 1, i));
+            }
+            return res;
+        };
+
+        return intervals.length - dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,6 +573,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    eraseOverlapIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[1] - b[1]);
+        const n = intervals.length;
+        let memo: number[] = new Array(n).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i >= n) return 0;
+            if (memo[i] !== -1) return memo[i];
+
+            let res = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (intervals[i][1] <= intervals[j][0]) {
+                    res = Math.max(res, 1 + dfs(j));
+                }
+            }
+            memo[i] = res;
+            return res;
+        };
+
+        const maxNonOverlapping = dfs(0);
+        return n - maxNonOverlapping;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -809,6 +863,32 @@ impl Solution {
 
         let max_non_overlapping = *dp.iter().max().unwrap();
         n as i32 - max_non_overlapping
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    eraseOverlapIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[1] - b[1]);
+        const n = intervals.length;
+        const dp: number[] = new Array(n).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (let j = 0; j < i; j++) {
+                if (intervals[j][1] <= intervals[i][0]) {
+                    dp[i] = Math.max(dp[i], 1 + dp[j]);
+                }
+            }
+        }
+
+        const maxNonOverlapping = Math.max(...dp);
+        return n - maxNonOverlapping;
     }
 }
 ```
@@ -1189,6 +1269,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    eraseOverlapIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[1] - b[1]);
+        const n = intervals.length;
+        const dp: number[] = new Array(n).fill(0);
+        dp[0] = 1;
+
+        const bs = (r: number, target: number): number => {
+            let l = 0;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (intervals[m][1] <= target) {
+                    l = m + 1;
+                } else {
+                    r = m;
+                }
+            }
+            return l;
+        };
+
+        for (let i = 1; i < n; i++) {
+            const idx = bs(i, intervals[i][0]);
+            if (idx === 0) {
+                dp[i] = dp[i - 1];
+            } else {
+                dp[i] = Math.max(dp[i - 1], 1 + dp[idx - 1]);
+            }
+        }
+        return n - dp[n - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1440,6 +1558,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    eraseOverlapIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[0] - b[0]);
+        let res = 0;
+        let prevEnd = intervals[0][1];
+
+        for (let i = 1; i < intervals.length; i++) {
+            const start = intervals[i][0];
+            const end = intervals[i][1];
+            if (start >= prevEnd) {
+                prevEnd = end;
+            } else {
+                res++;
+                prevEnd = Math.min(end, prevEnd);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1675,6 +1819,31 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    eraseOverlapIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[1] - b[1]);
+        let res = 0;
+        let prevEnd = intervals[0][1];
+
+        for (let i = 1; i < intervals.length; i++) {
+            const start = intervals[i][0];
+            const end = intervals[i][1];
+            if (start < prevEnd) {
+                res++;
+            } else {
+                prevEnd = end;
+            }
+        }
+        return res;
     }
 }
 ```

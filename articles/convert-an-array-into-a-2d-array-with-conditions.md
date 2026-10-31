@@ -45,7 +45,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<List<Integer>> findMatrix(int[] nums) {
+    public int[][] findMatrix(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
 
         for (int num : nums) {
@@ -62,7 +62,9 @@ public class Solution {
             res.get(r).add(num);
         }
 
-        return res;
+        return res.stream()
+            .map(row -> row.stream().mapToInt(Integer::intValue).toArray())
+            .toArray(int[][]::new);
     }
 }
 ```
@@ -122,7 +124,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<int>> FindMatrix(int[] nums) {
+    public int[][] FindMatrix(int[] nums) {
         IList<IList<int>> res = new List<IList<int>>();
 
         foreach (int num in nums) {
@@ -139,7 +141,7 @@ public class Solution {
             res[r].Add(num);
         }
 
-        return res;
+        return res.Select(row => row.ToArray()).ToArray();
     }
 }
 ```
@@ -245,6 +247,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    findMatrix(nums: number[]): number[][] {
+        const res: number[][] = [];
+
+        for (const num of nums) {
+            let r = 0;
+            while (r < res.length) {
+                if (!res[r].includes(num)) {
+                    break;
+                }
+                r++;
+            }
+            if (r === res.length) {
+                res.push([]);
+            }
+            res[r].push(num);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -298,7 +328,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<List<Integer>> findMatrix(int[] nums) {
+    public int[][] findMatrix(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();
 
@@ -317,7 +347,9 @@ public class Solution {
             i = j;
         }
 
-        return res;
+        return res.stream()
+            .map(row -> row.stream().mapToInt(Integer::intValue).toArray())
+            .toArray(int[][]::new);
     }
 }
 ```
@@ -380,7 +412,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<int>> FindMatrix(int[] nums) {
+    public int[][] FindMatrix(int[] nums) {
         Array.Sort(nums);
         IList<IList<int>> res = new List<IList<int>>();
 
@@ -399,7 +431,7 @@ public class Solution {
             i = j;
         }
 
-        return res;
+        return res.Select(row => row.ToArray()).ToArray();
     }
 }
 ```
@@ -507,6 +539,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    findMatrix(nums: number[]): number[][] {
+        nums.sort((a, b) => a - b);
+        const res: number[][] = [];
+
+        let i = 0;
+        while (i < nums.length) {
+            let j = i;
+            let r = 0;
+            while (j < nums.length && nums[i] === nums[j]) {
+                if (r === res.length) {
+                    res.push([]);
+                }
+                res[r].push(nums[i]);
+                r++;
+                j++;
+            }
+            i = j;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -553,7 +615,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<List<Integer>> findMatrix(int[] nums) {
+    public int[][] findMatrix(int[] nums) {
         Map<Integer, Integer> count = new HashMap<>();
         List<List<Integer>> res = new ArrayList<>();
 
@@ -566,7 +628,9 @@ public class Solution {
             count.put(num, row + 1);
         }
 
-        return res;
+        return res.stream()
+            .map(row -> row.stream().mapToInt(Integer::intValue).toArray())
+            .toArray(int[][]::new);
     }
 }
 ```
@@ -618,7 +682,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<int>> FindMatrix(int[] nums) {
+    public int[][] FindMatrix(int[] nums) {
         Dictionary<int, int> count = new Dictionary<int, int>();
         IList<IList<int>> res = new List<IList<int>>();
 
@@ -631,7 +695,7 @@ public class Solution {
             count[num] = row + 1;
         }
 
-        return res;
+        return res.Select(row => row.ToArray()).ToArray();
     }
 }
 ```
@@ -710,6 +774,30 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    findMatrix(nums: number[]): number[][] {
+        const count = new Map<number, number>();
+        const res: number[][] = [];
+
+        for (const num of nums) {
+            const row = count.get(num) || 0;
+            if (res.length === row) {
+                res.push([]);
+            }
+            res[row].push(num);
+            count.set(num, row + 1);
+        }
+
+        return res;
     }
 }
 ```

@@ -712,7 +712,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 struct UnionFind {
     par: Vec<usize>,
@@ -796,6 +795,108 @@ impl Solution {
         }
 
         vec![critical, pseudo]
+    }
+}
+```
+
+```typescript
+class UnionFind {
+    par: number[];
+    rank: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.par = Array.from({ length: n }, (_, i) => i);
+        this.rank = Array(n).fill(1);
+    }
+
+    /**
+     * @param {number} v1
+     * @return {number}
+     */
+    find(v1: number): number {
+        if (this.par[v1] !== v1) {
+            this.par[v1] = this.find(this.par[v1]);
+        }
+        return this.par[v1];
+    }
+
+    /**
+     * @param {number} v1
+     * @param {number} v2
+     * @return {boolean}
+     */
+    union(v1: number, v2: number): boolean {
+        const p1 = this.find(v1),
+            p2 = this.find(v2);
+        if (p1 === p2) return false;
+        if (this.rank[p1] > this.rank[p2]) {
+            this.par[p2] = p1;
+            this.rank[p1] += this.rank[p2];
+        } else {
+            this.par[p1] = p2;
+            this.rank[p2] += this.rank[p1];
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[][]}
+     */
+    findCriticalAndPseudoCriticalEdges(n: number, edges: number[][]): number[][] {
+        edges = edges.map((edge, idx) => [...edge, idx]);
+        edges.sort((a, b) => a[2] - b[2]);
+
+        const uf = new UnionFind(n);
+        let mstWeight = 0;
+        for (const [v1, v2, w] of edges) {
+            if (uf.union(v1, v2)) {
+                mstWeight += w;
+            }
+        }
+
+        const critical: number[] = [];
+        const pseudo: number[] = [];
+
+        for (const [n1, n2, weight, i] of edges) {
+            // Try without current edge
+            const ufWithout = new UnionFind(n);
+            let weightWithout = 0;
+            for (const [v1, v2, w, j] of edges) {
+                if (j !== i && ufWithout.union(v1, v2)) {
+                    weightWithout += w;
+                }
+            }
+            if (
+                Math.max(...ufWithout.rank) !== n ||
+                weightWithout > mstWeight
+            ) {
+                critical.push(i);
+                continue;
+            }
+
+            // Try with current edge
+            const ufWith = new UnionFind(n);
+            ufWith.union(n1, n2);
+            let weightWith = weight;
+            for (const [v1, v2, w, j] of edges) {
+                if (ufWith.union(v1, v2)) {
+                    weightWith += w;
+                }
+            }
+            if (weightWith === mstWeight) {
+                pseudo.push(i);
+            }
+        }
+
+        return [critical, pseudo];
     }
 }
 ```
@@ -1465,7 +1566,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 struct UnionFind {
     n: usize,
@@ -1544,6 +1644,102 @@ impl Solution {
         }
 
         vec![critical, pseudo]
+    }
+}
+```
+
+```typescript
+class UnionFind {
+    private Parent: number[];
+    private Size: number[];
+    private n: number;
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+        this.n = n;
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        this.n--;
+        if (this.Size[pu] < this.Size[pv]) {
+            [pu, pv] = [pv, pu];
+        }
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    isConnected(): boolean {
+        return this.n === 1;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[][]}
+     */
+    findCriticalAndPseudoCriticalEdges(n: number, edges: number[][]): number[][] {
+        edges.forEach((edge, i) => edge.push(i));
+        edges.sort((a, b) => a[2] - b[2]);
+
+        const findMST = (index: number, include: boolean): number => {
+            const uf = new UnionFind(n);
+            let wgt = 0;
+            if (include) {
+                wgt += edges[index][2];
+                uf.union(edges[index][0], edges[index][1]);
+            }
+            for (let i = 0; i < edges.length; i++) {
+                if (i === index) continue;
+                if (uf.union(edges[i][0], edges[i][1])) {
+                    wgt += edges[i][2];
+                }
+            }
+            return uf.isConnected() ? wgt : Infinity;
+        };
+
+        const mst_wgt = findMST(-1, false);
+        const critical: number[] = [];
+        const pseudo: number[] = [];
+
+        edges.forEach((edge, i) => {
+            if (mst_wgt < findMST(i, false)) {
+                critical.push(edge[3]);
+            } else if (mst_wgt === findMST(i, true)) {
+                pseudo.push(edge[3]);
+            }
+        });
+
+        return [critical, pseudo];
     }
 }
 ```
@@ -2092,7 +2288,6 @@ struct Heap<T> {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_critical_and_pseudo_critical_edges(n: i32, mut edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
@@ -2140,6 +2335,61 @@ impl Solution {
         }
 
         vec![critical, pseudo]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[][]}
+     */
+    findCriticalAndPseudoCriticalEdges(n: number, edges: number[][]): number[][] {
+        edges.forEach((edge, i) => edge.push(i));
+
+        const adj: number[][][] = Array.from({ length: n }, () => []);
+        for (const [u, v, w, idx] of edges) {
+            adj[u].push([v, w, idx]);
+            adj[v].push([u, w, idx]);
+        }
+
+        const minimax = (src: number, dst: number, excludeIdx: number): number => {
+            const dist: number[] = Array(n).fill(Infinity);
+            dist[src] = 0;
+
+            const pq = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]);
+            pq.enqueue([0, src]);
+
+            while (!pq.isEmpty()) {
+                const [maxW, u]: number[] = pq.dequeue();
+                if (u === dst) return maxW;
+
+                for (const [v, weight, edgeIdx] of adj[u]) {
+                    if (edgeIdx === excludeIdx) continue;
+                    const newW = Math.max(maxW, weight);
+                    if (newW < dist[v]) {
+                        dist[v] = newW;
+                        pq.enqueue([newW, v]);
+                    }
+                }
+            }
+            return Infinity;
+        };
+
+        const critical: number[] = [];
+        const pseudo: number[] = [];
+
+        for (const [u, v, w, idx] of edges) {
+            if (w < minimax(u, v, idx)) {
+                critical.push(idx);
+            } else if (w === minimax(u, v, -1)) {
+                pseudo.push(idx);
+            }
+        }
+
+        return [critical, pseudo];
     }
 }
 ```
@@ -2927,7 +3177,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 struct UnionFind {
     parent: Vec<usize>,
@@ -3025,6 +3274,112 @@ impl Solution {
         let pseudo: Vec<i32> = pseudo_set.iter().map(|&e| e as i32).collect();
 
         vec![critical, pseudo]
+    }
+}
+```
+
+```typescript
+class UnionFind {
+    private Parent: number[];
+    private Size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) {
+            [pu, pv] = [pv, pu];
+        }
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[][]}
+     */
+    findCriticalAndPseudoCriticalEdges(n: number, edges: number[][]): number[][] {
+        const mst: number[][][] = Array.from({ length: n }, () => []);
+        const mstEdges = new Set<number>();
+        const pseudoCriticalEdges = new Set<number>();
+        const edgeList = edges
+            .map((e, i) => [...e, i])
+            .sort((a, b) => a[2] - b[2]);
+
+        const uf = new UnionFind(n);
+
+        for (const [u, v, w, idx] of edgeList) {
+            if (uf.union(u, v)) {
+                mst[u].push([v, idx]);
+                mst[v].push([u, idx]);
+                mstEdges.add(idx);
+            }
+        }
+
+        let path: number[] = [];
+        let destination: number | null = null;
+
+        const dfs = (node: number, parent: number): boolean => {
+            if (node === destination) return true;
+            for (const [next, edgeIdx] of mst[node]) {
+                if (edgeIdx === parent) continue;
+                path.push(edgeIdx);
+                if (dfs(next, edgeIdx)) return true;
+                path.pop();
+            }
+            return false;
+        };
+
+        for (let i = 0; i < edges.length; i++) {
+            if (mstEdges.has(i)) continue;
+
+            path = [];
+            destination = edges[i][1];
+            if (dfs(edges[i][0], -1)) {
+                for (const edgeIdx of path) {
+                    if (edges[edgeIdx][2] === edges[i][2]) {
+                        pseudoCriticalEdges.add(i);
+                        pseudoCriticalEdges.add(edgeIdx);
+                    }
+                }
+            }
+        }
+
+        const critical = [...mstEdges].filter(
+            (edgeIdx) => !pseudoCriticalEdges.has(edgeIdx),
+        );
+        const pseudo = [...pseudoCriticalEdges];
+
+        return [critical, pseudo];
     }
 }
 ```

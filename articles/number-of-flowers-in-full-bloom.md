@@ -211,6 +211,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} flowers
+     * @param {number[]} people
+     * @return {number[]}
+     */
+    fullBloomFlowers(flowers: number[][], people: number[]): number[] {
+        let res: number[] = new Array(people.length).fill(0);
+
+        for (let i = 0; i < people.length; i++) {
+            let count = 0;
+            for (let [start, end] of flowers) {
+                if (start <= people[i] && people[i] <= end) {
+                    count++;
+                }
+            }
+            res[i] = count;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -586,6 +611,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} flowers
+     * @param {number[]} people
+     * @return {number[]}
+     */
+    fullBloomFlowers(flowers: number[][], people: number[]): number[] {
+        const m = people.length;
+        const res: number[] = new Array(m).fill(0);
+
+        const sortedPeople = people.map((p, i) => [p, i]);
+        sortedPeople.sort((a, b) => a[0] - b[0]);
+
+        const startHeap = new MinPriorityQueue();
+        const endHeap = new MinPriorityQueue();
+        for (const [s, e] of flowers) {
+            startHeap.enqueue(s);
+            endHeap.enqueue(e);
+        }
+
+        let count = 0;
+        for (const [p, index] of sortedPeople) {
+            while (!startHeap.isEmpty() && startHeap.front() <= p) {
+                startHeap.dequeue();
+                count++;
+            }
+            while (!endHeap.isEmpty() && endHeap.front() < p) {
+                endHeap.dequeue();
+                count--;
+            }
+            res[index] = count;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -921,6 +985,40 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} flowers
+     * @param {number[]} people
+     * @return {number[]}
+     */
+    fullBloomFlowers(flowers: number[][], people: number[]): number[] {
+        const m = people.length;
+        const res: number[] = new Array(m).fill(0);
+        const indexedPeople = people.map((p, i) => [p, i]);
+
+        indexedPeople.sort((a, b) => a[0] - b[0]);
+        flowers.sort((a, b) => a[0] - b[0]);
+
+        const endHeap = new MinPriorityQueue();
+        let j = 0,
+            n = flowers.length;
+
+        for (const [p, index] of indexedPeople) {
+            while (j < n && flowers[j][0] <= p) {
+                endHeap.enqueue(flowers[j][1]);
+                j++;
+            }
+            while (!endHeap.isEmpty() && endHeap.front() < p) {
+                endHeap.dequeue();
+            }
+            res[index] = endHeap.size();
+        }
+        return res;
     }
 }
 ```
@@ -1278,6 +1376,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} flowers
+     * @param {number[]} people
+     * @return {number[]}
+     */
+    fullBloomFlowers(flowers: number[][], people: number[]): number[] {
+        const start: number[] = [],
+            end: number[] = [];
+        for (let f of flowers) {
+            start.push(f[0]);
+            end.push(f[1]);
+        }
+
+        start.sort((a, b) => a - b);
+        end.sort((a, b) => a - b);
+
+        let count = 0,
+            i = 0,
+            j = 0;
+        const peopleIndex = people.map((p, idx) => [p, idx]);
+        peopleIndex.sort((a, b) => a[0] - b[0]);
+
+        const res: number[] = new Array(people.length);
+
+        for (let [p, index] of peopleIndex) {
+            while (i < start.length && start[i] <= p) {
+                count++;
+                i++;
+            }
+            while (j < end.length && end[j] < p) {
+                count--;
+                j++;
+            }
+            res[index] = count;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1578,6 +1719,39 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} flowers
+     * @param {number[]} people
+     * @return {number[]}
+     */
+    fullBloomFlowers(flowers: number[][], people: number[]): number[] {
+        let events: number[][] = [];
+        for (let [start, end] of flowers) {
+            events.push([start, 1]);
+            events.push([end + 1, -1]);
+        }
+
+        events.sort((a, b) => a[0] - b[0]);
+        let queries = people.map((p, i) => [p, i]).sort((a, b) => a[0] - b[0]);
+        let res: number[] = new Array(people.length).fill(0);
+
+        let count = 0,
+            j = 0;
+        for (let [time, index] of queries) {
+            while (j < events.length && events[j][0] <= time) {
+                count += events[j][1];
+                j++;
+            }
+            res[index] = count;
+        }
+
+        return res;
     }
 }
 ```

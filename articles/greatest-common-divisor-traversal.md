@@ -33,7 +33,7 @@ class Solution:
         adj = [[] for _ in range(n)]
         for i in range(n):
             for j in range(i + 1, n):
-                if gcd(nums[i], nums[j]) > 1:
+                if math.gcd(nums[i], nums[j]) > 1:
                     adj[i].append(j)
                     adj[j].append(i)
 
@@ -358,6 +358,43 @@ impl Solution {
 
         dfs(0, &adj, &mut visit);
         visit.iter().all(|&v| v)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canTraverseAllPairs(nums: number[]): boolean {
+        const n = nums.length;
+        const visit: boolean[] = new Array(n).fill(false);
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                if (gcd(nums[i], nums[j]) > 1) {
+                    adj[i].push(j);
+                    adj[j].push(i);
+                }
+            }
+        }
+
+        const dfs = (node: number): void => {
+            visit[node] = true;
+            for (const nei of adj[node]) {
+                if (!visit[nei]) {
+                    dfs(nei);
+                }
+            }
+        };
+
+        dfs(0);
+        return visit.every((node) => node);
     }
 }
 ```
@@ -769,6 +806,222 @@ public class Solution {
 }
 ```
 
+```go
+type UnionFind struct {
+    n      int
+    Parent []int
+    Size   []int
+}
+
+func NewUnionFind(n int) *UnionFind {
+    uf := &UnionFind{n: n, Parent: make([]int, n+1), Size: make([]int, n+1)}
+    for i := 0; i <= n; i++ {
+        uf.Parent[i] = i
+        uf.Size[i] = 1
+    }
+    return uf
+}
+
+func (uf *UnionFind) Find(node int) int {
+    if uf.Parent[node] != node {
+        uf.Parent[node] = uf.Find(uf.Parent[node])
+    }
+    return uf.Parent[node]
+}
+
+func (uf *UnionFind) Union(u, v int) bool {
+    pu, pv := uf.Find(u), uf.Find(v)
+    if pu == pv {
+        return false
+    }
+    uf.n--
+    if uf.Size[pu] < uf.Size[pv] {
+        pu, pv = pv, pu
+    }
+    uf.Size[pu] += uf.Size[pv]
+    uf.Parent[pv] = pu
+    return true
+}
+
+func (uf *UnionFind) IsConnected() bool {
+    return uf.n == 1
+}
+
+func canTraverseAllPairs(nums []int) bool {
+    n := len(nums)
+    uf := NewUnionFind(n)
+    factorIndex := make(map[int]int)
+
+    for i, num := range nums {
+        f := 2
+        for f*f <= num {
+            if num%f == 0 {
+                if idx, ok := factorIndex[f]; ok {
+                    uf.Union(i, idx)
+                } else {
+                    factorIndex[f] = i
+                }
+                for num%f == 0 {
+                    num /= f
+                }
+            }
+            f++
+        }
+        if num > 1 {
+            if idx, ok := factorIndex[num]; ok {
+                uf.Union(i, idx)
+            } else {
+                factorIndex[num] = i
+            }
+        }
+    }
+
+    return uf.IsConnected()
+}
+```
+
+```kotlin
+class UnionFind(private var n: Int) {
+    private val Parent = IntArray(n + 1) { it }
+    private val Size = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (Parent[node] != node) {
+            Parent[node] = find(Parent[node])
+        }
+        return Parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) return false
+        n--
+        if (Size[pu] < Size[pv]) {
+            val temp = pu
+            pu = pv
+            pv = temp
+        }
+        Size[pu] += Size[pv]
+        Parent[pv] = pu
+        return true
+    }
+
+    fun isConnected(): Boolean {
+        return n == 1
+    }
+}
+
+class Solution {
+    fun canTraverseAllPairs(nums: IntArray): Boolean {
+        val n = nums.size
+        val uf = UnionFind(n)
+        val factorIndex = HashMap<Int, Int>()
+
+        for (i in 0 until n) {
+            var num = nums[i]
+            var f = 2
+            while (f * f <= num) {
+                if (num % f == 0) {
+                    if (factorIndex.containsKey(f)) {
+                        uf.union(i, factorIndex[f]!!)
+                    } else {
+                        factorIndex[f] = i
+                    }
+                    while (num % f == 0) {
+                        num /= f
+                    }
+                }
+                f++
+            }
+            if (num > 1) {
+                if (factorIndex.containsKey(num)) {
+                    uf.union(i, factorIndex[num]!!)
+                } else {
+                    factorIndex[num] = i
+                }
+            }
+        }
+
+        return uf.isConnected()
+    }
+}
+```
+
+```swift
+class UnionFind {
+    private var n: Int
+    private var Parent: [Int]
+    private var Size: [Int]
+
+    init(_ n: Int) {
+        self.n = n
+        self.Parent = Array(0...n)
+        self.Size = [Int](repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if Parent[node] != node {
+            Parent[node] = find(Parent[node])
+        }
+        return Parent[node]
+    }
+
+    @discardableResult
+    func union(_ u: Int, _ v: Int) -> Bool {
+        var pu = find(u)
+        var pv = find(v)
+        if pu == pv { return false }
+        n -= 1
+        if Size[pu] < Size[pv] {
+            swap(&pu, &pv)
+        }
+        Size[pu] += Size[pv]
+        Parent[pv] = pu
+        return true
+    }
+
+    func isConnected() -> Bool {
+        return n == 1
+    }
+}
+
+class Solution {
+    func canTraverseAllPairs(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        let uf = UnionFind(n)
+        var factorIndex = [Int: Int]()
+
+        for i in 0..<n {
+            var num = nums[i]
+            var f = 2
+            while f * f <= num {
+                if num % f == 0 {
+                    if let idx = factorIndex[f] {
+                        uf.union(i, idx)
+                    } else {
+                        factorIndex[f] = i
+                    }
+                    while num % f == 0 {
+                        num /= f
+                    }
+                }
+                f += 1
+            }
+            if num > 1 {
+                if let idx = factorIndex[num] {
+                    uf.union(i, idx)
+                } else {
+                    factorIndex[num] = i
+                }
+            }
+        }
+
+        return uf.isConnected()
+    }
+}
+```
+
 ```rust
 struct UnionFind {
     parent: Vec<usize>,
@@ -842,6 +1095,99 @@ impl Solution {
         }
 
         uf.is_connected()
+    }
+}
+```
+
+```typescript
+class UnionFind {
+    private Parent: number[];
+    private Size: number[];
+    private n: number;
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+        this.n = n;
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        this.n--;
+        if (this.Size[pu] < this.Size[pv]) {
+            [pu, pv] = [pv, pu];
+        }
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    isConnected(): boolean {
+        return this.n === 1;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canTraverseAllPairs(nums: number[]): boolean {
+        const n = nums.length;
+        const uf = new UnionFind(n);
+        const factor_index = new Map<number, number>();
+
+        for (let i = 0; i < n; i++) {
+            let num = nums[i];
+            let f = 2;
+            while (f * f <= num) {
+                if (num % f === 0) {
+                    if (factor_index.has(f)) {
+                        uf.union(i, factor_index.get(f)!);
+                    } else {
+                        factor_index.set(f, i);
+                    }
+                    while (num % f === 0) {
+                        num = Math.floor(num / f);
+                    }
+                }
+                f++;
+            }
+            if (num > 1) {
+                if (factor_index.has(num)) {
+                    uf.union(i, factor_index.get(num)!);
+                } else {
+                    factor_index.set(num, i);
+                }
+            }
+        }
+
+        return uf.isConnected();
     }
 }
 ```
@@ -1277,6 +1623,249 @@ public class Solution {
 }
 ```
 
+```go
+type UnionFind struct {
+    Parent []int
+    Size   []int
+}
+
+func NewUnionFind(n int) *UnionFind {
+    uf := &UnionFind{Parent: make([]int, n+1), Size: make([]int, n+1)}
+    for i := 0; i <= n; i++ {
+        uf.Parent[i] = i
+        uf.Size[i] = 1
+    }
+    return uf
+}
+
+func (uf *UnionFind) Find(node int) int {
+    if uf.Parent[node] != node {
+        uf.Parent[node] = uf.Find(uf.Parent[node])
+    }
+    return uf.Parent[node]
+}
+
+func (uf *UnionFind) Union(u, v int) bool {
+    pu, pv := uf.Find(u), uf.Find(v)
+    if pu == pv {
+        return false
+    }
+    if uf.Size[pu] < uf.Size[pv] {
+        pu, pv = pv, pu
+    }
+    uf.Size[pu] += uf.Size[pv]
+    uf.Parent[pv] = pu
+    return true
+}
+
+func canTraverseAllPairs(nums []int) bool {
+    N := len(nums)
+    if N == 1 {
+        return true
+    }
+    MAX := 0
+    for _, num := range nums {
+        MAX = max(MAX, num)
+        if num == 1 {
+            return false
+        }
+    }
+
+    sieve := make([]int, MAX+1)
+    for p := 2; p*p <= MAX; p++ {
+        if sieve[p] == 0 {
+            for composite := p * p; composite <= MAX; composite += p {
+                sieve[composite] = p
+            }
+        }
+    }
+
+    uf := NewUnionFind(N + MAX + 1)
+    for i := 0; i < N; i++ {
+        num := nums[i]
+        if sieve[num] == 0 { // num is prime
+            uf.Union(i, N+num)
+            continue
+        }
+
+        for num > 1 {
+            prime := sieve[num]
+            if prime == 0 {
+                prime = num
+            }
+            uf.Union(i, N+prime)
+            for num%prime == 0 {
+                num /= prime
+            }
+        }
+    }
+
+    root := uf.Find(0)
+    for i := 1; i < N; i++ {
+        if uf.Find(i) != root {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class UnionFind(n: Int) {
+    private val Parent = IntArray(n + 1) { it }
+    private val Size = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (Parent[node] != node) {
+            Parent[node] = find(Parent[node])
+        }
+        return Parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) return false
+        if (Size[pu] < Size[pv]) {
+            val temp = pu
+            pu = pv
+            pv = temp
+        }
+        Size[pu] += Size[pv]
+        Parent[pv] = pu
+        return true
+    }
+}
+
+class Solution {
+    fun canTraverseAllPairs(nums: IntArray): Boolean {
+        val N = nums.size
+        if (N == 1) return true
+        var MAX = 0
+        for (num in nums) {
+            MAX = maxOf(MAX, num)
+            if (num == 1) return false
+        }
+
+        val sieve = IntArray(MAX + 1)
+        var p = 2
+        while (p * p <= MAX) {
+            if (sieve[p] == 0) {
+                var composite = p * p
+                while (composite <= MAX) {
+                    sieve[composite] = p
+                    composite += p
+                }
+            }
+            p++
+        }
+
+        val uf = UnionFind(N + MAX + 1)
+        for (i in 0 until N) {
+            var num = nums[i]
+            if (sieve[num] == 0) { // num is prime
+                uf.union(i, N + num)
+                continue
+            }
+
+            while (num > 1) {
+                val prime = if (sieve[num] != 0) sieve[num] else num
+                uf.union(i, N + prime)
+                while (num % prime == 0) {
+                    num /= prime
+                }
+            }
+        }
+
+        val root = uf.find(0)
+        for (i in 1 until N) {
+            if (uf.find(i) != root) return false
+        }
+        return true
+    }
+}
+```
+
+```swift
+class UnionFind {
+    private var Parent: [Int]
+    private var Size: [Int]
+
+    init(_ n: Int) {
+        self.Parent = Array(0...n)
+        self.Size = [Int](repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if Parent[node] != node {
+            Parent[node] = find(Parent[node])
+        }
+        return Parent[node]
+    }
+
+    @discardableResult
+    func union(_ u: Int, _ v: Int) -> Bool {
+        var pu = find(u)
+        var pv = find(v)
+        if pu == pv { return false }
+        if Size[pu] < Size[pv] {
+            swap(&pu, &pv)
+        }
+        Size[pu] += Size[pv]
+        Parent[pv] = pu
+        return true
+    }
+}
+
+class Solution {
+    func canTraverseAllPairs(_ nums: [Int]) -> Bool {
+        let N = nums.count
+        if N == 1 { return true }
+        var MAX = 0
+        for num in nums {
+            MAX = max(MAX, num)
+            if num == 1 { return false }
+        }
+
+        var sieve = [Int](repeating: 0, count: MAX + 1)
+        var p = 2
+        while p * p <= MAX {
+            if sieve[p] == 0 {
+                var composite = p * p
+                while composite <= MAX {
+                    sieve[composite] = p
+                    composite += p
+                }
+            }
+            p += 1
+        }
+
+        let uf = UnionFind(N + MAX + 1)
+        for i in 0..<N {
+            var num = nums[i]
+            if sieve[num] == 0 { // num is prime
+                uf.union(i, N + num)
+                continue
+            }
+
+            while num > 1 {
+                let prime = sieve[num] != 0 ? sieve[num] : num
+                uf.union(i, N + prime)
+                while num % prime == 0 {
+                    num /= prime
+                }
+            }
+        }
+
+        let root = uf.find(0)
+        for i in 1..<N {
+            if uf.find(i) != root { return false }
+        }
+        return true
+    }
+}
+```
+
 ```rust
 struct UnionFind {
     parent: Vec<usize>,
@@ -1356,6 +1945,98 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class UnionFind {
+    private Parent: number[];
+    private Size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) {
+            [pu, pv] = [pv, pu];
+        }
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canTraverseAllPairs(nums: number[]): boolean {
+        const N = nums.length;
+        if (N === 1) return true;
+        if (nums.includes(1)) return false;
+
+        const MAX = Math.max(...nums);
+        const sieve: number[] = Array(MAX + 1).fill(0);
+        for (let p = 2; p * p <= MAX; p++) {
+            if (sieve[p] === 0) {
+                for (let composite = p * p; composite <= MAX; composite += p) {
+                    sieve[composite] = p;
+                }
+            }
+        }
+
+        const uf = new UnionFind(N + MAX + 1);
+        for (let i = 0; i < N; i++) {
+            let num = nums[i];
+            if (sieve[num] === 0) {
+                // num is prime
+                uf.union(i, N + num);
+                continue;
+            }
+
+            while (num > 1) {
+                const prime = sieve[num] !== 0 ? sieve[num] : num;
+                uf.union(i, N + prime);
+                while (num % prime === 0) {
+                    num = Math.floor(num / prime);
+                }
+            }
+        }
+
+        const root = uf.find(0);
+        for (let i = 1; i < N; i++) {
+            if (uf.find(i) !== root) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ```
@@ -1675,6 +2356,200 @@ public class Solution {
 }
 ```
 
+```go
+func canTraverseAllPairs(nums []int) bool {
+    N := len(nums)
+    if N == 1 {
+        return true
+    }
+    MAX := 0
+    for _, num := range nums {
+        if num == 1 {
+            return false
+        }
+        MAX = max(MAX, num)
+    }
+
+    sieve := make([]int, MAX+1)
+    for p := 2; p*p <= MAX; p++ {
+        if sieve[p] == 0 {
+            for composite := p * p; composite <= MAX; composite += p {
+                sieve[composite] = p
+            }
+        }
+    }
+
+    adj := make(map[int][]int)
+    for i := 0; i < N; i++ {
+        num := nums[i]
+        if _, ok := adj[i]; !ok {
+            adj[i] = []int{}
+        }
+
+        if sieve[num] == 0 {
+            adj[i] = append(adj[i], N+num)
+            adj[N+num] = append(adj[N+num], i)
+            continue
+        }
+
+        for num > 1 {
+            prime := sieve[num]
+            if prime == 0 {
+                prime = num
+            }
+            adj[i] = append(adj[i], N+prime)
+            adj[N+prime] = append(adj[N+prime], i)
+            for num%prime == 0 {
+                num /= prime
+            }
+        }
+    }
+
+    visited := make(map[int]bool)
+    var dfs func(node int)
+    dfs = func(node int) {
+        visited[node] = true
+        for _, nei := range adj[node] {
+            if !visited[nei] {
+                dfs(nei)
+            }
+        }
+    }
+
+    dfs(0)
+    for i := 0; i < N; i++ {
+        if !visited[i] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canTraverseAllPairs(nums: IntArray): Boolean {
+        val N = nums.size
+        if (N == 1) return true
+        for (num in nums) {
+            if (num == 1) return false
+        }
+
+        val MAX = nums.maxOrNull()!!
+        val sieve = IntArray(MAX + 1)
+        var p = 2
+        while (p * p <= MAX) {
+            if (sieve[p] == 0) {
+                var composite = p * p
+                while (composite <= MAX) {
+                    sieve[composite] = p
+                    composite += p
+                }
+            }
+            p++
+        }
+
+        val adj = HashMap<Int, MutableList<Int>>()
+        for (i in 0 until N) {
+            var num = nums[i]
+            adj.getOrPut(i) { mutableListOf() }
+
+            if (sieve[num] == 0) {
+                adj.getOrPut(N + num) { mutableListOf() }
+                adj[i]!!.add(N + num)
+                adj[N + num]!!.add(i)
+                continue
+            }
+
+            while (num > 1) {
+                val prime = if (sieve[num] == 0) num else sieve[num]
+                adj.getOrPut(N + prime) { mutableListOf() }
+                adj[i]!!.add(N + prime)
+                adj[N + prime]!!.add(i)
+                while (num % prime == 0) num /= prime
+            }
+        }
+
+        val visited = HashSet<Int>()
+        dfs(0, adj, visited)
+        for (i in 0 until N) {
+            if (i !in visited) return false
+        }
+        return true
+    }
+
+    private fun dfs(node: Int, adj: Map<Int, List<Int>>, visited: MutableSet<Int>) {
+        visited.add(node)
+        for (neighbor in adj[node]!!) {
+            if (neighbor !in visited) {
+                dfs(neighbor, adj, visited)
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func canTraverseAllPairs(_ nums: [Int]) -> Bool {
+        let N = nums.count
+        if N == 1 { return true }
+        for num in nums {
+            if num == 1 { return false }
+        }
+
+        let MAX = nums.max()!
+        var sieve = [Int](repeating: 0, count: MAX + 1)
+        var p = 2
+        while p * p <= MAX {
+            if sieve[p] == 0 {
+                var composite = p * p
+                while composite <= MAX {
+                    sieve[composite] = p
+                    composite += p
+                }
+            }
+            p += 1
+        }
+
+        var adj = [Int: [Int]]()
+        for i in 0..<N {
+            var num = nums[i]
+            if adj[i] == nil { adj[i] = [] }
+
+            if sieve[num] == 0 {
+                adj[i]!.append(N + num)
+                adj[N + num, default: []].append(i)
+                continue
+            }
+
+            while num > 1 {
+                let prime = sieve[num] == 0 ? num : sieve[num]
+                adj[i]!.append(N + prime)
+                adj[N + prime, default: []].append(i)
+                while num % prime == 0 { num /= prime }
+            }
+        }
+
+        var visited = Set<Int>()
+        func dfs(_ node: Int) {
+            visited.insert(node)
+            for neighbor in adj[node]! {
+                if !visited.contains(neighbor) {
+                    dfs(neighbor)
+                }
+            }
+        }
+
+        dfs(0)
+        for i in 0..<N {
+            if !visited.contains(i) { return false }
+        }
+        return true
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
@@ -1730,6 +2605,67 @@ impl Solution {
 
         dfs(0, &adj, &mut visited);
         (0..n).all(|i| visited.contains(&i))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canTraverseAllPairs(nums: number[]): boolean {
+        const N = nums.length;
+        if (N === 1) return true;
+        if (nums.includes(1)) return false;
+
+        const MAX = Math.max(...nums);
+        const sieve: number[] = new Array(MAX + 1).fill(0);
+        for (let p = 2; p * p <= MAX; p++) {
+            if (sieve[p] === 0) {
+                for (let composite = p * p; composite <= MAX; composite += p) {
+                    sieve[composite] = p;
+                }
+            }
+        }
+
+        const adj = new Map<number, number[]>();
+        for (let i = 0; i < N; i++) {
+            if (!adj.has(i)) adj.set(i, []);
+            let num = nums[i];
+
+            if (sieve[num] === 0) {
+                if (!adj.has(N + num)) adj.set(N + num, []);
+                adj.get(i)!.push(N + num);
+                adj.get(N + num)!.push(i);
+                continue;
+            }
+
+            while (num > 1) {
+                const prime = sieve[num] === 0 ? num : sieve[num];
+                if (!adj.has(N + prime)) adj.set(N + prime, []);
+                adj.get(i)!.push(N + prime);
+                adj.get(N + prime)!.push(i);
+                while (num % prime === 0) num = Math.floor(num / prime);
+            }
+        }
+
+        const visited = new Set<number>();
+        const dfs = (node: number): void => {
+            visited.add(node);
+            for (const neighbor of adj.get(node) || []) {
+                if (!visited.has(neighbor)) {
+                    dfs(neighbor);
+                }
+            }
+        };
+
+        dfs(0);
+        for (let i = 0; i < N; i++) {
+            if (!visited.has(i)) return false;
+        }
+        return true;
     }
 }
 ```
@@ -2082,6 +3018,205 @@ public class Solution {
 }
 ```
 
+```go
+func canTraverseAllPairs(nums []int) bool {
+    N := len(nums)
+    if N == 1 {
+        return true
+    }
+    MAX := 0
+    for _, num := range nums {
+        if num == 1 {
+            return false
+        }
+        MAX = max(MAX, num)
+    }
+
+    sieve := make([]int, MAX+1)
+    for p := 2; p*p <= MAX; p++ {
+        if sieve[p] == 0 {
+            for composite := p * p; composite <= MAX; composite += p {
+                sieve[composite] = p
+            }
+        }
+    }
+
+    adj := make(map[int][]int)
+    for i := 0; i < N; i++ {
+        num := nums[i]
+        if sieve[num] == 0 { // num is prime
+            adj[i] = append(adj[i], N+num)
+            adj[N+num] = append(adj[N+num], i)
+            continue
+        }
+
+        for num > 1 {
+            prime := sieve[num]
+            if prime == 0 {
+                prime = num
+            }
+            adj[i] = append(adj[i], N+prime)
+            adj[N+prime] = append(adj[N+prime], i)
+            for num%prime == 0 {
+                num /= prime
+            }
+        }
+    }
+
+    visited := make(map[int]bool)
+    queue := []int{0}
+    visited[0] = true
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        for _, nei := range adj[node] {
+            if !visited[nei] {
+                visited[nei] = true
+                queue = append(queue, nei)
+            }
+        }
+    }
+
+    for i := 0; i < N; i++ {
+        if !visited[i] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canTraverseAllPairs(nums: IntArray): Boolean {
+        val N = nums.size
+        if (N == 1) return true
+        for (num in nums) {
+            if (num == 1) return false
+        }
+
+        val MAX = nums.maxOrNull()!!
+        val sieve = IntArray(MAX + 1)
+        var p = 2
+        while (p * p <= MAX) {
+            if (sieve[p] == 0) {
+                var composite = p * p
+                while (composite <= MAX) {
+                    sieve[composite] = p
+                    composite += p
+                }
+            }
+            p++
+        }
+
+        val adj = HashMap<Int, MutableList<Int>>()
+        for (i in 0 until N) {
+            var num = nums[i]
+            if (sieve[num] == 0) { // num is prime
+                adj.getOrPut(i) { mutableListOf() }.add(N + num)
+                adj.getOrPut(N + num) { mutableListOf() }.add(i)
+                continue
+            }
+
+            while (num > 1) {
+                val prime = if (sieve[num] != 0) sieve[num] else num
+                adj.getOrPut(i) { mutableListOf() }.add(N + prime)
+                adj.getOrPut(N + prime) { mutableListOf() }.add(i)
+                while (num % prime == 0) {
+                    num /= prime
+                }
+            }
+        }
+
+        val visited = HashSet<Int>()
+        val queue = ArrayDeque<Int>()
+        queue.add(0)
+        visited.add(0)
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            for (nei in adj.getOrDefault(node, mutableListOf())) {
+                if (nei !in visited) {
+                    visited.add(nei)
+                    queue.add(nei)
+                }
+            }
+        }
+
+        for (i in 0 until N) {
+            if (i !in visited) return false
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func canTraverseAllPairs(_ nums: [Int]) -> Bool {
+        let N = nums.count
+        if N == 1 { return true }
+        for num in nums {
+            if num == 1 { return false }
+        }
+
+        let MAX = nums.max()!
+        var sieve = [Int](repeating: 0, count: MAX + 1)
+        var p = 2
+        while p * p <= MAX {
+            if sieve[p] == 0 {
+                var composite = p * p
+                while composite <= MAX {
+                    sieve[composite] = p
+                    composite += p
+                }
+            }
+            p += 1
+        }
+
+        var adj = [Int: [Int]]()
+        for i in 0..<N {
+            var num = nums[i]
+            if sieve[num] == 0 { // num is prime
+                adj[i, default: []].append(N + num)
+                adj[N + num, default: []].append(i)
+                continue
+            }
+
+            while num > 1 {
+                let prime = sieve[num] != 0 ? sieve[num] : num
+                adj[i, default: []].append(N + prime)
+                adj[N + prime, default: []].append(i)
+                while num % prime == 0 {
+                    num /= prime
+                }
+            }
+        }
+
+        var visited = Set<Int>([0])
+        var queue = [0]
+        var head = 0
+
+        while head < queue.count {
+            let node = queue[head]
+            head += 1
+            for nei in adj[node, default: []] {
+                if !visited.contains(nei) {
+                    visited.insert(nei)
+                    queue.append(nei)
+                }
+            }
+        }
+
+        for i in 0..<N {
+            if !visited.contains(i) { return false }
+        }
+        return true
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
@@ -2143,6 +3278,79 @@ impl Solution {
         }
 
         (0..n).all(|i| visited.contains(&i))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canTraverseAllPairs(nums: number[]): boolean {
+        const N = nums.length;
+        if (N === 1) return true;
+        if (nums.includes(1)) return false;
+
+        const MAX = Math.max(...nums);
+        const sieve: number[] = Array(MAX + 1).fill(0);
+        let p = 2;
+        while (p * p <= MAX) {
+            if (sieve[p] === 0) {
+                for (let composite = p * p; composite <= MAX; composite += p) {
+                    sieve[composite] = p;
+                }
+            }
+            p++;
+        }
+
+        const adj = new Map<number, number[]>();
+        for (let i = 0; i < N; i++) {
+            let num = nums[i];
+            if (sieve[num] === 0) {
+                // num is prime
+                if (!adj.has(i)) adj.set(i, []);
+                if (!adj.has(N + num)) adj.set(N + num, []);
+                adj.get(i)!.push(N + num);
+                adj.get(N + num)!.push(i);
+                continue;
+            }
+
+            while (num > 1) {
+                const prime = sieve[num] !== 0 ? sieve[num] : num;
+                if (!adj.has(i)) adj.set(i, []);
+                if (!adj.has(N + prime)) adj.set(N + prime, []);
+                adj.get(i)!.push(N + prime);
+                adj.get(N + prime)!.push(i);
+                while (num % prime === 0) {
+                    num = Math.floor(num / prime);
+                }
+            }
+        }
+
+        const visited = new Set<number>();
+        const queue = new Queue([0]);
+        visited.add(0);
+
+        while (!queue.isEmpty()) {
+            const node: number = queue.pop();
+            if (adj.has(node)) {
+                for (const nei of adj.get(node)!) {
+                    if (!visited.has(nei)) {
+                        visited.add(nei);
+                        queue.push(nei);
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < N; i++) {
+            if (!visited.has(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ```

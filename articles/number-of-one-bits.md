@@ -113,13 +113,13 @@ public class Solution {
 
 ```go
 func hammingWeight(n int) int {
-	res := 0
-	for i := 0; i < 32; i++ {
-		if (1<<i)&n != 0 {
-			res++
-		}
-	}
-	return res
+    res := 0
+    for i := 0; i < 32; i++ {
+        if (1<<i)&n != 0 {
+            res++
+        }
+    }
+    return res
 }
 ```
 
@@ -161,6 +161,24 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a non-negative integer
+     * @return {number}
+     */
+    hammingWeight(n: number): number {
+        let res = 0;
+        for (let i = 0; i < 32; i++) {
+            if ((1 << i) & n) {
+                res++;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -273,14 +291,14 @@ public class Solution {
 
 ```go
 func hammingWeight(n int) int {
-	res := 0
-	for n != 0 {
-		if n&1 != 0 {
-			res++
-		}
-		n >>= 1
-	}
-	return res
+    res := 0
+    for n != 0 {
+        if n&1 != 0 {
+            res++
+        }
+        n >>= 1
+    }
+    return res
 }
 ```
 
@@ -324,6 +342,23 @@ impl Solution {
             n >>= 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a non-negative integer
+     * @return {number}
+     */
+    hammingWeight(n: number): number {
+        let res = 0;
+        while (n !== 0) {
+            res += (n & 1) === 1 ? 1 : 0;
+            n >>= 1;
+        }
+        return res;
     }
 }
 ```
@@ -438,12 +473,12 @@ public class Solution {
 
 ```go
 func hammingWeight(n int) int {
-	res := 0
-	for n != 0 {
-		n &= n - 1
+    res := 0
+    for n != 0 {
+        n &= n - 1
         res++
-	}
-	return res
+    }
+    return res
 }
 ```
 
@@ -485,6 +520,23 @@ impl Solution {
             res += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a non-negative integer
+     * @return {number}
+     */
+    hammingWeight(n: number): number {
+        let res = 0;
+        while (n !== 0) {
+            n &= n - 1;
+            res++;
+        }
+        return res;
     }
 }
 ```
@@ -567,7 +619,7 @@ public class Solution {
 
 ```go
 func hammingWeight(n int) int {
-	return bits.OnesCount(uint(n))
+    return bits.OnesCount(uint(n))
 }
 ```
 
@@ -591,6 +643,18 @@ class Solution {
 impl Solution {
     pub fn hamming_weight(n: u32) -> i32 {
         n.count_ones() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a non-negative integer
+     * @return {number}
+     */
+    hammingWeight(n: number): number {
+        return n.toString(2).split('0').join('').length;
     }
 }
 ```

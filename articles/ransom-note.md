@@ -181,6 +181,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} ransomNote
+     * @param {string} magazine
+     * @return {boolean}
+     */
+    canConstruct(ransomNote: string, magazine: string): boolean {
+        let mag = magazine.split('');
+
+        for (let c of ransomNote) {
+            let idx = mag.indexOf(c);
+            if (idx === -1) return false;
+            mag.splice(idx, 1);
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -413,6 +434,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} ransomNote
+     * @param {string} magazine
+     * @return {boolean}
+     */
+    canConstruct(ransomNote: string, magazine: string): boolean {
+        const countR: number[] = Array(26).fill(0);
+        const countM: number[] = Array(26).fill(0);
+
+        for (const c of ransomNote) {
+            countR[c.charCodeAt(0) - 97]++;
+        }
+
+        for (const c of magazine) {
+            countM[c.charCodeAt(0) - 97]++;
+        }
+
+        for (let i = 0; i < 26; i++) {
+            if (countM[i] < countR[i]) return false;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -585,6 +634,26 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} ransomNote
+     * @param {string} magazine
+     * @return {boolean}
+     */
+    canConstruct(ransomNote: string, magazine: string): boolean {
+        const count: number[] = Array(26).fill(0);
+        for (const c of magazine) {
+            count[c.charCodeAt(0) - 97]++;
+        }
+        for (const c of ransomNote) {
+            if (--count[c.charCodeAt(0) - 97] < 0) return false;
+        }
+        return true;
     }
 }
 ```

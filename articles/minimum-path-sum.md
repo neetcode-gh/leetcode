@@ -192,6 +192,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minPathSum(grid: number[][]): number {
+        const dfs = (r: number, c: number): number => {
+            if (r === grid.length - 1 && c === grid[0].length - 1) {
+                return grid[r][c];
+            }
+            if (r === grid.length || c === grid[0].length) {
+                return Infinity;
+            }
+            return grid[r][c] + Math.min(dfs(r + 1, c), dfs(r, c + 1));
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -482,6 +504,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minPathSum(grid: number[][]): number {
+        const m = grid.length,
+            n = grid[0].length;
+        const dp: number[][] = Array.from({ length: m }, () =>
+            Array(n).fill(-1),
+        );
+
+        const dfs = (r: number, c: number): number => {
+            if (r === m - 1 && c === n - 1) {
+                return grid[r][c];
+            }
+            if (r === m || c === n) {
+                return Infinity;
+            }
+            if (dp[r][c] !== -1) {
+                return dp[r][c];
+            }
+
+            dp[r][c] = grid[r][c] + Math.min(dfs(r + 1, c), dfs(r, c + 1));
+            return dp[r][c];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -700,6 +755,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minPathSum(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const dp: number[][] = Array.from({ length: ROWS + 1 }, () =>
+            Array(COLS + 1).fill(Infinity),
+        );
+        dp[ROWS - 1][COLS] = 0;
+
+        for (let r = ROWS - 1; r >= 0; r--) {
+            for (let c = COLS - 1; c >= 0; c--) {
+                dp[r][c] = grid[r][c] + Math.min(dp[r + 1][c], dp[r][c + 1]);
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -903,6 +983,29 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minPathSum(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const dp: number[] = new Array(COLS + 1).fill(Infinity);
+        dp[COLS - 1] = 0;
+
+        for (let r = ROWS - 1; r >= 0; r--) {
+            for (let c = COLS - 1; c >= 0; c--) {
+                dp[c] = grid[r][c] + Math.min(dp[c], dp[c + 1]);
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

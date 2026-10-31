@@ -200,6 +200,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} text1
+     * @param {string} text2
+     * @return {number}
+     */
+    longestCommonSubsequence(text1: string, text2: string): number {
+        const dfs = (i: number, j: number): number => {
+            if (i === text1.length || j === text2.length) {
+                return 0;
+            }
+            if (text1[i] === text2[j]) {
+                return 1 + dfs(i + 1, j + 1);
+            }
+            return Math.max(dfs(i + 1, j), dfs(i, j + 1));
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +518,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} text1
+     * @param {string} text2
+     * @return {number}
+     */
+    longestCommonSubsequence(text1: string, text2: string): number {
+        const memo: number[][] = Array(text1.length)
+            .fill(0)
+            .map(() => Array(text2.length).fill(-1));
+
+        const dfs = (i: number, j: number): number => {
+            if (i === text1.length || j === text2.length) {
+                return 0;
+            }
+            if (memo[i][j] !== -1) {
+                return memo[i][j];
+            }
+            if (text1[i] === text2[j]) {
+                memo[i][j] = 1 + dfs(i + 1, j + 1);
+            } else {
+                memo[i][j] = Math.max(dfs(i + 1, j), dfs(i, j + 1));
+            }
+            return memo[i][j];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -723,6 +778,33 @@ impl Solution {
         }
 
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} text1
+     * @param {string} text2
+     * @return {number}
+     */
+    longestCommonSubsequence(text1: string, text2: string): number {
+        const dp: number[][] = Array(text1.length + 1)
+            .fill(0)
+            .map(() => Array(text2.length + 1).fill(0));
+
+        for (let i = text1.length - 1; i >= 0; i--) {
+            for (let j = text2.length - 1; j >= 0; j--) {
+                if (text1[i] === text2[j]) {
+                    dp[i][j] = 1 + dp[i + 1][j + 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i][j + 1], dp[i + 1][j]);
+                }
+            }
+        }
+
+        return dp[0][0];
     }
 }
 ```
@@ -1009,6 +1091,37 @@ impl Solution {
         }
 
         prev[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} text1
+     * @param {string} text2
+     * @return {number}
+     */
+    longestCommonSubsequence(text1: string, text2: string): number {
+        if (text1.length < text2.length) {
+            [text1, text2] = [text2, text1];
+        }
+
+        let prev: number[] = new Array(text2.length + 1).fill(0);
+        let curr: number[] = new Array(text2.length + 1).fill(0);
+
+        for (let i = text1.length - 1; i >= 0; i--) {
+            for (let j = text2.length - 1; j >= 0; j--) {
+                if (text1[i] === text2[j]) {
+                    curr[j] = 1 + prev[j + 1];
+                } else {
+                    curr[j] = Math.max(curr[j + 1], prev[j]);
+                }
+            }
+            [prev, curr] = [curr, prev];
+        }
+
+        return prev[0];
     }
 }
 ```
@@ -1302,6 +1415,38 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} text1
+     * @param {string} text2
+     * @return {number}
+     */
+    longestCommonSubsequence(text1: string, text2: string): number {
+        if (text1.length < text2.length) {
+            [text1, text2] = [text2, text1];
+        }
+
+        const dp: number[] = new Array(text2.length + 1).fill(0);
+
+        for (let i = text1.length - 1; i >= 0; i--) {
+            let prev = 0;
+            for (let j = text2.length - 1; j >= 0; j--) {
+                let temp = dp[j];
+                if (text1[i] === text2[j]) {
+                    dp[j] = 1 + prev;
+                } else {
+                    dp[j] = Math.max(dp[j], dp[j + 1]);
+                }
+                prev = temp;
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

@@ -830,6 +830,134 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestDistance(grid: number[][]): number {
+        let minDistance = Number.MAX_VALUE;
+        let rows = grid.length;
+        let cols = grid[0].length;
+        let totalHouses = 0;
+
+        for (let row = 0; row < rows; ++row) {
+            for (let col = 0; col < cols; ++col) {
+                if (grid[row][col] == 1) {
+                    totalHouses++;
+                }
+            }
+        }
+
+        // Find the min distance sum for each empty cell.
+        for (let row = 0; row < rows; ++row) {
+            for (let col = 0; col < cols; ++col) {
+                if (grid[row][col] == 0) {
+                    minDistance = Math.min(
+                        minDistance,
+                        this.bfs(grid, row, col, totalHouses),
+                    );
+                }
+            }
+        }
+
+        // If it is impossible to reach all houses from any empty cell, then return -1.
+        if (minDistance == Number.MAX_VALUE) {
+            return -1;
+        }
+        return minDistance;
+    }
+
+    bfs(grid: number[][], row: number, col: number, totalHouses: number): number {
+        // Next four directions.
+        const dirs: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        let rows = grid.length;
+        let cols = grid[0].length;
+        let distanceSum = 0;
+        let housesReached = 0;
+
+        // Use a queue to do a bfs, starting from cell located at (row, col).
+        // Using @datastructures-js/queue implementation
+        let queue = new Queue([[row, col]]);
+
+        // Keep track of visited cells.
+        let vis: boolean[][] = new Array(rows)
+            .fill(false)
+            .map(() => new Array(cols).fill(false));
+        vis[row][col] = true;
+
+        let steps = 0;
+
+        while (!queue.isEmpty() && housesReached != totalHouses) {
+            // Record the cells that we will explore in the next level
+            let next_queue = new Queue();
+            let currentLevelSize: number = queue.size();
+
+            for (let i = 0; i < currentLevelSize; i++) {
+                let curr: number[] = queue.dequeue();
+                let currRow = curr[0];
+                let currCol = curr[1];
+
+                // If this cell is a house, then add the distance from source to this cell
+                // and we go past from this cell.
+                if (grid[currRow][currCol] == 1) {
+                    distanceSum += steps;
+                    housesReached++;
+                    continue;
+                }
+
+                // This cell was empty cell, hence traverse the next cells which is not a blockage.
+                dirs.forEach((dir) => {
+                    let nextRow = currRow + dir[0];
+                    let nextCol = currCol + dir[1];
+                    if (
+                        nextRow >= 0 &&
+                        nextCol >= 0 &&
+                        nextRow < rows &&
+                        nextCol < cols
+                    ) {
+                        if (
+                            !vis[nextRow][nextCol] &&
+                            grid[nextRow][nextCol] != 2
+                        ) {
+                            vis[nextRow][nextCol] = true;
+                            next_queue.enqueue([nextRow, nextCol]);
+                        }
+                    }
+                });
+            }
+
+            // Set the queue equal to the next level queue.
+            queue = next_queue;
+            // After traversing one level cells, increment the steps by 1 to reach to next level.
+            steps++;
+        }
+
+        // If we did not reach all houses, then any cell visited also cannot reach all houses.
+        // Set all cells visited to 2 so we do not check them again and return MAX_VALUE.
+        if (housesReached != totalHouses) {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (grid[row][col] == 0 && vis[row][col]) {
+                        grid[row][col] = 2;
+                    }
+                }
+            }
+            return Number.MAX_VALUE;
+        }
+
+        // If we have reached all houses then return the total distance calculated.
+        return distanceSum;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1550,6 +1678,117 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestDistance(grid: number[][]): number {
+        let minDistance = Number.MAX_VALUE;
+        let rows = grid.length;
+        let cols = grid[0].length;
+        let totalHouses = 0;
+        // Store { total_dist, houses_count } for each cell.
+        let distances: number[][][] = new Array(rows)
+            .fill(0)
+            .map(() => new Array(cols).fill(0).map(() => new Array(2).fill(0)));
+
+        // Count houses and start BFS from each house.
+        for (let row = 0; row < rows; ++row) {
+            for (let col = 0; col < cols; ++col) {
+                if (grid[row][col] == 1) {
+                    totalHouses++;
+                    this.bfs(grid, distances, row, col);
+                }
+            }
+        }
+
+        // Check all empty lands with houses count equal to total houses and find the min ans.
+        for (let row = 0; row < rows; ++row) {
+            for (let col = 0; col < cols; ++col) {
+                if (distances[row][col][1] == totalHouses) {
+                    minDistance = Math.min(minDistance, distances[row][col][0]);
+                }
+            }
+        }
+
+        // If we haven't found a valid cell return -1.
+        if (minDistance == Number.MAX_VALUE) {
+            return -1;
+        }
+        return minDistance;
+    }
+
+    bfs(grid: number[][], distances: number[][][], row: number, col: number): void {
+        // Next four directions.
+        const dirs: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        let rows = grid.length;
+        let cols = grid[0].length;
+
+        // Use a queue to do a BFS, starting from cell at (row, col).
+        // Using @datastructures-js/queue implementation
+        let queue = new Queue([[row, col]]);
+
+        // Keep track of visited cells
+        let vis: boolean[][] = new Array(rows)
+            .fill(false)
+            .map(() => new Array(cols).fill(false));
+        vis[row][col] = true;
+        let steps = 0;
+
+        while (!queue.isEmpty()) {
+            // Record the cells that we will explore in the next level
+            let next_queue = new Queue();
+            let currentLevelSize: number = queue.size();
+
+            for (let i = 0; i < currentLevelSize; i++) {
+                let curr: number[] = queue.dequeue();
+                let currRow = curr[0];
+                let currCol = curr[1];
+
+                // If we reached an empty cell, then add the distance
+                // and increment the count of houses reached at this cell.
+                if (grid[currRow][currCol] == 0) {
+                    distances[currRow][currCol][0] += steps;
+                    distances[currRow][currCol][1]++;
+                }
+
+                // Traverse the next cells which is not a blockage.
+                dirs.forEach((dir) => {
+                    let nextRow = currRow + dir[0];
+                    let nextCol = currCol + dir[1];
+                    if (
+                        nextRow >= 0 &&
+                        nextCol >= 0 &&
+                        nextRow < rows &&
+                        nextCol < cols
+                    ) {
+                        if (
+                            !vis[nextRow][nextCol] &&
+                            grid[nextRow][nextCol] == 0
+                        ) {
+                            vis[nextRow][nextCol] = true;
+                            next_queue.enqueue([nextRow, nextCol]);
+                        }
+                    }
+                });
+            }
+
+            // Set the queue equal to the next level queue.
+            queue = next_queue;
+            // After traversing one level cells, increment the steps by 1 to reach to next level.
+            steps++;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2115,6 +2354,86 @@ impl Solution {
         }
 
         if min_dist == i32::MAX { -1 } else { min_dist }
+    }
+}
+```
+
+```typescript
+// Next four directions.
+const dirs: number[][] = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+];
+
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestDistance(grid: number[][]): number {
+        const rows = grid.length;
+        const cols = grid[0].length;
+
+        // Total Matrix to store total distance sum for each empty cell.
+        const total: number[][] = new Array(rows)
+            .fill(0)
+            .map(() => new Array(cols).fill(0));
+        let emptyLandValue = 0;
+        let minDist = Number.MAX_VALUE;
+
+        for (let row = 0; row < rows; ++row) {
+            for (let col = 0; col < cols; ++col) {
+                // Start a BFS from each house.
+                if (grid[row][col] === 1) {
+                    minDist = Number.MAX_VALUE;
+
+                    // Use a queue to perform a BFS, starting from the cell located at (row, col).
+                    // Using @datastructures-js/queue implementation
+                    const q = new Queue([{ row, col }]);
+                    let steps = 0;
+
+                    while (!q.isEmpty()) {
+                        steps++;
+                        const levelSize: number = q.size();
+
+                        for (let level = 0; level < levelSize; level++) {
+                            const curr: { row: number; col: number } =
+                                q.dequeue();
+
+                            dirs.forEach((dir) => {
+                                const nextRow = curr.row + dir[0];
+                                const nextCol = curr.col + dir[1];
+
+                                // For each cell with the value equal to empty land value
+                                // add distance and decrement the cell value by 1.
+                                if (
+                                    nextRow >= 0 &&
+                                    nextRow < rows &&
+                                    nextCol >= 0 &&
+                                    nextCol < cols &&
+                                    grid[nextRow][nextCol] === emptyLandValue
+                                ) {
+                                    grid[nextRow][nextCol]--;
+                                    total[nextRow][nextCol] += steps;
+                                    q.enqueue({ row: nextRow, col: nextCol });
+                                    minDist = Math.min(
+                                        minDist,
+                                        total[nextRow][nextCol],
+                                    );
+                                }
+                            });
+                        }
+                    }
+
+                    // Decrement empty land value to be searched in next iteration.
+                    emptyLandValue--;
+                }
+            }
+        }
+
+        return minDist === Number.MAX_VALUE ? -1 : minDist;
     }
 }
 ```

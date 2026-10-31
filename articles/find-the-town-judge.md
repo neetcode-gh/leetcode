@@ -224,6 +224,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} trust
+     * @return {number}
+     */
+    findJudge(n: number, trust: number[][]): number {
+        let incoming: number[] = new Array(n + 1).fill(0);
+        let outgoing: number[] = new Array(n + 1).fill(0);
+
+        for (let [src, dst] of trust) {
+            outgoing[src]++;
+            incoming[dst]++;
+        }
+
+        for (let i = 1; i <= n; i++) {
+            if (outgoing[i] === 0 && incoming[i] === n - 1) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,6 +466,32 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} trust
+     * @return {number}
+     */
+    findJudge(n: number, trust: number[][]): number {
+        let delta: number[] = new Array(n + 1).fill(0);
+
+        for (let [src, dst] of trust) {
+            delta[src]--;
+            delta[dst]++;
+        }
+
+        for (let i = 1; i <= n; i++) {
+            if (delta[i] === n - 1) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
 ```

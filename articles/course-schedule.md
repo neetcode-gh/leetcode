@@ -436,6 +436,55 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {boolean}
+     */
+    canFinish(numCourses: number, prerequisites: number[][]): boolean {
+        const preMap = new Map<number, number[]>();
+        for (let i = 0; i < numCourses; i++) {
+            preMap.set(i, []);
+        }
+        for (let [crs, pre] of prerequisites) {
+            preMap.get(crs)!.push(pre);
+        }
+
+        // Store all courses along the current DFS path
+        const visiting = new Set<number>();
+
+        const dfs = (crs: number): boolean => {
+            if (visiting.has(crs)) {
+                // Cycle detected
+                return false;
+            }
+            if (preMap.get(crs)!.length === 0) {
+                return true;
+            }
+
+            visiting.add(crs);
+            for (let pre of preMap.get(crs)!) {
+                if (!dfs(pre)) {
+                    return false;
+                }
+            }
+            visiting.delete(crs);
+            preMap.set(crs, []);
+            return true;
+        };
+
+        for (let c = 0; c < numCourses; c++) {
+            if (!dfs(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -794,6 +843,45 @@ impl Solution {
         }
 
         finish == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {boolean}
+     */
+    canFinish(numCourses: number, prerequisites: number[][]): boolean {
+        let indegree: number[] = Array(numCourses).fill(0);
+        let adj: number[][] = Array.from({ length: numCourses }, () => []);
+        for (let [src, dst] of prerequisites) {
+            indegree[dst]++;
+            adj[src].push(dst);
+        }
+
+        let q = new Queue();
+        for (let i = 0; i < numCourses; i++) {
+            if (indegree[i] === 0) {
+                q.push(i);
+            }
+        }
+
+        let finish = 0;
+        while (!q.isEmpty()) {
+            let node: number = q.pop();
+            finish++;
+            for (let nei of adj[node]) {
+                indegree[nei]--;
+                if (indegree[nei] === 0) {
+                    q.push(nei);
+                }
+            }
+        }
+
+        return finish === numCourses;
     }
 }
 ```

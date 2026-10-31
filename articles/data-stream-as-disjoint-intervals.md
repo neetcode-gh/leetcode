@@ -67,9 +67,9 @@ public class SummaryRanges {
         arr.add(value);
     }
 
-    public List<int[]> getIntervals() {
+    public int[][] getIntervals() {
         List<int[]> res = new ArrayList<>();
-        if (arr.isEmpty()) return res;
+        if (arr.isEmpty()) return new int[0][];
 
         Collections.sort(arr);
         int start = arr.get(0);
@@ -80,7 +80,7 @@ public class SummaryRanges {
             }
         }
         res.add(new int[]{start, arr.get(arr.size() - 1)});
-        return res;
+        return res.toArray(new int[0][]);
     }
 }
 ```
@@ -309,6 +309,44 @@ impl SummaryRanges {
 }
 ```
 
+```typescript
+class SummaryRanges {
+    private arr: number[];
+
+    constructor() {
+        this.arr = [];
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    addNum(value: number): void {
+        this.arr.push(value);
+    }
+
+    /**
+     * @return {number[][]}
+     */
+    getIntervals(): number[][] {
+        if (this.arr.length === 0) return [];
+
+        this.arr.sort((a, b) => a - b);
+        let start = this.arr[0];
+        let res: number[][] = [];
+
+        for (let i = 1; i < this.arr.length; i++) {
+            if (this.arr[i] - this.arr[i - 1] > 1) {
+                res.push([start, this.arr[i - 1]]);
+                start = this.arr[i];
+            }
+        }
+        res.push([start, this.arr[this.arr.length - 1]]);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,9 +417,9 @@ public class SummaryRanges {
         arr.add(value);
     }
 
-    public List<int[]> getIntervals() {
+    public int[][] getIntervals() {
         List<int[]> res = new ArrayList<>();
-        if (arr.isEmpty()) return res;
+        if (arr.isEmpty()) return new int[0][];
 
         List<Integer> lst = new ArrayList<>(arr);
         int start = lst.get(0);
@@ -392,7 +430,7 @@ public class SummaryRanges {
             }
         }
         res.add(new int[]{start, lst.get(lst.size() - 1)});
-        return res;
+        return res.toArray(new int[0][]);
     }
 }
 ```
@@ -628,6 +666,44 @@ impl SummaryRanges {
 }
 ```
 
+```typescript
+class SummaryRanges {
+    private arr: Set<number>;
+
+    constructor() {
+        this.arr = new Set();
+    }
+
+    /**
+     * @param {number} value
+     * @return {number[][]}
+     */
+    addNum(value: number): void {
+        this.arr.add(value);
+    }
+
+    /**
+     * @return {number[][]}
+     */
+    getIntervals(): number[][] {
+        if (this.arr.size === 0) return [];
+
+        let lst = Array.from(this.arr).sort((a, b) => a - b);
+        let start = lst[0];
+        let res: number[][] = [];
+
+        for (let i = 1; i < lst.length; i++) {
+            if (lst[i] - lst[i - 1] > 1) {
+                res.push([start, lst[i - 1]]);
+                start = lst[i];
+            }
+        }
+        res.push([start, lst[lst.length - 1]]);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -691,7 +767,7 @@ public class SummaryRanges {
         treeMap.put(value, true);
     }
 
-    public List<int[]> getIntervals() {
+    public int[][] getIntervals() {
         List<int[]> res = new ArrayList<>();
         for (int n : treeMap.keySet()) {
             if (!res.isEmpty() && res.get(res.size() - 1)[1] + 1 == n) {
@@ -700,7 +776,7 @@ public class SummaryRanges {
                 res.add(new int[]{n, n});
             }
         }
-        return res;
+        return res.toArray(new int[0][]);
     }
 }
 ```
@@ -900,6 +976,40 @@ impl SummaryRanges {
 }
 ```
 
+```typescript
+class SummaryRanges {
+    private treeMap: Map<number, boolean>;
+
+    constructor() {
+        this.treeMap = new Map();
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    addNum(value: number): void {
+        this.treeMap.set(value, true);
+    }
+
+    /**
+     * @return {number[][]}
+     */
+    getIntervals(): number[][] {
+        const keys = Array.from(this.treeMap.keys()).sort((a, b) => a - b);
+        const res: number[][] = [];
+        for (const n of keys) {
+            if (res.length > 0 && res[res.length - 1][1] + 1 === n) {
+                res[res.length - 1][1] = n;
+            } else {
+                res.push([n, n]);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -963,7 +1073,7 @@ public class SummaryRanges {
         orderedSet.add(value);
     }
 
-    public List<int[]> getIntervals() {
+    public int[][] getIntervals() {
         List<int[]> res = new ArrayList<>();
         for (int n : orderedSet) {
             if (!res.isEmpty() && res.get(res.size() - 1)[1] + 1 == n) {
@@ -972,7 +1082,7 @@ public class SummaryRanges {
                 res.add(new int[]{n, n});
             }
         }
-        return res;
+        return res.toArray(new int[0][]);
     }
 }
 ```
@@ -1168,6 +1278,40 @@ impl SummaryRanges {
             res.push(vec![n, n]);
         }
         res
+    }
+}
+```
+
+```typescript
+class SummaryRanges {
+    private orderedSet: Set<number>;
+
+    constructor() {
+        this.orderedSet = new Set();
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    addNum(value: number): void {
+        this.orderedSet.add(value);
+    }
+
+    /**
+     * @return {number[][]}
+     */
+    getIntervals(): number[][] {
+        const sorted = Array.from(this.orderedSet).sort((a, b) => a - b);
+        const res: number[][] = [];
+        for (const n of sorted) {
+            if (res.length > 0 && res[res.length - 1][1] + 1 === n) {
+                res[res.length - 1][1] = n;
+            } else {
+                res.push([n, n]);
+            }
+        }
+        return res;
     }
 }
 ```

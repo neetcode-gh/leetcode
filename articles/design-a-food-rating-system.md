@@ -296,7 +296,6 @@ class FoodRatings {
 }
 ```
 
-
 ```rust
 struct FoodRatings {
     food_to_rating: HashMap<String, i32>,
@@ -332,6 +331,57 @@ impl FoodRatings {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class FoodRatings {
+    private foodToRating: Map<string, number>;
+    private cuisineToFood: Map<string, string[]>;
+
+    /**
+     * @param {string[]} foods
+     * @param {string[]} cuisines
+     * @param {number[]} ratings
+     */
+    constructor(foods: string[], cuisines: string[], ratings: number[]) {
+        this.foodToRating = new Map();
+        this.cuisineToFood = new Map();
+
+        for (let i = 0; i < foods.length; i++) {
+            this.foodToRating.set(foods[i], ratings[i]);
+            if (!this.cuisineToFood.has(cuisines[i])) {
+                this.cuisineToFood.set(cuisines[i], []);
+            }
+            this.cuisineToFood.get(cuisines[i])!.push(foods[i]);
+        }
+    }
+
+    /**
+     * @param {string} food
+     * @param {number} newRating
+     * @return {void}
+     */
+    changeRating(food: string, newRating: number): void {
+        this.foodToRating.set(food, newRating);
+    }
+
+    /**
+     * @param {string} cuisine
+     * @return {string}
+     */
+    highestRated(cuisine: string): string {
+        let maxR = 0,
+            res = '';
+        for (let food of this.cuisineToFood.get(cuisine)!) {
+            let r = this.foodToRating.get(food)!;
+            if (r > maxR || (r === maxR && food < res)) {
+                res = food;
+                maxR = r;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -376,12 +426,12 @@ class FoodRatings:
         for i in range(len(foods)):
             self.foodToRating[foods[i]] = ratings[i]
             self.foodToCuisine[foods[i]] = cuisines[i]
-            heappush(self.cuisineToHeap[cuisines[i]], (-ratings[i], foods[i]))
+            heapq.heappush(self.cuisineToHeap[cuisines[i]], (-ratings[i], foods[i]))
 
     def changeRating(self, food: str, newRating: int) -> None:
         cuisine = self.foodToCuisine[food]
         self.foodToRating[food] = newRating
-        heappush(self.cuisineToHeap[cuisine], (-newRating, food))
+        heapq.heappush(self.cuisineToHeap[cuisine], (-newRating, food))
 
     def highestRated(self, cuisine: str) -> str:
         heap = self.cuisineToHeap[cuisine]
@@ -389,7 +439,7 @@ class FoodRatings:
             rating, food = heap[0]
             if -rating == self.foodToRating[food]:
                 return food
-            heappop(heap)
+            heapq.heappop(heap)
 ```
 
 ```java
@@ -561,8 +611,8 @@ public class FoodRatings {
             if (!cuisineToHeap.ContainsKey(cuisines[i])) {
                 cuisineToHeap[cuisines[i]] = new PriorityQueue<(string, int), (int, string)>(
                     Comparer<(int rating, string name)>.Create((a, b) => {
-                        if (a.rating != b.rating) return b.rating.CompareTo(a.rating);
-                        return a.name.CompareTo(b.name);
+                        if (a.rating != b.rating) return a.rating.CompareTo(b.rating);
+                        return string.CompareOrdinal(a.name, b.name);
                     })
                 );
             }
@@ -591,10 +641,6 @@ public class FoodRatings {
 ```
 
 ```go
-import (
-    "container/heap"
-)
-
 type Food struct {
     rating int
     name   string
@@ -663,8 +709,6 @@ func (this *FoodRatings) HighestRated(cuisine string) string {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class FoodRatings(foods: Array<String>, cuisines: Array<String>, ratings: IntArray) {
     private val foodToRating = mutableMapOf<String, Int>()
     private val foodToCuisine = mutableMapOf<String, String>()
@@ -740,7 +784,6 @@ class FoodRatings {
 }
 ```
 
-
 ```rust
 struct FoodRatings {
     food_to_rating: HashMap<String, i32>,
@@ -788,6 +831,71 @@ impl FoodRatings {
 }
 ```
 
+```typescript
+class FoodRatings {
+    private foodToRating: Map<string, number>;
+    private foodToCuisine: Map<string, string>;
+    private cuisineToHeap: Map<string, any>;
+
+    /**
+     * @param {string[]} foods
+     * @param {string[]} cuisines
+     * @param {number[]} ratings
+     */
+    constructor(foods: string[], cuisines: string[], ratings: number[]) {
+        this.foodToRating = new Map();
+        this.foodToCuisine = new Map();
+        this.cuisineToHeap = new Map();
+
+        for (let i = 0; i < foods.length; i++) {
+            this.foodToRating.set(foods[i], ratings[i]);
+            this.foodToCuisine.set(foods[i], cuisines[i]);
+            if (!this.cuisineToHeap.has(cuisines[i])) {
+                this.cuisineToHeap.set(
+                    cuisines[i],
+                    new PriorityQueue(
+                        (a: { rating: number; name: string }, b: { rating: number; name: string }) =>
+                            b.rating - a.rating || a.name.localeCompare(b.name),
+                    ),
+                );
+            }
+            this.cuisineToHeap
+                .get(cuisines[i])
+                .enqueue({ rating: ratings[i], name: foods[i] });
+        }
+    }
+
+    /**
+     * @param {string} food
+     * @param {number} newRating
+     * @return {void}
+     */
+    changeRating(food: string, newRating: number): void {
+        let cuisine = this.foodToCuisine.get(food)!;
+        this.foodToRating.set(food, newRating);
+        this.cuisineToHeap
+            .get(cuisine)
+            .enqueue({ rating: newRating, name: food });
+    }
+
+    /**
+     * @param {string} cuisine
+     * @return {string}
+     */
+    highestRated(cuisine: string): string {
+        let heap = this.cuisineToHeap.get(cuisine);
+        while (!heap.isEmpty()) {
+            let top = heap.front();
+            if (this.foodToRating.get(top.name) === top.rating) {
+                return top.name;
+            }
+            heap.dequeue();
+        }
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -818,6 +926,9 @@ A sorted set (like `TreeSet` or `SortedSet`) maintains elements in sorted order 
 ::tabs-start
 
 ```python
+from sortedcontainers import SortedSet
+
+
 class FoodRatings:
 
     def __init__(self, foods: List[str], cuisines: List[str], ratings: List[int]):
@@ -1014,7 +1125,6 @@ public class FoodRatings {
 import (
     "github.com/emirpasic/gods/sets/treeset"
 )
-
 type FoodRatings struct {
     foodToRating  map[string]int
     foodToCuisine map[string]string
@@ -1073,8 +1183,6 @@ func (this *FoodRatings) HighestRated(cuisine string) string {
 ```
 
 ```kotlin
-import java.util.TreeSet
-
 class FoodRatings(foods: Array<String>, cuisines: Array<String>, ratings: IntArray) {
     private val foodToRating = mutableMapOf<String, Int>()
     private val foodToCuisine = mutableMapOf<String, String>()
@@ -1144,7 +1252,6 @@ class FoodRatings {
 }
 ```
 
-
 ```rust
 struct FoodRatings {
     food_to_rating: HashMap<String, i32>,
@@ -1189,6 +1296,65 @@ impl FoodRatings {
             .unwrap()
             .1
             .clone()
+    }
+}
+```
+
+```typescript
+// Sorted Set implementation is not available in TypeScript standard library
+// Use a Map with sorted arrays as a workaround
+class FoodRatings {
+    private foodToRating: Map<string, number>;
+    private foodToCuisine: Map<string, string>;
+    private cuisineToSet: Map<string, [number, string][]>;
+
+    /**
+     * @param {string[]} foods
+     * @param {string[]} cuisines
+     * @param {number[]} ratings
+     */
+    constructor(foods: string[], cuisines: string[], ratings: number[]) {
+        this.foodToRating = new Map();
+        this.foodToCuisine = new Map();
+        this.cuisineToSet = new Map();
+
+        for (let i = 0; i < foods.length; i++) {
+            this.foodToRating.set(foods[i], ratings[i]);
+            this.foodToCuisine.set(foods[i], cuisines[i]);
+            if (!this.cuisineToSet.has(cuisines[i])) {
+                this.cuisineToSet.set(cuisines[i], []);
+            }
+            this.cuisineToSet.get(cuisines[i])!.push([-ratings[i], foods[i]]);
+        }
+        for (let [, arr] of this.cuisineToSet) {
+            arr.sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));
+        }
+    }
+
+    /**
+     * @param {string} food
+     * @param {number} newRating
+     * @return {void}
+     */
+    changeRating(food: string, newRating: number): void {
+        let cuisine = this.foodToCuisine.get(food)!;
+        let oldRating = this.foodToRating.get(food)!;
+        let arr = this.cuisineToSet.get(cuisine)!;
+
+        let idx = arr.findIndex(([r, f]) => r === -oldRating && f === food);
+        if (idx !== -1) arr.splice(idx, 1);
+
+        this.foodToRating.set(food, newRating);
+        arr.push([-newRating, food]);
+        arr.sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));
+    }
+
+    /**
+     * @param {string} cuisine
+     * @return {string}
+     */
+    highestRated(cuisine: string): string {
+        return this.cuisineToSet.get(cuisine)![0][1];
     }
 }
 ```

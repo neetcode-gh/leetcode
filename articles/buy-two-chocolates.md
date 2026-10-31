@@ -173,6 +173,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @param {number} money
+     * @return {number}
+     */
+    buyChoco(prices: number[], money: number): number {
+        let res = -1;
+        for (let i = 0; i < prices.length; i++) {
+            for (let j = i + 1; j < prices.length; j++) {
+                if (prices[i] + prices[j] <= money) {
+                    res = Math.max(res, money - prices[i] - prices[j]);
+                }
+            }
+        }
+        return res === -1 ? money : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,6 +309,21 @@ impl Solution {
         prices.sort();
         let buy = prices[0] + prices[1];
         if buy > money { money } else { money - buy }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @param {number} money
+     * @return {number}
+     */
+    buyChoco(prices: number[], money: number): number {
+        prices.sort((a, b) => a - b);
+        let buy = prices[0] + prices[1];
+        return buy > money ? money : money - buy;
     }
 }
 ```
@@ -499,6 +535,32 @@ impl Solution {
 
         let leftover = money - min1 - min2;
         if leftover >= 0 { leftover } else { money }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @param {number} money
+     * @return {number}
+     */
+    buyChoco(prices: number[], money: number): number {
+        let min1 = Infinity,
+            min2 = Infinity;
+
+        for (const p of prices) {
+            if (p < min1) {
+                min2 = min1;
+                min1 = p;
+            } else if (p < min2) {
+                min2 = p;
+            }
+        }
+
+        const leftover = money - min1 - min2;
+        return leftover >= 0 ? leftover : money;
     }
 }
 ```

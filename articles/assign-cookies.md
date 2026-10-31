@@ -262,6 +262,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} g
+     * @param {number[]} s
+     * @return {number}
+     */
+    findContentChildren(g: number[], s: number[]): number {
+        s.sort((a, b) => a - b);
+        let res = 0;
+
+        for (let i of g) {
+            let minIdx = -1;
+            for (let j = 0; j < s.length; j++) {
+                if (s[j] < i) continue;
+
+                if (minIdx === -1 || s[minIdx] > s[j]) {
+                    minIdx = j;
+                }
+            }
+
+            if (minIdx !== -1) {
+                s[minIdx] = -1;
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -479,6 +511,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} g
+     * @param {number[]} s
+     * @return {number}
+     */
+    findContentChildren(g: number[], s: number[]): number {
+        g.sort((a, b) => a - b);
+        s.sort((a, b) => a - b);
+
+        let i = 0,
+            j = 0;
+        while (i < g.length) {
+            while (j < s.length && g[i] > s[j]) {
+                j++;
+            }
+            if (j === s.length) break;
+            i++;
+            j++;
+        }
+        return i;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -658,6 +716,26 @@ impl Solution {
             j += 1;
         }
         i as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} g
+     * @param {number[]} s
+     * @return {number}
+     */
+    findContentChildren(g: number[], s: number[]): number {
+        g.sort((a, b) => a - b);
+        s.sort((a, b) => a - b);
+
+        let i = 0;
+        for (let j = 0; i < g.length && j < s.length; j++) {
+            if (g[i] <= s[j]) i++;
+        }
+        return i;
     }
 }
 ```

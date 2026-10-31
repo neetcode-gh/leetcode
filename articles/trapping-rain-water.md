@@ -284,6 +284,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} height
+     * @return {number}
+     */
+    trap(height: number[]): number {
+        if (!height.length) {
+            return 0;
+        }
+        let n = height.length;
+        let res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let leftMax = height[i];
+            let rightMax = height[i];
+
+            for (let j = 0; j < i; j++) {
+                leftMax = Math.max(leftMax, height[j]);
+            }
+            for (let j = i + 1; j < n; j++) {
+                rightMax = Math.max(rightMax, height[j]);
+            }
+
+            res += Math.min(leftMax, rightMax) - height[i];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -611,6 +642,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} height
+     * @return {number}
+     */
+    trap(height: number[]): number {
+        let n = height.length;
+        if (n === 0) {
+            return 0;
+        }
+
+        let leftMax: number[] = new Array(n).fill(0);
+        let rightMax: number[] = new Array(n).fill(0);
+
+        leftMax[0] = height[0];
+        for (let i = 1; i < n; i++) {
+            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+        }
+
+        rightMax[n - 1] = height[n - 1];
+        for (let i = n - 2; i >= 0; i--) {
+            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+        }
+
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            res += Math.min(leftMax[i], rightMax[i]) - height[i];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -915,6 +980,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} height
+     * @return {number}
+     */
+    trap(height: number[]): number {
+        if (height.length === 0) {
+            return 0;
+        }
+
+        const stack: number[] = [];
+        let res = 0;
+
+        for (let i = 0; i < height.length; i++) {
+            while (
+                stack.length > 0 &&
+                height[i] >= height[stack[stack.length - 1]]
+            ) {
+                const mid = height[stack.pop()!];
+                if (stack.length > 0) {
+                    const right = height[i];
+                    const left = height[stack[stack.length - 1]];
+                    const h = Math.min(right, left) - mid;
+                    const w = i - stack[stack.length - 1] - 1;
+                    res += h * w;
+                }
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1203,6 +1303,38 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} height
+     * @return {number}
+     */
+    trap(height: number[]): number {
+        if (!height || height.length === 0) {
+            return 0;
+        }
+
+        let l = 0;
+        let r = height.length - 1;
+        let leftMax = height[l];
+        let rightMax = height[r];
+        let res = 0;
+        while (l < r) {
+            if (leftMax < rightMax) {
+                l++;
+                leftMax = Math.max(leftMax, height[l]);
+                res += leftMax - height[l];
+            } else {
+                r--;
+                rightMax = Math.max(rightMax, height[r]);
+                res += rightMax - height[r];
+            }
+        }
+        return res;
     }
 }
 ```

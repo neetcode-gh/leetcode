@@ -700,6 +700,109 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private m: number = 0;
+    private n: number = 0;
+
+    /**
+     * @param {number[][]} board
+     * @return {number[][]}
+     */
+    candyCrush(board: number[][]): number[][] {
+        this.m = board.length;
+        this.n = board[0].length;
+
+        let crushedSet = this.find(board);
+        while (crushedSet.size > 0) {
+            this.crush(board, crushedSet);
+            this.drop(board);
+            crushedSet = this.find(board);
+        }
+
+        return board;
+    }
+
+    /**
+     * @param {number[][]} board
+     * @return {Set<string>}
+     */
+    find(board: number[][]): Set<string> {
+        let crushedSet = new Set<string>();
+
+        // Check vertically adjacent candies
+        for (let r = 1; r < this.m - 1; r++) {
+            for (let c = 0; c < this.n; c++) {
+                if (board[r][c] === 0) {
+                    continue;
+                }
+                if (
+                    board[r][c] === board[r - 1][c] &&
+                    board[r][c] === board[r + 1][c]
+                ) {
+                    crushedSet.add(`${r},${c}`);
+                    crushedSet.add(`${r - 1},${c}`);
+                    crushedSet.add(`${r + 1},${c}`);
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for (let r = 0; r < this.m; r++) {
+            for (let c = 1; c < this.n - 1; c++) {
+                if (board[r][c] === 0) {
+                    continue;
+                }
+                if (
+                    board[r][c] === board[r][c - 1] &&
+                    board[r][c] === board[r][c + 1]
+                ) {
+                    crushedSet.add(`${r},${c}`);
+                    crushedSet.add(`${r},${c - 1}`);
+                    crushedSet.add(`${r},${c + 1}`);
+                }
+            }
+        }
+
+        return crushedSet;
+    }
+
+    /**
+     * @param {number[][]} board
+     * @param {Set<string>} crushedSet
+     * @return {void}
+     */
+    crush(board: number[][], crushedSet: Set<string>): void {
+        for (let key of crushedSet) {
+            let [r, c] = key.split(',').map(Number);
+            board[r][c] = 0;
+        }
+    }
+
+    /**
+     * @param {number[][]} board
+     * @return {void}
+     */
+    drop(board: number[][]): void {
+        for (let c = 0; c < this.n; c++) {
+            let lowestZero = -1;
+
+            // Iterate over each column
+            for (let r = this.m - 1; r >= 0; r--) {
+                if (board[r][c] === 0) {
+                    lowestZero = Math.max(lowestZero, r);
+                } else if (lowestZero >= 0) {
+                    let temp = board[r][c];
+                    board[r][c] = board[lowestZero][c];
+                    board[lowestZero][c] = temp;
+                    lowestZero--;
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1432,6 +1535,106 @@ impl Solution {
         }
 
         board
+    }
+}
+```
+
+```typescript
+class Solution {
+    private m: number = 0;
+    private n: number = 0;
+
+    /**
+     * @param {number[][]} board
+     * @return {number[][]}
+     */
+    candyCrush(board: number[][]): number[][] {
+        this.m = board.length;
+        this.n = board[0].length;
+
+        // Continue with the three steps until we can no longer find any crushable candies.
+        while (!this.findAndCrush(board)) {
+            this.drop(board);
+        }
+
+        return board;
+    }
+
+    /**
+     * @param {number[][]} board
+     * @return {boolean}
+     */
+    findAndCrush(board: number[][]): boolean {
+        let complete = true;
+
+        // Check vertically adjacent candies
+        for (let r = 1; r < this.m - 1; r++) {
+            for (let c = 0; c < this.n; c++) {
+                if (board[r][c] === 0) {
+                    continue;
+                }
+                if (
+                    Math.abs(board[r][c]) === Math.abs(board[r - 1][c]) &&
+                    Math.abs(board[r][c]) === Math.abs(board[r + 1][c])
+                ) {
+                    board[r][c] = -Math.abs(board[r][c]);
+                    board[r - 1][c] = -Math.abs(board[r - 1][c]);
+                    board[r + 1][c] = -Math.abs(board[r + 1][c]);
+                    complete = false;
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for (let r = 0; r < this.m; r++) {
+            for (let c = 1; c < this.n - 1; c++) {
+                if (board[r][c] === 0) {
+                    continue;
+                }
+                if (
+                    Math.abs(board[r][c]) === Math.abs(board[r][c - 1]) &&
+                    Math.abs(board[r][c]) === Math.abs(board[r][c + 1])
+                ) {
+                    board[r][c] = -Math.abs(board[r][c]);
+                    board[r][c - 1] = -Math.abs(board[r][c - 1]);
+                    board[r][c + 1] = -Math.abs(board[r][c + 1]);
+                    complete = false;
+                }
+            }
+        }
+
+        // Set the value of each candy to be crushed as 0
+        for (let r = 0; r < this.m; r++) {
+            for (let c = 0; c < this.n; c++) {
+                if (board[r][c] < 0) {
+                    board[r][c] = 0;
+                }
+            }
+        }
+
+        return complete;
+    }
+
+    /**
+     * @param {number[][]} board
+     * @return {void}
+     */
+    drop(board: number[][]): void {
+        for (let c = 0; c < this.n; c++) {
+            let lowestZero = -1;
+
+            // Iterate over each column
+            for (let r = this.m - 1; r >= 0; r--) {
+                if (board[r][c] === 0) {
+                    lowestZero = Math.max(lowestZero, r);
+                } else if (lowestZero >= 0) {
+                    let temp = board[r][c];
+                    board[r][c] = board[lowestZero][c];
+                    board[lowestZero][c] = temp;
+                    lowestZero--;
+                }
+            }
+        }
     }
 }
 ```

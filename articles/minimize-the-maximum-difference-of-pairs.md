@@ -281,6 +281,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} p
+     * @return {number}
+     */
+    minimizeMax(nums: number[], p: number): number {
+        nums.sort((a, b) => a - b);
+        const dp = new Map<string, number>();
+
+        const dfs = (i: number, pairs: number): number => {
+            if (pairs === p) return 0;
+            if (i >= nums.length - 1) return Infinity;
+
+            let key = `${i},${pairs}`;
+            if (dp.has(key)) return dp.get(key)!;
+
+            let take = Math.max(nums[i + 1] - nums[i], dfs(i + 2, pairs + 1));
+            let skip = dfs(i + 1, pairs);
+
+            let result = Math.min(take, skip);
+            dp.set(key, result);
+            return result;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -575,6 +606,43 @@ impl Solution {
         }
 
         dp[0][p]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} p
+     * @return {number}
+     */
+    minimizeMax(nums: number[], p: number): number {
+        const n = nums.length;
+        nums.sort((a, b) => a - b);
+
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            new Array(p + 1).fill(Infinity),
+        );
+        for (let i = 0; i <= n; i++) {
+            dp[i][0] = 0;
+        }
+
+        for (let i = n - 2; i >= 0; i--) {
+            for (let pairs = 1; pairs <= p; pairs++) {
+                let take = Infinity;
+                if (i + 1 < n) {
+                    take = Math.max(
+                        nums[i + 1] - nums[i],
+                        dp[i + 2][pairs - 1],
+                    );
+                }
+                const skip = dp[i + 1][pairs];
+                dp[i][pairs] = Math.min(take, skip);
+            }
+        }
+
+        return dp[0][p];
     }
 }
 ```
@@ -922,6 +990,43 @@ impl Solution {
         }
 
         dp1[p]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} p
+     * @return {number}
+     */
+    minimizeMax(nums: number[], p: number): number {
+        const n = nums.length;
+        nums.sort((a, b) => a - b);
+
+        let dp: number[] = new Array(p + 1).fill(Infinity);
+        let dp1: number[] = new Array(p + 1).fill(Infinity);
+        let dp2: number[] = new Array(p + 1).fill(Infinity);
+
+        dp[0] = dp1[0] = dp2[0] = 0;
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let pairs = 1; pairs <= p; pairs++) {
+                let take = Infinity;
+                if (i + 1 < n) {
+                    take = Math.max(nums[i + 1] - nums[i], dp2[pairs - 1]);
+                }
+                let skip = dp1[pairs];
+                dp[pairs] = Math.min(take, skip);
+            }
+            dp2 = dp1.slice();
+            dp1 = dp.slice();
+            dp.fill(Infinity);
+            dp[0] = 0;
+        }
+
+        return dp1[p];
     }
 }
 ```
@@ -1322,6 +1427,51 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} p
+     * @return {number}
+     */
+    minimizeMax(nums: number[], p: number): number {
+        if (p === 0) return 0;
+
+        nums.sort((a, b) => a - b);
+        let l = 0,
+            r = nums[nums.length - 1] - nums[0],
+            res = r;
+
+        const isValid = (threshold: number): boolean => {
+            let i = 0,
+                cnt = 0;
+            while (i < nums.length - 1) {
+                if (Math.abs(nums[i] - nums[i + 1]) <= threshold) {
+                    cnt++;
+                    i += 2;
+                } else {
+                    i++;
+                }
+                if (cnt === p) return true;
+            }
+            return false;
+        };
+
+        while (l <= r) {
+            let m = Math.floor(l + (r - l) / 2);
+            if (isValid(m)) {
+                res = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return res;
     }
 }
 ```

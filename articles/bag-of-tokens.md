@@ -264,6 +264,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} tokens
+     * @param {number} power
+     * @return {number}
+     */
+    bagOfTokensScore(tokens: number[], power: number): number {
+        tokens.sort((a, b) => a - b);
+        let res = 0,
+            score = 0,
+            l = 0,
+            r = tokens.length - 1;
+
+        while (l <= r) {
+            if (power >= tokens[l]) {
+                power -= tokens[l++];
+                score++;
+                res = Math.max(res, score);
+            } else if (score > 0) {
+                power += tokens[r--];
+                score--;
+            } else {
+                break;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -248,6 +248,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number[][]}
+     */
+    merge(intervals: number[][]): number[][] {
+        intervals.sort((a, b) => a[0] - b[0]);
+        const output: number[][] = [];
+        output.push(intervals[0]);
+
+        for (const interval of intervals) {
+            const start = interval[0];
+            const end = interval[1];
+            const lastEnd = output[output.length - 1][1];
+
+            if (start <= lastEnd) {
+                output[output.length - 1][1] = Math.max(lastEnd, end);
+            } else {
+                output.push([start, end]);
+            }
+        }
+        return output;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,7 +470,6 @@ public class Solution {
 ```
 
 ```go
-
 func merge(intervals [][]int) [][]int {
     mp := make(map[int]int)
     for _, interval := range intervals {
@@ -563,6 +589,40 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number[][]}
+     */
+    merge(intervals: number[][]): number[][] {
+        const mp = new Map<number, number>();
+        for (const [start, end] of intervals) {
+            mp.set(start, (mp.get(start) || 0) + 1);
+            mp.set(end, (mp.get(end) || 0) - 1);
+        }
+
+        const sortedKeys = Array.from(mp.keys()).sort((a, b) => a - b);
+        const res: number[][] = [];
+        let interval: number[] = [];
+        let have = 0;
+
+        for (const i of sortedKeys) {
+            if (interval.length === 0) {
+                interval.push(i);
+            }
+            have += mp.get(i)!;
+            if (have === 0) {
+                interval.push(i);
+                res.push(interval);
+                interval = [];
+            }
+        }
+        return res;
     }
 }
 ```
@@ -976,6 +1036,49 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number[][]}
+     */
+    merge(intervals: number[][]): number[][] {
+        let max = 0;
+        for (let i = 0; i < intervals.length; i++) {
+            max = Math.max(intervals[i][0], max);
+        }
+
+        let mp: number[] = new Array(max + 1).fill(0);
+        for (let i = 0; i < intervals.length; i++) {
+            let start = intervals[i][0];
+            let end = intervals[i][1];
+            mp[start] = Math.max(end + 1, mp[start]);
+        }
+
+        let res: number[][] = [];
+        let have = -1;
+        let intervalStart = -1;
+        for (let i = 0; i < mp.length; i++) {
+            if (mp[i] !== 0) {
+                if (intervalStart === -1) intervalStart = i;
+                have = Math.max(mp[i] - 1, have);
+            }
+            if (have === i) {
+                res.push([intervalStart, have]);
+                have = -1;
+                intervalStart = -1;
+            }
+        }
+
+        if (intervalStart !== -1) {
+            res.push([intervalStart, have]);
+        }
+
+        return res;
     }
 }
 ```

@@ -384,7 +384,7 @@ impl Solution {
                 if found { break; }
                 for c in 0..cols {
                     if board[r][c] != word_chars[0] { continue; }
-                    if Self::backtrack(&mut board, r, c, &word_chars, 0) {
+                    if Self::backtrack(&mut board, r as i32, c as i32, &word_chars, 0) {
                         res.push(word.clone());
                         found = true;
                         break;
@@ -410,6 +410,59 @@ impl Solution {
             || Self::backtrack(board, r, c - 1, word, i + 1);
         board[ru][cu] = word[i];
         ret
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findWords(board: string[][], words: string[]): string[] {
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const res: string[] = [];
+
+        const backtrack = (r: number, c: number, word: string, i: number): boolean => {
+            if (i === word.length) return true;
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] !== word[i]
+            )
+                return false;
+
+            const temp = board[r][c];
+            board[r][c] = '*';
+            const ret =
+                backtrack(r + 1, c, word, i + 1) ||
+                backtrack(r - 1, c, word, i + 1) ||
+                backtrack(r, c + 1, word, i + 1) ||
+                backtrack(r, c - 1, word, i + 1);
+            board[r][c] = temp;
+            return ret;
+        };
+
+        for (const word of words) {
+            let flag = false;
+            for (let r = 0; r < ROWS; r++) {
+                if (flag) break;
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] !== word[0]) continue;
+                    if (backtrack(r, c, word, 0)) {
+                        res.push(word);
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -780,73 +833,73 @@ public class Solution {
 
 ```go
 type TrieNode struct {
-	children map[byte]*TrieNode
-	isWord   bool
+    children map[byte]*TrieNode
+    isWord   bool
 }
 
 func NewTrieNode() *TrieNode {
-	return &TrieNode{children: make(map[byte]*TrieNode)}
+    return &TrieNode{children: make(map[byte]*TrieNode)}
 }
 
 func (this *TrieNode) addWord(word string) {
-	cur := this
-	for i := 0; i < len(word); i++ {
-		c := word[i]
-		if _, found := cur.children[c]; !found {
-			cur.children[c] = NewTrieNode()
-		}
-		cur = cur.children[c]
-	}
-	cur.isWord = true
+    cur := this
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, found := cur.children[c]; !found {
+            cur.children[c] = NewTrieNode()
+        }
+        cur = cur.children[c]
+    }
+    cur.isWord = true
 }
 
 func findWords(board [][]byte, words []string) []string {
     root := NewTrieNode()
-	for _, w := range words {
-		root.addWord(w)
-	}
+    for _, w := range words {
+        root.addWord(w)
+    }
 
-	rows, cols := len(board), len(board[0])
-	var res []string
-	visit := make(map[[2]int]bool)
-	wordSet := make(map[string]bool)
+    rows, cols := len(board), len(board[0])
+    var res []string
+    visit := make(map[[2]int]bool)
+    wordSet := make(map[string]bool)
 
-	var dfs func(r, c int, node *TrieNode, word string)
-	dfs = func(r, c int, node *TrieNode, word string) {
-		if r < 0 || c < 0 || r >= rows || c >= cols || visit[[2]int{r, c}] || board[r][c] == 0 {
-			return
-		}
+    var dfs func(r, c int, node *TrieNode, word string)
+    dfs = func(r, c int, node *TrieNode, word string) {
+        if r < 0 || c < 0 || r >= rows || c >= cols || visit[[2]int{r, c}] || board[r][c] == 0 {
+            return
+        }
 
-		char := board[r][c]
-		nextNode, found := node.children[char]
-		if !found {
-			return
-		}
+        char := board[r][c]
+        nextNode, found := node.children[char]
+        if !found {
+            return
+        }
 
-		visit[[2]int{r, c}] = true
-		word += string(char)
-		if nextNode.isWord {
-			wordSet[word] = true
-		}
+        visit[[2]int{r, c}] = true
+        word += string(char)
+        if nextNode.isWord {
+            wordSet[word] = true
+        }
 
-		dfs(r+1, c, nextNode, word)
-		dfs(r-1, c, nextNode, word)
-		dfs(r, c+1, nextNode, word)
-		dfs(r, c-1, nextNode, word)
+        dfs(r+1, c, nextNode, word)
+        dfs(r-1, c, nextNode, word)
+        dfs(r, c+1, nextNode, word)
+        dfs(r, c-1, nextNode, word)
 
-		visit[[2]int{r, c}] = false
-	}
+        visit[[2]int{r, c}] = false
+    }
 
-	for r := 0; r < rows; r++ {
-		for c := 0; c < cols; c++ {
-			dfs(r, c, root, "")
-		}
-	}
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            dfs(r, c, root, "")
+        }
+    }
 
-	for word := range wordSet {
-		res = append(res, word)
-	}
-	return res
+    for word := range wordSet {
+        res = append(res, word)
+    }
+    return res
 }
 ```
 
@@ -1045,6 +1098,87 @@ impl Solution {
 
         word.pop();
         visit[ru][cu] = false;
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: { [key: string]: TrieNode };
+    isWord: boolean;
+
+    constructor() {
+        this.children = {};
+        this.isWord = false;
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        let cur: TrieNode = this;
+        for (const c of word) {
+            if (!(c in cur.children)) {
+                cur.children[c] = new TrieNode();
+            }
+            cur = cur.children[c];
+        }
+        cur.isWord = true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findWords(board: string[][], words: string[]): string[] {
+        const root = new TrieNode();
+        for (const word of words) {
+            root.addWord(word);
+        }
+
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const res = new Set<string>(),
+            visit = new Set<string>();
+
+        const dfs = (r: number, c: number, node: TrieNode, word: string): void => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                visit.has(`${r},${c}`) ||
+                !(board[r][c] in node.children)
+            ) {
+                return;
+            }
+
+            visit.add(`${r},${c}`);
+            node = node.children[board[r][c]];
+            word += board[r][c];
+            if (node.isWord) {
+                res.add(word);
+            }
+
+            dfs(r + 1, c, node, word);
+            dfs(r - 1, c, node, word);
+            dfs(r, c + 1, node, word);
+            dfs(r, c - 1, node, word);
+
+            visit.delete(`${r},${c}`);
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                dfs(r, c, root, '');
+            }
+        }
+
+        return Array.from(res);
     }
 }
 ```
@@ -1512,78 +1646,78 @@ public class Solution {
 
 ```go
 type TrieNode struct {
-	children [26]*TrieNode
-	idx      int
-	refs     int
+    children [26]*TrieNode
+    idx      int
+    refs     int
 }
 
 func NewTrieNode() *TrieNode {
-	return &TrieNode{idx: -1}
+    return &TrieNode{idx: -1}
 }
 
 func (this *TrieNode) addWord(word string, i int) {
-	cur := this
-	cur.refs++
-	for _, ch := range word {
-		index := ch - 'a'
-		if cur.children[index] == nil {
-			cur.children[index] = NewTrieNode()
-		}
-		cur = cur.children[index]
-		cur.refs++
-	}
-	cur.idx = i
+    cur := this
+    cur.refs++
+    for _, ch := range word {
+        index := ch - 'a'
+        if cur.children[index] == nil {
+            cur.children[index] = NewTrieNode()
+        }
+        cur = cur.children[index]
+        cur.refs++
+    }
+    cur.idx = i
 }
 
 func findWords(board [][]byte, words []string) []string {
     root := NewTrieNode()
-	for i, word := range words {
-		root.addWord(word, i)
-	}
+    for i, word := range words {
+        root.addWord(word, i)
+    }
 
-	rows, cols := len(board), len(board[0])
-	var res []string
+    rows, cols := len(board), len(board[0])
+    var res []string
 
-	getIndex := func(c byte) int { return int(c - 'a') }
+    getIndex := func(c byte) int { return int(c - 'a') }
 
-	var dfs func(r, c int, node *TrieNode) int
-	dfs = func(r, c int, node *TrieNode) int {
-		if r < 0 || c < 0 || r >= rows || c >= cols ||
+    var dfs func(r, c int, node *TrieNode) int
+    dfs = func(r, c int, node *TrieNode) int {
+        if r < 0 || c < 0 || r >= rows || c >= cols ||
            board[r][c] == '*' || node.children[getIndex(board[r][c])] == nil {
-			return 0
-		}
+            return 0
+        }
 
-		tmp := board[r][c]
-		board[r][c] = '*'
-		prev := node
-		node = node.children[getIndex(tmp)]
-		found := 0
-		if node.idx != -1 {
-			res = append(res, words[node.idx])
-			node.idx = -1
-			found++
-		}
+        tmp := board[r][c]
+        board[r][c] = '*'
+        prev := node
+        node = node.children[getIndex(tmp)]
+        found := 0
+        if node.idx != -1 {
+            res = append(res, words[node.idx])
+            node.idx = -1
+            found++
+        }
 
-		found += dfs(r+1, c, node)
-		found += dfs(r-1, c, node)
-		found += dfs(r, c+1, node)
-		found += dfs(r, c-1, node)
+        found += dfs(r+1, c, node)
+        found += dfs(r-1, c, node)
+        found += dfs(r, c+1, node)
+        found += dfs(r, c-1, node)
 
-		board[r][c] = tmp
-		node.refs -= found
-		if node.refs == 0 {
-			prev.children[getIndex(tmp)] = nil
-		}
-		return found
-	}
+        board[r][c] = tmp
+        node.refs -= found
+        if node.refs == 0 {
+            prev.children[getIndex(tmp)] = nil
+        }
+        return found
+    }
 
-	for r := 0; r < rows; r++ {
-		for c := 0; c < cols; c++ {
-			root.refs -= dfs(r, c, root)
-		}
-	}
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            root.refs -= dfs(r, c, root)
+        }
+    }
 
-	return res
+    return res
 }
 ```
 
@@ -1836,6 +1970,109 @@ impl Solution {
         }
         board[ru][cu] = tmp;
         found
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: (TrieNode | null)[];
+    idx: number;
+    refs: number;
+
+    constructor() {
+        this.children = Array(26).fill(null);
+        this.idx = -1;
+        this.refs = 0;
+    }
+
+    /**
+     * @param {string} word
+     * @param {number} i
+     * @return {void}
+     */
+    addWord(word: string, i: number): void {
+        let cur: TrieNode = this;
+        cur.refs++;
+        for (const c of word) {
+            const index = c.charCodeAt(0) - 'a'.charCodeAt(0);
+            if (cur.children[index] === null) {
+                cur.children[index] = new TrieNode();
+            }
+            cur = cur.children[index]!;
+            cur.refs++;
+        }
+        cur.idx = i;
+    }
+}
+
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findWords(board: string[][], words: string[]): string[] {
+        const root = new TrieNode();
+        for (let i = 0; i < words.length; i++) {
+            root.addWord(words[i], i);
+        }
+
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const res: string[] = [];
+
+        const dfs = (r: number, c: number, node: TrieNode): number => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] === '*' ||
+                node.children[this.getId(board[r][c])] === null
+            ) {
+                return 0;
+            }
+
+            let tmp = board[r][c];
+            board[r][c] = '*';
+            let prev = node;
+            node = node.children[this.getId(tmp)]!;
+            let found = 0;
+            if (node.idx !== -1) {
+                res.push(words[node.idx]);
+                node.idx = -1;
+                found++;
+            }
+
+            found += dfs(r + 1, c, node);
+            found += dfs(r - 1, c, node);
+            found += dfs(r, c + 1, node);
+            found += dfs(r, c - 1, node);
+
+            board[r][c] = tmp;
+            node.refs -= found;
+            if (node.refs === 0) {
+                prev.children[this.getId(tmp)] = null;
+            }
+            return found;
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                root.refs -= dfs(r, c, root);
+            }
+        }
+
+        return Array.from(res);
+    }
+
+    /**
+     * @param {string} c
+     * @return {number}
+     */
+    getId(c: string): number {
+        return c.charCodeAt(0) - 'a'.charCodeAt(0);
     }
 }
 ```

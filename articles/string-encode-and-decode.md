@@ -259,33 +259,33 @@ public class Solution {
 type Solution struct{}
 
 func (s *Solution) Encode(strs []string) string {
-	if len(strs) == 0 {
-		return ""
-	}
-	var sizes []string
-	for _, str := range strs {
-		sizes = append(sizes, strconv.Itoa(len(str)))
-	}
-	return strings.Join(sizes, ",") + "#" + strings.Join(strs, "")
+    if len(strs) == 0 {
+        return ""
+    }
+    var sizes []string
+    for _, str := range strs {
+        sizes = append(sizes, strconv.Itoa(len(str)))
+    }
+    return strings.Join(sizes, ",") + "#" + strings.Join(strs, "")
 }
 
 func (s *Solution) Decode(encoded string) []string {
-	if encoded == "" {
-		return []string{}
-	}
-	parts := strings.SplitN(encoded, "#", 2)
-	sizes := strings.Split(parts[0], ",")
-	var res []string
-	i := 0
-	for _, sz := range sizes {
-		if sz == "" {
-			continue
-		}
-		length, _ := strconv.Atoi(sz)
-		res = append(res, parts[1][i:i+length])
-		i += length
-	}
-	return res
+    if encoded == "" {
+        return []string{}
+    }
+    parts := strings.SplitN(encoded, "#", 2)
+    sizes := strings.Split(parts[0], ",")
+    var res []string
+    i := 0
+    for _, sz := range sizes {
+        if sz == "" {
+            continue
+        }
+        length, _ := strconv.Atoi(sz)
+        res = append(res, parts[1][i:i+length])
+        i += length
+    }
+    return res
 }
 ```
 
@@ -398,6 +398,53 @@ impl Solution {
             i += sz;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @returns {string}
+     */
+    encode(strs: string[]): string {
+        if (strs.length === 0) return '';
+        let sizes: number[] = [],
+            parts: string[] = [];
+        for (let s of strs) {
+            sizes.push(s.length);
+        }
+        for (let sz of sizes) {
+            parts.push(String(sz), ',');
+        }
+        parts.push('#', ...strs);
+        return parts.join('');
+    }
+
+    /**
+     * @param {string} str
+     * @returns {string[]}
+     */
+    decode(str: string): string[] {
+        if (str.length === 0) return [];
+        let sizes: number[] = [],
+            res: string[] = [],
+            i = 0;
+        while (str[i] !== '#') {
+            let j = i;
+            while (str[j] !== ',') {
+                j++;
+            }
+            sizes.push(parseInt(str.substring(i, j), 10));
+            i = j + 1;
+        }
+        i++;
+        for (let sz of sizes) {
+            res.push(str.substr(i, sz));
+            i += sz;
+        }
+        return res;
     }
 }
 ```
@@ -607,29 +654,29 @@ public class Solution {
 type Solution struct{}
 
 func (s *Solution) Encode(strs []string) string {
-	var res strings.Builder
-	for _, str := range strs {
-		res.WriteString(strconv.Itoa(len(str)))
-		res.WriteByte('#')
-		res.WriteString(str)
-	}
-	return res.String()
+    var res strings.Builder
+    for _, str := range strs {
+        res.WriteString(strconv.Itoa(len(str)))
+        res.WriteByte('#')
+        res.WriteString(str)
+    }
+    return res.String()
 }
 
 func (s *Solution) Decode(encoded string) []string {
-	res := []string{}
-	i := 0
-	for i < len(encoded) {
-		j := i
-		for encoded[j] != '#' {
-			j++
-		}
-		length, _ := strconv.Atoi(encoded[i:j])
-		i = j + 1
-		res = append(res, encoded[i:i+length])
-		i += length
-	}
-	return res
+    res := []string{}
+    i := 0
+    for i < len(encoded) {
+        j := i
+        for encoded[j] != '#' {
+            j++
+        }
+        length, _ := strconv.Atoi(encoded[i:j])
+        i = j + 1
+        res = append(res, encoded[i:i+length])
+        i += length
+    }
+    return res
 }
 ```
 
@@ -728,6 +775,43 @@ impl Solution {
             i = j;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @returns {string}
+     */
+    encode(strs: string[]): string {
+        const res: string[] = [];
+        for (let s of strs) {
+            res.push(String(s.length), '#', s);
+        }
+        return res.join('');
+    }
+
+    /**
+     * @param {string} str
+     * @returns {string[]}
+     */
+    decode(str: string): string[] {
+        let res: string[] = [];
+        let i = 0;
+        while (i < str.length) {
+            let j = i;
+            while (str[j] !== '#') {
+                j++;
+            }
+            let length = parseInt(str.substring(i, j));
+            i = j + 1;
+            j = i + length;
+            res.push(str.substring(i, j));
+            i = j;
+        }
+        return res;
     }
 }
 ```

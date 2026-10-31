@@ -320,6 +320,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} newInterval
+     * @return {number[][]}
+     */
+    insert(intervals: number[][], newInterval: number[]): number[][] {
+        let n = intervals.length,
+            i = 0,
+            res: number[][] = [];
+
+        while (i < n && intervals[i][1] < newInterval[0]) {
+            res.push(intervals[i]);
+            i++;
+        }
+
+        while (i < n && newInterval[1] >= intervals[i][0]) {
+            newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
+            newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+        res.push(newInterval);
+
+        while (i < n) {
+            res.push(intervals[i]);
+            i++;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -725,6 +759,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} newInterval
+     * @return {number[][]}
+     */
+    insert(intervals: number[][], newInterval: number[]): number[][] {
+        if (intervals.length === 0) {
+            return [newInterval];
+        }
+
+        let n = intervals.length;
+        let target = newInterval[0];
+        let left = 0,
+            right = n - 1;
+
+        while (left <= right) {
+            let mid = Math.floor((left + right) / 2);
+            if (intervals[mid][0] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        intervals.splice(left, 0, newInterval);
+
+        let res: number[][] = [];
+        for (let interval of intervals) {
+            if (res.length === 0 || res[res.length - 1][1] < interval[0]) {
+                res.push(interval);
+            } else {
+                res[res.length - 1][1] = Math.max(
+                    res[res.length - 1][1],
+                    interval[1],
+                );
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1010,6 +1089,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @param {number[]} newInterval
+     * @return {number[][]}
+     */
+    insert(intervals: number[][], newInterval: number[] | null): number[][] {
+        const res: number[][] = [];
+        for (const interval of intervals) {
+            if (newInterval === null || interval[1] < newInterval[0]) {
+                res.push(interval);
+            } else if (interval[0] > newInterval[1]) {
+                res.push(newInterval);
+                res.push(interval);
+                newInterval = null;
+            } else {
+                newInterval[0] = Math.min(interval[0], newInterval[0]);
+                newInterval[1] = Math.max(interval[1], newInterval[1]);
+            }
+        }
+        if (newInterval !== null) res.push(newInterval);
+        return res;
     }
 }
 ```

@@ -281,6 +281,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private res: Set<string>;
+
+    constructor() {
+        this.res = new Set<string>();
+    }
+
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsetsWithDup(nums: number[]): number[][] {
+        nums.sort((a, b) => a - b);
+        this.backtrack(nums, 0, []);
+        return Array.from(this.res).map((subset) => JSON.parse(subset));
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number[]} subset
+     * @return {void}
+     */
+    backtrack(nums: number[], i: number, subset: number[]): void {
+        if (i === nums.length) {
+            this.res.add(JSON.stringify(subset));
+            return;
+        }
+
+        subset.push(nums[i]);
+        this.backtrack(nums, i + 1, subset);
+        subset.pop();
+        this.backtrack(nums, i + 1, subset);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -580,6 +617,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsetsWithDup(nums: number[]): number[][] {
+        let res: number[][] = [];
+        nums.sort((a, b) => a - b);
+
+        const backtrack = (i: number, subset: number[]): void => {
+            if (i === nums.length) {
+                res.push([...subset]);
+                return;
+            }
+
+            subset.push(nums[i]);
+            backtrack(i + 1, subset);
+            subset.pop();
+
+            while (i + 1 < nums.length && nums[i] === nums[i + 1]) {
+                i++;
+            }
+            backtrack(i + 1, subset);
+        };
+
+        backtrack(0, []);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -856,6 +925,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private res: number[][];
+
+    constructor() {
+        this.res = [];
+    }
+
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsetsWithDup(nums: number[]): number[][] {
+        nums.sort((a, b) => a - b);
+        this.backtrack(0, [], nums);
+        return this.res;
+    }
+
+    /**
+     * @param {number} i
+     * @param {number[]} subset
+     * @param {number[]} nums
+     * @return {void}
+     */
+    backtrack(i: number, subset: number[], nums: number[]): void {
+        this.res.push([...subset]);
+        for (let j = i; j < nums.length; j++) {
+            if (j > i && nums[j] === nums[j - 1]) {
+                continue;
+            }
+            subset.push(nums[j]);
+            this.backtrack(j + 1, subset, nums);
+            subset.pop();
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1116,6 +1223,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsetsWithDup(nums: number[]): number[][] {
+        nums.sort((a, b) => a - b);
+        const res: number[][] = [[]];
+        let prevIdx = 0;
+        let idx = 0;
+
+        for (let i = 0; i < nums.length; i++) {
+            idx = i >= 1 && nums[i] === nums[i - 1] ? prevIdx : 0;
+            prevIdx = res.length;
+            for (let j = idx; j < prevIdx; j++) {
+                const tmp = [...res[j]];
+                tmp.push(nums[i]);
+                res.push(tmp);
+            }
+        }
+
+        return res;
     }
 }
 ```

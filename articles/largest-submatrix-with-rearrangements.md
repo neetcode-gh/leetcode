@@ -298,6 +298,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    largestSubmatrix(matrix: number[][]): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let res = 0;
+
+        for (let startRow = 0; startRow < ROWS; startRow++) {
+            const ones = new Queue();
+            for (let c = 0; c < COLS; c++) {
+                ones.push(c);
+            }
+
+            for (let r = startRow; r < ROWS; r++) {
+                if (ones.isEmpty()) break;
+
+                for (let i = ones.size(); i > 0; i--) {
+                    let c: number = ones.pop();
+                    if (matrix[r][c] === 1) {
+                        ones.push(c);
+                    }
+                }
+
+                res = Math.max(res, ones.size() * (r - startRow + 1));
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -598,6 +633,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    largestSubmatrix(matrix: number[][]): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let res = 0;
+        let prevHeights: number[] = new Array(COLS).fill(0);
+
+        for (let r = 0; r < ROWS; r++) {
+            let heights = [...matrix[r]];
+            let sortedHgts = [...matrix[r]];
+
+            for (let c = 0; c < COLS; c++) {
+                if (heights[c] > 0) {
+                    heights[c] += prevHeights[c];
+                    sortedHgts[c] = heights[c];
+                }
+            }
+
+            sortedHgts.sort((a, b) => b - a);
+            for (let i = 0; i < COLS; i++) {
+                res = Math.max(res, (i + 1) * sortedHgts[i]);
+            }
+
+            prevHeights = heights;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -858,6 +928,36 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    largestSubmatrix(matrix: number[][]): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let res = 0;
+
+        for (let r = 1; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (matrix[r][c] > 0) {
+                    matrix[r][c] += matrix[r - 1][c];
+                }
+            }
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            matrix[r].sort((a, b) => b - a);
+            for (let i = 0; i < COLS; i++) {
+                res = Math.max(res, (i + 1) * matrix[r][i]);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1195,6 +1295,45 @@ impl Solution {
             prev_heights = heights;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    largestSubmatrix(matrix: number[][]): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let res = 0,
+            prevHeights: number[] = [];
+
+        for (let r = 0; r < ROWS; r++) {
+            let heights: number[] = [];
+
+            for (let c of prevHeights) {
+                if (matrix[r][c] === 1) {
+                    matrix[r][c] += matrix[r - 1][c];
+                    heights.push(c);
+                }
+            }
+
+            for (let c = 0; c < COLS; c++) {
+                if (matrix[r][c] === 1) {
+                    heights.push(c);
+                }
+            }
+
+            for (let i = 0; i < heights.length; i++) {
+                res = Math.max(res, (i + 1) * matrix[r][heights[i]]);
+            }
+
+            prevHeights = heights;
+        }
+        return res;
     }
 }
 ```

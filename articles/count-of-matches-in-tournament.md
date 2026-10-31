@@ -162,6 +162,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numberOfMatches(n: number): number {
+        let res = 0;
+
+        while (n > 1) {
+            res += Math.floor(n / 2);
+            n = Math.ceil(n / 2);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,6 +271,18 @@ class Solution {
 impl Solution {
     pub fn number_of_matches(n: i32) -> i32 {
         n - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numberOfMatches(n: number): number {
+        return n - 1;
     }
 }
 ```

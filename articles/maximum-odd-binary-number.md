@@ -109,7 +109,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MaximumOddBinaryNumber(string s) {
+        char[] arr = s.ToCharArray();
+        Array.Sort(arr);
+        Array.Reverse(arr);
+        int i = arr.Length - 1;
+        while (i >= 0 && arr[i] == '0') {
+            i--;
+        }
+        char temp = arr[i];
+        arr[i] = arr[arr.Length - 1];
+        arr[arr.Length - 1] = temp;
+        return new string(arr);
+    }
+}
+```
+
 ```go
+import "sort"
+
 func maximumOddBinaryNumber(s string) string {
     arr := []byte(s)
     sort.Slice(arr, func(i, j int) bool {
@@ -165,24 +185,6 @@ class Solution {
 }
 ```
 
-```csharp
-public class Solution {
-    public string MaximumOddBinaryNumber(string s) {
-        char[] arr = s.ToCharArray();
-        Array.Sort(arr);
-        Array.Reverse(arr);
-        int i = arr.Length - 1;
-        while (i >= 0 && arr[i] == '0') {
-            i--;
-        }
-        char temp = arr[i];
-        arr[i] = arr[arr.Length - 1];
-        arr[arr.Length - 1] = temp;
-        return new string(arr);
-    }
-}
-```
-
 ```rust
 impl Solution {
     pub fn maximum_odd_binary_number(s: String) -> String {
@@ -197,6 +199,27 @@ impl Solution {
 
         arr.swap(i, n - 1);
         String::from_utf8(arr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    maximumOddBinaryNumber(s: string): string {
+        let arr = s.split('');
+        arr.sort().reverse();
+
+        let i = arr.length - 1;
+        while (i >= 0 && arr[i] === '0') {
+            i--;
+        }
+
+        [arr[i], arr[arr.length - 1]] = [arr[arr.length - 1], arr[i]];
+        return arr.join('');
     }
 }
 ```
@@ -290,6 +313,20 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MaximumOddBinaryNumber(string s) {
+        int count = 0;
+        foreach (char c in s) {
+            if (c == '1') {
+                count++;
+            }
+        }
+        return new string('1', count - 1) + new string('0', s.Length - count) + "1";
+    }
+}
+```
+
 ```go
 func maximumOddBinaryNumber(s string) string {
     count := 0
@@ -332,25 +369,28 @@ class Solution {
 }
 ```
 
-```csharp
-public class Solution {
-    public string MaximumOddBinaryNumber(string s) {
-        int count = 0;
-        foreach (char c in s) {
-            if (c == '1') {
-                count++;
-            }
-        }
-        return new string('1', count - 1) + new string('0', s.Length - count) + "1";
-    }
-}
-```
-
 ```rust
 impl Solution {
     pub fn maximum_odd_binary_number(s: String) -> String {
         let count = s.chars().filter(|&c| c == '1').count();
         "1".repeat(count - 1) + &"0".repeat(s.len() - count) + "1"
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    maximumOddBinaryNumber(s: string): string {
+        let count = 0;
+        for (const c of s) {
+            if (c === '1') count++;
+        }
+
+        return '1'.repeat(count - 1) + '0'.repeat(s.length - count) + '1';
     }
 }
 ```
@@ -467,6 +507,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MaximumOddBinaryNumber(string s) {
+        char[] arr = s.ToCharArray();
+        int left = 0;
+
+        for (int i = 0; i < arr.Length; i++) {
+            if (arr[i] == '1') {
+                char temp = arr[i];
+                arr[i] = arr[left];
+                arr[left] = temp;
+                left++;
+            }
+        }
+        char t = arr[left - 1];
+        arr[left - 1] = arr[arr.Length - 1];
+        arr[arr.Length - 1] = t;
+
+        return new string(arr);
+    }
+}
+```
+
 ```go
 func maximumOddBinaryNumber(s string) string {
     arr := []byte(s)
@@ -527,29 +590,6 @@ class Solution {
 }
 ```
 
-```csharp
-public class Solution {
-    public string MaximumOddBinaryNumber(string s) {
-        char[] arr = s.ToCharArray();
-        int left = 0;
-
-        for (int i = 0; i < arr.Length; i++) {
-            if (arr[i] == '1') {
-                char temp = arr[i];
-                arr[i] = arr[left];
-                arr[left] = temp;
-                left++;
-            }
-        }
-        char t = arr[left - 1];
-        arr[left - 1] = arr[arr.Length - 1];
-        arr[arr.Length - 1] = t;
-
-        return new string(arr);
-    }
-}
-```
-
 ```rust
 impl Solution {
     pub fn maximum_odd_binary_number(s: String) -> String {
@@ -566,6 +606,32 @@ impl Solution {
         let n = arr.len();
         arr.swap(left - 1, n - 1);
         String::from_utf8(arr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    maximumOddBinaryNumber(s: string): string {
+        let arr = s.split('');
+        let left = 0;
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === '1') {
+                [arr[left], arr[i]] = [arr[i], arr[left]];
+                left++;
+            }
+        }
+
+        [arr[left - 1], arr[arr.length - 1]] = [
+            arr[arr.length - 1],
+            arr[left - 1],
+        ];
+        return arr.join('');
     }
 }
 ```

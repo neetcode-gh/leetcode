@@ -376,6 +376,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} tasks
+     * @return {number[]}
+     */
+    getOrder(tasks: number[][]): number[] {
+        const available = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
+        );
+        const pending = new PriorityQueue(
+            (a: number[], b: number[]) => a[0] - b[0],
+        );
+
+        tasks.forEach(([enqueueTime, processTime], i) => {
+            pending.enqueue([enqueueTime, processTime, i]);
+        });
+
+        let time = 0;
+        const res: number[] = [];
+        while (!pending.isEmpty() || !available.isEmpty()) {
+            while (!pending.isEmpty() && pending.front()[0] <= time) {
+                const [enqueueTime, processTime, i]: number[] =
+                    pending.dequeue();
+                available.enqueue([processTime, i]);
+            }
+
+            if (available.isEmpty()) {
+                time = pending.front()[0];
+                continue;
+            }
+
+            const [processTime, i]: number[] = available.dequeue();
+            time += processTime;
+            res.push(i);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -721,6 +763,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} tasks
+     * @return {number[]}
+     */
+    getOrder(tasks: number[][]): number[] {
+        const n = tasks.length;
+        tasks = tasks.map((t, i) => [...t, i]);
+        tasks.sort((a, b) => a[0] - b[0]);
+
+        const res: number[] = [];
+        const minHeap = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
+        );
+
+        let i = 0,
+            time = tasks[0][0];
+        while (minHeap.size() || i < n) {
+            while (i < n && time >= tasks[i][0]) {
+                minHeap.enqueue([tasks[i][1], tasks[i][2]]);
+                i++;
+            }
+            if (minHeap.isEmpty()) {
+                time = tasks[i][0];
+            } else {
+                const [procTime, index]: number[] = minHeap.dequeue();
+                time += procTime;
+                res.push(index);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1024,8 +1102,7 @@ func (h *minHeap3) Pop() interface{} {
 class Solution {
     fun getOrder(tasks: Array<IntArray>): IntArray {
         val n = tasks.size
-        val indices = IntArray(n) { it }
-        indices.sortWith(compareBy({ tasks[it][0] }, { it }))
+        val indices = (0 until n).sortedWith(compareBy({ tasks[it][0] }, { it }))
 
         val minHeap = PriorityQueue<Int>(compareBy({ tasks[it][1] }, { it }))
 
@@ -1118,6 +1195,53 @@ impl Solution {
         }
 
         result
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} tasks
+     * @return {number[]}
+     */
+    getOrder(tasks: number[][]): number[] {
+        const n = tasks.length;
+        const indices = Array.from({ length: n }, (_, i) => i);
+        indices.sort((a, b) => {
+            if (tasks[a][0] !== tasks[b][0]) {
+                return tasks[a][0] - tasks[b][0];
+            }
+            return a - b;
+        });
+
+        const minHeap = new PriorityQueue((a: number, b: number) => {
+            if (tasks[a][1] !== tasks[b][1]) {
+                return tasks[a][1] - tasks[b][1];
+            }
+            return a - b;
+        });
+
+        const res: number[] = [];
+        let time = 0;
+        let i = 0;
+
+        while (!minHeap.isEmpty() || i < n) {
+            while (i < n && tasks[indices[i]][0] <= time) {
+                minHeap.enqueue(indices[i]);
+                i++;
+            }
+
+            if (minHeap.size() === 0) {
+                time = tasks[indices[i]][0];
+            } else {
+                const nextIndex: number = minHeap.dequeue();
+                time += tasks[nextIndex][1];
+                res.push(nextIndex);
+            }
+        }
+
+        return res;
     }
 }
 ```

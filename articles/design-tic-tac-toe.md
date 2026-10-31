@@ -513,6 +513,80 @@ impl TicTacToe {
 }
 ```
 
+```typescript
+class TicTacToe {
+    private board: number[][];
+    private n: number;
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.board = Array.from({ length: n }, () => Array(n).fill(0));
+        this.n = n;
+    }
+
+    /**
+     * @param {number} row
+     * @param {number} col
+     * @param {number} player
+     * @return {number}
+     */
+    move(row: number, col: number, player: number): number {
+        this.board[row][col] = player;
+
+        // check if the player wins
+        if (
+            this.checkRow(row, player) ||
+            this.checkColumn(col, player) ||
+            (row === col && this.checkDiagonal(player)) ||
+            (col === this.n - row - 1 && this.checkAntiDiagonal(player))
+        ) {
+            return player;
+        }
+
+        // No one wins
+        return 0;
+    }
+
+    checkDiagonal(player: number): boolean {
+        for (let row = 0; row < this.n; row++) {
+            if (this.board[row][row] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    checkAntiDiagonal(player: number): boolean {
+        for (let row = 0; row < this.n; row++) {
+            if (this.board[row][this.n - row - 1] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    checkColumn(col: number, player: number): boolean {
+        for (let row = 0; row < this.n; row++) {
+            if (this.board[row][col] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    checkRow(row: number, player: number): boolean {
+        for (let col = 0; col < this.n; col++) {
+            if (this.board[row][col] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -934,6 +1008,64 @@ impl TicTacToe {
         }
 
         0
+    }
+}
+```
+
+```typescript
+class TicTacToe {
+    private rows: number[];
+    private cols: number[];
+    private diagonal: number;
+    private antiDiagonal: number;
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.rows = new Array(n).fill(0);
+        this.cols = new Array(n).fill(0);
+        this.diagonal = 0;
+        this.antiDiagonal = 0;
+    }
+
+    /**
+     * @param {number} row
+     * @param {number} col
+     * @param {number} player
+     * @return {number}
+     */
+    move(row: number, col: number, player: number): number {
+        let currentPlayer = player === 1 ? 1 : -1;
+
+        // update currentPlayer in rows and cols arrays
+        this.rows[row] += currentPlayer;
+        this.cols[col] += currentPlayer;
+
+        // update diagonal
+        if (row === col) {
+            this.diagonal += currentPlayer;
+        }
+
+        // update anti diagonal
+        if (col === this.cols.length - row - 1) {
+            this.antiDiagonal += currentPlayer;
+        }
+
+        let n = this.rows.length;
+
+        // check if the current player wins
+        if (
+            Math.abs(this.rows[row]) === n ||
+            Math.abs(this.cols[col]) === n ||
+            Math.abs(this.diagonal) === n ||
+            Math.abs(this.antiDiagonal) === n
+        ) {
+            return player;
+        }
+
+        // No one wins
+        return 0;
     }
 }
 ```

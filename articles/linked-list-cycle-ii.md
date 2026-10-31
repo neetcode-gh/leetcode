@@ -246,6 +246,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    detectCycle(head: ListNode | null): ListNode | null {
+        const seen = new Set<ListNode>();
+        let cur = head;
+        while (cur) {
+            if (seen.has(cur)) {
+                return cur;
+            }
+            seen.add(cur);
+            cur = cur.next;
+        }
+        return null;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -576,6 +597,38 @@ impl Solution {
         //   }
         //   None
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    detectCycle(head: ListNode | null): ListNode | null {
+        if (!head || !head.next) {
+            return null;
+        }
+
+        let slow: ListNode | null = head,
+            fast: ListNode | null = head;
+
+        while (fast && fast.next) {
+            slow = slow!.next;
+            fast = fast.next.next;
+
+            if (slow === fast) {
+                slow = head;
+                while (slow !== fast) {
+                    slow = slow!.next;
+                    fast = fast!.next;
+                }
+                return slow;
+            }
+        }
+        return null;
     }
 }
 ```

@@ -273,6 +273,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {boolean[]} hasApple
+     * @return {number}
+     */
+    minTime(n: number, edges: number[][], hasApple: boolean[]): number {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [parent, child] of edges) {
+            adj[parent].push(child);
+            adj[child].push(parent);
+        }
+
+        const dfs = (cur: number, parent: number): number => {
+            let time = 0;
+            for (const child of adj[cur]) {
+                if (child === parent) continue;
+                const childTime = dfs(child, cur);
+                if (childTime > 0 || hasApple[child]) {
+                    time += 2 + childTime;
+                }
+            }
+            return time;
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -683,6 +715,56 @@ impl Solution {
         }
 
         time[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {boolean[]} hasApple
+     * @return {number}
+     */
+    minTime(n: number, edges: number[][], hasApple: boolean[]): number {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        const indegree: number[] = Array(n).fill(0);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+            indegree[u]++;
+            indegree[v]++;
+        }
+
+        const queue = new Queue();
+        for (let i = 1; i < n; i++) {
+            if (indegree[i] === 1) {
+                queue.push(i);
+                indegree[i] = 0;
+            }
+        }
+
+        const time: number[] = Array(n).fill(0);
+        while (!queue.isEmpty()) {
+            const node: number = queue.pop();
+            for (const neighbor of adj[node]) {
+                if (indegree[neighbor] <= 0) {
+                    continue;
+                }
+
+                indegree[neighbor]--;
+                if (hasApple[node] || time[node] > 0) {
+                    time[neighbor] += time[node] + 2;
+                }
+                if (indegree[neighbor] === 1 && neighbor !== 0) {
+                    queue.push(neighbor);
+                }
+            }
+        }
+
+        return time[0];
     }
 }
 ```

@@ -452,6 +452,60 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} servers
+     * @param {number[]} tasks
+     * @return {number[]}
+     */
+    assignTasks(servers: number[], tasks: number[]): number[] {
+        const n = servers.length,
+            m = tasks.length;
+        const available: boolean[] = Array(n).fill(true);
+        const finishTime: number[] = Array(n).fill(0);
+        const res: number[] = [];
+        let time = 0;
+
+        for (let t = 0; t < m; t++) {
+            time = Math.max(time, t);
+
+            for (let i = 0; i < n; i++) {
+                if (finishTime[i] <= time) {
+                    available[i] = true;
+                }
+            }
+
+            if (!available.some((v) => v)) {
+                time = Math.min(...finishTime);
+                for (let i = 0; i < n; i++) {
+                    if (finishTime[i] <= time) {
+                        available[i] = true;
+                    }
+                }
+            }
+
+            let minIdx = -1;
+            for (let i = 0; i < n; i++) {
+                if (
+                    available[i] &&
+                    (minIdx === -1 ||
+                        servers[i] < servers[minIdx] ||
+                        (servers[i] === servers[minIdx] && i < minIdx))
+                ) {
+                    minIdx = i;
+                }
+            }
+
+            res.push(minIdx);
+            available[minIdx] = false;
+            finishTime[minIdx] = time + tasks[t];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -672,10 +726,6 @@ public class Solution {
 ```
 
 ```go
-import (
-    "container/heap"
-)
-
 type AvailableHeap [][]int
 func (h AvailableHeap) Len() int { return len(h) }
 func (h AvailableHeap) Less(i, j int) bool {
@@ -745,8 +795,6 @@ func assignTasks(servers []int, tasks []int) []int {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Solution {
     fun assignTasks(servers: IntArray, tasks: IntArray): IntArray {
         val n = servers.size
@@ -789,36 +837,84 @@ class Solution {
         let n = servers.count, m = tasks.count
         var res = [Int](repeating: 0, count: m)
 
-        var available: [(weight: Int, index: Int)] = []
-        var unavailable: [(time: Int, weight: Int, index: Int)] = []
+        // (weight, index)
+        var available = Heap<(Int, Int)>(sort: { $0.0 != $1.0 ? $0.0 < $1.0 : $0.1 < $1.1 })
+        // (timeFree, weight, index)
+        var unavailable = Heap<(Int, Int, Int)>(sort: { $0.0 < $1.0 })
 
         for i in 0..<n {
-            available.append((servers[i], i))
+            available.insert((servers[i], i))
         }
-        available.sort { $0.weight == $1.weight ? $0.index < $1.index : $0.weight < $1.weight }
 
         var time = 0
         for i in 0..<m {
             time = max(time, i)
 
             if available.isEmpty {
-                unavailable.sort { $0.time < $1.time }
-                time = unavailable[0].time
+                time = unavailable.peek!.0
             }
 
-            unavailable.sort { $0.time < $1.time }
-            while !unavailable.isEmpty && unavailable[0].time <= time {
-                let server = unavailable.removeFirst()
-                available.append((server.weight, server.index))
-                available.sort { $0.weight == $1.weight ? $0.index < $1.index : $0.weight < $1.weight }
+            while let top = unavailable.peek, top.0 <= time {
+                let server = unavailable.remove()!
+                available.insert((server.1, server.2))
             }
 
-            let best = available.removeFirst()
-            res[i] = best.index
-            unavailable.append((time + tasks[i], best.weight, best.index))
+            let best = available.remove()!
+            res[i] = best.1
+            unavailable.insert((time + tasks[i], best.0, best.1))
         }
 
         return res
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let sort: (T, T) -> Bool
+
+    init(sort: @escaping (T, T) -> Bool) {
+        self.sort = sort
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+    var peek: T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && sort(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < count && sort(elements[left], elements[candidate]) { candidate = left }
+            if right < count && sort(elements[right], elements[candidate]) { candidate = right }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -864,6 +960,48 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} servers
+     * @param {number[]} tasks
+     * @return {number[]}
+     */
+    assignTasks(servers: number[], tasks: number[]): number[] {
+        const n = servers.length;
+        const available = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
+        );
+        const unavailable = new PriorityQueue(
+            (a: number[], b: number[]) => a[0] - b[0],
+        );
+        const res: number[] = new Array(tasks.length);
+
+        for (let i = 0; i < n; i++) {
+            available.enqueue([servers[i], i]);
+        }
+
+        let time = 0;
+        for (let i = 0; i < tasks.length; i++) {
+            time = Math.max(time, i);
+            if (available.isEmpty()) {
+                time = unavailable.front()[0];
+            }
+            while (!unavailable.isEmpty() && unavailable.front()[0] <= time) {
+                const [timeFree, weight, index]: number[] =
+                    unavailable.dequeue();
+                available.enqueue([weight, index]);
+            }
+            const [weight, index]: number[] = available.dequeue();
+            res[i] = index;
+            unavailable.enqueue([time + tasks[i], weight, index]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1090,8 +1228,6 @@ public class Solution {
 ```
 
 ```go
-import "container/heap"
-
 type ServerHeap [][]int
 func (h ServerHeap) Len() int { return len(h) }
 func (h ServerHeap) Less(i, j int) bool {
@@ -1142,8 +1278,6 @@ func assignTasks(servers []int, tasks []int) []int {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Solution {
     fun assignTasks(servers: IntArray, tasks: IntArray): IntArray {
         val m = tasks.size
@@ -1179,34 +1313,81 @@ class Solution {
         let n = servers.count, m = tasks.count
         var res = [Int](repeating: 0, count: m)
 
-        var available: [(weight: Int, index: Int, timeFree: Int)] = []
-        var unavailable: [(timeFree: Int, weight: Int, index: Int)] = []
+        // (weight, index, timeFree)
+        var available = Heap<(Int, Int, Int)>(sort: { $0.0 != $1.0 ? $0.0 < $1.0 : $0.1 < $1.1 })
+        // (timeFree, weight, index)
+        var unavailable = Heap<(Int, Int, Int)>(sort: {
+            if $0.0 != $1.0 { return $0.0 < $1.0 }
+            if $0.1 != $1.1 { return $0.1 < $1.1 }
+            return $0.2 < $1.2
+        })
 
         for i in 0..<n {
-            available.append((servers[i], i, 0))
-        }
-        available.sort {
-            if $0.weight != $1.weight { return $0.weight < $1.weight }
-            return $0.index < $1.index
+            available.insert((servers[i], i, 0))
         }
 
         for i in 0..<m {
-            while (!unavailable.isEmpty && unavailable[0].timeFree <= i) || available.isEmpty {
-                unavailable.sort { $0.timeFree < $1.timeFree }
-                let server = unavailable.removeFirst()
-                available.append((server.weight, server.index, server.timeFree))
-                available.sort {
-                    if $0.weight != $1.weight { return $0.weight < $1.weight }
-                    return $0.index < $1.index
-                }
+            while (!unavailable.isEmpty && unavailable.peek!.0 <= i) || available.isEmpty {
+                let server = unavailable.remove()!
+                available.insert((server.1, server.2, server.0))
             }
 
-            let best = available.removeFirst()
-            res[i] = best.index
-            unavailable.append((max(best.timeFree, i) + tasks[i], best.weight, best.index))
+            let best = available.remove()!
+            res[i] = best.1
+            unavailable.insert((max(best.2, i) + tasks[i], best.0, best.1))
         }
 
         return res
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let sort: (T, T) -> Bool
+
+    init(sort: @escaping (T, T) -> Bool) {
+        self.sort = sort
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+    var peek: T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && sort(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < count && sort(elements[left], elements[candidate]) { candidate = left }
+            if right < count && sort(elements[right], elements[candidate]) { candidate = right }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -1249,6 +1430,58 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} servers
+     * @param {number[]} tasks
+     * @return {number[]}
+     */
+    assignTasks(servers: number[], tasks: number[]): number[] {
+        const res: number[] = new Array(tasks.length);
+        const available = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0]
+                ? a[1] === b[1]
+                    ? a[2] - b[2]
+                    : a[1] - b[1]
+                : a[0] - b[0],
+        );
+        const unavailable = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0]
+                ? a[1] === b[1]
+                    ? a[2] - b[2]
+                    : a[1] - b[1]
+                : a[0] - b[0],
+        );
+
+        for (let i = 0; i < servers.length; i++) {
+            available.enqueue([servers[i], i, 0]);
+        }
+
+        for (let i = 0; i < tasks.length; i++) {
+            while (
+                (!unavailable.isEmpty() && unavailable.front()[0] <= i) ||
+                available.isEmpty()
+            ) {
+                const [timeFree, weight, index]: number[] =
+                    unavailable.dequeue();
+                available.enqueue([weight, index, timeFree]);
+            }
+
+            const [weight, index, timeFree]: number[] = available.dequeue();
+            res[i] = index;
+            unavailable.enqueue([
+                Math.max(timeFree, i) + tasks[i],
+                weight,
+                index,
+            ]);
+        }
+
+        return res;
     }
 }
 ```

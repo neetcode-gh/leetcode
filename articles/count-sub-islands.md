@@ -357,6 +357,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid1
+     * @param {number[][]} grid2
+     * @return {number}
+     */
+    countSubIslands(grid1: number[][], grid2: number[][]): number {
+        const ROWS = grid1.length,
+            COLS = grid1[0].length;
+        const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+
+        const dfs = (r: number, c: number): boolean => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                grid2[r][c] === 0 ||
+                visit[r][c]
+            )
+                return true;
+            visit[r][c] = true;
+            let res = grid1[r][c] === 1;
+            res = dfs(r - 1, c) && res;
+            res = dfs(r + 1, c) && res;
+            res = dfs(r, c - 1) && res;
+            res = dfs(r, c + 1) && res;
+            return res;
+        };
+
+        let count = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid2[r][c] === 1 && !visit[r][c]) {
+                    if (dfs(r, c)) count++;
+                }
+            }
+        }
+        return count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -795,6 +841,62 @@ impl Solution {
             }
         }
         count
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid1
+     * @param {number[][]} grid2
+     * @return {number}
+     */
+    countSubIslands(grid1: number[][], grid2: number[][]): number {
+        const ROWS = grid1.length,
+            COLS = grid1[0].length;
+        const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+        const directions = [1, 0, -1, 0, 1];
+        let count = 0;
+
+        const bfs = (sr: number, sc: number): boolean => {
+            const queue = new Queue([[sr, sc]]);
+            visit[sr][sc] = true;
+            let res = true;
+
+            while (!queue.isEmpty()) {
+                const [r, c]: number[] = queue.pop();
+                if (grid1[r][c] === 0) res = false;
+
+                for (let i = 0; i < 4; i++) {
+                    const nr = r + directions[i],
+                        nc = c + directions[i + 1];
+                    if (
+                        nr >= 0 &&
+                        nr < ROWS &&
+                        nc >= 0 &&
+                        nc < COLS &&
+                        grid2[nr][nc] === 1 &&
+                        !visit[nr][nc]
+                    ) {
+                        visit[nr][nc] = true;
+                        queue.push([nr, nc]);
+                    }
+                }
+            }
+            return res;
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid2[r][c] === 1 && !visit[r][c]) {
+                    if (bfs(r, c)) count++;
+                }
+            }
+        }
+        return count;
     }
 }
 ```
@@ -1336,6 +1438,75 @@ impl Solution {
             }
         }
         land - unions
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} grid1
+     * @param {number[][]} grid2
+     * @return {number}
+     */
+    countSubIslands(grid1: number[][], grid2: number[][]): number {
+        const ROWS = grid1.length,
+            COLS = grid1[0].length,
+            N = ROWS * COLS;
+        const dsu = new DSU(N);
+
+        const getId = (r: number, c: number): number => r * COLS + c;
+
+        let land = 0,
+            unions = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid2[r][c] === 0) continue;
+                land++;
+                if (r + 1 < ROWS && grid2[r + 1][c] === 1)
+                    unions += Number(dsu.union(getId(r, c), getId(r + 1, c)));
+                if (c + 1 < COLS && grid2[r][c + 1] === 1)
+                    unions += Number(dsu.union(getId(r, c), getId(r, c + 1)));
+                if (grid1[r][c] === 0) unions += Number(dsu.union(getId(r, c), N));
+            }
+        }
+        return land - unions;
     }
 }
 ```

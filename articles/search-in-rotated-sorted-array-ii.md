@@ -116,6 +116,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {boolean}
+     */
+    search(nums: number[], target: number): boolean {
+        for (let num of nums) {
+            if (num === target) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,6 +457,48 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {boolean}
+     */
+    search(nums: number[], target: number): boolean {
+        let l = 0,
+            r = nums.length - 1;
+
+        while (l <= r) {
+            const m = Math.floor(l + (r - l) / 2);
+
+            if (nums[m] === target) {
+                return true;
+            }
+
+            if (nums[l] < nums[m]) {
+                // Left portion
+                if (nums[l] <= target && target < nums[m]) {
+                    r = m - 1;
+                } else {
+                    l = m + 1;
+                }
+            } else if (nums[l] > nums[m]) {
+                // Right portion
+                if (nums[m] < target && target <= nums[r]) {
+                    l = m + 1;
+                } else {
+                    r = m - 1;
+                }
+            } else {
+                l++;
+            }
+        }
+
+        return false;
     }
 }
 ```

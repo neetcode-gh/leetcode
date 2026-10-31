@@ -218,6 +218,8 @@ public class Solution {
 ```
 
 ```go
+import "sort"
+
 func largestUniqueNumber(nums []int) int {
     n := len(nums)
 
@@ -343,6 +345,51 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    largestUniqueNumber(nums: number[]): number {
+        const n = nums.length;
+
+        // If there's only one element, it's unique by default
+        if (n === 1) {
+            return nums[0];
+        }
+
+        nums.sort((a, b) => b - a);
+
+        // Start from the beginning (largest numbers)
+        let currentIndex = 0;
+
+        while (currentIndex < n) {
+            // If it's the first element or different from the next one, it's unique
+            if (
+                currentIndex === n - 1 ||
+                nums[currentIndex] !== nums[currentIndex + 1]
+            ) {
+                return nums[currentIndex];
+            }
+
+            // Skip duplicates
+            while (
+                currentIndex < n - 1 &&
+                nums[currentIndex] === nums[currentIndex + 1]
+            ) {
+                currentIndex++;
+            }
+
+            // Move to the next unique number
+            currentIndex++;
+        }
+
+        return -1;
     }
 }
 ```
@@ -512,6 +559,8 @@ public class Solution {
 ```
 
 ```go
+import "sort"
+
 func largestUniqueNumber(nums []int) int {
     // Create a frequency map
     frequencyMap := make(map[int]int)
@@ -604,6 +653,36 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    largestUniqueNumber(nums: number[]): number {
+        // Create a frequency map
+        const frequencyMap: { [key: number]: number } = {};
+        for (const num of nums) {
+            frequencyMap[num] = (frequencyMap[num] || 0) + 1;
+        }
+
+        // Create a sorted OrderedDict
+        const sortedMap = new Map(
+            Object.entries(frequencyMap).sort((a, b) => Number(b[0]) - Number(a[0])),
+        );
+
+        // Find the largest unique number
+        for (const [num, freq] of sortedMap) {
+            if (freq === 1) {
+                return Number(num);
+            }
+        }
+
+        return -1;
     }
 }
 ```
@@ -852,6 +931,34 @@ impl Solution {
         }
 
         largest_unique
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    largestUniqueNumber(nums: number[]): number {
+        // Create a HashMap to store the frequency of each number
+        const frequencyMap = new Map<number, number>();
+
+        // Populate the frequencyMap
+        for (const num of nums) {
+            frequencyMap.set(num, (frequencyMap.get(num) || 0) + 1);
+        }
+
+        // Initialize the result to -1 (default if no unique number is found)
+        let largestUnique = -1;
+        for (const num of frequencyMap.keys()) {
+            // Check if the number appears only once and is larger than the current largestUnique
+            if (frequencyMap.get(num) === 1 && num > largestUnique) {
+                largestUnique = num;
+            }
+        }
+        return largestUnique;
     }
 }
 ```

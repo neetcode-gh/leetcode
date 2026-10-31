@@ -188,6 +188,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number}
+     */
+    maxUncrossedLines(nums1: number[], nums2: number[]): number {
+        const dfs = (i: number, j: number): number => {
+            if (i === nums1.length || j === nums2.length) {
+                return 0;
+            }
+            if (nums1[i] === nums2[j]) {
+                return 1 + dfs(i + 1, j + 1);
+            }
+            return Math.max(dfs(i, j + 1), dfs(i + 1, j));
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -473,6 +496,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number}
+     */
+    maxUncrossedLines(nums1: number[], nums2: number[]): number {
+        const n = nums1.length,
+            m = nums2.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(m).fill(-1),
+        );
+
+        const dfs = (i: number, j: number): number => {
+            if (i === n || j === m) {
+                return 0;
+            }
+
+            if (dp[i][j] !== -1) {
+                return dp[i][j];
+            }
+
+            if (nums1[i] === nums2[j]) {
+                dp[i][j] = 1 + dfs(i + 1, j + 1);
+            } else {
+                dp[i][j] = Math.max(dfs(i, j + 1), dfs(i + 1, j));
+            }
+
+            return dp[i][j];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -697,6 +757,35 @@ impl Solution {
         }
 
         dp[n][m]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number}
+     */
+    maxUncrossedLines(nums1: number[], nums2: number[]): number {
+        const n = nums1.length,
+            m = nums2.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(0),
+        );
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < m; j++) {
+                if (nums1[i] === nums2[j]) {
+                    dp[i + 1][j + 1] = 1 + dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = Math.max(dp[i][j + 1], dp[i + 1][j]);
+                }
+            }
+        }
+
+        return dp[n][m];
     }
 }
 ```
@@ -930,6 +1019,33 @@ impl Solution {
         }
 
         prev[nums2.len()]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number}
+     */
+    maxUncrossedLines(nums1: number[], nums2: number[]): number {
+        let prev: number[] = new Array(nums2.length + 1).fill(0);
+
+        for (let i = 0; i < nums1.length; i++) {
+            const dp: number[] = new Array(nums2.length + 1).fill(0);
+            for (let j = 0; j < nums2.length; j++) {
+                if (nums1[i] === nums2[j]) {
+                    dp[j + 1] = 1 + prev[j];
+                } else {
+                    dp[j + 1] = Math.max(dp[j], prev[j + 1]);
+                }
+            }
+            prev = dp;
+        }
+
+        return prev[nums2.length];
     }
 }
 ```
@@ -1241,6 +1357,41 @@ impl Solution {
         }
 
         dp[m]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number}
+     */
+    maxUncrossedLines(nums1: number[], nums2: number[]): number {
+        let n = nums1.length,
+            m = nums2.length;
+        if (m > n) {
+            [nums1, nums2] = [nums2, nums1];
+            [n, m] = [m, n];
+        }
+
+        const dp: number[] = Array(m + 1).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            let prev = 0;
+            for (let j = 0; j < m; j++) {
+                const temp = dp[j + 1];
+                if (nums1[i] === nums2[j]) {
+                    dp[j + 1] = 1 + prev;
+                } else {
+                    dp[j + 1] = Math.max(dp[j + 1], dp[j]);
+                }
+                prev = temp;
+            }
+        }
+
+        return dp[m];
     }
 }
 ```

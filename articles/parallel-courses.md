@@ -421,6 +421,65 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @return {number}
+     */
+    minimumSemesters(n: number, relations: number[][]): number {
+        const graph: { [key: number]: number[] } = {};
+        const inCount: { [key: number]: number } = {}; // or in-degree
+
+        for (let i = 1; i <= n; i++) {
+            graph[i] = [];
+            inCount[i] = 0;
+        }
+
+        for (const [startNode, endNode] of relations) {
+            graph[startNode].push(endNode);
+            inCount[endNode]++;
+        }
+
+        let queue: number[] = [];
+        // we use list here since we are not
+        // popping from the front in this code
+        for (let node = 1; node <= n; node++) {
+            if (inCount[node] === 0) {
+                queue.push(node);
+            }
+        }
+
+        let step = 0;
+        let studiedCount = 0;
+        // start learning with BFS
+        while (queue.length > 0) {
+            // start new semester
+            step++;
+            const nextQueue: number[] = [];
+
+            for (const node of queue) {
+                studiedCount++;
+                const endNodes = graph[node];
+
+                for (const endNode of endNodes) {
+                    inCount[endNode]--;
+                    // if all prerequisite courses learned
+                    if (inCount[endNode] === 0) {
+                        nextQueue.push(endNode);
+                    }
+                }
+            }
+
+            queue = nextQueue;
+        }
+
+        return studiedCount === n ? step : -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -980,6 +1039,69 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @return {number}
+     */
+    minimumSemesters(n: number, relations: number[][]): number {
+        const graph: { [key: number]: number[] } = {};
+        for (let i = 1; i <= n; i++) {
+            graph[i] = [];
+        }
+        for (const [startNode, endNode] of relations) {
+            graph[startNode].push(endNode);
+        }
+
+        const visited: { [key: number]: number } = {};
+
+        const dfsCheckCycle = (node: number): number => {
+            if (visited[node] !== undefined) {
+                return visited[node];
+            }
+            visited[node] = -1;
+            for (const endNode of graph[node]) {
+                if (dfsCheckCycle(endNode) === -1) {
+                    return -1;
+                }
+            }
+            visited[node] = 1;
+            return 1;
+        };
+
+        for (let node = 1; node <= n; node++) {
+            if (dfsCheckCycle(node) === -1) {
+                return -1;
+            }
+        }
+
+        const visitedLength: { [key: number]: number } = {};
+
+        const dfsMaxPath = (node: number): number => {
+            if (visitedLength[node] !== undefined) {
+                return visitedLength[node];
+            }
+            let maxLength = 1;
+            for (const endNode of graph[node]) {
+                const length = dfsMaxPath(endNode);
+                maxLength = Math.max(length + 1, maxLength);
+            }
+            visitedLength[node] = maxLength;
+            return maxLength;
+        };
+
+        let maxLength = 1;
+        for (let node = 1; node <= n; node++) {
+            const length = dfsMaxPath(node);
+            maxLength = Math.max(length, maxLength);
+        }
+        return maxLength;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1400,6 +1522,54 @@ impl Solution {
             max_length = max_length.max(length);
         }
         max_length
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @return {number}
+     */
+    minimumSemesters(n: number, relations: number[][]): number {
+        const graph: { [key: number]: number[] } = {};
+        for (let i = 1; i <= n; i++) {
+            graph[i] = [];
+        }
+        for (const [startNode, endNode] of relations) {
+            graph[startNode].push(endNode);
+        }
+
+        const visited: { [key: number]: number } = {};
+
+        const dfs = (node: number): number => {
+            if (visited[node] !== undefined) {
+                return visited[node];
+            }
+            visited[node] = -1;
+            let maxLength = 1;
+            for (const endNode of graph[node]) {
+                const length = dfs(endNode);
+                if (length === -1) {
+                    return -1;
+                }
+                maxLength = Math.max(length + 1, maxLength);
+            }
+            visited[node] = maxLength;
+            return maxLength;
+        };
+
+        let maxLength = -1;
+        for (let node = 1; node <= n; node++) {
+            const length = dfs(node);
+            if (length === -1) {
+                return -1;
+            }
+            maxLength = Math.max(length, maxLength);
+        }
+        return maxLength;
     }
 }
 ```

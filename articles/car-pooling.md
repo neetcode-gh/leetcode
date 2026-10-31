@@ -225,6 +225,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} trips
+     * @param {number} capacity
+     * @return {boolean}
+     */
+    carPooling(trips: number[][], capacity: number): boolean {
+        trips.sort((a, b) => a[1] - b[1]);
+
+        for (let i = 0; i < trips.length; i++) {
+            let curPass = trips[i][0];
+            for (let j = 0; j < i; j++) {
+                if (trips[j][2] > trips[i][1]) {
+                    curPass += trips[j][0];
+                }
+            }
+            if (curPass > capacity) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -581,6 +608,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} trips
+     * @param {number} capacity
+     * @return {boolean}
+     */
+    carPooling(trips: number[][], capacity: number): boolean {
+        trips.sort((a, b) => a[1] - b[1]);
+
+        const minHeap = new MinPriorityQueue((x: number[]) => x[0]); // [end, numPassengers]
+        let curPass = 0;
+
+        for (const [numPass, start, end] of trips) {
+            while (!minHeap.isEmpty() && minHeap.front()[0] <= start) {
+                curPass -= minHeap.dequeue()[1];
+            }
+
+            curPass += numPass;
+            if (curPass > capacity) {
+                return false;
+            }
+
+            minHeap.enqueue([end, numPass]);
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -840,6 +898,35 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} trips
+     * @param {number} capacity
+     * @return {boolean}
+     */
+    carPooling(trips: number[][], capacity: number): boolean {
+        const points: number[][] = [];
+        for (const [passengers, start, end] of trips) {
+            points.push([start, passengers]);
+            points.push([end, -passengers]);
+        }
+
+        points.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+        let curPass = 0;
+        for (const [point, passengers] of points) {
+            curPass += passengers;
+            if (curPass > capacity) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 ```
@@ -1147,6 +1234,41 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} trips
+     * @param {number} capacity
+     * @return {boolean}
+     */
+    carPooling(trips: number[][], capacity: number): boolean {
+        let L = Infinity,
+            R = -Infinity;
+        for (const [passengers, start, end] of trips) {
+            L = Math.min(L, start);
+            R = Math.max(R, end);
+        }
+
+        const N = R - L + 1;
+        const passChange: number[] = Array(N + 1).fill(0);
+        for (const [passengers, start, end] of trips) {
+            passChange[start - L] += passengers;
+            passChange[end - L] -= passengers;
+        }
+
+        let curPass = 0;
+        for (const change of passChange) {
+            curPass += change;
+            if (curPass > capacity) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 ```

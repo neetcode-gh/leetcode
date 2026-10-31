@@ -304,6 +304,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    restoreIpAddresses(s: string): string[] {
+        const res: string[] = [];
+        if (s.length > 12) return res;
+
+        const backtrack = (i: number, dots: number, curIP: string): void => {
+            if (dots === 4 && i === s.length) {
+                res.push(curIP.slice(0, -1));
+                return;
+            }
+            if (dots > 4) return;
+
+            for (let j = i; j < Math.min(i + 3, s.length); j++) {
+                if (i !== j && s[i] === '0') continue;
+                if (parseInt(s.slice(i, j + 1)) < 256) {
+                    backtrack(j + 1, dots + 1, curIP + s.slice(i, j + 1) + '.');
+                }
+            }
+        };
+
+        backtrack(0, 0, '');
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -671,6 +702,53 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    restoreIpAddresses(s: string): string[] {
+        const res: string[] = [];
+        if (s.length > 12) return res;
+
+        const isValid = (num: string): boolean => {
+            if (num.length > 1 && num[0] === '0') return false;
+            const value = parseInt(num, 10);
+            return value <= 255;
+        };
+
+        for (let seg1 = 1; seg1 < 4; seg1++) {
+            for (let seg2 = 1; seg2 < 4; seg2++) {
+                for (let seg3 = 1; seg3 < 4; seg3++) {
+                    for (let seg4 = 1; seg4 < 4; seg4++) {
+                        if (seg1 + seg2 + seg3 + seg4 !== s.length) continue;
+
+                        const num1 = s.substring(0, seg1);
+                        const num2 = s.substring(seg1, seg1 + seg2);
+                        const num3 = s.substring(
+                            seg1 + seg2,
+                            seg1 + seg2 + seg3,
+                        );
+                        const num4 = s.substring(seg1 + seg2 + seg3);
+
+                        if (
+                            isValid(num1) &&
+                            isValid(num2) &&
+                            isValid(num3) &&
+                            isValid(num4)
+                        ) {
+                            res.push(`${num1}.${num2}.${num3}.${num4}`);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```

@@ -216,6 +216,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} fruits
+     * @return {number}
+     */
+    totalFruit(fruits: number[]): number {
+        let n = fruits.length,
+            res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let types = new Set<number>();
+            let j = i;
+
+            while (j < n && (types.size < 2 || types.has(fruits[j]))) {
+                types.add(fruits[j]);
+                j++;
+            }
+            res = Math.max(res, j - i);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,6 +522,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} fruits
+     * @return {number}
+     */
+    totalFruit(fruits: number[]): number {
+        let count = new Map<number, number>();
+        let l = 0,
+            total = 0,
+            res = 0;
+
+        for (let r = 0; r < fruits.length; r++) {
+            count.set(fruits[r], (count.get(fruits[r]) || 0) + 1);
+            total++;
+
+            while (count.size > 2) {
+                let f = fruits[l];
+                count.set(f, count.get(f)! - 1);
+                total--;
+                if (count.get(f) === 0) {
+                    count.delete(f);
+                }
+                l++;
+            }
+            res = Math.max(res, total);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -732,6 +790,33 @@ impl Solution {
         }
 
         (fruits.len() - l) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} fruits
+     * @return {number}
+     */
+    totalFruit(fruits: number[]): number {
+        let count = new Map<number, number>();
+        let l = 0;
+
+        for (let r = 0; r < fruits.length; r++) {
+            count.set(fruits[r], (count.get(fruits[r]) || 0) + 1);
+
+            if (count.size > 2) {
+                count.set(fruits[l], count.get(fruits[l])! - 1);
+                if (count.get(fruits[l]) === 0) {
+                    count.delete(fruits[l]);
+                }
+                l++;
+            }
+        }
+
+        return fruits.length - l;
     }
 }
 ```
@@ -1120,6 +1205,52 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} fruits
+     * @return {number}
+     */
+    totalFruit(fruits: number[]): number {
+        let l = 0,
+            fruit1_lastIdx = 0,
+            fruit2_lastIdx = -1;
+        let fruit1 = fruits[0],
+            fruit2 = -1,
+            total = 1,
+            res = 1;
+
+        for (let r = 0; r < fruits.length; r++) {
+            let f = fruits[r];
+            if (f === fruit1) {
+                total++;
+                fruit1_lastIdx = r;
+            } else if (f === fruit2 || fruit2 === -1) {
+                total++;
+                fruit2_lastIdx = r;
+                fruit2 = f;
+            } else {
+                if (
+                    fruit2_lastIdx === Math.min(fruit1_lastIdx, fruit2_lastIdx)
+                ) {
+                    [fruit1_lastIdx, fruit2_lastIdx] = [
+                        fruit2_lastIdx,
+                        fruit1_lastIdx,
+                    ];
+                    [fruit1, fruit2] = [fruit2, fruit1];
+                }
+                total -= fruit1_lastIdx - l + 1;
+                l = fruit1_lastIdx + 1;
+                fruit1 = f;
+                fruit1_lastIdx = r;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
     }
 }
 ```

@@ -173,7 +173,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn is_circular_sentence(sentence: String) -> bool {
@@ -190,6 +189,28 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} sentence
+     * @return {boolean}
+     */
+    isCircularSentence(sentence: string): boolean {
+        const w = sentence.split(' ');
+
+        for (let i = 0; i < w.length; i++) {
+            const start = w[i][0];
+            const prevEnd = w[(i - 1 + w.length) % w.length].slice(-1);
+            if (start !== prevEnd) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 ```
@@ -321,7 +342,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn is_circular_sentence(sentence: String) -> bool {
@@ -332,6 +352,23 @@ impl Solution {
             }
         }
         bytes[0] == bytes[bytes.len() - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} sentence
+     * @return {boolean}
+     */
+    isCircularSentence(sentence: string): boolean {
+        for (let i = 0; i < sentence.length; i++) {
+            if (sentence[i] === ' ' && sentence[i - 1] !== sentence[i + 1]) {
+                return false;
+            }
+        }
+        return sentence[0] === sentence[sentence.length - 1];
     }
 }
 ```

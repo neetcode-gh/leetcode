@@ -234,6 +234,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @param {number[]} time
+     * @return {number}
+     */
+    paintWalls(cost: number[], time: number[]): number {
+        const dfs = (i: number, remain: number): number => {
+            if (remain <= 0) {
+                return 0;
+            }
+            if (i === cost.length) {
+                return Infinity;
+            }
+
+            const paint = cost[i] + dfs(i + 1, remain - 1 - time[i]);
+            const skip = dfs(i + 1, remain);
+            return Math.min(paint, skip);
+        };
+
+        return dfs(0, cost.length);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -537,6 +563,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @param {number[]} time
+     * @return {number}
+     */
+    paintWalls(cost: number[], time: number[]): number {
+        const n = cost.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(n + 1).fill(-1),
+        );
+        const dfs = (i: number, remain: number): number => {
+            if (remain <= 0) {
+                return 0;
+            }
+            if (i === n) {
+                return Infinity;
+            }
+            if (dp[i][remain] !== -1) {
+                return dp[i][remain];
+            }
+
+            const paint = cost[i] + dfs(i + 1, remain - 1 - time[i]);
+            const skip = dfs(i + 1, remain);
+            return (dp[i][remain] = Math.min(paint, skip));
+        };
+
+        return dfs(0, cost.length);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -807,6 +866,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @param {number[]} time
+     * @return {number}
+     */
+    paintWalls(cost: number[], time: number[]): number {
+        const n = cost.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(n + 2).fill(0),
+        );
+
+        for (let remain = 1; remain <= n; remain++) {
+            dp[n][remain] = Infinity;
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let remain = 1; remain <= n; remain++) {
+                const paint =
+                    cost[i] + dp[i + 1][Math.max(remain - 1 - time[i], 0)];
+                const skip = dp[i + 1][remain];
+                dp[i][remain] = Math.min(paint, skip);
+            }
+        }
+
+        return dp[0][n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1035,6 +1125,30 @@ impl Solution {
         }
 
         dp[n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @param {number[]} time
+     * @return {number}
+     */
+    paintWalls(cost: number[], time: number[]): number {
+        const n = cost.length;
+        const dp: number[] = Array(n + 2).fill(Infinity);
+        dp[0] = 0;
+
+        for (let i = 0; i < n; i++) {
+            for (let remain = n; remain > 0; remain--) {
+                const paint = cost[i] + dp[Math.max(remain - 1 - time[i], 0)];
+                dp[remain] = Math.min(paint, dp[remain]);
+            }
+        }
+
+        return dp[n];
     }
 }
 ```

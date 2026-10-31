@@ -335,6 +335,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    removeNodes(head: ListNode | null): ListNode | null {
+        let cur = head,
+            arr: ListNode[] = [new ListNode(0, head)];
+        while (cur) {
+            arr.push(cur);
+            cur = cur.next;
+        }
+
+        let rightMaxi = new ListNode(0, null);
+        for (let i = arr.length - 1; i > 0; i--) {
+            if (rightMaxi.val > arr[i].val) {
+                arr[i - 1].next = rightMaxi;
+            } else {
+                rightMaxi = arr[i];
+            }
+        }
+
+        return arr[0].next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,6 +709,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    removeNodes(head: ListNode | null): ListNode | null {
+        let stack: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            while (stack.length && cur.val > stack[stack.length - 1]) {
+                stack.pop();
+            }
+            stack.push(cur.val);
+            cur = cur.next;
+        }
+
+        let dummy = new ListNode();
+        let node: ListNode = dummy;
+
+        for (let num of stack) {
+            node.next = new ListNode(num);
+            node = node.next;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -911,6 +970,24 @@ impl Solution {
             }
         }
         Some(node)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    removeNodes(head: ListNode | null): ListNode | null {
+        if (!head) return null;
+
+        head.next = this.removeNodes(head.next);
+        if (head.next && head.val < head.next.val) {
+            return head.next;
+        }
+        return head;
     }
 }
 ```
@@ -1301,6 +1378,42 @@ impl Solution {
             }
         }
         reverse(head)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    removeNodes(head: ListNode | null): ListNode | null {
+        const reverse = (head: ListNode | null): ListNode | null => {
+            let prev: ListNode | null = null,
+                cur = head;
+            while (cur) {
+                let tmp = cur.next;
+                cur.next = prev;
+                prev = cur;
+                cur = tmp;
+            }
+            return prev;
+        };
+
+        head = reverse(head);
+        let cur = head;
+        let cur_max = head!.val;
+
+        while (cur && cur.next) {
+            if (cur.next.val < cur_max) {
+                cur.next = cur.next.next;
+            } else {
+                cur_max = cur.next.val;
+                cur = cur.next;
+            }
+        }
+        return reverse(head);
     }
 }
 ```

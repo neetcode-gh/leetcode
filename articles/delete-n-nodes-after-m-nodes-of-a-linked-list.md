@@ -342,6 +342,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} m
+     * @param {number} n
+     * @return {ListNode}
+     */
+    deleteNodes(head: ListNode | null, m: number, n: number): ListNode | null {
+        let currentNode = head;
+        let lastMNode = head;
+
+        while (currentNode !== null) {
+            // initialize mCount to m and nCount to n
+            let mCount = m,
+                nCount = n;
+
+            // traverse m nodes
+            while (currentNode !== null && mCount !== 0) {
+                lastMNode = currentNode;
+                currentNode = currentNode.next;
+                mCount--;
+            }
+
+            // traverse n nodes
+            while (currentNode !== null && nCount !== 0) {
+                currentNode = currentNode.next;
+                nCount--;
+            }
+
+            // delete n nodes
+            lastMNode!.next = currentNode;
+        }
+
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

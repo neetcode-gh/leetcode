@@ -373,6 +373,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    reverseKGroup(head: ListNode | null, k: number): ListNode | null {
+        let cur = head;
+        let group = 0;
+        while (cur && group < k) {
+            cur = cur.next;
+            group++;
+        }
+
+        if (group === k) {
+            cur = this.reverseKGroup(cur, k);
+            while (group-- > 0) {
+                let tmp: ListNode | null = head!.next;
+                head!.next = cur;
+                cur = head;
+                head = tmp;
+            }
+            head = cur;
+        }
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -862,6 +892,50 @@ impl Solution {
             tail = Some(node);
         }
         tail
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    reverseKGroup(head: ListNode | null, k: number): ListNode | null {
+        const dummy = new ListNode(0, head);
+        let groupPrev: ListNode = dummy;
+
+        while (true) {
+            const kth = this.getKth(groupPrev, k);
+            if (!kth) {
+                break;
+            }
+            const groupNext = kth.next;
+
+            let prev: ListNode | null = kth.next;
+            let curr = groupPrev.next;
+            while (curr != groupNext) {
+                const tmp: ListNode | null = curr!.next;
+                curr!.next = prev;
+                prev = curr;
+                curr = tmp;
+            }
+
+            const tmp = groupPrev.next!;
+            groupPrev.next = kth;
+            groupPrev = tmp;
+        }
+        return dummy.next;
+    }
+
+    getKth(curr: ListNode | null, k: number): ListNode | null {
+        while (curr && k > 0) {
+            curr = curr.next;
+            k--;
+        }
+        return curr;
     }
 }
 ```

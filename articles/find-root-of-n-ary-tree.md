@@ -254,6 +254,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {_Node[]} tree
+     * @return {_Node}
+     */
+    findRoot(tree: Node[]): Node | null {
+        // set that contains all the child nodes.
+        const seen = new Set<number>();
+
+        // add all the child nodes into the set
+        for (const node of tree) {
+            for (const child of node.children) {
+                // we could either add the value or the node itself.
+                seen.add(child.val);
+            }
+        }
+
+        let root: Node | null = null;
+        // find the node that is not in the child node set.
+        for (const node of tree) {
+            if (!seen.has(node.val)) {
+                root = node;
+                break;
+            }
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -498,6 +530,35 @@ impl Solution {
         }
 
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node[]} tree
+     * @return {_Node}
+     */
+    findRoot(tree: Node[]): Node | null {
+        let value_sum = 0;
+
+        for (let node of tree) {
+            // the value is added as a parent node
+            value_sum += node.val;
+            for (let child of node.children) {
+                // the value is deducted as a child node.
+                value_sum -= child.val;
+            }
+        }
+
+        // the value of the root node is `value_sum`
+        for (let node of tree) {
+            if (node.val === value_sum) {
+                return node;
+            }
+        }
+        return null;
     }
 }
 ```

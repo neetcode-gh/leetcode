@@ -227,6 +227,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    findMinArrowShots(points: number[][]): number {
+        points.sort((a, b) => a[0] - b[0]);
+        let res = points.length,
+            prevEnd = points[0][1];
+
+        for (let i = 1; i < points.length; i++) {
+            let curr = points[i];
+            if (curr[0] <= prevEnd) {
+                res--;
+                prevEnd = Math.min(curr[1], prevEnd);
+            } else {
+                prevEnd = curr[1];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -420,6 +446,29 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    findMinArrowShots(points: number[][]): number {
+        points.sort((a, b) => a[1] - b[1]);
+        let res = 1,
+            prevEnd = points[0][1];
+
+        for (let i = 1; i < points.length; i++) {
+            if (points[i][0] > prevEnd) {
+                prevEnd = points[i][1];
+                res++;
+            }
+        }
+
+        return res;
     }
 }
 ```

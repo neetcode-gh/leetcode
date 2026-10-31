@@ -212,6 +212,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} val
+     * @return {TreeNode}
+     */
+    searchBST(root: TreeNode | null, val: number): TreeNode | null {
+        if (!root || root.val === val) {
+            return root;
+        }
+        return val < root.val
+            ? this.searchBST(root.left, val)
+            : this.searchBST(root.right, val);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,6 +457,22 @@ impl Solution {
             }
         }
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} val
+     * @return {TreeNode}
+     */
+    searchBST(root: TreeNode | null, val: number): TreeNode | null {
+        while (root != null && root.val != val) {
+            root = val < root.val ? root.left : root.right;
+        }
+        return root;
     }
 }
 ```

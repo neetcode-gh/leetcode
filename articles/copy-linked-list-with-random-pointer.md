@@ -266,7 +266,7 @@ class Solution {
  *     public init(_ val: Int) {
  *         self.val = val
  *         self.next = nil
- *    	   self.random = nil
+ *         self.random = nil
  *     }
  * }
  */
@@ -317,6 +317,30 @@ impl Solution {
 
         let mut old_to_copy = HashMap::new();
         dfs(&head, &mut old_to_copy)
+    }
+}
+```
+
+```typescript
+class Solution {
+    private map: Map<Node, Node>;
+
+    constructor() {
+        this.map = new Map();
+    }
+    /**
+     * @param {Node} head
+     * @return {Node}
+     */
+    copyRandomList(head: Node | null): Node | null {
+        if (head === null) return null;
+        if (this.map.has(head)) return this.map.get(head)!;
+
+        const copy = new Node(head.val);
+        this.map.set(head, copy);
+        copy.next = this.copyRandomList(head.next);
+        copy.random = this.map.get(head.random) || null;
+        return copy;
     }
 }
 ```
@@ -628,7 +652,7 @@ class Solution {
  *     public init(_ val: Int) {
  *         self.val = val
  *         self.next = nil
- *    	   self.random = nil
+ *         self.random = nil
  *     }
  * }
  */
@@ -680,6 +704,36 @@ impl Solution {
         }
 
         head.as_ref().map(|n| old_to_copy[&Rc::as_ptr(n)].clone())
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} head
+     * @return {Node}
+     */
+    copyRandomList(head: Node | null): Node | null {
+        const oldToCopy = new Map<Node | null, Node | null>();
+        oldToCopy.set(null, null);
+
+        let cur = head;
+        while (cur) {
+            const copy = new Node(cur.val);
+            oldToCopy.set(cur, copy);
+            cur = cur.next;
+        }
+
+        cur = head;
+        while (cur) {
+            const copy = oldToCopy.get(cur)!;
+            copy.next = oldToCopy.get(cur.next);
+            copy.random = oldToCopy.get(cur.random);
+            cur = cur.next;
+        }
+
+        return oldToCopy.get(head)!;
     }
 }
 ```
@@ -1013,33 +1067,33 @@ class Solution {
  *     public init(_ val: Int) {
  *         self.val = val
  *         self.next = nil
- *    	   self.random = nil
+ *         self.random = nil
  *     }
  * }
  */
 
 class Solution {
-   func copyRandomList(_ head: Node?) -> Node? {
-       var oldToCopy = [Node?: Node?]()
+    func copyRandomList(_ head: Node?) -> Node? {
+        var oldToCopy = [Node?: Node?]()
 
-       func getNode(_ node: Node?) -> Node? {
-           if node == nil { return nil }
-           if oldToCopy[node] == nil {
-               oldToCopy[node] = Node(0)
-           }
-           return oldToCopy[node]!
-       }
+        func getNode(_ node: Node?) -> Node? {
+            if node == nil { return nil }
+            if oldToCopy[node] == nil {
+                oldToCopy[node] = Node(0)
+            }
+            return oldToCopy[node]!
+        }
 
-       var cur = head
-       while cur != nil {
-           getNode(cur)!.val = cur!.val
-           getNode(cur)!.next = getNode(cur!.next)
-           getNode(cur)!.random = getNode(cur!.random)
-           cur = cur!.next
-       }
+        var cur = head
+        while cur != nil {
+            getNode(cur)!.val = cur!.val
+            getNode(cur)!.next = getNode(cur!.next)
+            getNode(cur)!.random = getNode(cur!.random)
+            cur = cur!.next
+        }
 
-       return getNode(head)
-   }
+        return getNode(head)
+    }
 }
 ```
 
@@ -1071,6 +1125,37 @@ impl Solution {
         }
 
         get_copy(&head, &mut old_to_copy)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} head
+     * @return {Node}
+     */
+    copyRandomList(head: Node | null): Node | null {
+        const oldToCopy = new Map<Node | null, Node | null>();
+        oldToCopy.set(null, null);
+
+        let cur = head;
+        while (cur !== null) {
+            if (!oldToCopy.has(cur)) {
+                oldToCopy.set(cur, new Node(0));
+            }
+            oldToCopy.get(cur)!.val = cur.val;
+            if (!oldToCopy.has(cur.next)) {
+                oldToCopy.set(cur.next, new Node(0));
+            }
+            oldToCopy.get(cur)!.next = oldToCopy.get(cur.next);
+            if (!oldToCopy.has(cur.random)) {
+                oldToCopy.set(cur.random, new Node(0));
+            }
+            oldToCopy.get(cur)!.random = oldToCopy.get(cur.random);
+            cur = cur.next;
+        }
+        return oldToCopy.get(head)!;
     }
 }
 ```
@@ -1489,7 +1574,7 @@ class Solution {
  *     public init(_ val: Int) {
  *         self.val = val
  *         self.next = nil
- *    	   self.random = nil
+ *         self.random = nil
  *     }
  * }
  */
@@ -1570,6 +1655,50 @@ impl Solution {
         }
 
         new_head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} head
+     * @return {Node}
+     */
+    copyRandomList(head: Node | null): Node | null {
+        if (!head) {
+            return null;
+        }
+
+        let l1: Node | null = head;
+        while (l1) {
+            const l2 = new Node(l1.val);
+            l2.next = l1.next;
+            l1.next = l2;
+            l1 = l2.next;
+        }
+
+        const newHead = head.next;
+
+        l1 = head;
+        while (l1) {
+            if (l1.random) {
+                l1.next.random = l1.random.next;
+            }
+            l1 = l1.next.next;
+        }
+
+        l1 = head;
+        while (l1) {
+            const l2 = l1.next;
+            l1.next = l2.next;
+            if (l2.next) {
+                l2.next = l2.next.next;
+            }
+            l1 = l1.next;
+        }
+
+        return newHead;
     }
 }
 ```
@@ -1985,7 +2114,7 @@ class Solution {
  *     public init(_ val: Int) {
  *         self.val = val
  *         self.next = nil
- *    	   self.random = nil
+ *         self.random = nil
  *     }
  * }
  */
@@ -2064,6 +2193,47 @@ impl Solution {
         }
 
         new_head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} head
+     * @return {Node}
+     */
+    copyRandomList(head: Node | null): Node | null {
+        if (head === null) {
+            return null;
+        }
+
+        let l1: Node | null = head;
+        while (l1) {
+            let l2 = new Node(l1.val);
+            l2.next = l1.random;
+            l1.random = l2;
+            l1 = l1.next;
+        }
+
+        let newHead = head.random;
+
+        l1 = head;
+        while (l1) {
+            let l2 = l1.random;
+            l2.random = l2.next ? l2.next.random : null;
+            l1 = l1.next;
+        }
+
+        l1 = head;
+        while (l1) {
+            let l2 = l1.random;
+            l1.random = l2.next;
+            l2.next = l1.next ? l1.next.random : null;
+            l1 = l1.next;
+        }
+
+        return newHead;
     }
 }
 ```

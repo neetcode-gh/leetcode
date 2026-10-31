@@ -293,6 +293,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} maxPts
+     * @return {number}
+     */
+    new21Game(n: number, k: number, maxPts: number): number {
+        const dp: number[] = new Array(k).fill(-1);
+
+        const dfs = (score: number): number => {
+            if (score >= k) {
+                return score <= n ? 1 : 0;
+            }
+            if (dp[score] !== -1) {
+                return dp[score];
+            }
+
+            let prob = 0;
+            for (let i = 1; i <= maxPts; i++) {
+                prob += dfs(score + i);
+            }
+
+            dp[score] = prob / maxPts;
+            return dp[score];
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -612,6 +645,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} maxPts
+     * @return {number}
+     */
+    new21Game(n: number, k: number, maxPts: number): number {
+        const dp: number[] = new Array(k + maxPts).fill(-1);
+
+        const dfs = (score: number): number => {
+            if (score === k - 1) {
+                return Math.min(n - k + 1, maxPts) / maxPts;
+            }
+            if (score > n) {
+                return 0;
+            }
+            if (score >= k) {
+                return 1.0;
+            }
+            if (dp[score] !== -1) {
+                return dp[score];
+            }
+
+            dp[score] = dfs(score + 1);
+            dp[score] -= (dfs(score + 1 + maxPts) - dfs(score + 1)) / maxPts;
+            return dp[score];
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -812,7 +880,7 @@ class Solution {
         var dp = Array(repeating: 0.0, count: n + 1)
         dp[0] = 1.0
 
-        for score in 1...n {
+        for score in stride(from: 1, through: n, by: 1) {
             for draw in 1...maxPts {
                 if score - draw >= 0 && score - draw < k {
                     dp[score] += dp[score - draw] / Double(maxPts)
@@ -821,7 +889,7 @@ class Solution {
         }
 
         var result = 0.0
-        for i in k...n {
+        for i in stride(from: k, through: n, by: 1) {
             result += dp[i]
         }
 
@@ -848,6 +916,36 @@ impl Solution {
         }
 
         dp[k..=n].iter().sum()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} maxPts
+     * @return {number}
+     */
+    new21Game(n: number, k: number, maxPts: number): number {
+        const dp: number[] = new Array(n + 1).fill(0);
+        dp[0] = 1.0;
+
+        for (let score = 1; score <= n; score++) {
+            for (let draw = 1; draw <= maxPts; draw++) {
+                if (score - draw >= 0 && score - draw < k) {
+                    dp[score] += dp[score - draw] / maxPts;
+                }
+            }
+        }
+
+        let result = 0.0;
+        for (let i = k; i <= n; i++) {
+            result += dp[i];
+        }
+
+        return result;
     }
 }
 ```
@@ -1101,6 +1199,36 @@ impl Solution {
             window_sum += dp[&i] - remove;
         }
         dp[&0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} maxPts
+     * @return {number}
+     */
+    new21Game(n: number, k: number, maxPts: number): number {
+        if (k === 0) {
+            return 1.0;
+        }
+        let windowSum = 0.0;
+        for (let i = k; i < k + maxPts; i++) {
+            windowSum += i <= n ? 1.0 : 0.0;
+        }
+        let dp: { [key: number]: number } = {};
+        for (let i = k - 1; i >= 0; i--) {
+            dp[i] = windowSum / maxPts;
+            let remove = 0.0;
+            if (i + maxPts <= n) {
+                remove = dp[i + maxPts] !== undefined ? dp[i + maxPts] : 1.0;
+            }
+            windowSum += dp[i] - remove;
+        }
+        return dp[0];
     }
 }
 ```

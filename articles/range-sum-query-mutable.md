@@ -228,6 +228,41 @@ impl NumArray {
 }
 ```
 
+```typescript
+class NumArray {
+    private nums: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.nums = nums;
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        this.nums[index] = val;
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        let res = 0;
+        for (let i = left; i <= right; i++) {
+            res += this.nums[i];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1007,6 +1042,140 @@ impl NumArray {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: Int32Array;
+
+    /**
+     * @constructor
+     * @param {number} N
+     * @param {number[]} A
+     */
+    constructor(N: number, A: number[]) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = new Int32Array(2 * this.n);
+        this.build(0, 0, this.n - 1, A);
+    }
+
+    /**
+     * @param {number} node
+     * @param {number} start
+     * @param {number} end
+     * @param {number[]} A
+     */
+    build(node: number, start: number, end: number, A: number[]): void {
+        if (start === end) {
+            this.tree[node] = start < A.length ? A[start] : 0;
+        } else {
+            const mid = Math.floor((start + end) / 2);
+            this.build(2 * node + 1, start, mid, A);
+            this.build(2 * node + 2, mid + 1, end, A);
+            this.tree[node] = this.tree[2 * node + 1] + this.tree[2 * node + 2];
+        }
+    }
+
+    /**
+     * @param {number} node
+     * @param {number} start
+     * @param {number} end
+     * @param {number} idx
+     * @param {number} val
+     * @return {void}
+     */
+    _update(
+        node: number,
+        start: number,
+        end: number,
+        idx: number,
+        val: number,
+    ): void {
+        if (start === end) {
+            this.tree[node] = val;
+        } else {
+            const mid = Math.floor((start + end) / 2);
+            if (idx <= mid) {
+                this._update(2 * node + 1, start, mid, idx, val);
+            } else {
+                this._update(2 * node + 2, mid + 1, end, idx, val);
+            }
+            this.tree[node] = this.tree[2 * node + 1] + this.tree[2 * node + 2];
+        }
+    }
+
+    /**
+     * @param {number} node
+     * @param {number} start
+     * @param {number} end
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    _query(node: number, start: number, end: number, l: number, r: number): number {
+        if (r < start || end < l) {
+            return 0;
+        }
+        if (l <= start && end <= r) {
+            return this.tree[node];
+        }
+        const mid = Math.floor((start + end) / 2);
+        const leftSum = this._query(2 * node + 1, start, mid, l, r);
+        const rightSum = this._query(2 * node + 2, mid + 1, end, l, r);
+        return leftSum + rightSum;
+    }
+
+    /**
+     * @param {number} idx
+     * @param {number} val
+     * @return {void}
+     */
+    update(idx: number, val: number): void {
+        this._update(0, 0, this.n - 1, idx, val);
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        return this._query(0, 0, this.n - 1, l, r);
+    }
+}
+
+class NumArray {
+    private segTree: SegmentTree;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.segTree = new SegmentTree(nums.length, nums);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        this.segTree.update(index, val);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.segTree.query(left, right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1635,6 +1804,103 @@ impl NumArray {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: Int32Array;
+
+    /**
+     * @constructor
+     * @param {number} N
+     * @param {number[]} A
+     */
+    constructor(N: number, A: number[]) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = new Int32Array(0);
+        this.build(N, A);
+    }
+
+    /**
+     * @param {number} N
+     * @param {number[]} A
+     * @return {void}
+     */
+    build(N: number, A: number[]): void {
+        this.tree = new Int32Array(2 * this.n);
+        for (let i = 0; i < N; i++) {
+            this.tree[this.n + i] = A[i];
+        }
+        for (let i = this.n - 1; i > 0; i--) {
+            this.tree[i] = this.tree[i << 1] + this.tree[(i << 1) | 1];
+        }
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     * @return {void}
+     */
+    update(i: number, val: number): void {
+        this.tree[this.n + i] = val;
+        for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
+            this.tree[j] = this.tree[j << 1] + this.tree[(j << 1) | 1];
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        let res = 0;
+        l += this.n;
+        r += this.n + 1;
+
+        while (l < r) {
+            if (l & 1) res += this.tree[l++];
+            if (r & 1) res += this.tree[--r];
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return res;
+    }
+}
+
+class NumArray {
+    private segTree: SegmentTree;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.segTree = new SegmentTree(nums.length, nums);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        this.segTree.update(index, val);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.segTree.query(left, right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2208,6 +2474,92 @@ impl NumArray {
 
     fn sum_range(&self, left: i32, right: i32) -> i32 {
         self.sq.query(left as usize, right as usize)
+    }
+}
+```
+
+```typescript
+class SqrtDecomposition {
+    private nums: number[];
+    private n: number;
+    private blockSize: number;
+    private blocks: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.nums = [...nums];
+        this.n = nums.length;
+        this.blockSize = Math.floor(Math.sqrt(this.n)) + 1;
+        this.blocks = new Array(this.blockSize).fill(0);
+
+        for (let i = 0; i < this.n; i++) {
+            this.blocks[Math.floor(i / this.blockSize)] += nums[i];
+        }
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    query(left: number, right: number): number {
+        let totalSum = 0;
+        while (left <= right && left % this.blockSize !== 0) {
+            totalSum += this.nums[left++];
+        }
+
+        while (left + this.blockSize - 1 <= right) {
+            totalSum += this.blocks[Math.floor(left / this.blockSize)];
+            left += this.blockSize;
+        }
+
+        while (left <= right) {
+            totalSum += this.nums[left++];
+        }
+
+        return totalSum;
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        let blockIndex = Math.floor(index / this.blockSize);
+        this.blocks[blockIndex] += val - this.nums[index];
+        this.nums[index] = val;
+    }
+}
+
+class NumArray {
+    private sq: SqrtDecomposition;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.sq = new SqrtDecomposition(nums);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        this.sq.update(index, val);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.sq.query(left, right);
     }
 }
 ```
@@ -2836,6 +3188,107 @@ impl NumArray {
 }
 ```
 
+```typescript
+class SqrtDecomposition {
+    private nums: number[];
+    private n: number;
+    private blockSize: number;
+    private prefixSums: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.nums = [...nums];
+        this.n = nums.length;
+        this.blockSize = Math.floor(Math.sqrt(this.n)) + 1;
+        this.prefixSums = [...nums];
+
+        for (let i = 1; i < this.n; i++) {
+            if (i % this.blockSize !== 0) {
+                this.prefixSums[i] += this.prefixSums[i - 1];
+            }
+        }
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    query(left: number, right: number): number {
+        let totalSum =
+            left % this.blockSize !== 0 ? -this.prefixSums[left - 1] : 0;
+
+        while (
+            Math.floor(left / this.blockSize) <
+            Math.floor(right / this.blockSize)
+        ) {
+            const blockEnd = Math.min(
+                this.n - 1,
+                Math.floor(left / this.blockSize) * this.blockSize +
+                    this.blockSize -
+                    1,
+            );
+            totalSum += this.prefixSums[blockEnd];
+            left = blockEnd + 1;
+        }
+
+        totalSum += this.prefixSums[right];
+        return totalSum;
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        const diff = val - this.nums[index];
+        this.nums[index] = val;
+
+        const blockEnd = Math.min(
+            this.n - 1,
+            Math.floor(index / this.blockSize) * this.blockSize +
+                this.blockSize -
+                1,
+        );
+        for (let i = index; i <= blockEnd; i++) {
+            this.prefixSums[i] += diff;
+        }
+    }
+}
+
+class NumArray {
+    private sq: SqrtDecomposition;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.sq = new SqrtDecomposition(nums);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        this.sq.update(index, val);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.sq.query(left, right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -3386,6 +3839,93 @@ impl NumArray {
 
     fn sum_range(&self, left: i32, right: i32) -> i32 {
         self.bit.query(left as usize, right as usize)
+    }
+}
+```
+
+```typescript
+class BIT {
+    private n: number;
+    private tree: Int32Array;
+    private nums: Int32Array;
+
+    /**
+     * @constructor
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.n = nums.length + 1;
+        this.tree = new Int32Array(this.n);
+        this.nums = new Int32Array(this.n);
+        for (let i = 0; i < this.n - 1; i++) {
+            this.update(i, nums[i]);
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        index++;
+        const diff = val - this.nums[index];
+        this.nums[index] = val;
+        while (index < this.n) {
+            this.tree[index] += diff;
+            index += index & -index;
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    prefixSum(index: number): number {
+        let totalSum = 0;
+        while (index > 0) {
+            totalSum += this.tree[index];
+            index -= index & -index;
+        }
+        return totalSum;
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    query(left: number, right: number): number {
+        return this.prefixSum(right + 1) - this.prefixSum(left);
+    }
+}
+
+class NumArray {
+    private bit: BIT;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.bit = new BIT(nums);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        this.bit.update(index, val);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.bit.query(left, right);
     }
 }
 ```

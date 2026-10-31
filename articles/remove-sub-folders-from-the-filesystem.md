@@ -219,6 +219,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} folder
+     * @return {string[]}
+     */
+    removeSubfolders(folder: string[]): string[] {
+        let res: string[] = [];
+        let folder_set = new Set<string>(folder);
+
+        for (let f of folder) {
+            res.push(f);
+            for (let i = 0; i < f.length; i++) {
+                if (f[i] === '/' && folder_set.has(f.slice(0, i))) {
+                    res.pop();
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +424,27 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} folder
+     * @return {string[]}
+     */
+    removeSubfolders(folder: string[]): string[] {
+        folder.sort();
+        let res = [folder[0]];
+
+        for (let i = 1; i < folder.length; i++) {
+            if (!folder[i].startsWith(res[res.length - 1] + '/')) {
+                res.push(folder[i]);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -901,6 +947,73 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Trie {
+    children: (Trie | null)[];
+    end_of_folder: boolean;
+
+    constructor() {
+        this.children = new Array(128).fill(null);
+        this.end_of_folder = false;
+    }
+
+    /**
+     * @param {string[]} path
+     * @return {void}
+     */
+    add(path: string): void {
+        let cur: Trie = this;
+        for (let f of path.split('/')) {
+            if (f === '') continue;
+            for (let c of f) {
+                if (!cur.children[c.charCodeAt(0)])
+                    cur.children[c.charCodeAt(0)] = new Trie();
+                cur = cur.children[c.charCodeAt(0)]!;
+            }
+            if (!cur.children['/'.charCodeAt(0)])
+                cur.children['/'.charCodeAt(0)] = new Trie();
+            cur = cur.children['/'.charCodeAt(0)]!;
+        }
+        cur.end_of_folder = true;
+    }
+
+    /**
+     * @param {string} path
+     * @return {boolean}
+     */
+    prefixSearch(path: string): boolean {
+        let cur: Trie = this;
+        let folders = path.split('/');
+        for (let i = 0; i < folders.length - 1; i++) {
+            if (folders[i] === '') continue;
+            for (let c of folders[i]) {
+                cur = cur.children[c.charCodeAt(0)]!;
+            }
+            cur = cur.children['/'.charCodeAt(0)]!;
+            if (cur.end_of_folder) return true;
+        }
+        return false;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[]} folder
+     * @return {string[]}
+     */
+    removeSubfolders(folder: string[]): string[] {
+        let trie = new Trie();
+        for (let f of folder) trie.add(f);
+
+        let res: string[] = [];
+        for (let f of folder) {
+            if (!trie.prefixSearch(f)) res.push(f);
+        }
+        return res;
     }
 }
 ```

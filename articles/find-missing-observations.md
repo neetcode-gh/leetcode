@@ -233,6 +233,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} rolls
+     * @param {number} mean
+     * @param {number} n
+     * @return {number[]}
+     */
+    missingRolls(rolls: number[], mean: number, n: number): number[] {
+        const m = rolls.length;
+        let nTotal =
+            mean * (n + m) - rolls.reduce((sum, roll) => sum + roll, 0);
+
+        if (nTotal < n || nTotal > n * 6) {
+            return [];
+        }
+
+        const res: number[] = [];
+        while (nTotal > 0) {
+            const dice = Math.min(nTotal - n + 1, 6);
+            res.push(dice);
+            nTotal -= dice;
+            n--;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,6 +501,32 @@ impl Solution {
         let mut res = vec![avg as i32; n - rem];
         res.extend(vec![(avg + 1) as i32; rem]);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} rolls
+     * @param {number} mean
+     * @param {number} n
+     * @return {number[]}
+     */
+    missingRolls(rolls: number[], mean: number, n: number): number[] {
+        const m = rolls.length;
+        const nTotal =
+            mean * (n + m) - rolls.reduce((sum, roll) => sum + roll, 0);
+
+        if (nTotal < n || nTotal > n * 6) {
+            return [];
+        }
+
+        const avg = Math.floor(nTotal / n);
+        const rem = nTotal - avg * n;
+        return Array(n - rem)
+            .fill(avg)
+            .concat(Array(rem).fill(avg + 1));
     }
 }
 ```

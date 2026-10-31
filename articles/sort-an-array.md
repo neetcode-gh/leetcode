@@ -481,6 +481,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArray(nums: number[]): number[] {
+        function partition(left: number, right: number): number {
+            const mid = (left + right) >> 1;
+            [nums[mid], nums[left + 1]] = [nums[left + 1], nums[mid]];
+
+            if (nums[left] > nums[right])
+                [nums[left], nums[right]] = [nums[right], nums[left]];
+            if (nums[left + 1] > nums[right])
+                [nums[left + 1], nums[right]] = [nums[right], nums[left + 1]];
+            if (nums[left] > nums[left + 1])
+                [nums[left], nums[left + 1]] = [nums[left + 1], nums[left]];
+
+            const pivot = nums[left + 1];
+            let i = left + 1;
+            let j = right;
+
+            while (true) {
+                while (nums[++i] < pivot);
+                while (nums[--j] > pivot);
+                if (i > j) break;
+                [nums[i], nums[j]] = [nums[j], nums[i]];
+            }
+
+            nums[left + 1] = nums[j];
+            nums[j] = pivot;
+            return j;
+        }
+
+        function quickSort(left: number, right: number): void {
+            if (right <= left + 1) {
+                if (right == left + 1 && nums[right] < nums[left])
+                    [nums[left], nums[right]] = [nums[right], nums[left]];
+                return;
+            }
+
+            const j = partition(left, right);
+            quickSort(left, j - 1);
+            quickSort(j + 1, right);
+        }
+
+        quickSort(0, nums.length - 1);
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -899,6 +951,61 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArray(nums: number[]): number[] {
+        this.mergeSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+
+    /**
+     * @param {number[]} arr
+     * @param {number} l
+     * @param {number} r
+     * @return {void}
+     */
+    mergeSort(arr: number[], l: number, r: number): void {
+        if (l >= r) return;
+        let m = Math.floor((l + r) / 2);
+        this.mergeSort(arr, l, m);
+        this.mergeSort(arr, m + 1, r);
+        this.merge(arr, l, m, r);
+    }
+
+    /**
+     * @param {number[]} arr
+     * @param {number} l
+     * @param {number} m
+     * @param {number} r
+     * @return {void}
+     */
+    merge(arr: number[], l: number, m: number, r: number): void {
+        let temp: number[] = [];
+        let i = l,
+            j = m + 1;
+
+        while (i <= m && j <= r) {
+            if (arr[i] <= arr[j]) {
+                temp.push(arr[i++]);
+            } else {
+                temp.push(arr[j++]);
+            }
+        }
+
+        while (i <= m) temp.push(arr[i++]);
+        while (j <= r) temp.push(arr[j++]);
+
+        for (let i = l; i <= r; i++) {
+            arr[i] = temp[i - l];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1289,6 +1396,60 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArray(nums: number[]): number[] {
+        this.heapSort(nums);
+        return nums;
+    }
+
+    /**
+     * @param {number[]} arr
+     * @param {number} n
+     * @param {number} i
+     * @return {void}
+     */
+    heapify(arr: number[], n: number, i: number): void {
+        let l = (i << 1) + 1;
+        let r = (i << 1) + 2;
+        let largestNode = i;
+
+        if (l < n && arr[l] > arr[largestNode]) {
+            largestNode = l;
+        }
+
+        if (r < n && arr[r] > arr[largestNode]) {
+            largestNode = r;
+        }
+
+        if (largestNode !== i) {
+            [arr[i], arr[largestNode]] = [arr[largestNode], arr[i]];
+            this.heapify(arr, n, largestNode);
+        }
+    }
+
+    /**
+     * @param {number[]} arr
+     * @return {void}
+     */
+    heapSort(arr: number[]): void {
+        let n = arr.length;
+        for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+            this.heapify(arr, n, i);
+        }
+
+        for (let i = n - 1; i > 0; i--) {
+            [arr[0], arr[i]] = [arr[i], arr[0]];
+            this.heapify(arr, i, 0);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1412,10 +1573,10 @@ class Solution {
      */
     countingSort(arr) {
         let count = new Map();
-        let minVal = Math.min(...nums);
-        let maxVal = Math.max(...nums);
+        let minVal = Math.min(...arr);
+        let maxVal = Math.max(...arr);
 
-        nums.forEach((val) => {
+        arr.forEach((val) => {
             if (!count.has(val)) {
                 count.set(val, 0);
             }
@@ -1425,7 +1586,7 @@ class Solution {
         let index = 0;
         for (let val = minVal; val <= maxVal; val += 1) {
             while (count.get(val) > 0) {
-                nums[index] = val;
+                arr[index] = val;
                 index += 1;
                 count.set(val, count.get(val) - 1);
             }
@@ -1583,6 +1744,45 @@ impl Solution {
                 arr[index] = val;
                 index += 1;
                 c -= 1;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArray(nums: number[]): number[] {
+        this.countingSort(nums);
+        return nums;
+    }
+
+    /**
+     * @param {number[]} arr
+     * @return {void}
+     */
+    countingSort(arr: number[]): void {
+        let count = new Map<number, number>();
+        let minVal = Math.min(...arr);
+        let maxVal = Math.max(...arr);
+
+        arr.forEach((val) => {
+            if (!count.has(val)) {
+                count.set(val, 0);
+            }
+            count.set(val, count.get(val)! + 1);
+        });
+
+        let index = 0;
+        for (let val = minVal; val <= maxVal; val += 1) {
+            while (count.get(val)! > 0) {
+                arr[index] = val;
+                index += 1;
+                count.set(val, count.get(val)! - 1);
             }
         }
     }
@@ -2170,6 +2370,73 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArray(nums: number[]): number[] {
+        const negatives = nums.filter((num) => num < 0).map((num) => -num);
+        const positives = nums.filter((num) => num >= 0);
+
+        if (negatives.length > 0) {
+            this.radixSort(negatives);
+            negatives.reverse();
+            for (let i = 0; i < negatives.length; i++) {
+                negatives[i] = -negatives[i];
+            }
+        }
+
+        if (positives.length > 0) {
+            this.radixSort(positives);
+        }
+
+        return [...negatives, ...positives];
+    }
+
+    /**
+     * @param {number[]} arr
+     * @return {void}
+     */
+    radixSort(arr: number[]): void {
+        const maxElement = Math.max(...arr);
+        let d = 1;
+
+        while (Math.floor(maxElement / d) > 0) {
+            this.countSort(arr, d);
+            d *= 10;
+        }
+    }
+
+    /**
+     * @param {number[]} arr
+     * @param {number} d
+     * @return {void}
+     */
+    countSort(arr: number[], d: number): void {
+        const count: number[] = Array(10).fill(0);
+        for (const num of arr) {
+            count[Math.floor(num / d) % 10]++;
+        }
+        for (let i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        const res: number[] = Array(arr.length);
+        for (let i = arr.length - 1; i >= 0; i--) {
+            const idx = Math.floor(arr[i] / d) % 10;
+            res[count[idx] - 1] = arr[i];
+            count[idx]--;
+        }
+
+        for (let i = 0; i < arr.length; i++) {
+            arr[i] = res[i];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2440,6 +2707,38 @@ impl Solution {
             }
             gap /= 2;
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArray(nums: number[]): number[] {
+        const n = nums.length;
+        if (n === 1) return nums;
+
+        const shellSort = (): void => {
+            let gap = Math.floor(n / 2);
+            while (gap >= 1) {
+                for (let i = gap; i < n; i++) {
+                    let key = nums[i];
+                    let j = i - gap;
+                    while (j >= 0 && nums[j] > key) {
+                        nums[j + gap] = nums[j];
+                        j -= gap;
+                    }
+                    nums[j + gap] = key;
+                }
+                gap = Math.floor(gap / 2);
+            }
+        };
+
+        shellSort();
+        return nums;
     }
 }
 ```

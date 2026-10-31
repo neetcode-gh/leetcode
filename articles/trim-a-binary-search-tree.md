@@ -143,6 +143,40 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode TrimBST(TreeNode root, int low, int high) {
+        if (root == null) {
+            return null;
+        }
+
+        if (root.val > high) {
+            return TrimBST(root.left, low, high);
+        }
+        if (root.val < low) {
+            return TrimBST(root.right, low, high);
+        }
+
+        root.left = TrimBST(root.left, low, high);
+        root.right = TrimBST(root.right, low, high);
+        return root;
+    }
+}
+```
+
 ```go
 /**
  * Definition for a binary tree node.
@@ -252,6 +286,27 @@ impl Solution {
         node.borrow_mut().left = left;
         node.borrow_mut().right = right;
         Some(node)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} low
+     * @param {number} high
+     * @return {TreeNode}
+     */
+    trimBST(root: TreeNode | null, low: number, high: number): TreeNode | null {
+        if (!root) return null;
+
+        if (root.val > high) return this.trimBST(root.left, low, high);
+        if (root.val < low) return this.trimBST(root.right, low, high);
+
+        root.left = this.trimBST(root.left, low, high);
+        root.right = this.trimBST(root.right, low, high);
+        return root;
     }
 }
 ```
@@ -463,6 +518,52 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode TrimBST(TreeNode root, int low, int high) {
+        while (root != null && (root.val < low || root.val > high)) {
+            root = (root.val < low) ? root.right : root.left;
+        }
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.Push(root);
+
+        while (stack.Count > 0) {
+            TreeNode node = stack.Pop();
+            if (node == null) continue;
+
+            bool leftOut = node.left != null && node.left.val < low;
+            bool rightOut = node.right != null && node.right.val > high;
+
+            if (leftOut) node.left = node.left.right;
+            if (rightOut) node.right = node.right.left;
+
+            if (leftOut || rightOut) {
+                stack.Push(node);
+            } else {
+                if (node.left != null) stack.Push(node.left);
+                if (node.right != null) stack.Push(node.right);
+            }
+        }
+
+        return root;
+    }
+}
+```
+
 ```go
 /**
  * Definition for a binary tree node.
@@ -531,7 +632,7 @@ class Solution {
             root = if (root.`val` < low) root.right else root.left
         }
 
-        val stack = ArrayDeque<TreeNode?>()
+        val stack = LinkedList<TreeNode?>()
         stack.addLast(root)
 
         while (stack.isNotEmpty()) {
@@ -672,6 +773,44 @@ impl Solution {
         }
 
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} low
+     * @param {number} high
+     * @return {TreeNode}
+     */
+    trimBST(root: TreeNode | null, low: number, high: number): TreeNode | null {
+        while (root && (root.val < low || root.val > high)) {
+            root = root.val < low ? root.right : root.left;
+        }
+
+        const stack: (TreeNode | null)[] = [root];
+
+        while (stack.length > 0) {
+            let node = stack.pop();
+            if (!node) continue;
+
+            let leftOut = node.left && node.left.val < low;
+            let rightOut = node.right && node.right.val > high;
+
+            if (leftOut) node.left = node.left!.right;
+            if (rightOut) node.right = node.right!.left;
+
+            if (leftOut || rightOut) {
+                stack.push(node);
+            } else {
+                if (node.left) stack.push(node.left);
+                if (node.right) stack.push(node.right);
+            }
+        }
+
+        return root;
     }
 }
 ```
@@ -855,6 +994,47 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode TrimBST(TreeNode root, int low, int high) {
+        while (root != null && (root.val < low || root.val > high)) {
+            root = (root.val < low) ? root.right : root.left;
+        }
+
+        TreeNode tmpRoot = root;
+        while (root != null) {
+            while (root.left != null && root.left.val < low) {
+                root.left = root.left.right;
+            }
+            root = root.left;
+        }
+
+        root = tmpRoot;
+        while (root != null) {
+            while (root.right != null && root.right.val > high) {
+                root.right = root.right.left;
+            }
+            root = root.right;
+        }
+
+        return tmpRoot;
+    }
+}
+```
+
 ```go
 /**
  * Definition for a binary tree node.
@@ -1028,6 +1208,40 @@ impl Solution {
         }
 
         tmp_root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} low
+     * @param {number} high
+     * @return {TreeNode}
+     */
+    trimBST(root: TreeNode | null, low: number, high: number): TreeNode | null {
+        while (root && (root.val < low || root.val > high)) {
+            root = root.val < low ? root.right : root.left;
+        }
+
+        let tmpRoot = root;
+        while (root) {
+            while (root.left && root.left.val < low) {
+                root.left = root.left.right;
+            }
+            root = root.left;
+        }
+
+        root = tmpRoot;
+        while (root) {
+            while (root.right && root.right.val > high) {
+                root.right = root.right.left;
+            }
+            root = root.right;
+        }
+
+        return tmpRoot;
     }
 }
 ```

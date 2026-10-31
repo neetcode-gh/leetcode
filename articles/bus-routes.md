@@ -416,6 +416,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} routes
+     * @param {number} source
+     * @param {number} target
+     * @return {number}
+     */
+    numBusesToDestination(routes: number[][], source: number, target: number): number {
+        if (source === target) return 0;
+        let n = routes.length;
+        let stops = new Map<number, number[]>();
+        for (let bus = 0; bus < n; bus++) {
+            for (let stop of routes[bus]) {
+                if (!stops.has(stop)) stops.set(stop, []);
+                stops.get(stop)!.push(bus);
+            }
+        }
+
+        let seenBus = new Set<number>();
+        let seenStop = new Set<number>([source]);
+        let q = new Queue([source]);
+        let res = 0;
+
+        while (!q.isEmpty()) {
+            let size = q.size();
+            for (let k = 0; k < size; k++) {
+                let stop: number = q.pop();
+                if (stop === target) return res;
+                for (let bus of stops.get(stop) || []) {
+                    if (seenBus.has(bus)) continue;
+                    seenBus.add(bus);
+                    for (let nxtStop of routes[bus]) {
+                        if (seenStop.has(nxtStop)) continue;
+                        seenStop.add(nxtStop);
+                        q.push(nxtStop);
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -946,6 +992,64 @@ impl Solution {
             res += 1;
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} routes
+     * @param {number} source
+     * @param {number} target
+     * @return {number}
+     */
+    numBusesToDestination(routes: number[][], source: number, target: number): number {
+        if (source === target) return 0;
+
+        const n = routes.length;
+        const adjList: number[][] = Array.from({ length: n }, () => []);
+        const stopToRoutes = new Map<number, number[]>();
+        for (let bus = 0; bus < n; bus++) {
+            for (let stop of routes[bus]) {
+                if (!stopToRoutes.has(stop)) stopToRoutes.set(stop, []);
+                stopToRoutes.get(stop)!.push(bus);
+            }
+        }
+
+        if (!stopToRoutes.has(source) || !stopToRoutes.has(target)) return -1;
+
+        const hasEdge: boolean[][] = Array.from({ length: n }, () => Array(n).fill(false));
+        for (let buses of stopToRoutes.values()) {
+            for (let i = 0; i < buses.length; i++) {
+                for (let j = i + 1; j < buses.length; j++) {
+                    if (!hasEdge[buses[i]][buses[j]]) {
+                        hasEdge[buses[i]][buses[j]] = true;
+                        hasEdge[buses[j]][buses[i]] = true;
+                        adjList[buses[i]].push(buses[j]);
+                        adjList[buses[j]].push(buses[i]);
+                    }
+                }
+            }
+        }
+
+        const q = new Queue(stopToRoutes.get(source));
+        let res = 1;
+        while (!q.isEmpty()) {
+            for (let k = q.size(); k >= 1; k--) {
+                const node: number = q.pop();
+                if (stopToRoutes.get(target)!.includes(node)) return res;
+                while (adjList[node].length > 0) {
+                    const nxtBus = adjList[node].pop()!;
+                    if (adjList[nxtBus].length > 0) {
+                        q.push(nxtBus);
+                    }
+                }
+            }
+            res++;
+        }
+
+        return -1;
     }
 }
 ```

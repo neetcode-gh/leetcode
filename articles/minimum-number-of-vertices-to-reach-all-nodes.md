@@ -52,11 +52,11 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+    public List<Integer> findSmallestSetOfVertices(int n, int[][] edges) {
         List<Integer>[] adj = new ArrayList[n];
         for (int i = 0; i < n; i++) adj[i] = new ArrayList<>();
-        for (List<Integer> edge : edges) {
-            adj[edge.get(0)].add(edge.get(1));
+        for (int[] edge : edges) {
+            adj[edge[0]].add(edge[1]);
         }
 
         Set<Integer> res = new HashSet<>();
@@ -145,7 +145,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+    public List<int> FindSmallestSetOfVertices(int n, int[][] edges) {
         List<int>[] adj = new List<int>[n];
         for (int i = 0; i < n; i++) adj[i] = new List<int>();
         foreach (var edge in edges) {
@@ -215,7 +215,7 @@ func findSmallestSetOfVertices(n int, edges [][]int) []int {
 
 ```kotlin
 class Solution {
-    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+    fun findSmallestSetOfVertices(n: Int, edges: Array<IntArray>): IntArray {
         val adj = Array(n) { mutableListOf<Int>() }
         for (edge in edges) {
             adj[edge[0]].add(edge[1])
@@ -235,7 +235,7 @@ class Solution {
         for (i in 0 until n) {
             if (!visited[i]) dfs(i)
         }
-        return res.toList()
+        return res.toIntArray()
     }
 }
 ```
@@ -303,6 +303,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findSmallestSetOfVertices(n: number, edges: number[][]): number[] {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+        }
+
+        const res = new Set<number>(Array.from({ length: n }, (_, i) => i));
+        const visited: boolean[] = new Array(n).fill(false);
+
+        const dfs = (node: number): void => {
+            visited[node] = true;
+            for (const nei of adj[node]) {
+                if (!visited[nei]) dfs(nei);
+                res.delete(nei);
+            }
+        };
+
+        for (let i = 0; i < n; i++) {
+            if (!visited[i]) dfs(i);
+        }
+
+        return Array.from(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,13 +394,13 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+    public List<Integer> findSmallestSetOfVertices(int n, int[][] edges) {
         List<Integer>[] adj = new ArrayList[n];
         for (int i = 0; i < n; i++) {
             adj[i] = new ArrayList<>();
         }
-        for (List<Integer> edge : edges) {
-            adj[edge.get(0)].add(edge.get(1));
+        for (int[] edge : edges) {
+            adj[edge[0]].add(edge[1]);
         }
 
         boolean[] res = new boolean[n];
@@ -475,7 +508,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+    public List<int> FindSmallestSetOfVertices(int n, int[][] edges) {
         List<int>[] adj = new List<int>[n];
         for (int i = 0; i < n; i++) {
             adj[i] = new List<int>();
@@ -562,7 +595,7 @@ func findSmallestSetOfVertices(n int, edges [][]int) []int {
 
 ```kotlin
 class Solution {
-    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+    fun findSmallestSetOfVertices(n: Int, edges: Array<IntArray>): IntArray {
         val adj = Array(n) { mutableListOf<Int>() }
         for (edge in edges) {
             adj[edge[0]].add(edge[1])
@@ -587,7 +620,7 @@ class Solution {
             }
         }
 
-        return res.indices.filter { res[it] }
+        return res.indices.filter { res[it] }.toIntArray()
     }
 }
 ```
@@ -668,6 +701,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findSmallestSetOfVertices(n: number, edges: number[][]): number[] {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+        }
+
+        const res: boolean[] = Array(n).fill(true);
+        const visited: boolean[] = Array(n).fill(false);
+        const stack: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            if (!visited[i]) {
+                stack.push(i);
+                while (stack.length) {
+                    const node = stack.pop()!;
+                    if (visited[node]) continue;
+                    visited[node] = true;
+                    for (const nei of adj[node]) {
+                        if (!visited[nei]) stack.push(nei);
+                        res[nei] = false;
+                    }
+                }
+            }
+        }
+
+        return res.map((val, i) => (val ? i : -1)).filter((i) => i !== -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,13 +780,13 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+    public List<Integer> findSmallestSetOfVertices(int n, int[][] edges) {
         List<Integer>[] incoming = new ArrayList[n];
         for (int i = 0; i < n; i++) {
             incoming[i] = new ArrayList<>();
         }
-        for (List<Integer> edge : edges) {
-            incoming[edge.get(1)].add(edge.get(0));
+        for (int[] edge : edges) {
+            incoming[edge[1]].add(edge[0]);
         }
 
         List<Integer> res = new ArrayList<>();
@@ -777,7 +847,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+    public List<int> FindSmallestSetOfVertices(int n, int[][] edges) {
         List<int>[] incoming = new List<int>[n];
         for (int i = 0; i < n; i++) {
             incoming[i] = new List<int>();
@@ -819,7 +889,7 @@ func findSmallestSetOfVertices(n int, edges [][]int) []int {
 
 ```kotlin
 class Solution {
-    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+    fun findSmallestSetOfVertices(n: Int, edges: Array<IntArray>): IntArray {
         val incoming = Array(n) { mutableListOf<Int>() }
         for (edge in edges) {
             incoming[edge[1]].add(edge[0])
@@ -831,7 +901,7 @@ class Solution {
                 res.add(i)
             }
         }
-        return res
+        return res.toIntArray()
     }
 }
 ```
@@ -868,6 +938,31 @@ impl Solution {
             .filter(|&i| incoming[i].is_empty())
             .map(|i| i as i32)
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findSmallestSetOfVertices(n: number, edges: number[][]): number[] {
+        const incoming: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [src, dst] of edges) {
+            incoming[dst].push(src);
+        }
+
+        const res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            if (incoming[i].length === 0) {
+                res.push(i);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -909,10 +1004,10 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+    public List<Integer> findSmallestSetOfVertices(int n, int[][] edges) {
         boolean[] indegree = new boolean[n];
-        for (List<Integer> edge : edges) {
-            indegree[edge.get(1)] = true;
+        for (int[] edge : edges) {
+            indegree[edge[1]] = true;
         }
 
         List<Integer> res = new ArrayList<>();
@@ -970,7 +1065,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+    public List<int> FindSmallestSetOfVertices(int n, int[][] edges) {
         bool[] indegree = new bool[n];
         foreach (var edge in edges) {
             indegree[edge[1]] = true;
@@ -1006,7 +1101,7 @@ func findSmallestSetOfVertices(n int, edges [][]int) []int {
 
 ```kotlin
 class Solution {
-    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+    fun findSmallestSetOfVertices(n: Int, edges: Array<IntArray>): IntArray {
         val indegree = BooleanArray(n)
         for (edge in edges) {
             indegree[edge[1]] = true
@@ -1018,7 +1113,7 @@ class Solution {
                 res.add(i)
             }
         }
-        return res
+        return res.toIntArray()
     }
 }
 ```
@@ -1055,6 +1150,28 @@ impl Solution {
             .filter(|&i| !indegree[i])
             .map(|i| i as i32)
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findSmallestSetOfVertices(n: number, edges: number[][]): number[] {
+        const indegree: boolean[] = new Array(n).fill(false);
+        for (const [src, dst] of edges) {
+            indegree[dst] = true;
+        }
+
+        let res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            if (!indegree[i]) res.push(i);
+        }
+        return res;
     }
 }
 ```

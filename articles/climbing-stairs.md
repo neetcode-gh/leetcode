@@ -147,7 +147,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
@@ -158,6 +157,22 @@ impl Solution {
             dfs(n, i + 1) + dfs(n, i + 2)
         }
         dfs(n, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    climbStairs(n: number): number {
+        const dfs = (i: number): number => {
+            if (i >= n) return i == n ? 1 : 0;
+            return dfs(i + 1) + dfs(i + 2);
+        };
+        return dfs(0);
     }
 }
 ```
@@ -347,7 +362,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
@@ -366,6 +380,24 @@ impl Solution {
         }
 
         dfs(n, 0, &mut cache)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    climbStairs(n: number): number {
+        const cache = new Int32Array(n).fill(-1);
+        const dfs = (i: number): number => {
+            if (i >= n) return i == n ? 1 : 0;
+            if (cache[i] != -1) return cache[i];
+            return (cache[i] = dfs(i + 1) + dfs(i + 2));
+        };
+        return dfs(0);
     }
 }
 ```
@@ -533,7 +565,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
@@ -548,6 +579,27 @@ impl Solution {
             dp[i] = dp[i - 1] + dp[i - 2];
         }
         dp[n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    climbStairs(n: number): number {
+        if (n <= 2) {
+            return n;
+        }
+        let dp: number[] = new Array(n + 1).fill(0);
+        dp[1] = 1;
+        dp[2] = 2;
+        for (let i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
     }
 }
 ```
@@ -714,7 +766,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
@@ -728,6 +779,27 @@ impl Solution {
         }
 
         one
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    climbStairs(n: number): number {
+        let one = 1,
+            two = 1;
+
+        for (let i = 0; i < n - 1; i++) {
+            let temp = one;
+            one = one + two;
+            two = temp;
+        }
+
+        return one;
     }
 }
 ```
@@ -1067,7 +1139,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
@@ -1106,6 +1177,57 @@ impl Solution {
         let m = [[1i64, 1], [1, 0]];
         let result = matrix_pow(&m, n);
         result[0][0] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    climbStairs(n: number): number {
+        if (n === 1) return 1;
+
+        const matrixMult = (A: number[][], B: number[][]): number[][] => {
+            return [
+                [
+                    A[0][0] * B[0][0] + A[0][1] * B[1][0],
+                    A[0][0] * B[0][1] + A[0][1] * B[1][1],
+                ],
+                [
+                    A[1][0] * B[0][0] + A[1][1] * B[1][0],
+                    A[1][0] * B[0][1] + A[1][1] * B[1][1],
+                ],
+            ];
+        };
+
+        const matrixPow = (M: number[][], p: number): number[][] => {
+            let result = [
+                [1, 0],
+                [0, 1],
+            ];
+            let base = M;
+
+            while (p > 0) {
+                if (p % 2 === 1) {
+                    result = matrixMult(result, base);
+                }
+                base = matrixMult(base, base);
+                p = Math.floor(p / 2);
+            }
+
+            return result;
+        };
+
+        const M = [
+            [1, 1],
+            [1, 0],
+        ];
+        const result = matrixPow(M, n);
+
+        return result[0][0];
     }
 }
 ```
@@ -1234,7 +1356,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
@@ -1243,6 +1364,22 @@ impl Solution {
         let psi = (1.0 - sqrt5) / 2.0;
         let n = n as f64 + 1.0;
         ((phi.powf(n) - psi.powf(n)) / sqrt5).round() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    climbStairs(n: number): number {
+        let sqrt5 = Math.sqrt(5);
+        let phi = (1 + sqrt5) / 2;
+        let psi = (1 - sqrt5) / 2;
+        n++;
+        return Math.round((Math.pow(phi, n) - Math.pow(psi, n)) / sqrt5);
     }
 }
 ```

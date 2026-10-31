@@ -134,6 +134,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} x
+     * @return {number}
+     */
+    minEnd(n: number, x: number): number {
+        let res = BigInt(x);
+        for (let i = 0; i < n - 1; i++) {
+            res = (res + BigInt(1)) | BigInt(x);
+        }
+        return Number(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -483,6 +500,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} x
+     * @return {number}
+     */
+    minEnd(n: number, x: number): number {
+        let res = 0n;
+        n -= 1;
+
+        const x_bin: number[] = new Array(64).fill(0); // Binary representation of x
+        const n_bin: number[] = new Array(64).fill(0); // Binary representation of n-1
+
+        for (let i = 0; i < 32; i++) {
+            x_bin[i] = (x >> i) & 1;
+            n_bin[i] = (n >> i) & 1;
+        }
+
+        let i_x = 0;
+        let i_n = 0;
+        while (i_x < 63) {
+            while (i_x < 63 && x_bin[i_x] !== 0) {
+                i_x++;
+            }
+            x_bin[i_x] = n_bin[i_n];
+            i_x++;
+            i_n++;
+        }
+
+        for (let i = 0; i < 64; i++) {
+            if (x_bin[i] === 1) {
+                res += BigInt(1) << BigInt(i);
+            }
+        }
+
+        return Number(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -712,6 +770,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} x
+     * @return {number}
+     */
+    minEnd(n: number, x: number): number {
+        let res = BigInt(x);
+        let i_x = 1n;
+        let i_n = 1n;
+        const N = BigInt(n - 1);
+
+        while (i_n <= N) {
+            if ((i_x & res) === 0n) {
+                if ((i_n & N) !== 0n) {
+                    res = res | i_x;
+                }
+                i_n = i_n << 1n;
+            }
+            i_x = i_x << 1n;
+        }
+
+        return Number(res);
     }
 }
 ```

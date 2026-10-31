@@ -293,6 +293,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    splitArray(nums: number[], k: number): number {
+        const n = nums.length;
+
+        const dfs = (i: number, m: number): number => {
+            if (i === n) {
+                return m === 0 ? 0 : Infinity;
+            }
+            if (m === 0) {
+                return Infinity;
+            }
+
+            let res = Infinity;
+            let curSum = 0;
+            for (let j = i; j <= n - m; j++) {
+                curSum += nums[j];
+                res = Math.min(res, Math.max(curSum, dfs(j + 1, m - 1)));
+            }
+
+            return res;
+        };
+
+        return dfs(0, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,6 +679,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    splitArray(nums: number[], k: number): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(k + 1).fill(-1),
+        );
+
+        const dfs = (i: number, m: number): number => {
+            if (i === n) {
+                return m === 0 ? 0 : Infinity;
+            }
+            if (m === 0) {
+                return Infinity;
+            }
+            if (dp[i][m] !== -1) {
+                return dp[i][m];
+            }
+
+            let res = Infinity;
+            let curSum = 0;
+            for (let j = i; j <= n - m; j++) {
+                curSum += nums[j];
+                res = Math.min(res, Math.max(curSum, dfs(j + 1, m - 1)));
+            }
+
+            return (dp[i][m] = res);
+        };
+
+        return dfs(0, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -861,10 +933,10 @@ class Solution {
         var dp = [[Int]](repeating: [Int](repeating: Int.max, count: k + 1), count: n + 1)
         dp[n][0] = 0
 
-        for m in 1...k {
+        for m in stride(from: 1, through: k, by: 1) {
             for i in stride(from: n - 1, through: 0, by: -1) {
                 var curSum = 0
-                for j in i..<(n - m + 1) {
+                for j in stride(from: i, to: n - m + 1, by: 1) {
                     curSum += nums[j]
                     if dp[j + 1][m - 1] != Int.max {
                         dp[i][m] = min(dp[i][m], max(curSum, dp[j + 1][m - 1]))
@@ -899,6 +971,38 @@ impl Solution {
         }
 
         dp[0][k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    splitArray(nums: number[], k: number): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(Infinity),
+        );
+        dp[n][0] = 0;
+
+        for (let m = 1; m <= k; m++) {
+            for (let i = n - 1; i >= 0; i--) {
+                let curSum = 0;
+                for (let j = i; j < n - m + 1; j++) {
+                    curSum += nums[j];
+                    dp[i][m] = Math.min(
+                        dp[i][m],
+                        Math.max(curSum, dp[j + 1][m - 1]),
+                    );
+                }
+            }
+        }
+
+        return dp[0][k];
     }
 }
 ```
@@ -1133,13 +1237,13 @@ class Solution {
         var nextDp = [Int](repeating: Int.max, count: n + 1)
         dp[n] = 0
 
-        for m in 1...k {
+        for m in stride(from: 1, through: k, by: 1) {
             for i in 0...n {
                 nextDp[i] = Int.max
             }
             for i in stride(from: n - 1, through: 0, by: -1) {
                 var curSum = 0
-                for j in i..<(n - m + 1) {
+                for j in stride(from: i, to: n - m + 1, by: 1) {
                     curSum += nums[j]
                     if dp[j + 1] != Int.max {
                         nextDp[i] = min(nextDp[i], max(curSum, dp[j + 1]))
@@ -1178,6 +1282,39 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    splitArray(nums: number[], k: number): number {
+        const n = nums.length;
+        let dp: number[] = new Array(n + 1).fill(Infinity);
+        let nextDp: number[] = new Array(n + 1).fill(Infinity);
+        dp[n] = 0;
+
+        for (let m = 1; m <= k; m++) {
+            nextDp.fill(Infinity);
+            for (let i = n - 1; i >= 0; i--) {
+                let curSum = 0;
+                for (let j = i; j < n - m + 1; j++) {
+                    curSum += nums[j];
+                    nextDp[i] = Math.min(
+                        nextDp[i],
+                        Math.max(curSum, dp[j + 1]),
+                    );
+                }
+            }
+            [dp, nextDp] = [nextDp, dp];
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1533,6 +1670,46 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    splitArray(nums: number[], k: number): number {
+        const canSplit = (largest: number): boolean => {
+            let subarray = 1,
+                curSum = 0;
+            for (const num of nums) {
+                curSum += num;
+                if (curSum > largest) {
+                    subarray++;
+                    if (subarray > k) return false;
+                    curSum = num;
+                }
+            }
+            return true;
+        };
+
+        let l = Math.max(...nums);
+        let r = nums.reduce((a, b) => a + b, 0);
+        let res = r;
+
+        while (l <= r) {
+            const mid = Math.floor(l + (r - l) / 2);
+            if (canSplit(mid)) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -2017,6 +2194,60 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    splitArray(nums: number[], k: number): number {
+        const n = nums.length;
+        const prefix: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        const canSplit = (largest: number): boolean => {
+            let subarrays = 0,
+                i = 0;
+            while (i < n) {
+                let l = i + 1,
+                    r = n;
+                while (l <= r) {
+                    const mid = Math.floor(l + (r - l) / 2);
+                    if (prefix[mid] - prefix[i] <= largest) {
+                        l = mid + 1;
+                    } else {
+                        r = mid - 1;
+                    }
+                }
+                subarrays++;
+                i = r;
+                if (subarrays > k) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        let l = Math.max(...nums);
+        let r = nums.reduce((a, b) => a + b, 0),
+            res = r;
+        while (l <= r) {
+            const mid = Math.floor(l + (r - l) / 2);
+            if (canSplit(mid)) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
     }
 }
 ```

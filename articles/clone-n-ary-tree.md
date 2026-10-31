@@ -66,15 +66,15 @@ public:
         if (!root) {
             return root;
         }
-        
+
         // First, copy the node itself.
         Node* node_copy = new Node(root->val);
-        
+
         // Then, recursively clone the sub-trees.
         for (Node* child : root->children) {
             node_copy->children.push_back(cloneTree(child));
         }
-        
+
         return node_copy;
     }
 };
@@ -110,7 +110,7 @@ class Solution {
 // Definition for a Node.
 public class Node {
     public int val;
-    public IList<Node> children;
+    public List<Node> children;
 
     public Node() {
         val = 0;
@@ -175,7 +175,7 @@ func cloneTree(root *Node) *Node {
 /**
  * Definition for a Node.
  * class Node(var `val`: Int) {
- *     var children: List<Node?> = listOf()
+ *     var children: MutableList<Node> = mutableListOf()
  * }
  */
 
@@ -190,7 +190,7 @@ class Solution {
         val nodeCopy = Node(root.`val`)
 
         // Then, recursively clone the sub-trees.
-        nodeCopy.children = root.children.map { cloneTree(it) }
+        nodeCopy.children = root.children.map { cloneTree(it)!! }.toMutableList()
 
         return nodeCopy
     }
@@ -232,7 +232,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn clone_tree(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
@@ -241,12 +240,37 @@ impl Solution {
         let node_copy = Rc::new(RefCell::new(Node::new(node.val)));
 
         for child in &node.children {
-            if let Some(cloned) = Self::clone_tree(child.clone()) {
-                node_copy.borrow_mut().children.push(Some(cloned));
+            if let Some(cloned) = Self::clone_tree(Some(child.clone())) {
+                node_copy.borrow_mut().children.push(cloned);
             }
         }
 
         Some(node_copy)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node|null} root
+     * @return {_Node|null}
+     */
+    cloneTree(root: Node | null): Node | null {
+        // Base case: empty node.
+        if (!root) {
+            return root;
+        }
+
+        // First, copy the node itself.
+        const node_copy = new Node(root.val);
+
+        // Then, recursively clone the sub-trees.
+        for (const child of root.children) {
+            node_copy.children.push(this.cloneTree(child));
+        }
+
+        return node_copy;
     }
 }
 ```
@@ -348,16 +372,16 @@ public:
         if (!root) {
             return root;
         }
-        
+
         Node* new_root = new Node(root->val);
         // Starting point to kick off the DFS visits.
         stack<pair<Node*, Node*>> st;
         st.push({root, new_root});
-        
+
         while (!st.empty()) {
             auto [old_node, new_node] = st.top();
             st.pop();
-            
+
             for (Node* child_node : old_node->children) {
                 Node* new_child_node = new Node(child_node->val);
                 // Make a copy for each child node.
@@ -366,7 +390,7 @@ public:
                 st.push({child_node, new_child_node});
             }
         }
-        
+
         return new_root;
     }
 };
@@ -477,16 +501,14 @@ class Solution {
 
         while (stack.isNotEmpty()) {
             val (oldNode, newNode) = stack.removeLast()
-            val newChildren = mutableListOf<Node?>()
+            val newChildren = mutableListOf<Node>()
 
             for (childNode in oldNode.children) {
-                if (childNode != null) {
-                    val newChildNode = Node(childNode.`val`)
-                    // Make a copy for each child node.
-                    newChildren.add(newChildNode)
-                    // Schedule a visit to copy the child nodes of each child node.
-                    stack.addLast(Pair(childNode, newChildNode))
-                }
+                val newChildNode = Node(childNode.`val`)
+                // Make a copy for each child node.
+                newChildren.add(newChildNode)
+                // Schedule a visit to copy the child nodes of each child node.
+                stack.addLast(Pair(childNode, newChildNode))
             }
             newNode.children = newChildren
         }
@@ -524,7 +546,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn clone_tree(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
@@ -534,16 +555,46 @@ impl Solution {
 
         while let Some((old_node, new_node)) = stack.pop() {
             let old_borrowed = old_node.borrow();
-            for child in &old_borrowed.children {
-                if let Some(child_rc) = child {
-                    let new_child = Rc::new(RefCell::new(Node::new(child_rc.borrow().val)));
-                    new_node.borrow_mut().children.push(Some(new_child.clone()));
-                    stack.push((child_rc.clone(), new_child));
-                }
+            for child_rc in &old_borrowed.children {
+                let new_child = Rc::new(RefCell::new(Node::new(child_rc.borrow().val)));
+                new_node.borrow_mut().children.push(new_child.clone());
+                stack.push((child_rc.clone(), new_child));
             }
         }
 
         Some(new_root)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node|null} node
+     * @return {_Node|null}
+     */
+    cloneTree(root: Node | null): Node | null {
+        if (!root) {
+            return root;
+        }
+
+        const new_root = new Node(root.val);
+        // Starting point to kick off the DFS visits.
+        const stack: [Node, Node][] = [[root, new_root]];
+
+        while (stack.length > 0) {
+            const [old_node, new_node] = stack.pop()!;
+
+            for (const child_node of old_node.children) {
+                const new_child_node = new Node(child_node.val);
+                // Make a copy for each child node.
+                new_node.children.push(new_child_node);
+                // Schedule a visit to copy the child nodes of each child node.
+                stack.push([child_node, new_child_node]);
+            }
+        }
+
+        return new_root;
     }
 }
 ```
@@ -647,17 +698,17 @@ public:
         if (!root) {
             return root;
         }
-        
+
         Node* new_root = new Node(root->val);
         // Starting point to kick off the BFS visits.
         queue<pair<Node*, Node*>> q;
         q.push({root, new_root});
-        
+
         while (!q.empty()) {
             // Get the element from the head of the queue.
             auto [old_node, new_node] = q.front();
             q.pop();
-            
+
             for (Node* child_node : old_node->children) {
                 Node* new_child_node = new Node(child_node->val);
                 // Make a copy for each child node.
@@ -666,7 +717,7 @@ public:
                 q.push({child_node, new_child_node});
             }
         }
-        
+
         return new_root;
     }
 };
@@ -685,11 +736,11 @@ class Solution {
 
         const new_root = new Node(root.val);
         // Starting point to kick off the BFS visits.
-        const queue = [[root, new_root]];
+        const queue = new Queue([[root, new_root]]);
 
-        while (queue.length > 0) {
+        while (!queue.isEmpty()) {
             // Get the element from the head of the queue.
-            const [old_node, new_node] = queue.shift();
+            const [old_node, new_node] = queue.pop();
 
             for (const child_node of old_node.children) {
                 const new_child_node = new Node(child_node.val);
@@ -779,16 +830,14 @@ class Solution {
 
         while (queue.isNotEmpty()) {
             val (oldNode, newNode) = queue.removeFirst()
-            val newChildren = mutableListOf<Node?>()
+            val newChildren = mutableListOf<Node>()
 
             for (childNode in oldNode.children) {
-                if (childNode != null) {
-                    val newChildNode = Node(childNode.`val`)
-                    // Make a copy for each child node.
-                    newChildren.add(newChildNode)
-                    // Schedule a visit to copy the child nodes of each child node.
-                    queue.addLast(Pair(childNode, newChildNode))
-                }
+                val newChildNode = Node(childNode.`val`)
+                // Make a copy for each child node.
+                newChildren.add(newChildNode)
+                // Schedule a visit to copy the child nodes of each child node.
+                queue.addLast(Pair(childNode, newChildNode))
             }
             newNode.children = newChildren
         }
@@ -827,7 +876,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn clone_tree(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
@@ -838,16 +886,47 @@ impl Solution {
 
         while let Some((old_node, new_node)) = queue.pop_front() {
             let old_borrowed = old_node.borrow();
-            for child in &old_borrowed.children {
-                if let Some(child_rc) = child {
-                    let new_child = Rc::new(RefCell::new(Node::new(child_rc.borrow().val)));
-                    new_node.borrow_mut().children.push(Some(new_child.clone()));
-                    queue.push_back((child_rc.clone(), new_child.clone()));
-                }
+            for child_rc in &old_borrowed.children {
+                let new_child = Rc::new(RefCell::new(Node::new(child_rc.borrow().val)));
+                new_node.borrow_mut().children.push(new_child.clone());
+                queue.push_back((child_rc.clone(), new_child.clone()));
             }
         }
 
         Some(new_root)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node|null} root
+     * @return {_Node|null}
+     */
+    cloneTree(root: Node | null): Node | null {
+        if (!root) {
+            return root;
+        }
+
+        const new_root = new Node(root.val);
+        // Starting point to kick off the BFS visits.
+        const queue = new Queue([[root, new_root]]);
+
+        while (!queue.isEmpty()) {
+            // Get the element from the head of the queue.
+            const [old_node, new_node]: [Node, Node] = queue.pop();
+
+            for (const child_node of old_node.children) {
+                const new_child_node = new Node(child_node.val);
+                // Make a copy for each child node.
+                new_node.children.push(new_child_node);
+                // Schedule a visit to copy the child nodes of each child node.
+                queue.push([child_node, new_child_node]);
+            }
+        }
+
+        return new_root;
     }
 }
 ```

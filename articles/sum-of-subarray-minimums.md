@@ -204,6 +204,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    sumSubarrayMins(arr: number[]): number {
+        const n = arr.length;
+        let res = 0;
+        const MOD = 1000000007;
+
+        for (let i = 0; i < n; i++) {
+            let minVal = arr[i];
+            for (let j = i; j < n; j++) {
+                minVal = Math.min(minVal, arr[j]);
+                res = (res + minVal) % MOD;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -490,10 +514,10 @@ class Solution {
         val prevSmaller = IntArray(n)
         val stack = ArrayDeque<Int>()
         for (i in 0 until n) {
-            while (stack.isNotEmpty() && arr[stack.last()] > arr[i]) {
+            while (stack.isNotEmpty() && arr[stack.peekLast()] > arr[i]) {
                 stack.removeLast()
             }
-            prevSmaller[i] = if (stack.isEmpty()) -1 else stack.last()
+            prevSmaller[i] = if (stack.isEmpty()) -1 else stack.peekLast()
             stack.addLast(i)
         }
 
@@ -501,10 +525,10 @@ class Solution {
         val nextSmaller = IntArray(n) { n }
         stack.clear()
         for (i in n - 1 downTo 0) {
-            while (stack.isNotEmpty() && arr[stack.last()] >= arr[i]) {
+            while (stack.isNotEmpty() && arr[stack.peekLast()] >= arr[i]) {
                 stack.removeLast()
             }
-            nextSmaller[i] = if (stack.isEmpty()) n else stack.last()
+            nextSmaller[i] = if (stack.isEmpty()) n else stack.peekLast()
             stack.addLast(i)
         }
 
@@ -604,6 +628,51 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    sumSubarrayMins(arr: number[]): number {
+        const MOD = 1e9 + 7;
+        const n = arr.length;
+
+        // Compute previous smaller
+        const prevSmaller: number[] = new Array(n).fill(-1);
+        const stack: number[] = [];
+        for (let i = 0; i < n; i++) {
+            while (stack.length > 0 && arr[stack[stack.length - 1]] > arr[i]) {
+                stack.pop();
+            }
+            prevSmaller[i] = stack.length > 0 ? stack[stack.length - 1] : -1;
+            stack.push(i);
+        }
+
+        // Compute next smaller
+        const nextSmaller: number[] = new Array(n).fill(n);
+        stack.length = 0;
+        for (let i = n - 1; i >= 0; i--) {
+            while (stack.length > 0 && arr[stack[stack.length - 1]] >= arr[i]) {
+                stack.pop();
+            }
+            nextSmaller[i] = stack.length > 0 ? stack[stack.length - 1] : n;
+            stack.push(i);
+        }
+
+        // Calculate result
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            const left = i - prevSmaller[i];
+            const right = nextSmaller[i] - i;
+            res = (res + arr[i] * left * right) % MOD;
+        }
+
+        return res;
     }
 }
 ```
@@ -813,11 +882,11 @@ class Solution {
         val stack = ArrayDeque<IntArray>()
 
         for (i in newArr.indices) {
-            while (stack.isNotEmpty() && newArr[i] < stack.last()[1]) {
+            while (stack.isNotEmpty() && newArr[i] < stack.peekLast()[1]) {
                 val top = stack.removeLast()
                 val j = top[0]
                 val m = top[1]
-                val left = if (stack.isEmpty()) j + 1 else j - stack.last()[0]
+                val left = if (stack.isEmpty()) j + 1 else j - stack.peekLast()[0]
                 val right = i - j
                 res = (res + m.toLong() * left * right) % MOD
             }
@@ -883,6 +952,34 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    sumSubarrayMins(arr: number[]): number {
+        const MOD = 1e9 + 7;
+        let res = 0;
+        arr = [-Infinity, ...arr, -Infinity];
+        let stack: number[][] = [];
+
+        for (let i = 0; i < arr.length; i++) {
+            while (stack.length > 0 && arr[i] < stack[stack.length - 1][1]) {
+                let [j, m] = stack.pop()!;
+                let left =
+                    stack.length > 0 ? j - stack[stack.length - 1][0] : j + 1;
+                let right = i - j;
+                res = (res + m * left * right) % MOD;
+            }
+            stack.push([i, arr[i]]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1070,9 +1167,9 @@ class Solution {
         var res = 0L
 
         for (i in 0..n) {
-            while (stack.isNotEmpty() && (i == n || arr[i] < arr[stack.last()])) {
+            while (stack.isNotEmpty() && (i == n || arr[i] < arr[stack.peekLast()])) {
                 val j = stack.removeLast()
-                val left = j - if (stack.isEmpty()) -1 else stack.last()
+                val left = j - if (stack.isEmpty()) -1 else stack.peekLast()
                 val right = i - j
                 res = (res + arr[j].toLong() * left * right) % MOD
             }
@@ -1131,6 +1228,37 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    sumSubarrayMins(arr: number[]): number {
+        const MOD = 1e9 + 7;
+        const n = arr.length;
+        const stack: number[] = [];
+        let res = 0;
+
+        for (let i = 0; i <= n; i++) {
+            while (
+                stack.length > 0 &&
+                (i === n || arr[i] < arr[stack[stack.length - 1]])
+            ) {
+                const j = stack.pop()!;
+                const left =
+                    j - (stack.length > 0 ? stack[stack.length - 1] : -1);
+                const right = i - j;
+                res = (res + arr[j] * left * right) % MOD;
+            }
+            stack.push(i);
+        }
+
+        return res;
     }
 }
 ```
@@ -1330,11 +1458,11 @@ class Solution {
         var res = 0L
 
         for (i in 0 until n) {
-            while (stack.isNotEmpty() && arr[stack.last()] > arr[i]) {
+            while (stack.isNotEmpty() && arr[stack.peekLast()] > arr[i]) {
                 stack.removeLast()
             }
 
-            val j = if (stack.isEmpty()) -1 else stack.last()
+            val j = if (stack.isEmpty()) -1 else stack.peekLast()
             dp[i] = ((if (j != -1) dp[j] else 0L) + arr[i].toLong() * (i - j)) % MOD
             res = (res + dp[i]) % MOD
             stack.addLast(i)
@@ -1396,6 +1524,35 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    sumSubarrayMins(arr: number[]): number {
+        const MOD = 1e9 + 7;
+        const n = arr.length;
+        const dp: number[] = new Array(n).fill(0);
+        const stack: number[] = [];
+        let res = 0;
+
+        for (let i = 0; i < n; i++) {
+            while (stack.length > 0 && arr[stack[stack.length - 1]] > arr[i]) {
+                stack.pop();
+            }
+
+            const j = stack.length > 0 ? stack[stack.length - 1] : -1;
+            dp[i] = ((j !== -1 ? dp[j] : 0) + arr[i] * (i - j)) % MOD;
+            res = (res + dp[i]) % MOD;
+            stack.push(i);
+        }
+
+        return res;
     }
 }
 ```

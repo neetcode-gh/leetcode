@@ -200,6 +200,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} arrays
+     * @return {number}
+     */
+    maxDistance(arrays: number[][]): number {
+        let res = 0;
+        const n = arrays.length;
+        for (let i = 0; i < n - 1; i++) {
+            for (let j = 0; j < arrays[i].length; j++) {
+                for (let k = i + 1; k < n; k++) {
+                    for (let l = 0; l < arrays[k].length; l++) {
+                        res = Math.max(
+                            res,
+                            Math.abs(arrays[i][j] - arrays[k][l]),
+                        );
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -408,6 +434,35 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} arrays
+     * @return {number}
+     */
+    maxDistance(arrays: number[][]): number {
+        let array1: number[], array2: number[];
+        let res = 0;
+        const n = arrays.length;
+        for (let i = 0; i < n - 1; i++) {
+            for (let j = i + 1; j < n; j++) {
+                array1 = arrays[i];
+                array2 = arrays[j];
+                res = Math.max(
+                    res,
+                    Math.abs(array1[0] - array2[array2.length - 1]),
+                );
+                res = Math.max(
+                    res,
+                    Math.abs(array2[0] - array1[array1.length - 1]),
+                );
+            }
+        }
+        return res;
     }
 }
 ```
@@ -640,6 +695,34 @@ impl Solution {
             max_val = max_val.max(arrays[i][n - 1]);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} arrays
+     * @return {number}
+     */
+    maxDistance(arrays: number[][]): number {
+        let res = 0;
+        let n = arrays[0].length;
+        let min_val = arrays[0][0];
+        let max_val = arrays[0][arrays[0].length - 1];
+        for (let i = 1; i < arrays.length; i++) {
+            n = arrays[i].length;
+            res = Math.max(
+                res,
+                Math.max(
+                    Math.abs(arrays[i][n - 1] - min_val),
+                    Math.abs(max_val - arrays[i][0]),
+                ),
+            );
+            min_val = Math.min(min_val, arrays[i][0]);
+            max_val = Math.max(max_val, arrays[i][n - 1]);
+        }
+        return res;
     }
 }
 ```

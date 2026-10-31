@@ -285,6 +285,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxCoins(nums: number[]): number {
+        nums.unshift(1);
+        nums.push(1);
+        return this.dfs(nums);
+    }
+
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    dfs(nums: number[]): number {
+        if (nums.length === 2) return 0;
+
+        let maxCoins = 0;
+        for (let i = 1; i < nums.length - 1; i++) {
+            let coins = nums[i - 1] * nums[i] * nums[i + 1];
+            let newNums = nums.slice(0, i).concat(nums.slice(i + 1));
+            coins += this.dfs(newNums);
+            maxCoins = Math.max(maxCoins, coins);
+        }
+        return maxCoins;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -627,6 +658,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxCoins(nums: number[]): number {
+        let n = nums.length;
+        let newNums: number[] = new Array(n + 2).fill(1);
+        for (let i = 0; i < n; i++) {
+            newNums[i + 1] = nums[i];
+        }
+
+        let dp: number[][] = Array.from({ length: n + 2 }, () => new Array(n + 2).fill(-1));
+        return this.dfs(newNums, 1, newNums.length - 2, dp);
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} l
+     * @param {number} r
+     * @param {number[][]} dp
+     * @return {number}
+     */
+    dfs(nums: number[], l: number, r: number, dp: number[][]): number {
+        if (l > r) return 0;
+        if (dp[l][r] !== -1) return dp[l][r];
+
+        dp[l][r] = 0;
+        for (let i = l; i <= r; i++) {
+            let coins = nums[l - 1] * nums[i] * nums[r + 1];
+            coins +=
+                this.dfs(nums, l, i - 1, dp) + this.dfs(nums, i + 1, r, dp);
+            dp[l][r] = Math.max(dp[l][r], coins);
+        }
+        return dp[l][r];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -901,6 +972,35 @@ impl Solution {
         }
 
         dp[1][n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxCoins(nums: number[]): number {
+        let n = nums.length;
+        let newNums: number[] = new Array(n + 2).fill(1);
+        for (let i = 0; i < n; i++) {
+            newNums[i + 1] = nums[i];
+        }
+
+        let dp: number[][] = Array.from({ length: n + 2 }, () => new Array(n + 2).fill(0));
+        for (let l = n; l >= 1; l--) {
+            for (let r = l; r <= n; r++) {
+                for (let i = l; i <= r; i++) {
+                    let coins = newNums[l - 1] * newNums[i] * newNums[r + 1];
+                    coins += dp[l][i - 1] + dp[i + 1][r];
+                    dp[l][r] = Math.max(dp[l][r], coins);
+                }
+            }
+        }
+
+        return dp[1][n];
     }
 }
 ```

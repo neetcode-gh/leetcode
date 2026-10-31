@@ -255,7 +255,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -280,6 +279,37 @@ impl Solution {
         }
 
         dfs(0, 0, cols as i32 - 1, &grid, rows, cols as i32)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+
+        const dfs = (r: number, c1: number, c2: number): number => {
+            if (c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2)
+                return 0;
+            if (r === ROWS - 1) {
+                return grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
+            }
+
+            let res = 0;
+            for (let c1_d = -1; c1_d <= 1; c1_d++) {
+                for (let c2_d = -1; c2_d <= 1; c2_d++) {
+                    res = Math.max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d));
+                }
+            }
+            return res + grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
+        };
+
+        return dfs(0, 0, COLS - 1);
     }
 }
 ```
@@ -615,7 +645,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -649,6 +678,44 @@ impl Solution {
         }
 
         dfs(0, 0, cols as i32 - 1, &grid, &mut cache, rows, cols as i32)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const cache: number[][][] = Array.from({ length: ROWS }, () =>
+            Array.from({ length: COLS }, () => Array(COLS).fill(-1)),
+        );
+
+        const dfs = (r: number, c1: number, c2: number): number => {
+            if (Math.min(c1, c2) < 0 || Math.max(c1, c2) >= COLS) {
+                return 0;
+            }
+            if (cache[r][c1][c2] !== -1) return cache[r][c1][c2];
+            if (r === ROWS - 1) {
+                return (cache[r][c1][c2] =
+                    grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]));
+            }
+
+            let res = 0;
+            for (let c1_d = -1; c1_d <= 1; c1_d++) {
+                for (let c2_d = -1; c2_d <= 1; c2_d++) {
+                    res = Math.max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d));
+                }
+            }
+            return (cache[r][c1][c2] =
+                res + grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]));
+        };
+
+        return dfs(0, 0, COLS - 1);
     }
 }
 ```
@@ -995,7 +1062,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -1029,6 +1095,59 @@ impl Solution {
         }
 
         dp[0][0][cols - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const dp: number[][][] = Array.from({ length: ROWS }, () =>
+            Array.from({ length: COLS }, () => Array(COLS).fill(0)),
+        );
+
+        for (let r = ROWS - 1; r >= 0; r--) {
+            for (let c1 = 0; c1 < COLS; c1++) {
+                for (let c2 = 0; c2 < COLS; c2++) {
+                    let res = grid[r][c1];
+                    if (c1 !== c2) {
+                        res += grid[r][c2];
+                    }
+
+                    if (r !== ROWS - 1) {
+                        let maxCherries = 0;
+                        for (let d1 = -1; d1 <= 1; d1++) {
+                            for (let d2 = -1; d2 <= 1; d2++) {
+                                const nc1 = c1 + d1,
+                                    nc2 = c2 + d2;
+                                if (
+                                    nc1 >= 0 &&
+                                    nc1 < COLS &&
+                                    nc2 >= 0 &&
+                                    nc2 < COLS
+                                ) {
+                                    maxCherries = Math.max(
+                                        maxCherries,
+                                        dp[r + 1][nc1][nc2],
+                                    );
+                                }
+                            }
+                        }
+                        res += maxCherries;
+                    }
+
+                    dp[r][c1][c2] = res;
+                }
+            }
+        }
+
+        return dp[0][0][COLS - 1];
     }
 }
 ```
@@ -1329,7 +1448,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -1359,6 +1477,54 @@ impl Solution {
         }
 
         dp[0][cols - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        let dp: number[][] = Array.from({ length: COLS }, () => Array(COLS).fill(0));
+
+        for (let r = ROWS - 1; r >= 0; r--) {
+            const cur_dp: number[][] = Array.from({ length: COLS }, () =>
+                Array(COLS).fill(0),
+            );
+            for (let c1 = 0; c1 < COLS; c1++) {
+                for (let c2 = c1; c2 < COLS; c2++) {
+                    let maxCherries = 0;
+                    const cherries =
+                        grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
+                    for (let d1 = -1; d1 <= 1; d1++) {
+                        for (let d2 = -1; d2 <= 1; d2++) {
+                            const nc1 = c1 + d1,
+                                nc2 = c2 + d2;
+                            if (
+                                nc1 >= 0 &&
+                                nc1 < COLS &&
+                                nc2 >= 0 &&
+                                nc2 < COLS
+                            ) {
+                                maxCherries = Math.max(
+                                    maxCherries,
+                                    cherries + dp[nc1][nc2],
+                                );
+                            }
+                        }
+                    }
+                    cur_dp[c1][c2] = maxCherries;
+                }
+            }
+            dp = cur_dp;
+        }
+
+        return dp[0][COLS - 1];
     }
 }
 ```

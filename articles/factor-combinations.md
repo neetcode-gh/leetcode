@@ -182,7 +182,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    private void Backtracking(List<int> factors, List<IList<int>> ans) {
+    private void Backtracking(List<int> factors, List<List<int>> ans) {
         // Got a solution.
         if (factors.Count > 1) {
             ans.Add(new List<int>(factors));
@@ -208,8 +208,8 @@ public class Solution {
         factors.Add(lastFactor);
     }
 
-    public IList<IList<int>> GetFactors(int n) {
-        List<IList<int>> ans = new List<IList<int>>();
+    public List<List<int>> GetFactors(int n) {
+        List<List<int>> ans = new List<List<int>>();
         Backtracking(new List<int> { n }, ans);
         return ans;
     }
@@ -371,6 +371,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} factors
+     * @param {number[][]} ans
+     */
+    _backtracking(factors: number[], ans: number[][]): void {
+        // Got a solution.
+        if (factors.length > 1) {
+            ans.push([...factors]);
+        }
+
+        const lastFactor = factors.pop()!;
+
+        for (
+            let i = factors.length === 0 ? 2 : factors[factors.length - 1];
+            i <= Math.floor(lastFactor / i);
+            ++i
+        ) {
+            if (lastFactor % i === 0) {
+                // Add i and lastFactor / i.
+                factors.push(i);
+                factors.push(Math.floor(lastFactor / i));
+                this._backtracking(factors, ans);
+                // Remove the last 2 elements in factors to restore it after the recursion returns.
+                factors.pop();
+                factors.pop();
+            }
+        }
+
+        // Add lastFactor back to factors to restore it.
+        factors.push(lastFactor);
+    }
+
+    /**
+     * @param {number} n
+     * @return {number[][]}
+     */
+    getFactors(n: number): number[][] {
+        const ans: number[][] = [];
+        this._backtracking([n], ans);
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -403,6 +449,28 @@ This approach creates new factor lists for each branch rather than modifying and
 3. Return the result list.
 
 ::tabs-start
+
+```python
+class Solution:
+    def getFactors(self, n: int) -> List[List[int]]:
+        ans = []
+        stack = [[n]]
+
+        while stack:
+            factors = stack.pop()
+            last_factor = factors.pop()
+
+            i = 2 if not factors else factors[-1]
+            while i <= last_factor // i:
+                if last_factor % i == 0:
+                    # Add i and last_factor / i.
+                    new_factors = factors + [i, last_factor // i]
+                    stack.append(new_factors)
+                    ans.append(list(new_factors))
+                i += 1
+
+        return ans
+```
 
 ```java
 class Solution {
@@ -487,7 +555,7 @@ class Solution {
                         Math.floor(lastFactor / i),
                     ];
                     stack.push(newFactors);
-                    ans.push(newFactors);
+                    ans.push([...newFactors]);
                 }
             }
         }
@@ -499,8 +567,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<int>> GetFactors(int n) {
-        List<IList<int>> ans = new List<IList<int>>();
+    public List<List<int>> GetFactors(int n) {
+        List<List<int>> ans = new List<List<int>>();
         Stack<List<int>> stack = new Stack<List<int>>();
         stack.Push(new List<int> { n });
 
@@ -645,6 +713,40 @@ impl Solution {
         }
 
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[][]}
+     */
+    getFactors(n: number): number[][] {
+        const ans: number[][] = [];
+        const stack: number[][] = [[n]];
+
+        while (stack.length > 0) {
+            const factors = stack.pop()!;
+            const lastFactor = factors.pop()!;
+
+            const start =
+                factors.length === 0 ? 2 : factors[factors.length - 1];
+            for (let i = start; i <= Math.floor(lastFactor / i); i++) {
+                if (lastFactor % i === 0) {
+                    const newFactors = [
+                        ...factors,
+                        i,
+                        Math.floor(lastFactor / i),
+                    ];
+                    stack.push(newFactors);
+                    ans.push([...newFactors]);
+                }
+            }
+        }
+
+        return ans;
     }
 }
 ```

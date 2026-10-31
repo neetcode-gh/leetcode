@@ -167,19 +167,30 @@ class Codec {
 ```cpp
 class Codec {
 public:
+    // Each number is stored in two chars (16 bits), since values and ids can exceed one char.
+    void putNum(string& s, int x) {
+        s += (char)(x >> 8);
+        s += (char)(x & 255);
+    }
+
+    int getNum(const string& s, int i) {
+        return ((unsigned char)s[i] << 8) | (unsigned char)s[i + 1];
+    }
+
     string serialize(Node* root) {
         string result;
         int identity = 1;
-        serializeHelper(root, result, identity, -1);
+        serializeHelper(root, result, identity, 0);
         return result;
     }
 
     void serializeHelper(Node* root, string& result, int& identity, int parentId) {
         if (!root) return;
 
-        result += (char)(identity + '0');
-        result += (char)(root->val + '0');
-        result += (parentId == -1) ? 'N' : (char)(parentId + '0');
+        // Own identity, actual value, parent's identity (0 means no parent)
+        putNum(result, identity);
+        putNum(result, root->val);
+        putNum(result, parentId);
 
         int currentId = identity;
         for (Node* child : root->children) {
@@ -193,19 +204,19 @@ public:
 
         unordered_map<int, Node*> nodes;
 
-        for (int i = 0; i < data.size(); i += 3) {
-            int identity = data[i] - '0';
-            int orgValue = data[i + 1] - '0';
+        for (int i = 0; i < data.size(); i += 6) {
+            int identity = getNum(data, i);
+            int orgValue = getNum(data, i + 2);
             nodes[identity] = new Node(orgValue, vector<Node*>());
         }
 
-        for (int i = 3; i < data.size(); i += 3) {
-            int identity = data[i] - '0';
-            int parentId = data[i + 2] - '0';
+        for (int i = 6; i < data.size(); i += 6) {
+            int identity = getNum(data, i);
+            int parentId = getNum(data, i + 4);
             nodes[parentId]->children.push_back(nodes[identity]);
         }
 
-        return nodes[data[0] - '0'];
+        return nodes[getNum(data, 0)];
     }
 };
 ```
@@ -412,19 +423,19 @@ class Codec {
     private var identity = 1
 
     func serialize(_ root: Node?) -> String {
-        var result = [Character]()
+        var result = [UnicodeScalar]()
         identity = 1
         serializeHelper(root, &result, nil)
-        return String(result)
+        return String(String.UnicodeScalarView(result))
     }
 
-    private func serializeHelper(_ root: Node?, _ result: inout [Character], _ parentId: Int?) {
+    private func serializeHelper(_ root: Node?, _ result: inout [UnicodeScalar], _ parentId: Int?) {
         guard let root = root else { return }
 
-        result.append(Character(UnicodeScalar(identity + 48)!))
-        result.append(Character(UnicodeScalar(root.val + 48)!))
+        result.append(UnicodeScalar(identity + 48)!)
+        result.append(UnicodeScalar(root.val + 48)!)
         if let parentId = parentId {
-            result.append(Character(UnicodeScalar(parentId + 48)!))
+            result.append(UnicodeScalar(parentId + 48)!)
         } else {
             result.append("N")
         }
@@ -440,92 +451,146 @@ class Codec {
         if data.isEmpty { return nil }
 
         var nodes = [Int: Node]()
-        let chars = Array(data)
+        let chars = Array(data.unicodeScalars)
 
         for i in stride(from: 0, to: chars.count, by: 3) {
-            let id = Int(chars[i].asciiValue! - 48)
-            let val = Int(chars[i + 1].asciiValue! - 48)
+            let id = Int(chars[i].value) - 48
+            let val = Int(chars[i + 1].value) - 48
             nodes[id] = Node(val)
             nodes[id]!.children = []
         }
 
         for i in stride(from: 3, to: chars.count, by: 3) {
-            let id = Int(chars[i].asciiValue! - 48)
-            let parentId = Int(chars[i + 2].asciiValue! - 48)
+            let id = Int(chars[i].value) - 48
+            let parentId = Int(chars[i + 2].value) - 48
             nodes[parentId]!.children.append(nodes[id]!)
         }
 
-        return nodes[Int(chars[0].asciiValue! - 48)]
+        return nodes[Int(chars[0].value) - 48]
     }
 }
 ```
 
 ```rust
-struct Codec {
-    identity: usize,
-}
+// Definition for a Node.
+// #[derive(Debug, Clone)]
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Rc<RefCell<Node>>>,
+// }
+
+struct Codec {}
 
 impl Codec {
     fn new() -> Self {
-        Codec { identity: 1 }
+        Codec {}
     }
 
-    fn serialize(&mut self, root: Option<&NaryNode>) -> String {
-        let mut result = Vec::new();
-        self.identity = 1;
-        self.serialize_helper(root, &mut result, None);
-        String::from_utf8(result).unwrap()
+    fn serialize(&self, root: Option<Rc<RefCell<Node>>>) -> String {
+        let mut result = String::new();
+        let mut identity = 1;
+        if let Some(node) = &root {
+            Self::serialize_helper(node, &mut result, &mut identity, None);
+        }
+        result
     }
 
     fn serialize_helper(
-        &mut self,
-        root: Option<&NaryNode>,
-        result: &mut Vec<u8>,
-        parent_id: Option<usize>,
+        root: &Rc<RefCell<Node>>,
+        result: &mut String,
+        identity: &mut u32,
+        parent_id: Option<u32>,
     ) {
-        let root = match root {
-            Some(r) => r,
-            None => return,
-        };
-        result.push((self.identity as u8) + b'0');
-        result.push((root.val as u8) + b'0');
+        let node = root.borrow();
+        // Own identity, actual value, parent's identity
+        result.push(char::from_u32(*identity + 48).unwrap());
+        result.push(char::from_u32(node.val as u32 + 48).unwrap());
         match parent_id {
-            Some(pid) => result.push((pid as u8) + b'0'),
-            None => result.push(b'N'),
+            Some(pid) => result.push(char::from_u32(pid + 48).unwrap()),
+            None => result.push('N'),
         }
-        let current_id = self.identity;
-        for child in &root.children {
-            self.identity += 1;
-            self.serialize_helper(Some(child), result, Some(current_id));
+
+        let current_id = *identity;
+        for child in &node.children {
+            *identity += 1;
+            Self::serialize_helper(child, result, identity, Some(current_id));
         }
     }
 
-    fn deserialize(&self, data: String) -> Option<NaryNode> {
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<Node>>> {
         if data.is_empty() {
             return None;
         }
-        let bytes = data.as_bytes();
-        let mut nodes: HashMap<usize, NaryNode> = HashMap::new();
+        let chars: Vec<u32> = data.chars().map(|c| c as u32).collect();
+        let mut nodes: HashMap<u32, Rc<RefCell<Node>>> = HashMap::new();
 
-        let mut i = 0;
-        while i < bytes.len() {
-            let id = (bytes[i] - b'0') as usize;
-            let val = (bytes[i + 1] - b'0') as i32;
-            nodes.insert(id, NaryNode { val, children: vec![] });
-            i += 3;
+        for i in (0..chars.len()).step_by(3) {
+            let id = chars[i] - 48;
+            let val = (chars[i + 1] - 48) as i32;
+            nodes.insert(id, Rc::new(RefCell::new(Node::new(val))));
         }
 
-        let mut i = 3;
-        while i < bytes.len() {
-            let id = (bytes[i] - b'0') as usize;
-            let parent_id = (bytes[i + 2] - b'0') as usize;
-            let child = nodes.remove(&id).unwrap();
-            nodes.get_mut(&parent_id).unwrap().children.push(child);
-            i += 3;
+        for i in (3..chars.len()).step_by(3) {
+            let node = nodes[&(chars[i] - 48)].clone();
+            let parent = &nodes[&(chars[i + 2] - 48)];
+            parent.borrow_mut().children.push(node);
         }
 
-        let root_id = (bytes[0] - b'0') as usize;
-        nodes.remove(&root_id)
+        Some(nodes[&(chars[0] - 48)].clone())
+    }
+}
+```
+
+```typescript
+class Codec {
+    constructor() {}
+
+    serialize(root: _Node | null): string {
+        const serializedList: string[] = [];
+        let identity = { value: 1 };
+        this._serializeHelper(root, serializedList, identity, null);
+        return serializedList.join('');
+    }
+
+    _serializeHelper(
+        root: _Node | null,
+        serializedList: string[],
+        identity: { value: number },
+        parentId: number | null,
+    ): void {
+        if (!root) return;
+
+        serializedList.push(String.fromCharCode(identity.value + 48));
+        serializedList.push(String.fromCharCode(root.val + 48));
+        serializedList.push(
+            parentId !== null ? String.fromCharCode(parentId + 48) : 'N',
+        );
+
+        const currentId = identity.value;
+        for (const child of root.children) {
+            identity.value++;
+            this._serializeHelper(child, serializedList, identity, currentId);
+        }
+    }
+
+    deserialize(data: string): _Node | null {
+        if (!data) return null;
+
+        const nodes = new Map<number, _Node>();
+
+        for (let i = 0; i < data.length; i += 3) {
+            const identity = data.charCodeAt(i) - 48;
+            const orgValue = data.charCodeAt(i + 1) - 48;
+            nodes.set(identity, new _Node(orgValue, []));
+        }
+
+        for (let i = 3; i < data.length; i += 3) {
+            const identity = data.charCodeAt(i) - 48;
+            const parentId = data.charCodeAt(i + 2) - 48;
+            nodes.get(parentId)!.children.push(nodes.get(identity)!);
+        }
+
+        return nodes.get(data.charCodeAt(0) - 48)!;
     }
 }
 ```
@@ -697,6 +762,57 @@ class Codec {
 }
 ```
 
+```cpp
+class Codec {
+public:
+    // Each number is stored in two chars (16 bits), since values can exceed one char.
+    void putNum(string& s, int x) {
+        s += (char)(x >> 8);
+        s += (char)(x & 255);
+    }
+
+    int getNum(const string& s, int i) {
+        return ((unsigned char)s[i] << 8) | (unsigned char)s[i + 1];
+    }
+
+    string serialize(Node* root) {
+        string result;
+        serializeHelper(root, result);
+        return result;
+    }
+
+    void serializeHelper(Node* root, string& result) {
+        if (!root) return;
+
+        putNum(result, root->val);
+        putNum(result, root->children.size());
+
+        for (Node* child : root->children) {
+            serializeHelper(child, result);
+        }
+    }
+
+    Node* deserialize(string data) {
+        if (data.empty()) return nullptr;
+        int index = 0;
+        return deserializeHelper(data, index);
+    }
+
+    Node* deserializeHelper(string& data, int& index) {
+        if (index == data.size()) return nullptr;
+
+        Node* node = new Node(getNum(data, index), vector<Node*>());
+        int numChildren = getNum(data, index + 2);
+        index += 4;
+        for (int i = 0; i < numChildren; i++) {
+            node->children.push_back(deserializeHelper(data, index));
+        }
+
+        return node;
+    }
+};
+```
+
 ```javascript
 class Codec {
     constructor() {}
@@ -760,48 +876,6 @@ class Codec {
         return node;
     };
 }
-```
-
-```cpp
-class Codec {
-public:
-    string serialize(Node* root) {
-        string result;
-        serializeHelper(root, result);
-        return result;
-    }
-
-    void serializeHelper(Node* root, string& result) {
-        if (!root) return;
-
-        result += (char)(root->val + '0');
-        result += (char)(root->children.size() + '0');
-
-        for (Node* child : root->children) {
-            serializeHelper(child, result);
-        }
-    }
-
-    Node* deserialize(string data) {
-        if (data.empty()) return nullptr;
-        int index = 0;
-        return deserializeHelper(data, index);
-    }
-
-    Node* deserializeHelper(string& data, int& index) {
-        if (index == data.size()) return nullptr;
-
-        Node* node = new Node(data[index] - '0', vector<Node*>());
-        index++;
-        int numChildren = data[index] - '0';
-        for (int i = 0; i < numChildren; i++) {
-            index++;
-            node->children.push_back(deserializeHelper(data, index));
-        }
-
-        return node;
-    }
-};
 ```
 
 ```csharp
@@ -936,16 +1010,16 @@ class Codec {
 ```swift
 class Codec {
     func serialize(_ root: Node?) -> String {
-        var result = [Character]()
+        var result = [UnicodeScalar]()
         serializeHelper(root, &result)
-        return String(result)
+        return String(String.UnicodeScalarView(result))
     }
 
-    private func serializeHelper(_ root: Node?, _ result: inout [Character]) {
+    private func serializeHelper(_ root: Node?, _ result: inout [UnicodeScalar]) {
         guard let root = root else { return }
 
-        result.append(Character(UnicodeScalar(root.val + 48)!))
-        result.append(Character(UnicodeScalar(root.children.count + 48)!))
+        result.append(UnicodeScalar(root.val + 48)!)
+        result.append(UnicodeScalar(root.children.count + 48)!)
 
         for child in root.children {
             serializeHelper(child, &result)
@@ -955,17 +1029,17 @@ class Codec {
     func deserialize(_ data: String) -> Node? {
         if data.isEmpty { return nil }
         var index = 0
-        let chars = Array(data)
+        let chars = Array(data.unicodeScalars)
         return deserializeHelper(chars, &index)
     }
 
-    private func deserializeHelper(_ data: [Character], _ index: inout Int) -> Node? {
+    private func deserializeHelper(_ data: [UnicodeScalar], _ index: inout Int) -> Node? {
         if index == data.count { return nil }
 
-        let node = Node(Int(data[index].asciiValue! - 48))
+        let node = Node(Int(data[index].value) - 48)
         node.children = []
         index += 1
-        let numChildren = Int(data[index].asciiValue! - 48)
+        let numChildren = Int(data[index].value) - 48
         for _ in 0..<numChildren {
             index += 1
             node.children.append(deserializeHelper(data, &index)!)
@@ -977,53 +1051,124 @@ class Codec {
 ```
 
 ```rust
-struct Codec;
+// Definition for a Node.
+// #[derive(Debug, Clone)]
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Rc<RefCell<Node>>>,
+// }
+
+struct Codec {}
 
 impl Codec {
     fn new() -> Self {
-        Codec
+        Codec {}
     }
 
-    fn serialize(&self, root: Option<&NaryNode>) -> String {
-        let mut result = Vec::new();
-        Self::serialize_helper(root, &mut result);
-        String::from_utf8(result).unwrap()
+    fn serialize(&self, root: Option<Rc<RefCell<Node>>>) -> String {
+        let mut result = String::new();
+        if let Some(node) = &root {
+            Self::serialize_helper(node, &mut result);
+        }
+        result
     }
 
-    fn serialize_helper(root: Option<&NaryNode>, result: &mut Vec<u8>) {
-        let root = match root {
-            Some(r) => r,
-            None => return,
-        };
-        result.push((root.val as u8) + b'0');
-        result.push((root.children.len() as u8) + b'0');
-        for child in &root.children {
-            Self::serialize_helper(Some(child), result);
+    fn serialize_helper(root: &Rc<RefCell<Node>>, result: &mut String) {
+        let node = root.borrow();
+        result.push(char::from_u32(node.val as u32 + 48).unwrap());
+        result.push(char::from_u32(node.children.len() as u32 + 48).unwrap());
+        for child in &node.children {
+            Self::serialize_helper(child, result);
         }
     }
 
-    fn deserialize(&self, data: String) -> Option<NaryNode> {
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<Node>>> {
         if data.is_empty() {
             return None;
         }
-        let bytes = data.as_bytes();
+        let chars: Vec<u32> = data.chars().map(|c| c as u32).collect();
         let mut index = 0;
-        Self::deserialize_helper(bytes, &mut index)
+        Self::deserialize_helper(&chars, &mut index)
     }
 
-    fn deserialize_helper(data: &[u8], index: &mut usize) -> Option<NaryNode> {
+    fn deserialize_helper(data: &[u32], index: &mut usize) -> Option<Rc<RefCell<Node>>> {
         if *index == data.len() {
             return None;
         }
-        let val = (data[*index] - b'0') as i32;
+        let node = Rc::new(RefCell::new(Node::new((data[*index] - 48) as i32)));
         *index += 1;
-        let num_children = (data[*index] - b'0') as usize;
-        let mut children = Vec::with_capacity(num_children);
+        let num_children = data[*index] - 48;
         for _ in 0..num_children {
             *index += 1;
-            children.push(Self::deserialize_helper(data, index).unwrap());
+            let child = Self::deserialize_helper(data, index).unwrap();
+            node.borrow_mut().children.push(child);
         }
-        Some(NaryNode { val, children })
+        Some(node)
+    }
+}
+```
+
+```typescript
+class Codec {
+    constructor() {}
+
+    /**
+     * @param {_Node|null} root
+     * @return {string}
+     */
+    serialize(root: _Node | null): string {
+        const serializedList: string[] = [];
+        this._serializeHelper(root, serializedList);
+        return serializedList.join('');
+    }
+
+    _serializeHelper(root: _Node | null, serializedList: string[]): void {
+        if (!root) {
+            return;
+        }
+
+        // Actual value
+        serializedList.push(String.fromCharCode(root.val + 48));
+
+        // Number of children
+        serializedList.push(String.fromCharCode(root.children.length + 48));
+
+        for (const child of root.children) {
+            this._serializeHelper(child, serializedList);
+        }
+    }
+
+    /**
+     * @param {string} data
+     * @return {_Node|null}
+     */
+    deserialize(data: string): _Node | null {
+        if (!data) {
+            return null;
+        }
+
+        const index = { value: 0 };
+        return this._deserializeHelper(data, index);
+    }
+
+    _deserializeHelper(data: string, index: { value: number }): _Node | null {
+        if (index.value === data.length) {
+            return null;
+        }
+
+        // The invariant here is that the "index" always
+        // points to a node and the value next to it
+        // represents the number of children it has.
+        const node = new _Node(data.charCodeAt(index.value) - 48, []);
+        index.value++;
+
+        const numChildren = data.charCodeAt(index.value) - 48;
+        for (let i = 0; i < numChildren; i++) {
+            index.value++;
+            node.children.push(this._deserializeHelper(data, index));
+        }
+
+        return node;
     }
 }
 ```
@@ -1201,6 +1346,18 @@ class Codec {
 ```cpp
 class Codec {
 public:
+    // Each number is stored in two chars (16 bits); END marks the end of a node's children.
+    static const int END = 65535;
+
+    void putNum(string& s, int x) {
+        s += (char)(x >> 8);
+        s += (char)(x & 255);
+    }
+
+    int getNum(const string& s, int i) {
+        return ((unsigned char)s[i] << 8) | (unsigned char)s[i + 1];
+    }
+
     string serialize(Node* root) {
         string result;
         serializeHelper(root, result);
@@ -1210,13 +1367,13 @@ public:
     void serializeHelper(Node* root, string& result) {
         if (!root) return;
 
-        result += (char)(root->val + '0');
+        putNum(result, root->val);
 
         for (Node* child : root->children) {
             serializeHelper(child, result);
         }
 
-        result += '#';
+        putNum(result, END);
     }
 
     Node* deserialize(string data) {
@@ -1228,13 +1385,13 @@ public:
     Node* deserializeHelper(string& data, int& index) {
         if (index == data.size()) return nullptr;
 
-        Node* node = new Node(data[index] - '0', vector<Node*>());
-        index++;
-        while (data[index] != '#') {
+        Node* node = new Node(getNum(data, index), vector<Node*>());
+        index += 2;
+        while (getNum(data, index) != END) {
             node->children.push_back(deserializeHelper(data, index));
         }
 
-        index++;
+        index += 2;
         return node;
     }
 };
@@ -1415,15 +1572,15 @@ class Codec {
 ```swift
 class Codec {
     func serialize(_ root: Node?) -> String {
-        var result = [Character]()
+        var result = [UnicodeScalar]()
         serializeHelper(root, &result)
-        return String(result)
+        return String(String.UnicodeScalarView(result))
     }
 
-    private func serializeHelper(_ root: Node?, _ result: inout [Character]) {
+    private func serializeHelper(_ root: Node?, _ result: inout [UnicodeScalar]) {
         guard let root = root else { return }
 
-        result.append(Character(UnicodeScalar(root.val + 48)!))
+        result.append(UnicodeScalar(root.val + 48)!)
 
         for child in root.children {
             serializeHelper(child, &result)
@@ -1435,14 +1592,14 @@ class Codec {
     func deserialize(_ data: String) -> Node? {
         if data.isEmpty { return nil }
         var index = 0
-        let chars = Array(data)
+        let chars = Array(data.unicodeScalars)
         return deserializeHelper(chars, &index)
     }
 
-    private func deserializeHelper(_ data: [Character], _ index: inout Int) -> Node? {
+    private func deserializeHelper(_ data: [UnicodeScalar], _ index: inout Int) -> Node? {
         if index == data.count { return nil }
 
-        let node = Node(Int(data[index].asciiValue! - 48))
+        let node = Node(Int(data[index].value) - 48)
         node.children = []
         index += 1
         while data[index] != "#" {
@@ -1456,52 +1613,102 @@ class Codec {
 ```
 
 ```rust
-struct Codec;
+// Definition for a Node.
+// #[derive(Debug, Clone)]
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Rc<RefCell<Node>>>,
+// }
+
+struct Codec {}
 
 impl Codec {
     fn new() -> Self {
-        Codec
+        Codec {}
     }
 
-    fn serialize(&self, root: Option<&NaryNode>) -> String {
-        let mut result = Vec::new();
-        Self::serialize_helper(root, &mut result);
-        String::from_utf8(result).unwrap()
-    }
-
-    fn serialize_helper(root: Option<&NaryNode>, result: &mut Vec<u8>) {
-        let root = match root {
-            Some(r) => r,
-            None => return,
-        };
-        result.push((root.val as u8) + b'0');
-        for child in &root.children {
-            Self::serialize_helper(Some(child), result);
+    fn serialize(&self, root: Option<Rc<RefCell<Node>>>) -> String {
+        let mut result = String::new();
+        if let Some(node) = &root {
+            Self::serialize_helper(node, &mut result);
         }
-        result.push(b'#');
+        result
     }
 
-    fn deserialize(&self, data: String) -> Option<NaryNode> {
+    fn serialize_helper(root: &Rc<RefCell<Node>>, result: &mut String) {
+        let node = root.borrow();
+        result.push(char::from_u32(node.val as u32 + 48).unwrap());
+        for child in &node.children {
+            Self::serialize_helper(child, result);
+        }
+        result.push('#');
+    }
+
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<Node>>> {
         if data.is_empty() {
             return None;
         }
-        let bytes = data.as_bytes();
+        let chars: Vec<char> = data.chars().collect();
         let mut index = 0;
-        Self::deserialize_helper(bytes, &mut index)
+        Self::deserialize_helper(&chars, &mut index)
     }
 
-    fn deserialize_helper(data: &[u8], index: &mut usize) -> Option<NaryNode> {
+    fn deserialize_helper(data: &[char], index: &mut usize) -> Option<Rc<RefCell<Node>>> {
         if *index == data.len() {
             return None;
         }
-        let val = (data[*index] - b'0') as i32;
+        let node = Rc::new(RefCell::new(Node::new((data[*index] as u32 - 48) as i32)));
         *index += 1;
-        let mut children = Vec::new();
-        while data[*index] != b'#' {
-            children.push(Self::deserialize_helper(data, index).unwrap());
+        while data[*index] != '#' {
+            let child = Self::deserialize_helper(data, index).unwrap();
+            node.borrow_mut().children.push(child);
         }
         *index += 1;
-        Some(NaryNode { val, children })
+        Some(node)
+    }
+}
+```
+
+```typescript
+class Codec {
+    constructor() {}
+
+    serialize(root: _Node | null): string {
+        const serializedList: string[] = [];
+        this._serializeHelper(root, serializedList);
+        return serializedList.join('');
+    }
+
+    _serializeHelper(root: _Node | null, serializedList: string[]): void {
+        if (!root) return;
+
+        serializedList.push(String.fromCharCode(root.val + 48));
+
+        for (const child of root.children) {
+            this._serializeHelper(child, serializedList);
+        }
+
+        serializedList.push('#');
+    }
+
+    deserialize(data: string): _Node | null {
+        if (!data) return null;
+
+        const index = { value: 0 };
+        return this._deserializeHelper(data, index);
+    }
+
+    _deserializeHelper(data: string, index: { value: number }): _Node | null {
+        if (index.value === data.length) return null;
+
+        const node = new _Node(data.charCodeAt(index.value) - 48, []);
+        index.value++;
+        while (data[index.value] !== '#') {
+            node.children.push(this._deserializeHelper(data, index));
+        }
+
+        index.value++;
+        return node;
     }
 }
 ```
@@ -2165,7 +2372,7 @@ class Codec {
         if (root == null) return ""
 
         val serializedList = mutableListOf<String>()
-        val queue = ArrayDeque<Any?>()
+        val queue = LinkedList<Any?>()
         queue.add(root)
         queue.add(null)
 
@@ -2232,7 +2439,7 @@ class Codec {
     func serialize(_ root: Node?) -> String {
         guard let root = root else { return "" }
 
-        var result = [Character]()
+        var result = [UnicodeScalar]()
         var queue: [Any?] = [root, nil]
 
         while !queue.isEmpty {
@@ -2246,7 +2453,7 @@ class Codec {
             } else if let str = item as? String, str == "C" {
                 result.append("$")
             } else if let node = item as? Node {
-                result.append(Character(UnicodeScalar(node.val + 48)!))
+                result.append(UnicodeScalar(node.val + 48)!)
                 for child in node.children {
                     queue.append(child)
                 }
@@ -2256,14 +2463,14 @@ class Codec {
             }
         }
 
-        return String(result)
+        return String(String.UnicodeScalarView(result))
     }
 
     func deserialize(_ data: String) -> Node? {
         if data.isEmpty { return nil }
 
-        let chars = Array(data)
-        let rootNode = Node(Int(chars[0].asciiValue! - 48))
+        let chars = Array(data.unicodeScalars)
+        let rootNode = Node(Int(chars[0].value) - 48)
         rootNode.children = []
 
         var prevLevel = [Node]()
@@ -2287,7 +2494,7 @@ class Codec {
                     parentNode = nil
                 }
             } else {
-                let childNode = Node(Int(d.asciiValue! - 48))
+                let childNode = Node(Int(d.value) - 48)
                 childNode.children = []
                 currentLevel.append(childNode)
                 parentNode?.children.append(childNode)
@@ -2300,46 +2507,53 @@ class Codec {
 ```
 
 ```rust
-struct Codec;
+// Definition for a Node.
+// #[derive(Debug, Clone)]
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Rc<RefCell<Node>>>,
+// }
+
+struct Codec {}
+
+enum QItem {
+    Item(Rc<RefCell<Node>>),
+    EndLevel,
+    ChildSwitch,
+}
 
 impl Codec {
     fn new() -> Self {
-        Codec
+        Codec {}
     }
 
-    fn serialize(&self, root: Option<&NaryNode>) -> String {
+    fn serialize(&self, root: Option<Rc<RefCell<Node>>>) -> String {
         let root = match root {
             Some(r) => r,
             None => return String::new(),
         };
 
-        let mut result = Vec::<u8>::new();
-
-        enum QItem<'a> {
-            Node(&'a NaryNode),
-            EndLevel,
-            ChildSwitch,
-        }
-
+        let mut result = String::new();
         let mut queue = VecDeque::new();
-        queue.push_back(QItem::Node(root));
+        queue.push_back(QItem::Item(root));
         queue.push_back(QItem::EndLevel);
 
         while let Some(item) = queue.pop_front() {
             match item {
                 QItem::EndLevel => {
-                    result.push(b'#');
+                    result.push('#');
                     if !queue.is_empty() {
                         queue.push_back(QItem::EndLevel);
                     }
                 }
                 QItem::ChildSwitch => {
-                    result.push(b'$');
+                    result.push('$');
                 }
-                QItem::Node(node) => {
-                    result.push((node.val as u8) + b'0');
+                QItem::Item(node) => {
+                    let node = node.borrow();
+                    result.push(char::from_u32(node.val as u32 + 48).unwrap());
                     for child in &node.children {
-                        queue.push_back(QItem::Node(child));
+                        queue.push_back(QItem::Item(child.clone()));
                     }
                     if let Some(front) = queue.front() {
                         if !matches!(front, QItem::EndLevel) {
@@ -2349,54 +2563,137 @@ impl Codec {
                 }
             }
         }
-        String::from_utf8(result).unwrap()
+        result
     }
 
-    fn deserialize(&self, data: String) -> Option<NaryNode> {
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<Node>>> {
         if data.is_empty() {
             return None;
         }
-        let bytes = data.as_bytes();
-        let mut root = NaryNode {
-            val: (bytes[0] - b'0') as i32,
-            children: vec![],
-        };
+        let chars: Vec<char> = data.chars().collect();
+        let root = Rc::new(RefCell::new(Node::new((chars[0] as u32 - 48) as i32)));
 
-        let mut prev_level: VecDeque<*mut NaryNode> = VecDeque::new();
-        let mut current_level: VecDeque<*mut NaryNode> = VecDeque::new();
-        current_level.push_back(&mut root as *mut NaryNode);
-        let mut parent: *mut NaryNode = &mut root;
+        let mut prev_level: VecDeque<Rc<RefCell<Node>>> = VecDeque::new();
+        let mut current_level: VecDeque<Rc<RefCell<Node>>> = VecDeque::new();
+        current_level.push_back(root.clone());
+        let mut parent: Option<Rc<RefCell<Node>>> = Some(root.clone());
 
-        for i in 1..bytes.len() {
-            match bytes[i] {
-                b'#' => {
-                    prev_level = current_level;
-                    current_level = VecDeque::new();
-                    parent = prev_level
-                        .pop_front()
-                        .unwrap_or(std::ptr::null_mut());
-                }
-                b'$' => {
-                    parent = prev_level
-                        .pop_front()
-                        .unwrap_or(std::ptr::null_mut());
-                }
-                d => {
-                    let child = NaryNode {
-                        val: (d - b'0') as i32,
-                        children: vec![],
-                    };
-                    unsafe {
-                        (*parent).children.push(child);
-                        let children = &mut (*parent).children;
-                        let ptr = children.last_mut().unwrap()
-                            as *mut NaryNode;
-                        current_level.push_back(ptr);
-                    }
+        for &d in &chars[1..] {
+            if d == '#' {
+                prev_level = std::mem::take(&mut current_level);
+                parent = prev_level.pop_front();
+            } else if d == '$' {
+                parent = prev_level.pop_front();
+            } else {
+                let child = Rc::new(RefCell::new(Node::new((d as u32 - 48) as i32)));
+                current_level.push_back(child.clone());
+                if let Some(p) = &parent {
+                    p.borrow_mut().children.push(child);
                 }
             }
         }
         Some(root)
+    }
+}
+```
+
+```typescript
+class Codec {
+    _serializeHelper(root: _Node, serializedList: string[]): void {
+        const queue = new Deque();
+        queue.pushBack(root);
+        queue.pushBack(null);
+
+        while (queue.size() > 0) {
+            // Pop a node
+            const node: _Node | string | null = queue.popFront();
+
+            // If this is an "endNode", we need to add another one
+            // to mark the end of the current level unless this
+            // was the last level.
+            if (node === null) {
+                // We add a sentinel value of "#" here
+                serializedList.push('#');
+                if (queue.size() > 0) {
+                    queue.pushBack(null);
+                }
+            } else if (node === 'C') {
+                // Add a sentinel value of "$" here to mark the switch to a
+                // different parent.
+                serializedList.push('$');
+            } else {
+                // Add value of the current node and add all of its
+                // children nodes to the queue. Note how we convert
+                // the integers to their corresponding ASCII counterparts.
+                const cur = node as _Node;
+                serializedList.push(String.fromCharCode(cur.val + 48));
+                for (const child of cur.children) {
+                    queue.pushBack(child);
+                }
+
+                // If this node is NOT the last one on the current level,
+                // add a childNode as well since we move on to processing
+                // the next node.
+                if (queue.front() !== null) {
+                    queue.pushBack('C');
+                }
+            }
+        }
+    }
+
+    serialize(root: _Node | null): string {
+        if (!root) {
+            return '';
+        }
+
+        const serializedList: string[] = [];
+        this._serializeHelper(root, serializedList);
+        return serializedList.join('');
+    }
+
+    _deserializeHelper(data: string, rootNode: _Node): void {
+        // We move one level at a time and at every level, we need access
+        // to the nodes on the previous level as well so that we can form
+        // the children arrays properly. Hence two arrays.
+        let prevLevel = new Deque();
+        let currentLevel = new Deque();
+        currentLevel.pushBack(rootNode);
+        let parentNode: _Node | null = rootNode;
+
+        // Process the characters in the string one at a time.
+        for (let i = 1; i < data.length; i++) {
+            if (data[i] === '#') {
+                // Special processing for end of level. We need to swap the
+                // array lists. Here, we simply re-initialize the "currentLevel"
+                // arraylist rather than clearing it.
+                prevLevel = currentLevel;
+                currentLevel = new Deque();
+
+                // Since we move one level down, we take the parent as the first
+                // node on the current level.
+                parentNode = prevLevel.size() > 0 ? prevLevel.popFront() : null;
+            } else {
+                if (data[i] === '$') {
+                    // Special handling for change in parent on the same level
+                    parentNode =
+                        prevLevel.size() > 0 ? prevLevel.popFront() : null;
+                } else {
+                    const childNode = new _Node(data.charCodeAt(i) - 48, []);
+                    currentLevel.pushBack(childNode);
+                    parentNode!.children.push(childNode);
+                }
+            }
+        }
+    }
+
+    deserialize(data: string): _Node | null {
+        if (!data) {
+            return null;
+        }
+
+        const rootNode = new _Node(data.charCodeAt(0) - 48, []);
+        this._deserializeHelper(data, rootNode);
+        return rootNode;
     }
 }
 ```

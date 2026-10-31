@@ -106,6 +106,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public double FindMaxAverage(int[] nums, int k) {
+        double res = int.MinValue;
+
+        for (int s = 0; s < nums.Length - k + 1; s++) {
+            long sum = 0;
+            for (int i = s; i < nums.Length; i++) {
+                sum += nums[i];
+                if (i - s + 1 >= k) {
+                    res = Math.Max(res, sum * 1.0 / (i - s + 1));
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func findMaxAverage(nums []int, k int) float64 {
     res := math.Inf(-1)
@@ -178,6 +198,29 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findMaxAverage(nums: number[], k: number): number {
+        let res = -Infinity;
+
+        for (let s = 0; s < nums.length - k + 1; s++) {
+            let sum = 0;
+            for (let i = s; i < nums.length; i++) {
+                sum += nums[i];
+                if (i - s + 1 >= k) res = Math.max(res, sum / (i - s + 1));
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -420,6 +463,61 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public double FindMaxAverage(int[] nums, int k) {
+        double maxVal = int.MinValue;
+        double minVal = int.MaxValue;
+
+        foreach (int n in nums) {
+            maxVal = Math.Max(maxVal, n);
+            minVal = Math.Min(minVal, n);
+        }
+
+        double prevMid = maxVal, error = int.MaxValue;
+
+        while (error > 0.00001) {
+            double mid = (maxVal + minVal) * 0.5;
+
+            if (Check(nums, mid, k)) {
+                minVal = mid;
+            } else {
+                maxVal = mid;
+            }
+
+            error = Math.Abs(prevMid - mid);
+            prevMid = mid;
+        }
+
+        return minVal;
+    }
+
+    private bool Check(int[] nums, double mid, int k) {
+        double sum = 0, prev = 0, minSum = 0;
+
+        for (int i = 0; i < k; i++) {
+            sum += nums[i] - mid;
+        }
+
+        if (sum >= 0) {
+            return true;
+        }
+
+        for (int i = k; i < nums.Length; i++) {
+            sum += nums[i] - mid;
+            prev += nums[i - k] - mid;
+            minSum = Math.Min(prev, minSum);
+
+            if (sum >= minSum) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ```go
 func findMaxAverage(nums []int, k int) float64 {
     maxVal := float64(nums[0])
@@ -599,6 +697,63 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findMaxAverage(nums: number[], k: number): number {
+        let max_val = -Infinity;
+        let min_val = Infinity;
+
+        for (let n of nums) {
+            max_val = Math.max(max_val, n);
+            min_val = Math.min(min_val, n);
+        }
+
+        let prev_mid = max_val;
+        let error = Infinity;
+
+        while (error > 0.00001) {
+            let mid = (max_val + min_val) * 0.5;
+            if (this.check(nums, mid, k)) min_val = mid;
+            else max_val = mid;
+            error = Math.abs(prev_mid - mid);
+            prev_mid = mid;
+        }
+
+        return min_val;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} mid
+     * @param {number} k
+     * @return {boolean}
+     */
+    check(nums: number[], mid: number, k: number): boolean {
+        let sum = 0,
+            prev = 0,
+            min_sum = 0;
+
+        for (let i = 0; i < k; i++) sum += nums[i] - mid;
+
+        if (sum >= 0) return true;
+
+        for (let i = k; i < nums.length; i++) {
+            sum += nums[i] - mid;
+            prev += nums[i - k] - mid;
+            min_sum = Math.min(prev, min_sum);
+            if (sum >= min_sum) return true;
+        }
+
+        return false;
     }
 }
 ```

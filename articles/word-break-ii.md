@@ -306,6 +306,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {string[]}
+     */
+    wordBreak(s: string, wordDict: string[]): string[] {
+        const wordSet = new Set<string>(wordDict);
+        const res: string[] = [];
+        const cur: string[] = [];
+
+        const backtrack = (i: number): void => {
+            if (i === s.length) {
+                res.push(cur.join(' '));
+                return;
+            }
+
+            for (let j = i; j < s.length; j++) {
+                const w = s.substring(i, j + 1);
+                if (wordSet.has(w)) {
+                    cur.push(w);
+                    backtrack(j + 1);
+                    cur.pop();
+                }
+            }
+        };
+
+        backtrack(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -649,6 +683,188 @@ public class Solution {
 }
 ```
 
+```go
+type TrieNode struct {
+    children map[byte]*TrieNode
+    isWord   bool
+}
+
+func NewTrieNode() *TrieNode {
+    return &TrieNode{children: make(map[byte]*TrieNode)}
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func NewTrie() *Trie {
+    return &Trie{root: NewTrieNode()}
+}
+
+func (t *Trie) addWord(word string) {
+    curr := t.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, ok := curr.children[c]; !ok {
+            curr.children[c] = NewTrieNode()
+        }
+        curr = curr.children[c]
+    }
+    curr.isWord = true
+}
+
+func wordBreak(s string, wordDict []string) []string {
+    trie := NewTrie()
+    for _, word := range wordDict {
+        trie.addWord(word)
+    }
+
+    res := []string{}
+    path := []string{}
+
+    var backtrack func(index int)
+    backtrack = func(index int) {
+        if index == len(s) {
+            res = append(res, strings.Join(path, " "))
+            return
+        }
+
+        node := trie.root
+        for i := index; i < len(s); i++ {
+            c := s[i]
+            next, ok := node.children[c]
+            if !ok {
+                break
+            }
+            node = next
+
+            if node.isWord {
+                path = append(path, s[index:i+1])
+                backtrack(i + 1)
+                path = path[:len(path)-1]
+            }
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = HashMap<Char, TrieNode>()
+    var isWord = false
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun addWord(word: String) {
+        var curr = root
+        for (c in word) {
+            curr = curr.children.getOrPut(c) { TrieNode() }
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): List<String> {
+        val trie = Trie()
+        for (word in wordDict) {
+            trie.addWord(word)
+        }
+
+        val res = mutableListOf<String>()
+        backtrack(0, s, mutableListOf(), trie, res)
+        return res
+    }
+
+    private fun backtrack(index: Int, s: String, path: MutableList<String>, trie: Trie, res: MutableList<String>) {
+        if (index == s.length) {
+            res.add(path.joinToString(" "))
+            return
+        }
+
+        var node = trie.root
+        val word = StringBuilder()
+        for (i in index until s.length) {
+            val c = s[i]
+            node = node.children[c] ?: break
+
+            word.append(c)
+            if (node.isWord) {
+                path.add(word.toString())
+                backtrack(i + 1, s, path, trie, res)
+                path.removeAt(path.size - 1)
+            }
+        }
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [Character: TrieNode]()
+    var isWord = false
+}
+
+class Trie {
+    let root = TrieNode()
+
+    func addWord(_ word: String) {
+        var curr = root
+        for c in word {
+            if curr.children[c] == nil {
+                curr.children[c] = TrieNode()
+            }
+            curr = curr.children[c]!
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> [String] {
+        let trie = Trie()
+        for word in wordDict {
+            trie.addWord(word)
+        }
+
+        let chars = Array(s)
+        var res = [String]()
+        var path = [String]()
+
+        func backtrack(_ index: Int) {
+            if index == chars.count {
+                res.append(path.joined(separator: " "))
+                return
+            }
+
+            var node = trie.root
+            var word = ""
+            for i in index..<chars.count {
+                let c = chars[i]
+                guard let next = node.children[c] else { break }
+
+                word.append(c)
+                node = next
+
+                if node.isWord {
+                    path.append(word)
+                    backtrack(i + 1)
+                    path.removeLast()
+                }
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ```rust
 struct TrieNode {
     children: HashMap<u8, TrieNode>,
@@ -717,6 +933,84 @@ impl Solution {
 
         backtrack(bytes, 0, &mut Vec::new(), &trie, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: Map<string, TrieNode>;
+    isWord: boolean;
+
+    constructor() {
+        this.children = new Map();
+        this.isWord = false;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        let curr = this.root;
+        for (const c of word) {
+            if (!curr.children.has(c)) {
+                curr.children.set(c, new TrieNode());
+            }
+            curr = curr.children.get(c)!;
+        }
+        curr.isWord = true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {string[]}
+     */
+    wordBreak(s: string, wordDict: string[]): string[] {
+        const trie = new Trie();
+        for (const word of wordDict) {
+            trie.addWord(word);
+        }
+
+        const res: string[] = [];
+        const backtrack = (index: number, path: string[]): void => {
+            if (index === s.length) {
+                res.push(path.join(' '));
+                return;
+            }
+
+            let node = trie.root;
+            let word = '';
+            for (let i = index; i < s.length; i++) {
+                const char = s[i];
+                if (!node.children.has(char)) {
+                    break;
+                }
+
+                word += char;
+                node = node.children.get(char)!;
+
+                if (node.isWord) {
+                    path.push(word);
+                    backtrack(i + 1, path);
+                    path.pop();
+                }
+            }
+        };
+
+        backtrack(0, []);
+        return res;
     }
 }
 ```
@@ -1073,6 +1367,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {string[]}
+     */
+    wordBreak(s: string, wordDict: string[]): string[] {
+        const wordSet = new Set<string>(wordDict);
+        const cache = new Map<number, string[]>();
+
+        const backtrack = (i: number): string[] => {
+            if (i === s.length) {
+                return [''];
+            }
+            if (cache.has(i)) {
+                return cache.get(i)!;
+            }
+
+            const res: string[] = [];
+            for (let j = i; j < s.length; j++) {
+                const w = s.substring(i, j + 1);
+                if (!wordSet.has(w)) continue;
+
+                const strings = backtrack(j + 1);
+                for (const substr of strings) {
+                    let sentence = w;
+                    if (substr) {
+                        sentence += ' ' + substr;
+                    }
+                    res.push(sentence);
+                }
+            }
+            cache.set(i, res);
+            return res;
+        };
+
+        return backtrack(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1344,6 +1680,34 @@ impl Solution {
         }
 
         dp[n].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {string[]}
+     */
+    wordBreak(s: string, wordDict: string[]): string[] {
+        const wordSet = new Set<string>(wordDict);
+        const n = s.length;
+        const dp: string[][] = Array.from({ length: n + 1 }, () => []);
+        dp[0].push('');
+
+        for (let i = 1; i <= n; i++) {
+            for (let j = 0; j < i; j++) {
+                if (wordSet.has(s.substring(j, i))) {
+                    for (const sentence of dp[j]) {
+                        dp[i].push((sentence + ' ' + s.substring(j, i)).trim());
+                    }
+                }
+            }
+        }
+
+        return dp[n];
     }
 }
 ```
@@ -1983,6 +2347,91 @@ impl Solution {
         }
 
         backtrack(bytes, 0, &trie, &mut cache)
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: Map<string, TrieNode>;
+    isWord: boolean;
+
+    constructor() {
+        this.children = new Map();
+        this.isWord = false;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        let curr = this.root;
+        for (const c of word) {
+            if (!curr.children.has(c)) {
+                curr.children.set(c, new TrieNode());
+            }
+            curr = curr.children.get(c)!;
+        }
+        curr.isWord = true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {string[]}
+     */
+    wordBreak(s: string, wordDict: string[]): string[] {
+        const trie = new Trie();
+        for (const word of wordDict) {
+            trie.addWord(word);
+        }
+
+        const cache = new Map<number, string[]>();
+
+        const backtrack = (index: number): string[] => {
+            if (index === s.length) {
+                return [''];
+            }
+            if (cache.has(index)) {
+                return cache.get(index)!;
+            }
+
+            const res: string[] = [];
+            let curr = trie.root;
+
+            for (let i = index; i < s.length; i++) {
+                const char = s[i];
+                if (!curr.children.has(char)) {
+                    break;
+                }
+                curr = curr.children.get(char)!;
+                if (curr.isWord) {
+                    for (const suffix of backtrack(i + 1)) {
+                        if (suffix) {
+                            res.push(s.slice(index, i + 1) + ' ' + suffix);
+                        } else {
+                            res.push(s.slice(index, i + 1));
+                        }
+                    }
+                }
+            }
+
+            cache.set(index, res);
+            return res;
+        };
+
+        return backtrack(0);
     }
 }
 ```

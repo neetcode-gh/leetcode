@@ -249,8 +249,9 @@ class Solution {
         return maxHeight1
     }
 
-    fun diameter(root: Node): Int {
+    fun diameter(root: Node?): Int {
         diameter = 0
+        if (root == null) return 0
         height(root)
         return diameter
     }
@@ -259,7 +260,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func diameter(_ root: Node) -> Int {
+    func diameter(_ root: Node?) -> Int {
+        guard let root = root else { return 0 }
         var diameter = 0
 
         func height(_ node: Node) -> Int {
@@ -282,18 +284,23 @@ class Solution {
             return maxHeight1
         }
 
-        height(root)
+        _ = height(root)
         return diameter
     }
 }
 ```
 
 ```rust
-// Definition: struct Node { val: i32, children: Vec<Node> }
-struct Solution;
-
+/**
+ * Definition for a Node.
+ * #[derive(Debug, Clone)]
+ * pub struct Node {
+ *     pub val: i32,
+ *     pub children: Vec<Option<Box<Node>>>,
+ * }
+ */
 impl Solution {
-    pub fn diameter(root: &Node) -> i32 {
+    pub fn diameter(root: Option<Box<Node>>) -> i32 {
         let mut diameter = 0;
 
         fn height(node: &Node, diameter: &mut i32) -> i32 {
@@ -302,7 +309,7 @@ impl Solution {
             }
 
             let (mut max_height1, mut max_height2) = (0, 0);
-            for child in &node.children {
+            for child in node.children.iter().flatten() {
                 let parent_height = height(child, diameter) + 1;
                 if parent_height > max_height1 {
                     max_height2 = max_height1;
@@ -316,8 +323,44 @@ impl Solution {
             max_height1
         }
 
-        height(root, &mut diameter);
+        if let Some(root) = root.as_ref() {
+            height(root, &mut diameter);
+        }
         diameter
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node} root
+     * @return {number}
+     */
+    diameter(root: Node): number {
+        let diameter = 0;
+
+        const height = (node: Node): number => {
+            if (node.children.length === 0) return 0;
+
+            let maxHeight1 = 0,
+                maxHeight2 = 0;
+            for (const child of node.children) {
+                const parentHeight = height(child) + 1;
+                if (parentHeight > maxHeight1) {
+                    maxHeight2 = maxHeight1;
+                    maxHeight1 = parentHeight;
+                } else if (parentHeight > maxHeight2) {
+                    maxHeight2 = parentHeight;
+                }
+                const distance = maxHeight1 + maxHeight2;
+                diameter = Math.max(diameter, distance);
+            }
+            return maxHeight1;
+        };
+
+        height(root);
+        return diameter;
     }
 }
 ```
@@ -427,7 +470,7 @@ class Solution {
 ```cpp
 class Solution {
 protected:
-    int diameter = 0;
+    int maxDiameter = 0;
 
     /**
      * return the maximum depth of leaves nodes descending from the given node
@@ -448,16 +491,16 @@ protected:
             }
             // calculate the distance between the two farthest leaves nodes.
             int distance = maxDepth1 + maxDepth2 - 2 * currDepth;
-            this->diameter = max(this->diameter, distance);
+            this->maxDiameter = max(this->maxDiameter, distance);
         }
         return maxDepth1;
     }
 
 public:
     int diameter(Node* root) {
-        this->diameter = 0;
+        this->maxDiameter = 0;
         maxDepth(root, 0);
-        return diameter;
+        return maxDiameter;
     }
 };
 ```
@@ -592,8 +635,9 @@ class Solution {
         return maxDepth1
     }
 
-    fun diameter(root: Node): Int {
+    fun diameter(root: Node?): Int {
         diameter = 0
+        if (root == null) return 0
         maxDepth(root, 0)
         return diameter
     }
@@ -602,7 +646,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func diameter(_ root: Node) -> Int {
+    func diameter(_ root: Node?) -> Int {
+        guard let root = root else { return 0 }
         var diameter = 0
 
         func maxDepth(_ node: Node, _ currDepth: Int) -> Int {
@@ -625,18 +670,23 @@ class Solution {
             return maxDepth1
         }
 
-        maxDepth(root, 0)
+        _ = maxDepth(root, 0)
         return diameter
     }
 }
 ```
 
 ```rust
-// Definition: struct Node { val: i32, children: Vec<Node> }
-struct Solution;
-
+/**
+ * Definition for a Node.
+ * #[derive(Debug, Clone)]
+ * pub struct Node {
+ *     pub val: i32,
+ *     pub children: Vec<Option<Box<Node>>>,
+ * }
+ */
 impl Solution {
-    pub fn diameter(root: &Node) -> i32 {
+    pub fn diameter(root: Option<Box<Node>>) -> i32 {
         let mut diameter = 0;
 
         fn max_depth(node: &Node, curr_depth: i32, diameter: &mut i32) -> i32 {
@@ -645,7 +695,7 @@ impl Solution {
             }
 
             let (mut max_depth1, mut max_depth2) = (curr_depth, 0);
-            for child in &node.children {
+            for child in node.children.iter().flatten() {
                 let depth = max_depth(child, curr_depth + 1, diameter);
                 if depth > max_depth1 {
                     max_depth2 = max_depth1;
@@ -659,8 +709,53 @@ impl Solution {
             max_depth1
         }
 
-        max_depth(root, 0, &mut diameter);
+        if let Some(root) = root.as_ref() {
+            max_depth(root, 0, &mut diameter);
+        }
         diameter
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node} root
+     * @return {number}
+     */
+    diameter(root: Node): number {
+        let diameter = 0;
+
+        const maxDepth = (node: Node, curr_depth: number): number => {
+            /* return the maximum depth of leaves nodes
+                 descending from the current node
+            */
+            if (node.children.length === 0) {
+                return curr_depth;
+            }
+
+            // select the top 2 depths from its children
+            let max_depth_1 = curr_depth,
+                max_depth_2 = 0;
+            for (const child of node.children) {
+                const depth = maxDepth(child, curr_depth + 1);
+                if (depth > max_depth_1) {
+                    max_depth_2 = max_depth_1;
+                    max_depth_1 = depth;
+                } else if (depth > max_depth_2) {
+                    max_depth_2 = depth;
+                }
+            }
+
+            // calculate the distance between the two farthest leaves nodes
+            const distance = max_depth_1 + max_depth_2 - 2 * curr_depth;
+            diameter = Math.max(diameter, distance);
+
+            return max_depth_1;
+        };
+
+        maxDepth(root, 0);
+        return diameter;
     }
 }
 ```

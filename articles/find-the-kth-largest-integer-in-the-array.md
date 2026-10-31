@@ -80,10 +80,6 @@ public class Solution {
 ```
 
 ```go
-import (
-    "sort"
-)
-
 func kthLargestNumber(nums []string, k int) string {
     sort.Slice(nums, func(i, j int) bool {
         if len(nums[i]) != len(nums[j]) {
@@ -132,6 +128,22 @@ impl Solution {
             }
         });
         nums[(k - 1) as usize].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @param {number} k
+     * @return {string}
+     */
+    kthLargestNumber(nums: string[], k: number): string {
+        nums.sort((a, b) =>
+            a.length === b.length ? b.localeCompare(a) : b.length - a.length,
+        );
+        return nums[k - 1];
     }
 }
 ```
@@ -256,8 +268,8 @@ public class Solution {
     public string KthLargestNumber(string[] nums, int k) {
         var maxHeap = new PriorityQueue<string, string>(
             Comparer<string>.Create((a, b) => {
-                if (a.Length != b.Length) return a.Length.CompareTo(b.Length);
-                return string.Compare(a, b, StringComparison.Ordinal);
+                if (a.Length != b.Length) return b.Length.CompareTo(a.Length);
+                return string.Compare(b, a, StringComparison.Ordinal);
             })
         );
 
@@ -275,9 +287,7 @@ public class Solution {
 ```
 
 ```go
-import (
-    "container/heap"
-)
+import "container/heap"
 
 type MaxHeap []string
 
@@ -316,8 +326,6 @@ func kthLargestNumber(nums []string, k int) string {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Solution {
     fun kthLargestNumber(nums: Array<String>, k: Int): String {
         val maxHeap = PriorityQueue<String> { a, b ->
@@ -376,6 +384,31 @@ impl Solution {
         }
 
         heap.pop().unwrap().1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @param {number} k
+     * @return {string}
+     */
+    kthLargestNumber(nums: string[], k: number): string {
+        const maxHeap = new PriorityQueue((a: string, b: string) =>
+            a.length === b.length ? b.localeCompare(a) : b.length - a.length,
+        );
+
+        for (const num of nums) {
+            maxHeap.enqueue(num);
+        }
+
+        while (--k > 0) {
+            maxHeap.dequeue();
+        }
+
+        return maxHeap.dequeue();
     }
 }
 ```
@@ -515,9 +548,7 @@ public class Solution {
 ```
 
 ```go
-import (
-    "container/heap"
-)
+import "container/heap"
 
 type MinHeap []string
 
@@ -554,8 +585,6 @@ func kthLargestNumber(nums []string, k int) string {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Solution {
     fun kthLargestNumber(nums: Array<String>, k: Int): String {
         val minHeap = PriorityQueue<String> { a, b ->
@@ -650,6 +679,30 @@ impl Solution {
         }
 
         heap.pop().unwrap().0 .1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @param {number} k
+     * @return {string}
+     */
+    kthLargestNumber(nums: string[], k: number): string {
+        const minHeap = new PriorityQueue((a: string, b: string) =>
+            a.length === b.length ? a.localeCompare(b) : a.length - b.length,
+        );
+
+        for (const num of nums) {
+            minHeap.enqueue(num);
+            if (minHeap.size() > k) {
+                minHeap.dequeue();
+            }
+        }
+
+        return minHeap.front();
     }
 }
 ```
@@ -1277,6 +1330,69 @@ impl Solution {
             if j >= k { right = j - 1; }
             if j <= k { left = j + 1; }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} nums
+     * @param {number} k
+     * @return {string}
+     */
+    kthLargestNumber(nums: string[], k: number): string {
+        const greater = (x: string, y: string): boolean =>
+            x.length !== y.length ? x.length > y.length : x > y;
+        const less = (x: string, y: string): boolean =>
+            x.length !== y.length ? x.length < y.length : x < y;
+        const swap = (arr: string[], i: number, j: number) => ([arr[i], arr[j]] = [arr[j], arr[i]]);
+
+        const partition = (nums: string[], left: number, right: number): number => {
+            const mid = Math.floor((left + right) / 2);
+            swap(nums, mid, left + 1);
+
+            if (less(nums[left], nums[right])) swap(nums, left, right);
+            if (less(nums[left + 1], nums[right])) swap(nums, left + 1, right);
+            if (less(nums[left], nums[left + 1])) swap(nums, left, left + 1);
+
+            const pivot = nums[left + 1];
+            let i = left + 1,
+                j = right;
+
+            while (true) {
+                while (greater(nums[++i], pivot));
+                while (less(nums[--j], pivot));
+                if (i > j) break;
+                swap(nums, i, j);
+            }
+
+            swap(nums, left + 1, j);
+            return j;
+        };
+
+        const quickSelect = (nums: string[], k: number): string => {
+            let left = 0,
+                right = nums.length - 1;
+
+            while (true) {
+                if (right <= left + 1) {
+                    if (
+                        right === left + 1 &&
+                        greater(nums[right], nums[left])
+                    ) {
+                        swap(nums, left, right);
+                    }
+                    return nums[k];
+                }
+
+                const j = partition(nums, left, right);
+                if (j >= k) right = j - 1;
+                if (j <= k) left = j + 1;
+            }
+        };
+
+        return quickSelect(nums, k - 1);
     }
 }
 ```

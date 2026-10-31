@@ -398,65 +398,100 @@ class Solution {
 ```
 
 ```rust
-// This problem uses a circular linked list with raw pointers,
-// which is not representable with Option<Box<ListNode>>.
-// The solution below assumes a Node struct with val and next fields.
-use std::ptr;
-
-#[derive(Debug)]
-struct Node {
-    val: i32,
-    next: *mut Node,
-}
-
-impl Node {
-    fn new(val: i32) -> *mut Node {
-        Box::into_raw(Box::new(Node { val, next: ptr::null_mut() }))
-    }
-}
-
+// Definition for a Node.
+// pub struct Node {
+//     pub val: i32,
+//     pub next: Option<Rc<RefCell<Node>>>,
+// }
 impl Solution {
-    pub unsafe fn insert(head: *mut Node, insert_val: i32) -> *mut Node {
-        if head.is_null() {
-            let new_node = Node::new(insert_val);
-            (*new_node).next = new_node;
-            return new_node;
-        }
+    pub fn insert(head: Option<Rc<RefCell<Node>>>, insert_val: i32) -> Option<Rc<RefCell<Node>>> {
+        let head = match head {
+            None => {
+                let new_node = Rc::new(RefCell::new(Node { val: insert_val, next: None }));
+                new_node.borrow_mut().next = Some(new_node.clone());
+                return Some(new_node);
+            }
+            Some(h) => h,
+        };
 
-        let mut prev = head;
-        let mut curr = (*head).next;
-        let mut to_insert = false;
+        let mut prev = head.clone();
+        let mut curr = head.borrow().next.clone().unwrap();
 
         loop {
-            if (*prev).val <= insert_val && insert_val <= (*curr).val {
+            let (prev_val, curr_val) = (prev.borrow().val, curr.borrow().val);
+            let mut to_insert = false;
+            if prev_val <= insert_val && insert_val <= curr_val {
                 // Case 1
                 to_insert = true;
-            } else if (*prev).val > (*curr).val {
+            } else if prev_val > curr_val {
                 // Case 2
-                if insert_val >= (*prev).val || insert_val <= (*curr).val {
+                if insert_val >= prev_val || insert_val <= curr_val {
                     to_insert = true;
                 }
             }
 
             if to_insert {
-                let new_node = Node::new(insert_val);
-                (*new_node).next = curr;
-                (*prev).next = new_node;
-                return head;
+                let node = Rc::new(RefCell::new(Node { val: insert_val, next: Some(curr) }));
+                prev.borrow_mut().next = Some(node);
+                return Some(head);
             }
 
+            let next = curr.borrow().next.clone().unwrap();
             prev = curr;
-            curr = (*curr).next;
-            if prev == head {
+            curr = next;
+            if Rc::ptr_eq(&prev, &head) {
                 break;
             }
         }
 
         // Case 3
-        let new_node = Node::new(insert_val);
-        (*new_node).next = curr;
-        (*prev).next = new_node;
-        head
+        let node = Rc::new(RefCell::new(Node { val: insert_val, next: Some(curr) }));
+        prev.borrow_mut().next = Some(node);
+        Some(head)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {_Node} head
+     * @param {number} insertVal
+     * @return {_Node}
+     */
+    insert(head: _Node | null, insertVal: number): _Node | null {
+        if (head === null) {
+            let newNode = new _Node(insertVal, null);
+            newNode.next = newNode;
+            return newNode;
+        }
+
+        let prev = head;
+        let curr = head.next;
+        let toInsert = false;
+
+        do {
+            if (prev.val <= insertVal && insertVal <= curr.val) {
+                // Case 1
+                toInsert = true;
+            } else if (prev.val > curr.val) {
+                // Case 2
+                if (insertVal >= prev.val || insertVal <= curr.val)
+                    toInsert = true;
+            }
+
+            if (toInsert) {
+                prev.next = new _Node(insertVal, curr);
+                return head;
+            }
+
+            prev = curr;
+            curr = curr.next;
+        } while (prev !== head);
+
+        // Case 3
+        prev.next = new _Node(insertVal, curr);
+        return head;
     }
 }
 ```

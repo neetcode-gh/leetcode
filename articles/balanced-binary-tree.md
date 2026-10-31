@@ -363,6 +363,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isBalanced(root: TreeNode | null): boolean {
+        if (root === null) return true;
+
+        let left = this.height(root.left);
+        let right = this.height(root.right);
+        if (Math.abs(left - right) > 1) return false;
+        return this.isBalanced(root.left) && this.isBalanced(root.right);
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    height(root: TreeNode | null): number {
+        if (root === null) {
+            return 0;
+        }
+
+        return 1 + Math.max(this.height(root.left), this.height(root.right));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -704,6 +733,39 @@ impl Solution {
             }
         }
         dfs(&root).0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isBalanced(root: TreeNode | null): boolean {
+        return this.dfs(root)[0] === 1;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    dfs(root: TreeNode | null): number[] {
+        if (!root) {
+            return [1, 0];
+        }
+
+        const left = this.dfs(root.left);
+        const right = this.dfs(root.right);
+
+        const balanced =
+            left[0] === 1 &&
+            right[0] === 1 &&
+            Math.abs(left[1] - right[1]) <= 1;
+        const height = 1 + Math.max(left[1], right[1]);
+
+        return [balanced ? 1 : 0, height];
     }
 }
 ```
@@ -1176,6 +1238,42 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isBalanced(root: TreeNode | null): boolean {
+        let stack: TreeNode[] = [];
+        let node: TreeNode | null = root,
+            last: TreeNode | null = null;
+        let depths = new Map<TreeNode | null, number>();
+
+        while (stack.length > 0 || node !== null) {
+            if (node !== null) {
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack[stack.length - 1];
+                if (node.right === null || last === node.right) {
+                    stack.pop();
+                    let left = depths.get(node.left) || 0;
+                    let right = depths.get(node.right) || 0;
+                    if (Math.abs(left - right) > 1) return false;
+                    depths.set(node, 1 + Math.max(left, right));
+                    last = node;
+                    node = null;
+                } else {
+                    node = node.right;
+                }
+            }
+        }
+        return true;
     }
 }
 ```

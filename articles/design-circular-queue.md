@@ -384,7 +384,6 @@ class MyCircularQueue {
 }
 ```
 
-
 ```rust
 struct MyCircularQueue {
     q: Vec<i32>,
@@ -426,6 +425,72 @@ impl MyCircularQueue {
 
     fn is_full(&self) -> bool {
         self.q.len() == self.k
+    }
+}
+```
+
+```typescript
+class MyCircularQueue {
+    private queue: number[];
+    private capacity: number;
+
+    /**
+     * @param {number} k
+     */
+    constructor(k: number) {
+        this.queue = [];
+        this.capacity = k;
+    }
+
+    /**
+     * @param {number} value
+     * @return {boolean}
+     */
+    enQueue(value: number): boolean {
+        if (this.queue.length === this.capacity) {
+            return false;
+        }
+        this.queue.push(value);
+        return true;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    deQueue(): boolean {
+        if (this.queue.length === 0) {
+            return false;
+        }
+        this.queue.shift();
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    Front(): number {
+        return this.queue.length === 0 ? -1 : this.queue[0];
+    }
+
+    /**
+     * @return {number}
+     */
+    Rear(): number {
+        return this.queue.length === 0 ? -1 : this.queue[this.queue.length - 1];
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isEmpty(): boolean {
+        return this.queue.length === 0;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFull(): boolean {
+        return this.queue.length === this.capacity;
     }
 }
 ```
@@ -883,7 +948,6 @@ class MyCircularQueue {
 }
 ```
 
-
 ```rust
 struct MyCircularQueue {
     q: Vec<i32>,
@@ -937,6 +1001,81 @@ impl MyCircularQueue {
 
     fn is_full(&self) -> bool {
         self.size == self.capacity
+    }
+}
+```
+
+```typescript
+class MyCircularQueue {
+    private queue: number[];
+    private size: number;
+    private front: number;
+    private rear: number;
+    private capacity: number;
+
+    /**
+     * @param {number} k
+     */
+    constructor(k: number) {
+        this.queue = new Array(k);
+        this.size = 0;
+        this.front = 0;
+        this.rear = -1;
+        this.capacity = k;
+    }
+
+    /**
+     * @param {number} value
+     * @return {boolean}
+     */
+    enQueue(value: number): boolean {
+        if (this.isFull()) {
+            return false;
+        }
+        this.rear = (this.rear + 1) % this.capacity;
+        this.queue[this.rear] = value;
+        this.size++;
+        return true;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    deQueue(): boolean {
+        if (this.isEmpty()) {
+            return false;
+        }
+        this.front = (this.front + 1) % this.capacity;
+        this.size--;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    Front(): number {
+        return this.isEmpty() ? -1 : this.queue[this.front];
+    }
+
+    /**
+     * @return {number}
+     */
+    Rear(): number {
+        return this.isEmpty() ? -1 : this.queue[this.rear];
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isEmpty(): boolean {
+        return this.size === 0;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFull(): boolean {
+        return this.size === this.capacity;
     }
 }
 ```
@@ -1463,7 +1602,6 @@ class MyCircularQueue {
 }
 ```
 
-
 ```rust
 struct MyCircularQueue {
     q: VecDeque<i32>,
@@ -1508,6 +1646,93 @@ impl MyCircularQueue {
 
     fn is_full(&self) -> bool {
         self.q.len() == self.capacity
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: number;
+    next: ListNode | null;
+    prev: ListNode | null;
+
+    /**
+     * @param {number} val
+     * @param {ListNode} next
+     * @param {ListNode} prev
+     */
+    constructor(val: number, next: ListNode | null = null, prev: ListNode | null = null) {
+        this.val = val;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+
+class MyCircularQueue {
+    private space: number;
+    private left: ListNode;
+    private right: ListNode;
+
+    /**
+     * @param {number} k
+     */
+    constructor(k: number) {
+        this.space = k;
+        this.left = new ListNode(0);
+        this.right = new ListNode(0, null, this.left);
+        this.left.next = this.right;
+    }
+
+    /**
+     * @param {number} value
+     * @return {boolean}
+     */
+    enQueue(value: number): boolean {
+        if (this.isFull()) return false;
+        const cur = new ListNode(value, this.right, this.right.prev);
+        this.right.prev!.next = cur;
+        this.right.prev = cur;
+        this.space--;
+        return true;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    deQueue(): boolean {
+        if (this.isEmpty()) return false;
+        this.left.next = this.left.next!.next;
+        this.left.next!.prev = this.left;
+        this.space++;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    Front(): number {
+        return this.isEmpty() ? -1 : this.left.next!.val;
+    }
+
+    /**
+     * @return {number}
+     */
+    Rear(): number {
+        return this.isEmpty() ? -1 : this.right.prev!.val;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isEmpty(): boolean {
+        return this.left.next === this.right;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFull(): boolean {
+        return this.space === 0;
     }
 }
 ```
@@ -2087,7 +2312,6 @@ class MyCircularQueue {
 }
 ```
 
-
 ```rust
 struct MyCircularQueue {
     q: VecDeque<i32>,
@@ -2132,6 +2356,100 @@ impl MyCircularQueue {
 
     fn is_full(&self) -> bool {
         self.q.len() == self.capacity
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: number;
+    next: ListNode | null;
+
+    /**
+     * @param {number} val
+     * @param {ListNode} next
+     */
+    constructor(val: number, next: ListNode | null = null) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
+class MyCircularQueue {
+    private space: number;
+    private left: ListNode;
+    private right: ListNode;
+
+    /**
+     * @param {number} k
+     */
+    constructor(k: number) {
+        this.space = k;
+        this.left = new ListNode(0);
+        this.right = this.left;
+    }
+
+    /**
+     * @param {number} value
+     * @return {boolean}
+     */
+    enQueue(value: number): boolean {
+        if (this.isFull()) return false;
+
+        const cur = new ListNode(value);
+        if (this.isEmpty()) {
+            this.left.next = cur;
+            this.right = cur;
+        } else {
+            this.right.next = cur;
+            this.right = cur;
+        }
+
+        this.space--;
+        return true;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    deQueue(): boolean {
+        if (this.isEmpty()) return false;
+
+        this.left.next = this.left.next!.next;
+        if (!this.left.next) {
+            this.right = this.left;
+        }
+
+        this.space++;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    Front(): number {
+        return this.isEmpty() ? -1 : this.left.next!.val;
+    }
+
+    /**
+     * @return {number}
+     */
+    Rear(): number {
+        return this.isEmpty() ? -1 : this.right.val;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isEmpty(): boolean {
+        return this.left.next === null;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFull(): boolean {
+        return this.space === 0;
     }
 }
 ```

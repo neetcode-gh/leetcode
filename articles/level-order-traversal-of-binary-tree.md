@@ -345,6 +345,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    levelOrder(root: TreeNode | null): number[][] {
+        let res: number[][] = [];
+
+        /**
+         * @param {TreeNode} node
+         * @param {number} depth
+         */
+        function dfs(node: TreeNode | null, depth: number): void {
+            if (!node) return;
+
+            if (res.length === depth) {
+                res.push([]);
+            }
+
+            res[depth].push(node.val);
+            dfs(node.left, depth + 1);
+            dfs(node.right, depth + 1);
+        }
+
+        dfs(root, 0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -739,6 +770,39 @@ impl Solution {
             res.push(level);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    levelOrder(root: TreeNode | null): number[][] {
+        let res: number[][] = [];
+        if (!root) return res;
+
+        const q = new Queue();
+        q.push(root);
+
+        while (!q.isEmpty()) {
+            let level: number[] = [];
+
+            for (let i = q.size(); i > 0; i--) {
+                let node: TreeNode | null = q.pop();
+                if (node !== null) {
+                    level.push(node.val);
+                    q.push(node.left);
+                    q.push(node.right);
+                }
+            }
+            if (level.length > 0) {
+                res.push(level);
+            }
+        }
+        return res;
     }
 }
 ```

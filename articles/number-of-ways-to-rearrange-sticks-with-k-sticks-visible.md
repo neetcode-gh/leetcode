@@ -180,6 +180,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    rearrangeSticks(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+
+        const dfs = (N: number, K: number): number => {
+            if (N === K) return 1;
+            if (N === 0 || K === 0) return 0;
+            return (dfs(N - 1, K - 1) + (N - 1) * dfs(N - 1, K)) % MOD;
+        };
+
+        return dfs(n, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -406,6 +427,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    rearrangeSticks(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(-1),
+        );
+
+        const dfs = (N: number, K: number): number => {
+            if (N === K) return 1;
+            if (N === 0 || K === 0) return 0;
+            if (dp[N][K] !== -1) return dp[N][K];
+            dp[N][K] = (dfs(N - 1, K - 1) + (N - 1) * dfs(N - 1, K)) % MOD;
+            return dp[N][K];
+        };
+
+        return dfs(n, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,7 +618,7 @@ class Solution {
         var dp = [[Int]](repeating: [Int](repeating: 0, count: k + 1), count: n + 1)
         dp[1][1] = 1
 
-        for N in 2...n {
+        for N in stride(from: 2, through: n, by: 1) {
             for K in 1...k {
                 dp[N][K] = (dp[N - 1][K - 1] + (N - 1) * dp[N - 1][K]) % MOD
             }
@@ -597,6 +644,31 @@ impl Solution {
         }
 
         dp[n][k] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    rearrangeSticks(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(0),
+        );
+        dp[1][1] = 1;
+
+        for (let N = 2; N <= n; N++) {
+            for (let K = 1; K <= k; K++) {
+                dp[N][K] = (dp[N - 1][K - 1] + (N - 1) * dp[N - 1][K]) % MOD;
+            }
+        }
+
+        return dp[n][k];
     }
 }
 ```
@@ -785,7 +857,7 @@ class Solution {
         var dp = [Int](repeating: 0, count: k + 1)
         dp[1] = 1
 
-        for N in 2...n {
+        for N in stride(from: 2, through: n, by: 1) {
             var prev = 0
             for K in 1...k {
                 let tmp = dp[K]
@@ -817,6 +889,32 @@ impl Solution {
         }
 
         dp[k] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    rearrangeSticks(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[] = new Array(k + 1).fill(0);
+        dp[1] = 1;
+
+        for (let N = 2; N <= n; N++) {
+            let prev = 0;
+            for (let K = 1; K <= k; K++) {
+                const tmp = dp[K];
+                dp[K] = (prev + (N - 1) * dp[K]) % MOD;
+                prev = tmp;
+            }
+        }
+
+        return dp[k];
     }
 }
 ```

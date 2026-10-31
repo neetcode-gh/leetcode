@@ -138,7 +138,7 @@ public class Solution {
             pairs[i] = new int[] { mapped_n, i };
         }
 
-        Array.Sort(pairs, (a, b) => a[0].CompareTo(b[0]));
+        Array.Sort(pairs, (a, b) => a[0] != b[0] ? a[0].CompareTo(b[0]) : a[1].CompareTo(b[1]));
 
         int[] res = new int[n];
         for (int i = 0; i < n; i++) {
@@ -164,7 +164,7 @@ func sortJumbled(mapping []int, nums []int) []int {
         pairs[i] = [2]int{mapped_n, i}
     }
 
-    sort.Slice(pairs, func(i, j int) bool {
+    sort.SliceStable(pairs, func(i, j int) bool {
         return pairs[i][0] < pairs[j][0]
     })
 
@@ -450,7 +450,7 @@ public class Solution {
             pairs[i] = new int[] { mapped_n, i };
         }
 
-        Array.Sort(pairs, (a, b) => a[0].CompareTo(b[0]));
+        Array.Sort(pairs, (a, b) => a[0] != b[0] ? a[0].CompareTo(b[0]) : a[1].CompareTo(b[1]));
 
         int[] res = new int[n];
         for (int i = 0; i < n; i++) {
@@ -484,7 +484,7 @@ func sortJumbled(mapping []int, nums []int) []int {
         pairs[i] = [2]int{mapped_n, i}
     }
 
-    sort.Slice(pairs, func(i, j int) bool {
+    sort.SliceStable(pairs, func(i, j int) bool {
         return pairs[i][0] < pairs[j][0]
     })
 

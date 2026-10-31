@@ -244,7 +244,7 @@ func isCompleteTree(root *TreeNode) bool {
  */
 class Solution {
     fun isCompleteTree(root: TreeNode?): Boolean {
-        val q = ArrayDeque<TreeNode?>()
+        val q = LinkedList<TreeNode?>()
         q.add(root)
 
         while (q.isNotEmpty()) {
@@ -330,6 +330,33 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isCompleteTree(root: TreeNode | null): boolean {
+        const queue = new Queue([root]);
+
+        while (!queue.isEmpty()) {
+            const node: TreeNode | null = queue.pop();
+            if (node) {
+                queue.push(node.left);
+                queue.push(node.right);
+            } else {
+                while (!queue.isEmpty()) {
+                    if (queue.pop()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
 ```
@@ -571,7 +598,7 @@ func isCompleteTree(root *TreeNode) bool {
  */
 class Solution {
     fun isCompleteTree(root: TreeNode?): Boolean {
-        val q = ArrayDeque<TreeNode?>()
+        val q = LinkedList<TreeNode?>()
         q.add(root)
         var nullSeen = false
 
@@ -644,6 +671,31 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isCompleteTree(root: TreeNode | null): boolean {
+        const queue = new Queue([root]);
+        let nullSeen = false;
+
+        while (!queue.isEmpty()) {
+            const node: TreeNode | null = queue.pop();
+            if (node) {
+                if (nullSeen) return false;
+                queue.push(node.left);
+                queue.push(node.right);
+            } else {
+                nullSeen = true;
+            }
+        }
+        return true;
     }
 }
 ```
@@ -964,6 +1016,33 @@ impl Solution {
 
         let n = count_nodes(&root);
         dfs(&root, 0, n)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isCompleteTree(root: TreeNode | null): boolean {
+        const countNodes = (node: TreeNode | null): number => {
+            if (!node) return 0;
+            return 1 + countNodes(node.left) + countNodes(node.right);
+        };
+
+        const dfs = (node: TreeNode | null, index: number, n: number): boolean => {
+            if (!node) return true;
+            if (index >= n) return false;
+            return (
+                dfs(node.left, 2 * index + 1, n) &&
+                dfs(node.right, 2 * index + 2, n)
+            );
+        };
+
+        const n = countNodes(root);
+        return dfs(root, 0, n);
     }
 }
 ```
@@ -1321,6 +1400,36 @@ impl Solution {
         }
 
         dfs(&root, 0, &mut tree_hgt, &mut null_seen)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isCompleteTree(root: TreeNode | null): boolean {
+        let treeHgt = 0;
+        let nullSeen = false;
+
+        const dfs = (node: TreeNode | null, hgt: number): boolean => {
+            if (!node) {
+                if (treeHgt === 0) {
+                    treeHgt = hgt;
+                } else if (hgt === treeHgt - 1) {
+                    nullSeen = true;
+                } else if (hgt !== treeHgt) {
+                    return false;
+                }
+                return !(hgt === treeHgt && nullSeen);
+            }
+
+            return dfs(node.left, hgt + 1) && dfs(node.right, hgt + 1);
+        };
+
+        return dfs(root, 0);
     }
 }
 ```

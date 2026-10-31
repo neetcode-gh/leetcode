@@ -157,6 +157,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    getConcatenation(nums: number[]): number[] {
+        let ans: number[] = [];
+        for (let i = 0; i < 2; i++) {
+            for (let num of nums) {
+                ans.push(num);
+            }
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -301,6 +319,23 @@ impl Solution {
             ans[i + n] = nums[i];
         }
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    getConcatenation(nums: number[]): number[] {
+        let n = nums.length;
+        let ans: number[] = new Array(2 * n);
+        for (let i = 0; i < n; i++) {
+            ans[i] = ans[i + n] = nums[i];
+        }
+        return ans;
     }
 }
 ```

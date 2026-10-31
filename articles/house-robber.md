@@ -175,6 +175,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        const dfs = (i: number): number => {
+            if (i >= nums.length) {
+                return 0;
+            }
+            return Math.max(dfs(i + 1), nums[i] + dfs(i + 2));
+        };
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -412,6 +430,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        const memo = new Int32Array(nums.length).fill(-1);
+        const dfs = (i: number): number => {
+            if (i >= nums.length) {
+                return 0;
+            }
+            if (memo[i] !== -1) {
+                return memo[i];
+            }
+            return (memo[i] = Math.max(dfs(i + 1), nums[i] + dfs(i + 2)));
+        };
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,6 +684,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        if (nums.length === 0) return 0;
+        if (nums.length === 1) return nums[0];
+
+        const dp: number[] = new Array(nums.length).fill(0);
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+
+        for (let i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i - 1], nums[i] + dp[i - 2]);
+        }
+
+        return dp[nums.length - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -824,6 +887,26 @@ impl Solution {
             rob2 = temp;
         }
         rob2
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    rob(nums: number[]): number {
+        let rob1 = 0;
+        let rob2 = 0;
+
+        for (const num of nums) {
+            const temp = Math.max(num + rob1, rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        return rob2;
     }
 }
 ```

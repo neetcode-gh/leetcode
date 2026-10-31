@@ -262,6 +262,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    isMonotonic(nums: number[]): boolean {
+        const n = nums.length;
+        let increase = true;
+        for (let i = 1; i < n; i++) {
+            if (nums[i] < nums[i - 1]) {
+                increase = false;
+                break;
+            }
+        }
+        if (increase) {
+            return true;
+        }
+
+        let decrease = true;
+        for (let i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1]) {
+                decrease = false;
+                break;
+            }
+        }
+        return decrease;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -491,6 +522,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    isMonotonic(nums: number[]): boolean {
+        const n = nums.length;
+        if (nums[0] <= nums[n - 1]) {
+            for (let i = 1; i < n; i++) {
+                if (nums[i] < nums[i - 1]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            for (let i = 1; i < n; i++) {
+                if (nums[i] > nums[i - 1]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -676,6 +734,29 @@ impl Solution {
             }
         }
         increase || decrease
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    isMonotonic(nums: number[]): boolean {
+        let increase = true,
+            decrease = true;
+
+        for (let i = 0; i < nums.length - 1; i++) {
+            if (!(nums[i] <= nums[i + 1])) {
+                increase = false;
+            }
+            if (!(nums[i] >= nums[i + 1])) {
+                decrease = false;
+            }
+        }
+        return increase || decrease;
     }
 }
 ```

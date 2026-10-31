@@ -159,6 +159,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int K;
+
+    public int[][] HighFive(int[][] items) {
+        this.K = 5;
+
+        Array.Sort(items, (a, b) => {
+            if (a[0] != b[0]) {
+                // item with lower id goes first
+                return a[0] - b[0];
+            }
+            // in case of tie for ids, item with higher score goes first
+            return b[1] - a[1];
+        });
+
+        List<int[]> solution = new List<int[]>();
+        int n = items.Length;
+        int i = 0;
+        while (i < n) {
+            int id = items[i][0];
+            int sum = 0;
+            // obtain total using the top 5 scores
+            for (int k = i; k < i + this.K; ++k) {
+                sum += items[k][1];
+            }
+            // ignore all the other scores for the same id
+            while (i < n && items[i][0] == id) {
+                i++;
+            }
+            solution.Add(new int[] { id, sum / this.K });
+        }
+
+        return solution.ToArray();
+    }
+}
+```
+
 ```go
 func highFive(items [][]int) [][]int {
     K := 5
@@ -271,6 +309,39 @@ impl Solution {
         }
 
         solution
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} items
+     * @return {number[][]}
+     */
+    highFive(items: number[][]): number[][] {
+        const K = 5;
+        items.sort((a, b) => {
+            if (a[0] !== b[0]) return a[0] - b[0];
+            return b[1] - a[1];
+        });
+
+        const solution: number[][] = [];
+        const n = items.length;
+        let i = 0;
+        while (i < n) {
+            const id = items[i][0];
+            let sum = 0;
+            for (let k = i; k < i + K; k++) {
+                sum += items[k][1];
+            }
+            while (i < n && items[i][0] === id) {
+                i++;
+            }
+            solution.push([id, Math.floor(sum / K)]);
+        }
+
+        return solution;
     }
 }
 ```
@@ -416,13 +487,49 @@ class Solution {
             const heap = allScores.get(id);
 
             for (let i = 0; i < K; i++) {
-                sum += heap.dequeue().element;
+                sum += heap.dequeue();
             }
 
             solution.push([id, Math.floor(sum / K)]);
         }
 
         return solution;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int K;
+
+    public int[][] HighFive(int[][] items) {
+        this.K = 5;
+        SortedDictionary<int, PriorityQueue<int, int>> allScores =
+            new SortedDictionary<int, PriorityQueue<int, int>>();
+        foreach (int[] item in items) {
+            int id = item[0];
+            int score = item[1];
+            if (!allScores.ContainsKey(id)) {
+                // max heap
+                allScores[id] = new PriorityQueue<int, int>(
+                    Comparer<int>.Create((a, b) => b - a)
+                );
+            }
+            // Add score to the max heap
+            allScores[id].Enqueue(score, score);
+        }
+
+        List<int[]> solution = new List<int[]>();
+
+        foreach (int id in allScores.Keys) {
+            int sum = 0;
+            // obtain the top k scores (k = 5)
+            for (int i = 0; i < this.K; ++i) {
+                sum += allScores[id].Dequeue();
+            }
+            solution.Add(new int[] { id, sum / this.K });
+        }
+        return solution.ToArray();
     }
 }
 ```
@@ -479,9 +586,6 @@ func highFive(items [][]int) [][]int {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-import java.util.TreeMap
-
 class Solution {
     fun highFive(items: Array<IntArray>): Array<IntArray> {
         val K = 5
@@ -562,6 +666,45 @@ impl Solution {
         }
 
         solution
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} items
+     * @return {number[][]}
+     */
+    highFive(items: number[][]): number[][] {
+        const K = 5;
+        const allScores = new Map<number, any>();
+
+        for (const item of items) {
+            const id = item[0];
+            const score = item[1];
+
+            if (!allScores.has(id)) {
+                allScores.set(id, new MaxPriorityQueue());
+            }
+            allScores.get(id).enqueue(score);
+        }
+
+        const solution: number[][] = [];
+        const sortedIds = Array.from(allScores.keys()).sort((a, b) => a - b);
+
+        for (const id of sortedIds) {
+            let sum = 0;
+            const heap = allScores.get(id);
+
+            for (let i = 0; i < K; i++) {
+                sum += heap.dequeue();
+            }
+
+            solution.push([id, Math.floor(sum / K)]);
+        }
+
+        return solution;
     }
 }
 ```
@@ -721,13 +864,51 @@ class Solution {
             const heap = allScores.get(id);
 
             for (let i = 0; i < K; i++) {
-                sum += heap.dequeue().element;
+                sum += heap.dequeue();
             }
 
             solution.push([id, Math.floor(sum / K)]);
         }
 
         return solution;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int K;
+
+    public int[][] HighFive(int[][] items) {
+        this.K = 5;
+        SortedDictionary<int, PriorityQueue<int, int>> allScores =
+            new SortedDictionary<int, PriorityQueue<int, int>>();
+        foreach (int[] item in items) {
+            int id = item[0];
+            int score = item[1];
+            if (!allScores.ContainsKey(id)) {
+                allScores[id] = new PriorityQueue<int, int>();
+            }
+            // insert the score in the min heap
+            allScores[id].Enqueue(score, score);
+            // remove the minimum element from the min heap in case the size of the min heap exceeds 5
+            if (allScores[id].Count > this.K) {
+                allScores[id].Dequeue();
+            }
+        }
+
+        List<int[]> solution = new List<int[]>();
+
+        foreach (int id in allScores.Keys) {
+            int sum = 0;
+            // min heap contains the top 5 scores
+            for (int i = 0; i < this.K; ++i) {
+                sum += allScores[id].Dequeue();
+            }
+            solution.Add(new int[] { id, sum / this.K });
+        }
+
+        return solution.ToArray();
     }
 }
 ```
@@ -787,9 +968,6 @@ func highFive(items [][]int) [][]int {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-import java.util.TreeMap
-
 class Solution {
     fun highFive(items: Array<IntArray>): Array<IntArray> {
         val K = 5
@@ -874,6 +1052,50 @@ impl Solution {
         }
 
         solution
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} items
+     * @return {number[][]}
+     */
+    highFive(items: number[][]): number[][] {
+        const K = 5;
+        const allScores = new Map<number, any>();
+
+        for (const item of items) {
+            const id = item[0];
+            const score = item[1];
+
+            if (!allScores.has(id)) {
+                allScores.set(id, new MinPriorityQueue()); // Using { MinPriorityQueue } from '@datastructures-js/priority-queue';
+            }
+
+            allScores.get(id).enqueue(score);
+
+            if (allScores.get(id).size() > K) {
+                allScores.get(id).dequeue();
+            }
+        }
+
+        const solution: number[][] = [];
+        const sortedIds = Array.from(allScores.keys()).sort((a, b) => a - b);
+
+        for (const id of sortedIds) {
+            let sum = 0;
+            const heap = allScores.get(id);
+
+            for (let i = 0; i < K; i++) {
+                sum += heap.dequeue();
+            }
+
+            solution.push([id, Math.floor(sum / K)]);
+        }
+
+        return solution;
     }
 }
 ```

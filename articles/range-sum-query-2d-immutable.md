@@ -208,6 +208,36 @@ impl NumMatrix {
 }
 ```
 
+```typescript
+class NumMatrix {
+    private matrix: number[][];
+
+    /**
+     * @param {number[][]} matrix
+     */
+    constructor(matrix: number[][]) {
+        this.matrix = matrix;
+    }
+
+    /**
+     * @param {number} row1
+     * @param {number} col1
+     * @param {number} row2
+     * @param {number} col2
+     * @return {number}
+     */
+    sumRegion(row1: number, col1: number, row2: number, col2: number): number {
+        let res = 0;
+        for (let r = row1; r <= row2; r++) {
+            for (let c = col1; c <= col2; c++) {
+                res += this.matrix[r][c];
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -521,6 +551,49 @@ impl NumMatrix {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class NumMatrix {
+    private prefixSum: number[][];
+
+    /**
+     * @param {number[][]} matrix
+     */
+    constructor(matrix: number[][]) {
+        this.prefixSum = Array.from({ length: matrix.length }, () =>
+            Array(matrix[0].length).fill(0),
+        );
+
+        for (let row = 0; row < matrix.length; row++) {
+            this.prefixSum[row][0] = matrix[row][0];
+            for (let col = 1; col < matrix[0].length; col++) {
+                this.prefixSum[row][col] =
+                    this.prefixSum[row][col - 1] + matrix[row][col];
+            }
+        }
+    }
+
+    /**
+     * @param {number} row1
+     * @param {number} col1
+     * @param {number} row2
+     * @param {number} col2
+     * @return {number}
+     */
+    sumRegion(row1: number, col1: number, row2: number, col2: number): number {
+        let res = 0;
+        for (let row = row1; row <= row2; row++) {
+            if (col1 > 0) {
+                res +=
+                    this.prefixSum[row][col2] - this.prefixSum[row][col1 - 1];
+            } else {
+                res += this.prefixSum[row][col2];
+            }
+        }
+        return res;
     }
 }
 ```
@@ -846,6 +919,51 @@ impl NumMatrix {
         let left = self.sum_mat[r2][c1 - 1];
         let top_left = self.sum_mat[r1 - 1][c1 - 1];
         bottom_right - above - left + top_left
+    }
+}
+```
+
+```typescript
+class NumMatrix {
+    private sumMat: number[][];
+
+    /**
+     * @param {number[][]} matrix
+     */
+    constructor(matrix: number[][]) {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        this.sumMat = Array.from({ length: ROWS + 1 }, () =>
+            Array(COLS + 1).fill(0),
+        );
+
+        for (let r = 0; r < ROWS; r++) {
+            let prefix = 0;
+            for (let c = 0; c < COLS; c++) {
+                prefix += matrix[r][c];
+                const above = this.sumMat[r][c + 1];
+                this.sumMat[r + 1][c + 1] = prefix + above;
+            }
+        }
+    }
+
+    /**
+     * @param {number} row1
+     * @param {number} col1
+     * @param {number} row2
+     * @param {number} col2
+     * @return {number}
+     */
+    sumRegion(row1: number, col1: number, row2: number, col2: number): number {
+        row1++;
+        col1++;
+        row2++;
+        col2++;
+        const bottomRight = this.sumMat[row2][col2];
+        const above = this.sumMat[row1 - 1][col2];
+        const left = this.sumMat[row2][col1 - 1];
+        const topLeft = this.sumMat[row1 - 1][col1 - 1];
+        return bottomRight - above - left + topLeft;
     }
 }
 ```

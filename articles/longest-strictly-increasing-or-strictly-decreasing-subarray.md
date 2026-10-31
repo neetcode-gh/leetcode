@@ -230,6 +230,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    longestMonotonicSubarray(nums: number[]): number {
+        let n = nums.length;
+        let res = 1;
+
+        for (let i = 0; i < n - 1; i++) {
+            let curLen = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (
+                    nums[j] === nums[j - 1] ||
+                    nums[i] < nums[i + 1] !== nums[j - 1] < nums[j]
+                ) {
+                    break;
+                }
+                curLen++;
+            }
+            res = Math.max(res, curLen);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,6 +595,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    longestMonotonicSubarray(nums: number[]): number {
+        let cur = 1;
+        let res = 1;
+        let increasing = 0;
+
+        for (let i = 1; i < nums.length; i++) {
+            if (nums[i - 1] < nums[i]) {
+                if (increasing > 0) {
+                    cur++;
+                } else {
+                    cur = 2;
+                    increasing = 1;
+                }
+            } else if (nums[i - 1] > nums[i]) {
+                if (increasing < 0) {
+                    cur++;
+                } else {
+                    cur = 2;
+                    increasing = -1;
+                }
+            } else {
+                cur = 1;
+                increasing = 0;
+            }
+            res = Math.max(res, cur);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -813,6 +880,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    longestMonotonicSubarray(nums: number[]): number {
+        let inc = 1,
+            dec = 1,
+            res = 1;
+
+        for (let i = 1; i < nums.length; i++) {
+            if (nums[i] === nums[i - 1]) {
+                inc = dec = 1;
+            } else if (nums[i] > nums[i - 1]) {
+                inc = inc + 1;
+                dec = 1;
+            } else {
+                inc = 1;
+                dec = dec + 1;
+            }
+            res = Math.max(res, inc, dec);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1039,6 +1135,35 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    longestMonotonicSubarray(nums: number[]): number {
+        let curLen = 1,
+            res = 1;
+
+        for (let i = 1; i < nums.length; i++) {
+            if (
+                nums[i] === nums[i - 1] ||
+                nums[i - curLen] < nums[i - curLen + 1] !==
+                    nums[i - 1] < nums[i]
+            ) {
+                curLen = nums[i] === nums[i - 1] ? 1 : 2;
+                continue;
+            }
+
+            curLen++;
+            res = Math.max(res, curLen);
+        }
+
+        return res;
     }
 }
 ```

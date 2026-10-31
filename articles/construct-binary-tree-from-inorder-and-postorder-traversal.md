@@ -344,6 +344,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} inorder
+     * @param {number[]} postorder
+     * @return {TreeNode}
+     */
+    buildTree(inorder: number[], postorder: number[]): TreeNode | null {
+        if (postorder.length === 0 || inorder.length === 0) {
+            return null;
+        }
+
+        const rootVal = postorder[postorder.length - 1];
+        const root = new TreeNode(rootVal);
+        const mid = inorder.indexOf(rootVal);
+
+        root.left = this.buildTree(
+            inorder.slice(0, mid),
+            postorder.slice(0, mid),
+        );
+        root.right = this.buildTree(
+            inorder.slice(mid + 1),
+            postorder.slice(mid, postorder.length - 1),
+        );
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -707,6 +737,33 @@ impl Solution {
             &inorder_idx,
             &mut post_idx,
         )
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} inorder
+     * @param {number[]} postorder
+     * @return {TreeNode}
+     */
+    buildTree(inorder: number[], postorder: number[]): TreeNode | null {
+        const inorderIdx = new Map<number, number>();
+        inorder.forEach((val, idx) => inorderIdx.set(val, idx));
+        let postIdx = postorder.length - 1;
+
+        const dfs = (l: number, r: number): TreeNode | null => {
+            if (l > r) return null;
+
+            const root = new TreeNode(postorder[postIdx--]);
+            const idx = inorderIdx.get(root.val)!;
+            root.right = dfs(idx + 1, r);
+            root.left = dfs(l, idx - 1);
+            return root;
+        };
+
+        return dfs(0, inorder.length - 1);
     }
 }
 ```
@@ -1084,6 +1141,36 @@ impl Solution {
         }
 
         dfs(i64::MAX, &inorder, &postorder, &mut post_idx, &mut in_idx)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} inorder
+     * @param {number[]} postorder
+     * @return {TreeNode}
+     */
+    buildTree(inorder: number[], postorder: number[]): TreeNode | null {
+        let postIdx = postorder.length - 1;
+        let inIdx = inorder.length - 1;
+
+        const dfs = (limit: number): TreeNode | null => {
+            if (postIdx < 0) return null;
+
+            if (inorder[inIdx] === limit) {
+                inIdx--;
+                return null;
+            }
+
+            const root = new TreeNode(postorder[postIdx--]);
+            root.right = dfs(root.val);
+            root.left = dfs(limit);
+            return root;
+        };
+
+        return dfs(Infinity);
     }
 }
 ```

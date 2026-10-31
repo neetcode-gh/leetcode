@@ -673,6 +673,89 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} m
+     * @param {number[]} group
+     * @param {number[][]} beforeItems
+     * @return {number[]}
+     */
+    sortItems(
+        n: number,
+        m: number,
+        group: number[],
+        beforeItems: number[][],
+    ): number[] {
+        for (let i = 0; i < n; i++) {
+            if (group[i] === -1) {
+                group[i] = m++;
+            }
+        }
+
+        const itemAdj: number[][] = Array.from({ length: n }, () => []);
+        const groupAdj: number[][] = Array.from({ length: m }, () => []);
+        for (let i = 0; i < n; i++) {
+            for (const parent of beforeItems[i]) {
+                itemAdj[parent].push(i);
+                if (group[i] !== group[parent]) {
+                    groupAdj[group[parent]].push(group[i]);
+                }
+            }
+        }
+
+        const itm = this.topoSort(itemAdj, n);
+        if (!itm.length) return [];
+        const grp = this.topoSort(groupAdj, m);
+        if (!grp.length) return [];
+
+        const grouping: { [key: number]: number[] } = {};
+        for (const i of itm) {
+            if (!grouping[group[i]]) grouping[group[i]] = [];
+            grouping[group[i]].push(i);
+        }
+
+        const res: number[] = [];
+        for (const g of grp) {
+            if (grouping[g]) res.push(...grouping[g]);
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {number[][]} adj
+     * @param {number} N
+     * @return {number[]}
+     */
+    topoSort(adj: number[][], N: number): number[] {
+        const visited: number[] = new Array(N).fill(0);
+        const topo: number[] = [];
+
+        const dfs = (node: number): boolean => {
+            if (visited[node] === 1) return true;
+            if (visited[node] === 2) return false;
+            visited[node] = 1;
+            for (const neighbor of adj[node]) {
+                if (dfs(neighbor)) return true;
+            }
+            topo.push(node);
+            visited[node] = 2;
+            return false;
+        };
+
+        for (let i = 0; i < N; i++) {
+            if (visited[i] === 0 && dfs(i)) {
+                return [];
+            }
+        }
+
+        return topo.reverse();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1313,6 +1396,87 @@ impl Solution {
             }
         }
         if topo.len() == n { topo } else { vec![] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} m
+     * @param {number[]} group
+     * @param {number[][]} beforeItems
+     * @return {number[]}
+     */
+    sortItems(
+        n: number,
+        m: number,
+        group: number[],
+        beforeItems: number[][],
+    ): number[] {
+        for (let i = 0; i < n; i++) {
+            if (group[i] === -1) group[i] = m++;
+        }
+
+        const itemAdj: number[][] = Array.from({ length: n }, () => []);
+        const groupAdj: number[][] = Array.from({ length: m }, () => []);
+        const itemIndegree: number[] = Array(n).fill(0);
+        const groupIndegree: number[] = Array(m).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            for (const par of beforeItems[i]) {
+                itemAdj[par].push(i);
+                itemIndegree[i]++;
+                if (group[i] !== group[par]) {
+                    groupAdj[group[par]].push(group[i]);
+                    groupIndegree[group[i]]++;
+                }
+            }
+        }
+
+        const itm = this.topoSort(itemAdj, itemIndegree, n);
+        if (itm.length === 0) return [];
+        const grp = this.topoSort(groupAdj, groupIndegree, m);
+        if (grp.length === 0) return [];
+
+        const grouping = new Map<number, number[]>();
+        for (const i of itm) {
+            if (!grouping.has(group[i])) grouping.set(group[i], []);
+            grouping.get(group[i])!.push(i);
+        }
+
+        const res: number[] = [];
+        for (const g of grp) {
+            if (grouping.has(g)) res.push(...grouping.get(g)!);
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {number[][]} adj
+     * @param {number[]} indegree
+     * @param {number} N
+     * @return {number[]}
+     */
+    topoSort(adj: number[][], indegree: number[], N: number): number[] {
+        const q = new Queue();
+        const topo: number[] = [];
+        for (let i = 0; i < N; i++) {
+            if (indegree[i] === 0) q.push(i);
+        }
+
+        while (!q.isEmpty()) {
+            const node = q.pop() as number;
+            topo.push(node);
+            for (const neighbor of adj[node]) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] === 0) q.push(neighbor);
+            }
+        }
+
+        return topo.length === N ? topo : [];
     }
 }
 ```

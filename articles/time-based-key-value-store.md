@@ -348,6 +348,51 @@ impl TimeMap {
 }
 ```
 
+```typescript
+class TimeMap {
+    private keyStore: Map<string, Map<number, string[]>>;
+
+    constructor() {
+        this.keyStore = new Map();
+    }
+
+    /**
+     * @param {string} key
+     * @param {string} value
+     * @param {number} timestamp
+     * @return {void}
+     */
+    set(key: string, value: string, timestamp: number): void {
+        if (!this.keyStore.has(key)) {
+            this.keyStore.set(key, new Map());
+        }
+        if (!this.keyStore.get(key)!.has(timestamp)) {
+            this.keyStore.get(key)!.set(timestamp, []);
+        }
+        this.keyStore.get(key)!.get(timestamp)!.push(value);
+    }
+
+    /**
+     * @param {string} key
+     * @param {number} timestamp
+     * @return {string}
+     */
+    get(key: string, timestamp: number): string {
+        if (!this.keyStore.has(key)) {
+            return '';
+        }
+        let seen = -1;
+
+        for (let time of this.keyStore.get(key)!.keys()) {
+            if (time <= timestamp) {
+                seen = Math.max(seen, time);
+            }
+        }
+        return seen === -1 ? '' : this.keyStore.get(key)!.get(seen)!.at(-1)!;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -658,6 +703,53 @@ impl TimeMap {
         } else {
             pairs[idx - 1].1.clone()
         }
+    }
+}
+```
+
+```typescript
+class TimeMap {
+    private keyStore: Map<string, [number, string][]>;
+
+    constructor() {
+        this.keyStore = new Map();
+    }
+
+    /**
+     * @param {string} key
+     * @param {string} value
+     * @param {number} timestamp
+     * @return {void}
+     */
+    set(key: string, value: string, timestamp: number): void {
+        if (!this.keyStore.has(key)) {
+            this.keyStore.set(key, []);
+        }
+        this.keyStore.get(key)!.push([timestamp, value]);
+    }
+
+    /**
+     * @param {string} key
+     * @param {number} timestamp
+     * @return {string}
+     */
+    get(key: string, timestamp: number): string {
+        const values = this.keyStore.get(key) || [];
+        let left = 0;
+        let right = values.length - 1;
+        let result = '';
+
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (values[mid][0] <= timestamp) {
+                result = values[mid][1];
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return result;
     }
 }
 ```
@@ -1038,6 +1130,53 @@ impl TimeMap {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class TimeMap {
+    private keyStore: Map<string, [number, string][]>;
+
+    constructor() {
+        this.keyStore = new Map();
+    }
+
+    /**
+     * @param {string} key
+     * @param {string} value
+     * @param {number} timestamp
+     * @return {void}
+     */
+    set(key: string, value: string, timestamp: number): void {
+        if (!this.keyStore.has(key)) {
+            this.keyStore.set(key, []);
+        }
+        this.keyStore.get(key)!.push([timestamp, value]);
+    }
+
+    /**
+     * @param {string} key
+     * @param {number} timestamp
+     * @return {string}
+     */
+    get(key: string, timestamp: number): string {
+        const values = this.keyStore.get(key) || [];
+        let left = 0;
+        let right = values.length - 1;
+        let result = '';
+
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (values[mid][0] <= timestamp) {
+                result = values[mid][1];
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return result;
     }
 }
 ```

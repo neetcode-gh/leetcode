@@ -193,29 +193,29 @@ public class Solution {
 
 ```go
 func spiralOrder(matrix [][]int) []int {
-	m, n := len(matrix), len(matrix[0])
-	res := []int{}
+    m, n := len(matrix), len(matrix[0])
+    res := []int{}
 
-	// Helper function for DFS traversal
-	var dfs func(row, col, r, c, dr, dc int)
-	dfs = func(row, col, r, c, dr, dc int) {
-		if row == 0 || col == 0 {
-			return
-		}
+    // Helper function for DFS traversal
+    var dfs func(row, col, r, c, dr, dc int)
+    dfs = func(row, col, r, c, dr, dc int) {
+        if row == 0 || col == 0 {
+            return
+        }
 
-		for i := 0; i < col; i++ {
-			r += dr
-			c += dc
-			res = append(res, matrix[r][c])
-		}
+        for i := 0; i < col; i++ {
+            r += dr
+            c += dc
+            res = append(res, matrix[r][c])
+        }
 
-		// Recursive call with updated direction and dimensions
-		dfs(col, row-1, r, c, dc, -dr)
-	}
+        // Recursive call with updated direction and dimensions
+        dfs(col, row-1, r, c, dc, -dr)
+    }
 
-	// Start the DFS by going to the right
-	dfs(m, n, 0, -1, 0, 1)
-	return res
+    // Start the DFS by going to the right
+    dfs(m, n, 0, -1, 0, 1)
+    return res
 }
 ```
 
@@ -309,6 +309,45 @@ impl Solution {
         let mut c = -1i32;
         dfs(m, n, &mut r, &mut c, 0, 1, &matrix, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number[]}
+     */
+    spiralOrder(matrix: number[][]): number[] {
+        const m = matrix.length,
+            n = matrix[0].length;
+        const res: number[] = [];
+
+        // append all the elements in the given direction
+        const dfs = (
+            row: number,
+            col: number,
+            r: number,
+            c: number,
+            dr: number,
+            dc: number,
+        ): void => {
+            if (row === 0 || col === 0) return;
+
+            for (let i = 0; i < col; i++) {
+                r += dr;
+                c += dc;
+                res.push(matrix[r][c]);
+            }
+
+            // sub-problem
+            dfs(col, row - 1, r, c, dc, -dr);
+        };
+
+        // start by going to the right
+        dfs(m, n, 0, -1, 0, 1);
+        return res;
     }
 }
 ```
@@ -541,41 +580,41 @@ public class Solution {
 
 ```go
 func spiralOrder(matrix [][]int) []int {
-	res := []int{}
-	if len(matrix) == 0 || len(matrix[0]) == 0 {
-		return res
-	}
+    res := []int{}
+    if len(matrix) == 0 || len(matrix[0]) == 0 {
+        return res
+    }
 
-	left, right := 0, len(matrix[0])
-	top, bottom := 0, len(matrix)
+    left, right := 0, len(matrix[0])
+    top, bottom := 0, len(matrix)
 
-	for left < right && top < bottom {
-		for i := left; i < right; i++ {
-			res = append(res, matrix[top][i])
-		}
-		top++
+    for left < right && top < bottom {
+        for i := left; i < right; i++ {
+            res = append(res, matrix[top][i])
+        }
+        top++
 
-		for i := top; i < bottom; i++ {
-			res = append(res, matrix[i][right-1])
-		}
-		right--
+        for i := top; i < bottom; i++ {
+            res = append(res, matrix[i][right-1])
+        }
+        right--
 
-		if !(left < right && top < bottom) {
-			break
-		}
+        if !(left < right && top < bottom) {
+            break
+        }
 
-		for i := right - 1; i >= left; i-- {
-			res = append(res, matrix[bottom-1][i])
-		}
-		bottom--
+        for i := right - 1; i >= left; i-- {
+            res = append(res, matrix[bottom-1][i])
+        }
+        bottom--
 
-		for i := bottom - 1; i >= top; i-- {
-			res = append(res, matrix[i][left])
-		}
-		left++
-	}
+        for i := bottom - 1; i >= top; i-- {
+            res = append(res, matrix[i][left])
+        }
+        left++
+    }
 
-	return res
+    return res
 }
 ```
 
@@ -683,6 +722,46 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number[]}
+     */
+    spiralOrder(matrix: number[][]): number[] {
+        const res: number[] = [];
+        let left = 0;
+        let right = matrix[0].length;
+        let top = 0;
+        let bottom = matrix.length;
+
+        while (left < right && top < bottom) {
+            for (let i = left; i < right; i++) {
+                res.push(matrix[top][i]);
+            }
+            top++;
+            for (let i = top; i < bottom; i++) {
+                res.push(matrix[i][right - 1]);
+            }
+            right--;
+            if (!(left < right && top < bottom)) {
+                break;
+            }
+            for (let i = right - 1; i >= left; i--) {
+                res.push(matrix[bottom - 1][i]);
+            }
+            bottom--;
+            for (let i = bottom - 1; i >= top; i--) {
+                res.push(matrix[i][left]);
+            }
+            left++;
+        }
+
+        return res;
     }
 }
 ```
@@ -797,7 +876,7 @@ public:
         vector<int> res;
         vector<pair<int, int>> directions = {{0, 1}, {1, 0},
                                              {0, -1}, {-1, 0}};
-        vector<int> steps = {matrix[0].size(), matrix.size() - 1};
+        vector<int> steps = {(int)matrix[0].size(), (int)matrix.size() - 1};
 
         int r = 0, c = -1, d = 0;
         while (steps[d % 2]) {
@@ -872,27 +951,27 @@ public class Solution {
 
 ```go
 func spiralOrder(matrix [][]int) []int {
-	res := []int{}
-	if len(matrix) == 0 || len(matrix[0]) == 0 {
-		return res
-	}
+    res := []int{}
+    if len(matrix) == 0 || len(matrix[0]) == 0 {
+        return res
+    }
 
-	directions := [4][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
-	steps := []int{len(matrix[0]), len(matrix) - 1}
+    directions := [4][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+    steps := []int{len(matrix[0]), len(matrix) - 1}
 
-	r, c, d := 0, -1, 0
+    r, c, d := 0, -1, 0
 
-	for steps[d&1] > 0 {
-		for i := 0; i < steps[d&1]; i++ {
-			r += directions[d][0]
-			c += directions[d][1]
-			res = append(res, matrix[r][c])
-		}
-		steps[d&1]--
-		d = (d + 1) % 4
-	}
+    for steps[d&1] > 0 {
+        for i := 0; i < steps[d&1]; i++ {
+            r += directions[d][0]
+            c += directions[d][1]
+            res = append(res, matrix[r][c])
+        }
+        steps[d&1]--
+        d = (d + 1) % 4
+    }
 
-	return res
+    return res
 }
 ```
 
@@ -970,6 +1049,39 @@ impl Solution {
             d = (d + 1) % 4;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number[]}
+     */
+    spiralOrder(matrix: number[][]): number[] {
+        const res: number[] = [];
+        const directions: number[][] = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+        ];
+        const steps = [matrix[0].length, matrix.length - 1];
+
+        let r = 0,
+            c = -1,
+            d = 0;
+        while (steps[d % 2]) {
+            for (let i = 0; i < steps[d % 2]; i++) {
+                r += directions[d][0];
+                c += directions[d][1];
+                res.push(matrix[r][c]);
+            }
+            steps[d % 2]--;
+            d = (d + 1) % 4;
+        }
+        return res;
     }
 }
 ```

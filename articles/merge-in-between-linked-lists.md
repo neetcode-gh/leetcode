@@ -156,6 +156,41 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode cur = list1;
+        List<ListNode> arr = new List<ListNode>();
+
+        while (cur != null) {
+            arr.Add(cur);
+            cur = cur.next;
+        }
+
+        arr[a - 1].next = list2;
+        cur = list2;
+
+        while (cur.next != null) {
+            cur = cur.next;
+        }
+
+        cur.next = arr[b + 1];
+        return list1;
+    }
+}
+```
+
 ```go
 /**
  * Definition for singly-linked list.
@@ -292,6 +327,42 @@ impl Solution {
             head = Some(Box::new(node));
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} list1
+     * @param {number} a
+     * @param {number} b
+     * @param {ListNode} list2
+     * @return {ListNode}
+     */
+    mergeInBetween(
+        list1: ListNode,
+        a: number,
+        b: number,
+        list2: ListNode,
+    ): ListNode {
+        let cur: ListNode | null = list1;
+        let arr: ListNode[] = [];
+
+        while (cur) {
+            arr.push(cur);
+            cur = cur.next;
+        }
+
+        arr[a - 1].next = list2;
+        cur = list2;
+
+        while (cur.next) {
+            cur = cur.next;
+        }
+
+        cur.next = arr[b + 1];
+        return list1;
     }
 }
 ```
@@ -476,6 +547,46 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode curr = list1;
+        int i = 0;
+
+        while (i < a - 1) {
+            curr = curr.next;
+            i++;
+        }
+        ListNode head = curr;
+
+        while (i <= b) {
+            curr = curr.next;
+            i++;
+        }
+
+        head.next = list2;
+
+        while (list2.next != null) {
+            list2 = list2.next;
+        }
+        list2.next = curr;
+
+        return list1;
+    }
+}
+```
+
 ```go
 /**
  * Definition for singly-linked list.
@@ -614,6 +725,46 @@ impl Solution {
         cur.as_mut().unwrap().next = tail;
 
         dummy.unwrap().next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} list1
+     * @param {number} a
+     * @param {number} b
+     * @param {ListNode} list2
+     * @return {ListNode}
+     */
+    mergeInBetween(
+        list1: ListNode,
+        a: number,
+        b: number,
+        list2: ListNode,
+    ): ListNode {
+        let curr: ListNode = list1,
+            i = 0;
+
+        while (i < a - 1) {
+            curr = curr.next!;
+            i++;
+        }
+        let head = curr;
+
+        while (i <= b) {
+            curr = curr.next!;
+            i++;
+        }
+        head.next = list2;
+
+        while (list2.next) {
+            list2 = list2.next;
+        }
+        list2.next = curr;
+
+        return list1;
     }
 }
 ```
@@ -787,6 +938,42 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        if (a == 1) {
+            ListNode nxt = list1.next;
+            list1.next = list2;
+
+            while (list2.next != null) {
+                list2 = list2.next;
+            }
+            MergeInBetween(nxt, 0, b - 1, list2);
+            return list1;
+        }
+
+        if (b == 0) {
+            list2.next = list1.next;
+            return list1;
+        }
+
+        MergeInBetween(list1.next, a - 1, b - 1, list2);
+        return list1;
+    }
+}
+```
+
 ```go
 /**
  * Definition for singly-linked list.
@@ -942,6 +1129,43 @@ impl Solution {
             Some(node)
         }
         helper(list1, a, b, list2)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} list1
+     * @param {number} a
+     * @param {number} b
+     * @param {ListNode} list2
+     * @return {ListNode}
+     */
+    mergeInBetween(
+        list1: ListNode,
+        a: number,
+        b: number,
+        list2: ListNode,
+    ): ListNode {
+        if (a === 1) {
+            let nxt = list1.next!;
+            list1.next = list2;
+
+            while (list2.next) {
+                list2 = list2.next;
+            }
+            this.mergeInBetween(nxt, 0, b - 1, list2);
+            return list1;
+        }
+
+        if (b === 0) {
+            list2.next = list1.next;
+            return list1;
+        }
+
+        this.mergeInBetween(list1.next!, a - 1, b - 1, list2);
+        return list1;
     }
 }
 ```

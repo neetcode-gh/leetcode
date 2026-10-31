@@ -26,14 +26,14 @@ class Solution:
         def dfs(node, arr):
             if not node:
                 return
-            
+
             arr.append(node.val)
             dfs(node.left, arr)
             dfs(node.right, arr)
-        
+
         arr = []
         dfs(root, arr)
-        
+
         arr.sort(key = lambda x: (abs(x - target), x))
         return arr[:k]
 ```
@@ -261,7 +261,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
@@ -284,6 +283,36 @@ impl Solution {
         });
         arr.truncate(k as usize);
         arr
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @param {number} k
+     * @return {number[]}
+     */
+    closestKValues(root: TreeNode | null, target: number, k: number): number[] {
+        const arr: number[] = [];
+        this.dfs(root, arr);
+
+        arr.sort((a, b) => Math.abs(a - target) - Math.abs(b - target));
+
+        return arr.slice(0, k);
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number[]} arr
+     */
+    dfs(node: TreeNode | null, arr: number[]): void {
+        if (!node) return;
+        arr.push(node.val);
+        this.dfs(node.left, arr);
+        this.dfs(node.right, arr);
     }
 }
 ```
@@ -320,11 +349,11 @@ class Solution:
                 return
 
             if len(heap) < k:
-                heappush(heap, (-abs(node.val - target), node.val))
+                heapq.heappush(heap, (-abs(node.val - target), node.val))
             else:
                 if abs(node.val - target) <= abs(heap[0][0]):
-                    heappop(heap)
-                    heappush(heap, (-abs(node.val - target), node.val))
+                    heapq.heappop(heap)
+                    heapq.heappush(heap, (-abs(node.val - target), node.val))
 
             dfs(node.left, heap)
             dfs(node.right, heap)
@@ -401,9 +430,9 @@ class Solution {
      * @return {number[]}
      */
     closestKValues(root, target, k) {
-        const heap = new MaxPriorityQueue({
-            compare: (a, b) => Math.abs(b - target) - Math.abs(a - target)
-        });
+        const heap = new PriorityQueue(
+            (a, b) => Math.abs(b - target) - Math.abs(a - target),
+        );
 
         const dfs = (node) => {
             if (!node) return;
@@ -453,7 +482,7 @@ public class Solution {
 
 ```go
 func closestKValues(root *TreeNode, target float64, k int) []int {
-    heap := &maxHeap{target: target}
+    h := &maxHeap{target: target}
 
     var dfs func(node *TreeNode)
     dfs = func(node *TreeNode) {
@@ -461,9 +490,9 @@ func closestKValues(root *TreeNode, target float64, k int) []int {
             return
         }
 
-        hp.Push(heap, node.Val)
-        if heap.Len() > k {
-            hp.Pop(heap)
+        heap.Push(h, node.Val)
+        if h.Len() > k {
+            heap.Pop(h)
         }
 
         dfs(node.Left)
@@ -472,9 +501,9 @@ func closestKValues(root *TreeNode, target float64, k int) []int {
 
     dfs(root)
 
-    res := make([]int, heap.Len())
+    res := make([]int, h.Len())
     for i := len(res) - 1; i >= 0; i-- {
-        res[i] = hp.Pop(heap).(int)
+        res[i] = heap.Pop(h).(int)
     }
     return res
 }
@@ -550,7 +579,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
@@ -580,6 +608,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @param {number} k
+     * @return {number[]}
+     */
+    closestKValues(root: TreeNode | null, target: number, k: number): number[] {
+        const heap = new PriorityQueue(
+            (a: number, b: number) => Math.abs(b - target) - Math.abs(a - target),
+        );
+
+        const dfs = (node: TreeNode | null): void => {
+            if (!node) return;
+
+            heap.enqueue(node.val);
+            if (heap.size() > k) {
+                heap.dequeue();
+            }
+
+            dfs(node.left);
+            dfs(node.right);
+        };
+
+        dfs(root);
+        return heap.toArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -605,23 +664,26 @@ Since this is a BST, an inorder traversal gives us values in sorted order. With 
 ::tabs-start
 
 ```python
+import bisect
+
+
 class Solution:
     def closestKValues(self, root: TreeNode, target: float, k: int) -> List[int]:
         def dfs(node, arr):
             if not node:
                 return
-            
+
             dfs(node.left, arr)
             arr.append(node.val)
             dfs(node.right, arr)
-        
+
         arr = []
         dfs(root, arr)
-        
-        left = bisect_left(arr, target) - 1
+
+        left = bisect.bisect_left(arr, target) - 1
         right = left + 1
         ans = []
-        
+
         while len(ans) < k:
             if right == len(arr) or abs(arr[left] - target) <= abs(arr[right] - target):
                 ans.append(arr[left])
@@ -629,7 +691,7 @@ class Solution:
             else:
                 ans.append(arr[right])
                 right += 1
-        
+
         return ans
 ```
 
@@ -863,7 +925,9 @@ class Solution {
 
         dfs(root)
 
-        var left = arr.binarySearch(target.toInt()).let { if (it < 0) -it - 2 else it - 1 }
+        // lower bound of target (first index with arr[i] >= target), minus one
+        val idx = arr.binarySearch { if (it < target) -1 else 1 }
+        var left = -(idx + 1) - 1
         var right = left + 1
         val ans = mutableListOf<Int>()
 
@@ -936,7 +1000,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
@@ -981,6 +1044,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @param {number} k
+     * @return {number[]}
+     */
+    closestKValues(root: TreeNode | null, target: number, k: number): number[] {
+        const arr: number[] = [];
+        this.dfs(root, arr);
+
+        let left = this.bisectLeft(arr, target) - 1;
+        let right = left + 1;
+        const ans: number[] = [];
+
+        while (ans.length < k) {
+            if (left < 0) {
+                ans.push(arr[right++]);
+            } else if (right >= arr.length) {
+                ans.push(arr[left--]);
+            } else if (Math.abs(arr[left] - target) <= Math.abs(arr[right] - target)) {
+                ans.push(arr[left--]);
+            } else {
+                ans.push(arr[right++]);
+            }
+        }
+
+        return ans;
+    }
+
+    bisectLeft(arr: number[], target: number): number {
+        let lo = 0, hi = arr.length;
+        while (lo < hi) {
+            const mid = Math.floor((lo + hi) / 2);
+            if (arr[mid] < target) lo = mid + 1;
+            else hi = mid;
+        }
+        return lo;
+    }
+
+    dfs(node: TreeNode | null, arr: number[]): void {
+        if (!node) return;
+        this.dfs(node.left, arr);
+        arr.push(node.val);
+        this.dfs(node.right, arr);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1011,17 +1124,17 @@ class Solution:
         def dfs(node, arr):
             if not node:
                 return
-            
+
             dfs(node.left, arr)
             arr.append(node.val)
             dfs(node.right, arr)
-        
+
         arr = []
         dfs(root, arr)
-        
+
         left = 0
         right = len(arr) - k
-        
+
         while left < right:
             mid = (left + right) // 2
             if abs(target - arr[mid + k]) < abs(target - arr[mid]):
@@ -1254,7 +1367,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
@@ -1285,6 +1397,42 @@ impl Solution {
         }
 
         arr[left..left + k].to_vec()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @param {number} k
+     * @return {number[]}
+     */
+    closestKValues(root: TreeNode | null, target: number, k: number): number[] {
+        const arr: number[] = [];
+        this.dfs(root, arr);
+
+        let left = 0;
+        let right = arr.length - k;
+
+        while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            if (Math.abs(target - arr[mid + k]) < Math.abs(target - arr[mid])) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        return arr.slice(left, left + k);
+    }
+
+    dfs(node: TreeNode | null, arr: number[]): void {
+        if (!node) return;
+        this.dfs(node.left, arr);
+        arr.push(node.val);
+        this.dfs(node.right, arr);
     }
 }
 ```
@@ -1322,7 +1470,7 @@ class Solution:
         def dfs(node, queue):
             if not node:
                 return
-            
+
             dfs(node.left, queue)
             queue.append(node.val)
             if len(queue) > k:
@@ -1331,9 +1479,9 @@ class Solution:
                     return
                 else:
                     queue.popleft()
-                    
+
             dfs(node.right, queue)
-        
+
         queue = deque()
         dfs(root, queue)
         return list(queue)
@@ -1346,12 +1494,12 @@ class Solution {
         dfs(root, queue, k, target);
         return new ArrayList<>(queue);
     }
-    
+
     public void dfs(TreeNode node, Deque<Integer> queue, int k, double target) {
         if (node == null) {
             return;
         }
-        
+
         dfs(node.left, queue, k, target);
         queue.add(node.val);
         if (queue.size() > k) {
@@ -1376,15 +1524,15 @@ public:
         dfs(root, queue, k, target);
         return vector<int>(queue.begin(), queue.end());
     }
-    
+
 private:
     void dfs(TreeNode* node, deque<int>& queue, int k, double target) {
         if (node == nullptr) {
             return;
         }
-        
+
         dfs(node->left, queue, k, target);
-        
+
         queue.push_back(node->val);
         if (queue.size() > k) {
             if (abs(target - queue.front()) <= abs(target - queue.back())) {
@@ -1394,7 +1542,7 @@ private:
                 queue.pop_front();
             }
         }
-        
+
         dfs(node->right, queue, k, target);
     }
 };
@@ -1414,7 +1562,7 @@ class Solution {
 
         return queue.toArray();
     }
-    
+
     /**
      * @param {TreeNode} node
      * @param {Deque} queue
@@ -1426,7 +1574,7 @@ class Solution {
         if (node === null) {
             return;
         }
-        
+
         this.dfs(node.left, queue, k, target);
 
         queue.pushBack(node.val);
@@ -1442,7 +1590,7 @@ class Solution {
                 queue.popFront();
             }
         }
-        
+
         this.dfs(node.right, queue, k, target);
     }
 }
@@ -1518,7 +1666,7 @@ class Solution {
 
             queue.addLast(node.`val`)
             if (queue.size > k) {
-                if (Math.abs(target - queue.first()) <= Math.abs(target - queue.last())) {
+                if (Math.abs(target - queue.first()) <= Math.abs(target - queue.peekLast())) {
                     queue.removeLast()
                     return
                 } else {
@@ -1564,7 +1712,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
@@ -1596,6 +1743,54 @@ impl Solution {
 
         dfs(&root, &mut queue, target, k);
         queue.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @param {number} k
+     * @return {number[]}
+     */
+    closestKValues(root: TreeNode | null, target: number, k: number): number[] {
+        const queue = new Deque();
+        this.dfs(root, queue, k, target);
+
+        return queue.toArray();
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {Deque} queue
+     * @param {number} k
+     * @param {number} target
+     * @return {void}
+     */
+    dfs(node: TreeNode | null, queue: any, k: number, target: number): void {
+        if (node === null) {
+            return;
+        }
+
+        this.dfs(node.left, queue, k, target);
+
+        queue.pushBack(node.val);
+
+        if (queue.size() > k) {
+            const first: number = queue.front();
+            const last: number = queue.back();
+
+            if (Math.abs(target - first) <= Math.abs(target - last)) {
+                queue.popBack();
+                return;
+            } else {
+                queue.popFront();
+            }
+        }
+
+        this.dfs(node.right, queue, k, target);
     }
 }
 ```

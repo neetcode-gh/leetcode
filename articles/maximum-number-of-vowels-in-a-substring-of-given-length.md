@@ -602,6 +602,68 @@ public class Solution {
 }
 ```
 
+```go
+func maxVowels(s string, k int) int {
+    vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
+
+    l, cnt, res := 0, 0, 0
+    for r := 0; r < len(s); r++ {
+        if vowels[s[r]] {
+            cnt++
+        }
+        if r-l+1 > k {
+            if vowels[s[l]] {
+                cnt--
+            }
+            l++
+        }
+        res = max(res, cnt)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxVowels(s: String, k: Int): Int {
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
+
+        var l = 0
+        var cnt = 0
+        var res = 0
+        for (r in s.indices) {
+            cnt += if (s[r] in vowels) 1 else 0
+            if (r - l + 1 > k) {
+                cnt -= if (s[l] in vowels) 1 else 0
+                l++
+            }
+            res = maxOf(res, cnt)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxVowels(_ s: String, _ k: Int) -> Int {
+        let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
+        let chars = Array(s)
+
+        var l = 0, cnt = 0, res = 0
+        for r in 0..<chars.count {
+            cnt += vowels.contains(chars[r]) ? 1 : 0
+            if r - l + 1 > k {
+                cnt -= vowels.contains(chars[l]) ? 1 : 0
+                l += 1
+            }
+            res = max(res, cnt)
+        }
+        return res
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn max_vowels(s: String, k: i32) -> i32 {
@@ -787,6 +849,71 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxVowels(s string, k int) int {
+    mask := (1 << ('a' - 'a')) | (1 << ('e' - 'a')) |
+        (1 << ('i' - 'a')) | (1 << ('o' - 'a')) |
+        (1 << ('u' - 'a'))
+
+    l, cnt, res := 0, 0, 0
+    for r := 0; r < len(s); r++ {
+        cnt += (mask >> (s[r] - 'a')) & 1
+        if r-l+1 > k {
+            cnt -= (mask >> (s[l] - 'a')) & 1
+            l++
+        }
+        res = max(res, cnt)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxVowels(s: String, k: Int): Int {
+        val mask = (1 shl ('a' - 'a')) or (1 shl ('e' - 'a')) or
+                   (1 shl ('i' - 'a')) or (1 shl ('o' - 'a')) or
+                   (1 shl ('u' - 'a'))
+
+        var l = 0
+        var cnt = 0
+        var res = 0
+        for (r in s.indices) {
+            cnt += (mask shr (s[r] - 'a')) and 1
+            if (r - l + 1 > k) {
+                cnt -= (mask shr (s[l] - 'a')) and 1
+                l++
+            }
+            res = maxOf(res, cnt)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxVowels(_ s: String, _ k: Int) -> Int {
+        let mask = (1 << 0) | (1 << 4) | (1 << 8) | (1 << 14) | (1 << 20) // a, e, i, o, u
+        let chars = Array(s.utf8).map { Int($0) - 97 }
+
+        var l = 0, cnt = 0, res = 0
+        for r in 0..<chars.count {
+            cnt += (mask >> chars[r]) & 1
+            if r - l + 1 > k {
+                cnt -= (mask >> chars[l]) & 1
+                l += 1
+            }
+            res = max(res, cnt)
+        }
+
+        return res
     }
 }
 ```

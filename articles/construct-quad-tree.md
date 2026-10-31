@@ -494,39 +494,93 @@ class Solution {
 ```
 
 ```rust
-// LeetCode provides the Node definition for Quad Tree problems.
-// This solution assumes the Node type is available.
-// impl Solution {
-//     pub fn construct(grid: Vec<Vec<i32>>) -> Option<Box<Node>> {
-//         fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Box<Node>> {
-//             let mut all_same = true;
-//             'outer: for i in 0..n {
-//                 for j in 0..n {
-//                     if grid[r][c] != grid[r + i][c + j] {
-//                         all_same = false;
-//                         break 'outer;
-//                     }
-//                 }
-//             }
-//
-//             if all_same {
-//                 return Some(Box::new(Node::new(grid[r][c] == 1, true,
-//                     None, None, None, None)));
-//             }
-//
-//             let mid = n / 2;
-//             let top_left = dfs(grid, mid, r, c);
-//             let top_right = dfs(grid, mid, r, c + mid);
-//             let bottom_left = dfs(grid, mid, r + mid, c);
-//             let bottom_right = dfs(grid, mid, r + mid, c + mid);
-//
-//             Some(Box::new(Node::new(false, false,
-//                 top_left, top_right, bottom_left, bottom_right)))
-//         }
-//
-//         dfs(&grid, grid.len(), 0, 0)
-//     }
-// }
+/*
+// Definition for a QuadTree node.
+pub struct Node {
+    pub val: bool,
+    pub is_leaf: bool,
+    pub top_left: Option<Rc<RefCell<Node>>>,
+    pub top_right: Option<Rc<RefCell<Node>>>,
+    pub bottom_left: Option<Rc<RefCell<Node>>>,
+    pub bottom_right: Option<Rc<RefCell<Node>>>,
+}
+impl Node {
+    pub fn new(val: bool, is_leaf: bool) -> Self { ... }
+}
+*/
+impl Solution {
+    pub fn construct(grid: Vec<Vec<i32>>) -> Option<Rc<RefCell<Node>>> {
+        fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Rc<RefCell<Node>>> {
+            let mut all_same = true;
+            'outer: for i in 0..n {
+                for j in 0..n {
+                    if grid[r][c] != grid[r + i][c + j] {
+                        all_same = false;
+                        break 'outer;
+                    }
+                }
+            }
+
+            if all_same {
+                return Some(Rc::new(RefCell::new(Node::new(grid[r][c] == 1, true))));
+            }
+
+            let mid = n / 2;
+            let mut node = Node::new(false, false);
+            node.top_left = dfs(grid, mid, r, c);
+            node.top_right = dfs(grid, mid, r, c + mid);
+            node.bottom_left = dfs(grid, mid, r + mid, c);
+            node.bottom_right = dfs(grid, mid, r + mid, c + mid);
+            Some(Rc::new(RefCell::new(node)))
+        }
+
+        dfs(&grid, grid.len(), 0, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {Node}
+     */
+    construct(grid: number[][]): Node | null {
+        const dfs = (n: number, r: number, c: number): Node => {
+            let allSame = true;
+
+            for (let i = 0; i < n && allSame; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (grid[r][c] !== grid[r + i][c + j]) {
+                        allSame = false;
+                        break;
+                    }
+                }
+            }
+
+            if (allSame) {
+                return new Node(grid[r][c] === 1, true);
+            }
+
+            const mid = Math.floor(n / 2);
+            const topLeft = dfs(mid, r, c);
+            const topRight = dfs(mid, r, c + mid);
+            const bottomLeft = dfs(mid, r + mid, c);
+            const bottomRight = dfs(mid, r + mid, c + mid);
+
+            return new Node(
+                false,
+                false,
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight,
+            );
+        };
+
+        return dfs(grid.length, 0, 0);
+    }
+}
 ```
 
 ::tabs-end
@@ -1010,40 +1064,106 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     pub fn construct(grid: Vec<Vec<i32>>) -> Option<Box<Node>> {
-//         fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Box<Node>> {
-//             if n == 1 {
-//                 return Some(Box::new(Node::new(grid[r][c] == 1, true,
-//                     None, None, None, None)));
-//             }
-//
-//             let mid = n / 2;
-//             let tl = dfs(grid, mid, r, c);
-//             let tr = dfs(grid, mid, r, c + mid);
-//             let bl = dfs(grid, mid, r + mid, c);
-//             let br = dfs(grid, mid, r + mid, c + mid);
-//
-//             if let (Some(tl_n), Some(tr_n), Some(bl_n), Some(br_n)) =
-//                 (&tl, &tr, &bl, &br)
-//             {
-//                 if tl_n.is_leaf && tr_n.is_leaf &&
-//                    bl_n.is_leaf && br_n.is_leaf &&
-//                    tl_n.val == tr_n.val &&
-//                    tl_n.val == bl_n.val &&
-//                    tl_n.val == br_n.val
-//                 {
-//                     return Some(Box::new(Node::new(tl_n.val, true,
-//                         None, None, None, None)));
-//                 }
-//             }
-//
-//             Some(Box::new(Node::new(false, false, tl, tr, bl, br)))
-//         }
-//
-//         dfs(&grid, grid.len(), 0, 0)
-//     }
-// }
+/*
+// Definition for a QuadTree node.
+pub struct Node {
+    pub val: bool,
+    pub is_leaf: bool,
+    pub top_left: Option<Rc<RefCell<Node>>>,
+    pub top_right: Option<Rc<RefCell<Node>>>,
+    pub bottom_left: Option<Rc<RefCell<Node>>>,
+    pub bottom_right: Option<Rc<RefCell<Node>>>,
+}
+impl Node {
+    pub fn new(val: bool, is_leaf: bool) -> Self { ... }
+}
+*/
+impl Solution {
+    pub fn construct(grid: Vec<Vec<i32>>) -> Option<Rc<RefCell<Node>>> {
+        fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Rc<RefCell<Node>>> {
+            if n == 1 {
+                return Some(Rc::new(RefCell::new(Node::new(grid[r][c] == 1, true))));
+            }
+
+            let mid = n / 2;
+            let top_left = dfs(grid, mid, r, c);
+            let top_right = dfs(grid, mid, r, c + mid);
+            let bottom_left = dfs(grid, mid, r + mid, c);
+            let bottom_right = dfs(grid, mid, r + mid, c + mid);
+
+            let merged = {
+                let a = top_left.as_ref().unwrap().borrow();
+                let b = top_right.as_ref().unwrap().borrow();
+                let x = bottom_left.as_ref().unwrap().borrow();
+                let y = bottom_right.as_ref().unwrap().borrow();
+                if a.is_leaf && b.is_leaf && x.is_leaf && y.is_leaf
+                    && a.val == b.val && a.val == x.val && a.val == y.val
+                {
+                    Some(a.val)
+                } else {
+                    None
+                }
+            };
+            if let Some(val) = merged {
+                return Some(Rc::new(RefCell::new(Node::new(val, true))));
+            }
+
+            let mut node = Node::new(false, false);
+            node.top_left = top_left;
+            node.top_right = top_right;
+            node.bottom_left = bottom_left;
+            node.bottom_right = bottom_right;
+            Some(Rc::new(RefCell::new(node)))
+        }
+
+        dfs(&grid, grid.len(), 0, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {Node}
+     */
+    construct(grid: number[][]): Node | null {
+        const dfs = (n: number, r: number, c: number): Node => {
+            if (n === 1) {
+                return new Node(grid[r][c] === 1, true);
+            }
+
+            const mid = Math.floor(n / 2);
+            const topLeft = dfs(mid, r, c);
+            const topRight = dfs(mid, r, c + mid);
+            const bottomLeft = dfs(mid, r + mid, c);
+            const bottomRight = dfs(mid, r + mid, c + mid);
+
+            if (
+                topLeft.isLeaf &&
+                topRight.isLeaf &&
+                bottomLeft.isLeaf &&
+                bottomRight.isLeaf &&
+                topLeft.val === topRight.val &&
+                topLeft.val === bottomLeft.val &&
+                topLeft.val === bottomRight.val
+            ) {
+                return new Node(topLeft.val, true);
+            }
+
+            return new Node(
+                false,
+                false,
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight,
+            );
+        };
+
+        return dfs(grid.length, 0, 0);
+    }
+}
 ```
 
 ::tabs-end
@@ -1154,8 +1274,8 @@ class Node {
 */
 
 public class Solution {
-    private static final Node falseLeaf = new Node(false, true);
-    private static final Node trueLeaf = new Node(true, true);
+    private final Node falseLeaf = new Node(false, true);
+    private final Node trueLeaf = new Node(true, true);
 
     public Node construct(int[][] grid) {
         return dfs(grid, grid.length, 0, 0);
@@ -1554,40 +1674,110 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     pub fn construct(grid: Vec<Vec<i32>>) -> Option<Box<Node>> {
-//         fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Box<Node>> {
-//             if n == 1 {
-//                 return Some(Box::new(Node::new(grid[r][c] == 1, true,
-//                     None, None, None, None)));
-//             }
-//
-//             let half = n / 2;
-//             let tl = dfs(grid, half, r, c);
-//             let tr = dfs(grid, half, r, c + half);
-//             let bl = dfs(grid, half, r + half, c);
-//             let br = dfs(grid, half, r + half, c + half);
-//
-//             if let (Some(tl_n), Some(tr_n), Some(bl_n), Some(br_n)) =
-//                 (&tl, &tr, &bl, &br)
-//             {
-//                 if tl_n.is_leaf && tr_n.is_leaf &&
-//                    bl_n.is_leaf && br_n.is_leaf &&
-//                    tl_n.val == tr_n.val &&
-//                    tl_n.val == bl_n.val &&
-//                    tl_n.val == br_n.val
-//                 {
-//                     return Some(Box::new(Node::new(tl_n.val, true,
-//                         None, None, None, None)));
-//                 }
-//             }
-//
-//             Some(Box::new(Node::new(false, false, tl, tr, bl, br)))
-//         }
-//
-//         dfs(&grid, grid.len(), 0, 0)
-//     }
-// }
+/*
+// Definition for a QuadTree node.
+pub struct Node {
+    pub val: bool,
+    pub is_leaf: bool,
+    pub top_left: Option<Rc<RefCell<Node>>>,
+    pub top_right: Option<Rc<RefCell<Node>>>,
+    pub bottom_left: Option<Rc<RefCell<Node>>>,
+    pub bottom_right: Option<Rc<RefCell<Node>>>,
+}
+impl Node {
+    pub fn new(val: bool, is_leaf: bool) -> Self { ... }
+}
+*/
+impl Solution {
+    pub fn construct(grid: Vec<Vec<i32>>) -> Option<Rc<RefCell<Node>>> {
+        let false_leaf = Rc::new(RefCell::new(Node::new(false, true)));
+        let true_leaf = Rc::new(RefCell::new(Node::new(true, true)));
+
+        fn dfs(
+            grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize,
+            false_leaf: &Rc<RefCell<Node>>, true_leaf: &Rc<RefCell<Node>>,
+        ) -> Rc<RefCell<Node>> {
+            if n == 1 {
+                return if grid[r][c] == 1 { true_leaf.clone() } else { false_leaf.clone() };
+            }
+
+            let n = n / 2;
+            let top_left = dfs(grid, n, r, c, false_leaf, true_leaf);
+            let top_right = dfs(grid, n, r, c + n, false_leaf, true_leaf);
+            let bottom_left = dfs(grid, n, r + n, c, false_leaf, true_leaf);
+            let bottom_right = dfs(grid, n, r + n, c + n, false_leaf, true_leaf);
+
+            let same = {
+                let (a, b, x, y) = (
+                    top_left.borrow(), top_right.borrow(),
+                    bottom_left.borrow(), bottom_right.borrow(),
+                );
+                a.is_leaf && b.is_leaf && x.is_leaf && y.is_leaf
+                    && a.val == b.val && a.val == x.val && a.val == y.val
+            };
+            if same {
+                return top_left;
+            }
+
+            let mut node = Node::new(false, false);
+            node.top_left = Some(top_left);
+            node.top_right = Some(top_right);
+            node.bottom_left = Some(bottom_left);
+            node.bottom_right = Some(bottom_right);
+            Rc::new(RefCell::new(node))
+        }
+
+        Some(dfs(&grid, grid.len(), 0, 0, &false_leaf, &true_leaf))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {Node}
+     */
+    construct(grid: number[][]): Node | null {
+        const falseLeaf = new Node(false, true);
+        const trueLeaf = new Node(true, true);
+
+        const dfs = (n: number, r: number, c: number): Node => {
+            if (n === 1) {
+                return grid[r][c] === 1 ? trueLeaf : falseLeaf;
+            }
+
+            n = Math.floor(n / 2);
+            const topLeft = dfs(n, r, c);
+            const topRight = dfs(n, r, c + n);
+            const bottomLeft = dfs(n, r + n, c);
+            const bottomRight = dfs(n, r + n, c + n);
+
+            if (
+                topLeft.isLeaf &&
+                topRight.isLeaf &&
+                bottomLeft.isLeaf &&
+                bottomRight.isLeaf &&
+                topLeft.val === topRight.val &&
+                topLeft.val === bottomLeft.val &&
+                topLeft.val === bottomRight.val
+            ) {
+                return topLeft;
+            }
+
+            return new Node(
+                false,
+                false,
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight,
+            );
+        };
+
+        return dfs(grid.length, 0, 0);
+    }
+}
 ```
 
 ::tabs-end

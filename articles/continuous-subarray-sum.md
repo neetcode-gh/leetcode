@@ -171,6 +171,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    checkSubarraySum(nums: number[], k: number): boolean {
+        for (let i = 0; i < nums.length - 1; i++) {
+            let sum = nums[i];
+            for (let j = i + 1; j < nums.length; j++) {
+                sum += nums[j];
+                if (sum % k == 0) return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -391,6 +411,33 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    checkSubarraySum(nums: number[], k: number): boolean {
+        const remainder = new Map<number, number>();
+        remainder.set(0, -1);
+        let total = 0;
+
+        for (let i = 0; i < nums.length; i++) {
+            total += nums[i];
+            let r = total % k;
+            if (!remainder.has(r)) {
+                remainder.set(r, i);
+            } else if (i - remainder.get(r)! > 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ```
