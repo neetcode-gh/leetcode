@@ -142,6 +142,22 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        const unique = Array.from(new Set(nums)).sort((a, b) => a - b);
+        for (let i = 0; i < unique.length; i++) {
+            nums[i] = unique[i];
+        }
+        return unique.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,6 +338,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        let n = nums.length,
+            l = 0,
+            r = 0;
+        while (r < n) {
+            nums[l] = nums[r];
+            while (r < n && nums[r] === nums[l]) {
+                r++;
+            }
+            l++;
+        }
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -474,6 +512,24 @@ impl Solution {
             }
         }
         l as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        let l = 1;
+        for (let r = 1; r < nums.length; r++) {
+            if (nums[r] !== nums[r - 1]) {
+                nums[l++] = nums[r];
+            }
+        }
+        return l;
     }
 }
 ```

@@ -354,8 +354,6 @@ func (this *MaxStack) PopMax() int {
 ```
 
 ```kotlin
-import java.util.TreeSet
-
 class MaxStack {
     private val stack = TreeSet<IntArray>(compareBy({ it[0] }, { it[1] }))
     private val values = TreeSet<IntArray>(compareBy({ it[0] }, { it[1] }))
@@ -513,6 +511,99 @@ impl MaxStack {
         self.values.remove(&(val, idx));
         self.stack.remove(&(idx, val));
         val
+    }
+}
+```
+
+```typescript
+class MaxStack {
+    private stack: number[][];
+    private values: number[][];
+    private cnt: number;
+
+    constructor() {
+        // Using balanced BST via sorted array simulation
+        this.stack = []; // [cnt, x]
+        this.values = []; // [x, cnt]
+        this.cnt = 0;
+    }
+
+    _insertSorted(
+        arr: number[][],
+        item: number[],
+        compareFn: (a: number[], b: number[]) => number,
+    ): void {
+        let low = 0,
+            high = arr.length;
+        while (low < high) {
+            const mid = (low + high) >> 1;
+            if (compareFn(arr[mid], item) < 0) low = mid + 1;
+            else high = mid;
+        }
+        arr.splice(low, 0, item);
+    }
+
+    _removeSorted(
+        arr: number[][],
+        item: number[],
+        compareFn: (a: number[], b: number[]) => number,
+    ): void {
+        let low = 0,
+            high = arr.length;
+        while (low < high) {
+            const mid = (low + high) >> 1;
+            if (compareFn(arr[mid], item) < 0) low = mid + 1;
+            else high = mid;
+        }
+        if (low < arr.length && compareFn(arr[low], item) === 0) {
+            arr.splice(low, 1);
+        }
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x: number): void {
+        const compStack = (a: number[], b: number[]) => a[0] - b[0] || a[1] - b[1];
+        const compValues = (a: number[], b: number[]) => a[0] - b[0] || a[1] - b[1];
+        this._insertSorted(this.stack, [this.cnt, x], compStack);
+        this._insertSorted(this.values, [x, this.cnt], compValues);
+        this.cnt++;
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        const compValues = (a: number[], b: number[]) => a[0] - b[0] || a[1] - b[1];
+        const [idx, val] = this.stack.pop()!;
+        this._removeSorted(this.values, [val, idx], compValues);
+        return val;
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        return this.stack[this.stack.length - 1][1];
+    }
+
+    /**
+     * @return {number}
+     */
+    peekMax(): number {
+        return this.values[this.values.length - 1][0];
+    }
+
+    /**
+     * @return {number}
+     */
+    popMax(): number {
+        const compStack = (a: number[], b: number[]) => a[0] - b[0] || a[1] - b[1];
+        const [val, idx] = this.values.pop()!;
+        this._removeSorted(this.stack, [idx, val], compStack);
+        return val;
     }
 }
 ```
@@ -930,9 +1021,6 @@ func (this *MaxStack) PopMax() int {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-import java.util.Stack
-
 class MaxStack {
     private val stack = Stack<IntArray>()
     private val heap = PriorityQueue<IntArray> { a, b ->
@@ -1140,6 +1228,93 @@ impl MaxStack {
         let (val, idx) = self.heap.pop().unwrap();
         self.removed.insert(idx);
         val
+    }
+}
+```
+
+```typescript
+class MaxStack {
+    private stack: number[][];
+    private heap: any;
+    private removed: Set<number>;
+    private cnt: number;
+
+    constructor() {
+        this.stack = [];
+
+        // Using @datastructures-js/priority-queue
+        this.heap = new PriorityQueue((a: number[], b: number[]) => {
+            if (b[0] !== a[0]) {
+                return b[0] - a[0];
+            }
+            return b[1] - a[1];
+        });
+
+        this.removed = new Set();
+        this.cnt = 0;
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x: number): void {
+        const element = [x, this.cnt];
+
+        this.stack.push(element);
+        this.heap.enqueue(element);
+
+        this.cnt++;
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        while (this.removed.has(this.stack[this.stack.length - 1][1])) {
+            this.stack.pop();
+        }
+
+        const top = this.stack.pop()!;
+        this.removed.add(top[1]);
+
+        return top[0];
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        while (this.removed.has(this.stack[this.stack.length - 1][1])) {
+            this.stack.pop();
+        }
+
+        return this.stack[this.stack.length - 1][0];
+    }
+
+    /**
+     * @return {number}
+     */
+    peekMax(): number {
+        while (this.removed.has(this.heap.front()[1])) {
+            this.heap.dequeue();
+        }
+
+        return this.heap.front()[0];
+    }
+
+    /**
+     * @return {number}
+     */
+    popMax(): number {
+        while (this.removed.has(this.heap.front()[1])) {
+            this.heap.dequeue();
+        }
+
+        const top: number[] = this.heap.dequeue();
+        this.removed.add(top[1]);
+
+        return top[0];
     }
 }
 ```

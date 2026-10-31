@@ -272,7 +272,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -306,6 +305,31 @@ impl Solution {
         } else {
             true
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isSymmetric(root: TreeNode | null): boolean {
+        const dfs = (left: TreeNode | null, right: TreeNode | null): boolean => {
+            if (!left && !right) {
+                return true;
+            }
+            if (!left || !right) {
+                return false;
+            }
+            return (
+                left.val === right.val &&
+                dfs(left.left, right.right) &&
+                dfs(left.right, right.left)
+            );
+        };
+        return dfs(root!.left, root!.right);
     }
 }
 ```
@@ -627,7 +651,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -664,6 +687,36 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isSymmetric(root: TreeNode | null): boolean {
+        if (!root) return true;
+
+        const stack: [TreeNode | null, TreeNode | null][] = [
+            [root.left, root.right],
+        ];
+
+        while (stack.length > 0) {
+            const [left, right] = stack.pop()!;
+
+            if (!left && !right) continue;
+            if (!left || !right || left.val !== right.val) {
+                return false;
+            }
+
+            stack.push([left.left, right.right]);
+            stack.push([left.right, right.left]);
+        }
+
+        return true;
     }
 }
 ```
@@ -998,7 +1051,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -1036,6 +1088,36 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isSymmetric(root: TreeNode | null): boolean {
+        if (!root) return true;
+
+        const queue = new Queue([[root.left, root.right]]);
+
+        while (!queue.isEmpty()) {
+            for (let i = queue.size(); i > 0; i--) {
+                const [left, right]: [TreeNode | null, TreeNode | null] =
+                    queue.pop();
+
+                if (!left && !right) continue;
+                if (!left || !right || left.val !== right.val) {
+                    return false;
+                }
+                queue.push([left.left, right.right]);
+                queue.push([left.right, right.left]);
+            }
+        }
+
+        return true;
     }
 }
 ```

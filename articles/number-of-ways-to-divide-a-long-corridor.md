@@ -382,6 +382,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} corridor
+     * @return {number}
+     */
+    numberOfWays(corridor: string): number {
+        const MOD = 1_000_000_007;
+        const n = corridor.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(3).fill(-1),
+        );
+
+        const dfs = (i: number, seats: number): number => {
+            if (i === n) return seats === 2 ? 1 : 0;
+            if (dp[i][seats] !== -1) return dp[i][seats];
+
+            let res = 0;
+            if (seats === 2) {
+                if (corridor[i] === 'S') {
+                    res = dfs(i + 1, 1);
+                } else {
+                    res = (dfs(i + 1, 0) + dfs(i + 1, 2)) % MOD;
+                }
+            } else {
+                if (corridor[i] === 'S') {
+                    res = dfs(i + 1, seats + 1);
+                } else {
+                    res = dfs(i + 1, seats);
+                }
+            }
+
+            return (dp[i][seats] = res);
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -679,6 +719,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} corridor
+     * @return {number}
+     */
+    numberOfWays(corridor: string): number {
+        const MOD = 1000000007;
+        const n = corridor.length;
+        let dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(3).fill(0),
+        );
+        dp[n][2] = 1;
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let seats = 0; seats < 3; seats++) {
+                if (seats === 2) {
+                    if (corridor[i] === 'S') {
+                        dp[i][seats] = dp[i + 1][1];
+                    } else {
+                        dp[i][seats] = (dp[i + 1][0] + dp[i + 1][2]) % MOD;
+                    }
+                } else {
+                    if (corridor[i] === 'S') {
+                        dp[i][seats] = dp[i + 1][seats + 1];
+                    } else {
+                        dp[i][seats] = dp[i + 1][seats];
+                    }
+                }
+            }
+        }
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -909,6 +985,34 @@ impl Solution {
             dp = new_dp;
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} corridor
+     * @return {number}
+     */
+    numberOfWays(corridor: string): number {
+        const MOD = 1000000007;
+        let dp = [0, 0, 1];
+
+        for (let i = corridor.length - 1; i >= 0; i--) {
+            let new_dp = [0, 0, 0];
+            for (let seats = 0; seats < 3; seats++) {
+                if (seats === 2) {
+                    new_dp[seats] =
+                        corridor[i] === 'S' ? dp[1] : (dp[0] + dp[2]) % MOD;
+                } else {
+                    new_dp[seats] =
+                        corridor[i] === 'S' ? dp[seats + 1] : dp[seats];
+                }
+            }
+            dp = new_dp;
+        }
+        return dp[0];
     }
 }
 ```
@@ -1173,6 +1277,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} corridor
+     * @return {number}
+     */
+    numberOfWays(corridor: string): number {
+        const mod = 1_000_000_007;
+        const seats: number[] = [];
+
+        for (let i = 0; i < corridor.length; i++) {
+            if (corridor[i] === 'S') {
+                seats.push(i);
+            }
+        }
+
+        const length = seats.length;
+        if (length < 2 || length % 2 === 1) {
+            return 0;
+        }
+
+        let res = 1;
+        for (let i = 1; i < length - 1; i += 2) {
+            res = (res * (seats[i + 1] - seats[i])) % mod;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1396,6 +1531,33 @@ impl Solution {
         }
 
         if count >= 2 && count % 2 == 0 { res as i32 } else { 0 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} corridor
+     * @return {number}
+     */
+    numberOfWays(corridor: string): number {
+        const mod = 1_000_000_007;
+        let count = 0,
+            res = 1,
+            prev = -1;
+
+        for (let i = 0; i < corridor.length; i++) {
+            if (corridor[i] === 'S') {
+                count++;
+                if (count > 2 && count % 2 === 1) {
+                    res = (res * (i - prev)) % mod;
+                }
+                prev = i;
+            }
+        }
+
+        return count >= 2 && count % 2 === 0 ? res : 0;
     }
 }
 ```

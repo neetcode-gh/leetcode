@@ -207,6 +207,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maximumScore(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+
+        for (let i = 0; i <= k; i++) {
+            let minEle = nums[i];
+            for (let j = i; j < n; j++) {
+                minEle = Math.min(minEle, nums[j]);
+                if (j >= k) {
+                    res = Math.max(res, minEle * (j - i + 1));
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -236,6 +261,9 @@ For any subarray containing `k`, the minimum value decreases (or stays the same)
 ::tabs-start
 
 ```python
+from bisect import bisect_left
+
+
 class Solution:
     def maximumScore(self, nums: List[int], k: int) -> int:
         n, res = len(nums), 0
@@ -691,6 +719,69 @@ impl Solution {
             res = res.max(min_val * (k as i32 - l as i32 + 1 + r as i32));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maximumScore(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+        let arr = [...nums];
+
+        for (let i = k - 1; i >= 0; i--) {
+            arr[i] = Math.min(arr[i], arr[i + 1]);
+        }
+        for (let i = k + 1; i < n; i++) {
+            arr[i] = Math.min(arr[i], arr[i - 1]);
+        }
+
+        let leftArr = arr.slice(0, k + 1);
+        let rightArr = arr.slice(k);
+
+        const findLeft = (target: number): number => {
+            let lo = 0,
+                hi = leftArr.length - 1;
+            while (lo <= hi) {
+                let mid = Math.floor((lo + hi) / 2);
+                if (leftArr[mid] < target) {
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+            return lo;
+        };
+
+        const findRight = (target: number): number => {
+            let lo = 0,
+                hi = rightArr.length - 1,
+                pos = 0;
+            while (lo <= hi) {
+                let mid = Math.floor((lo + hi) / 2);
+                if (rightArr[mid] >= target) {
+                    pos = mid;
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+            return pos;
+        };
+
+        let candidates = [...new Set(arr)];
+        for (let minVal of candidates) {
+            let l = findLeft(minVal);
+            let r = findRight(minVal);
+            res = Math.max(res, minVal * (k - l + 1 + r));
+        }
+        return res;
     }
 }
 ```
@@ -1161,6 +1252,63 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maximumScore(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+
+        for (let i = k - 1; i >= 0; i--) {
+            nums[i] = Math.min(nums[i], nums[i + 1]);
+        }
+        for (let i = k + 1; i < n; i++) {
+            nums[i] = Math.min(nums[i], nums[i - 1]);
+        }
+
+        const findLeft = (target: number): number => {
+            let lo = 0,
+                hi = k;
+            while (lo <= hi) {
+                let mid = Math.floor((lo + hi) / 2);
+                if (nums[mid] < target) {
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+            return lo;
+        };
+
+        const findRight = (target: number): number => {
+            let lo = k,
+                hi = n - 1;
+            while (lo <= hi) {
+                let mid = Math.floor((lo + hi) / 2);
+                if (nums[mid] >= target) {
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+            return hi;
+        };
+
+        let candidates = new Set<number>(nums);
+        for (let minVal of candidates) {
+            let i = findLeft(minVal);
+            let j = findRight(minVal);
+            res = Math.max(res, minVal * (j - i + 1));
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1339,9 +1487,9 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (i in 0..n) {
-            while (stack.isNotEmpty() && (i == n || nums[stack.last()] >= nums[i])) {
+            while (stack.isNotEmpty() && (i == n || nums[stack.peekLast()] >= nums[i])) {
                 val mini = nums[stack.removeLast()]
-                val j = if (stack.isNotEmpty()) stack.last() else -1
+                val j = if (stack.isNotEmpty()) stack.peekLast() else -1
                 if (j < k && k < i) {
                     res = maxOf(res, mini * (i - j - 1))
                 }
@@ -1397,6 +1545,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maximumScore(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+        let stack: number[] = [];
+
+        for (let i = 0; i <= n; i++) {
+            while (
+                stack.length &&
+                (i === n || nums[stack[stack.length - 1]] >= nums[i])
+            ) {
+                let mini = nums[stack.pop()!];
+                let j = stack.length ? stack[stack.length - 1] : -1;
+                if (j < k && k < i) {
+                    res = Math.max(res, mini * (i - j - 1));
+                }
+            }
+            stack.push(i);
+        }
+
+        return res;
     }
 }
 ```
@@ -1691,6 +1870,40 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maximumScore(nums: number[], k: number): number {
+        let l = k,
+            r = k;
+        let res = nums[k];
+        let curMin = nums[k];
+        let n = nums.length;
+
+        while (l > 0 || r < n - 1) {
+            let left = l > 0 ? nums[l - 1] : 0;
+            let right = r < n - 1 ? nums[r + 1] : 0;
+
+            if (left > right) {
+                l--;
+                curMin = Math.min(curMin, left);
+            } else {
+                r++;
+                curMin = Math.min(curMin, right);
+            }
+
+            res = Math.max(res, curMin * (r - l + 1));
+        }
+
+        return res;
     }
 }
 ```

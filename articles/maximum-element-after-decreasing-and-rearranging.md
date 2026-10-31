@@ -148,6 +148,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maximumElementAfterDecrementingAndRearranging(arr: number[]): number {
+        arr.sort((a, b) => a - b);
+        let prev = 0;
+        for (let num of arr) {
+            prev = Math.min(prev + 1, num);
+        }
+        return prev;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,7 +351,7 @@ class Solution {
         }
 
         var prev = 1
-        for num in 2...n {
+        for num in stride(from: 2, through: n, by: 1) {
             prev = min(prev + count[num], num)
         }
 
@@ -359,6 +376,30 @@ impl Solution {
         }
 
         prev
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    maximumElementAfterDecrementingAndRearranging(arr: number[]): number {
+        let n = arr.length;
+        let count: number[] = new Array(n + 1).fill(0);
+
+        for (let num of arr) {
+            count[Math.min(num, n)]++;
+        }
+
+        let prev = 1;
+        for (let num = 2; num <= n; num++) {
+            prev = Math.min(prev + count[num], num);
+        }
+
+        return prev;
     }
 }
 ```

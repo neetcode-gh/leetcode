@@ -212,6 +212,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} cuts
+     * @return {number}
+     */
+    minCost(n: number, cuts: number[]): number {
+        const dfs = (l: number, r: number): number => {
+            if (r - l === 1) {
+                return 0;
+            }
+            let res = Infinity;
+            for (const c of cuts) {
+                if (l < c && c < r) {
+                    res = Math.min(res, r - l + dfs(l, c) + dfs(c, r));
+                }
+            }
+            return res === Infinity ? 0 : res;
+        };
+
+        return dfs(0, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,6 +519,41 @@ impl Solution {
             res
         }
         dfs(0, n, &cuts, &mut dp)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} cuts
+     * @return {number}
+     */
+    minCost(n: number, cuts: number[]): number {
+        const dp = new Map<string, number>();
+
+        const dfs = (l: number, r: number): number => {
+            if (r - l === 1) {
+                return 0;
+            }
+            const key = `${l},${r}`;
+            if (dp.has(key)) {
+                return dp.get(key)!;
+            }
+
+            let res = Infinity;
+            for (const c of cuts) {
+                if (l < c && c < r) {
+                    res = Math.min(res, r - l + dfs(l, c) + dfs(c, r));
+                }
+            }
+            res = res === Infinity ? 0 : res;
+            dp.set(key, res);
+            return res;
+        };
+
+        return dfs(0, n);
     }
 }
 ```
@@ -798,6 +859,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} cuts
+     * @return {number}
+     */
+    minCost(n: number, cuts: number[]): number {
+        const m = cuts.length;
+        cuts.sort((a, b) => a - b);
+        const dp: number[][] = Array.from({ length: m + 1 }, () =>
+            Array(m + 1).fill(-1),
+        );
+
+        const dfs = (l: number, r: number, i: number, j: number): number => {
+            if (i > j) return 0;
+            if (dp[i][j] !== -1) return dp[i][j];
+
+            let res = Infinity;
+            for (let mid = i; mid <= j; mid++) {
+                const cur =
+                    r -
+                    l +
+                    dfs(l, cuts[mid], i, mid - 1) +
+                    dfs(cuts[mid], r, mid + 1, j);
+                res = Math.min(res, cur);
+            }
+
+            dp[i][j] = res;
+            return res;
+        };
+
+        return dfs(0, n, 0, m - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1070,6 +1168,38 @@ impl Solution {
         }
 
         dp[0][m + 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} cuts
+     * @return {number}
+     */
+    minCost(n: number, cuts: number[]): number {
+        const m = cuts.length;
+        cuts = [0, ...cuts.sort((a, b) => a - b), n];
+        const dp: number[][] = Array.from({ length: m + 2 }, () =>
+            Array(m + 2).fill(0),
+        );
+
+        for (let length = 2; length <= m + 1; length++) {
+            for (let i = 0; i + length <= m + 1; i++) {
+                const j = i + length;
+                dp[i][j] = Infinity;
+                for (let mid = i + 1; mid < j; mid++) {
+                    dp[i][j] = Math.min(
+                        dp[i][j],
+                        cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j],
+                    );
+                }
+            }
+        }
+
+        return dp[0][m + 1];
     }
 }
 ```

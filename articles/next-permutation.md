@@ -482,6 +482,60 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    nextPermutation(nums: number[]): void {
+        const permute = (arr: number[]): number[][] => {
+            const res: number[][] = [];
+            arr.sort((a, b) => a - b);
+            const used: boolean[] = Array(arr.length).fill(false);
+            const path: number[] = [];
+            const dfs = (): void => {
+                if (path.length === arr.length) {
+                    res.push([...path]);
+                    return;
+                }
+                for (let i = 0; i < arr.length; i++) {
+                    if (used[i]) continue;
+                    if (i > 0 && arr[i] === arr[i - 1] && !used[i - 1])
+                        continue;
+                    used[i] = true;
+                    path.push(arr[i]);
+                    dfs();
+                    path.pop();
+                    used[i] = false;
+                }
+            };
+            dfs();
+            return res;
+        };
+
+        const perms = permute([...nums]);
+        perms.sort((a, b) => {
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return a[i] - b[i];
+            }
+            return 0;
+        });
+
+        for (let i = 0; i < perms.length; i++) {
+            const p = perms[i];
+            if (p.every((v, j) => v === nums[j])) {
+                const next = perms[(i + 1) % perms.length];
+                for (let j = 0; j < nums.length; j++) {
+                    nums[j] = next[j];
+                }
+                break;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -740,6 +794,36 @@ impl Solution {
             nums.swap(i as usize, j);
         }
         nums[(i as usize + 1)..].reverse();
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    nextPermutation(nums: number[]): void {
+        const n = nums.length;
+        let i = n - 2;
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
+            i--;
+        }
+        if (i >= 0) {
+            let j = n - 1;
+            while (nums[j] <= nums[i]) {
+                j--;
+            }
+            [nums[i], nums[j]] = [nums[j], nums[i]];
+        }
+        let l = i + 1,
+            r = n - 1;
+        while (l < r) {
+            [nums[l], nums[r]] = [nums[r], nums[l]];
+            l++;
+            r--;
+        }
     }
 }
 ```

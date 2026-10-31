@@ -362,18 +362,51 @@ impl Solution {
         let mut cur = head;
         let mut node = &mut cur;
         for i in (n - k)..n {
-            if let Some(ref mut nd) = node {
+            if let Some(nd) = node {
                 nd.val = arr[i];
                 node = &mut nd.next;
             }
         }
         for i in 0..(n - k) {
-            if let Some(ref mut nd) = node {
+            if let Some(nd) = node {
                 nd.val = arr[i];
                 node = &mut nd.next;
             }
         }
         cur
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    rotateRight(head: ListNode | null, k: number): ListNode | null {
+        if (!head) return null;
+
+        let arr: number[] = [];
+        let cur: ListNode | null = head;
+        while (cur) {
+            arr.push(cur.val);
+            cur = cur.next;
+        }
+
+        let n = arr.length;
+        k %= n;
+        cur = head;
+        for (let i = n - k; i < n; i++) {
+            cur!.val = arr[i];
+            cur = cur!.next;
+        }
+        for (let i = 0; i < n - k; i++) {
+            cur!.val = arr[i];
+            cur = cur!.next;
+        }
+        return head;
     }
 }
 ```
@@ -772,6 +805,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    rotateRight(head: ListNode | null, k: number): ListNode | null {
+        if (!head) {
+            return head;
+        }
+
+        let length = 1,
+            tail = head;
+        while (tail.next) {
+            tail = tail.next;
+            length++;
+        }
+
+        k = k % length;
+        if (k === 0) {
+            return head;
+        }
+
+        let cur = head;
+        for (let i = 0; i < length - k - 1; i++) {
+            cur = cur.next!;
+        }
+        let newHead = cur.next;
+        cur.next = null;
+        tail.next = head;
+
+        return newHead;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1119,6 +1189,38 @@ impl Solution {
         }
         tail.as_mut().unwrap().next = head;
         new_head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    rotateRight(head: ListNode | null, k: number): ListNode | null {
+        if (!head) {
+            return head;
+        }
+
+        let cur = head,
+            n = 1;
+        while (cur.next) {
+            n++;
+            cur = cur.next;
+        }
+
+        cur.next = head;
+        k %= n;
+        for (let i = 0; i < n - k; i++) {
+            cur = cur.next!;
+        }
+
+        head = cur.next;
+        cur.next = null;
+        return head;
     }
 }
 ```

@@ -279,6 +279,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    checkValidString(s: string): boolean {
+        function dfs(i: number, open: number): boolean {
+            if (open < 0) return false;
+            if (i === s.length) return open === 0;
+
+            if (s[i] === '(') {
+                return dfs(i + 1, open + 1);
+            } else if (s[i] === ')') {
+                return dfs(i + 1, open - 1);
+            } else {
+                return (
+                    dfs(i + 1, open) ||
+                    dfs(i + 1, open + 1) ||
+                    dfs(i + 1, open - 1)
+                );
+            }
+        }
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -650,6 +679,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    checkValidString(s: string): boolean {
+        const n = s.length;
+        const memo: (boolean | null)[][] = Array.from({ length: n + 1 }, () =>
+            Array(n + 1).fill(null),
+        );
+
+        function dfs(i: number, open: number): boolean {
+            if (open < 0) return false;
+            if (i === n) return open === 0;
+
+            if (memo[i][open] !== null) return memo[i][open]!;
+
+            let result: boolean;
+            if (s[i] === '(') {
+                result = dfs(i + 1, open + 1);
+            } else if (s[i] === ')') {
+                result = dfs(i + 1, open - 1);
+            } else {
+                result =
+                    dfs(i + 1, open) ||
+                    dfs(i + 1, open + 1) ||
+                    dfs(i + 1, open - 1);
+            }
+
+            memo[i][open] = result;
+            return result;
+        }
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -984,6 +1052,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    checkValidString(s: string): boolean {
+        const n = s.length;
+        const dp: boolean[][] = Array.from({ length: n + 1 }, () =>
+            Array(n + 1).fill(false),
+        );
+        dp[n][0] = true;
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let open = 0; open < n; open++) {
+                let res = false;
+                if (s[i] === '*') {
+                    res ||= dp[i + 1][open + 1];
+                    if (open > 0) res ||= dp[i + 1][open - 1];
+                    res ||= dp[i + 1][open];
+                } else {
+                    if (s[i] === '(') {
+                        res ||= dp[i + 1][open + 1];
+                    } else if (open > 0) {
+                        res ||= dp[i + 1][open - 1];
+                    }
+                }
+                dp[i][open] = res;
+            }
+        }
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1282,6 +1385,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    checkValidString(s: string): boolean {
+        const n = s.length;
+        let dp: boolean[] = Array(n + 1).fill(false);
+        dp[0] = true;
+
+        for (let i = n - 1; i >= 0; i--) {
+            const newDp: boolean[] = Array(n + 1).fill(false);
+            for (let open = 0; open < n; open++) {
+                if (s[i] === '*') {
+                    newDp[open] =
+                        dp[open + 1] || (open > 0 && dp[open - 1]) || dp[open];
+                } else if (s[i] === '(') {
+                    newDp[open] = dp[open + 1];
+                } else if (open > 0) {
+                    newDp[open] = dp[open - 1];
+                }
+            }
+            dp = newDp;
+        }
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1546,7 +1679,7 @@ class Solution {
         }
 
         while (left.isNotEmpty() && star.isNotEmpty()) {
-            if (left.last() > star.last()) return false
+            if (left.peekLast() > star.peekLast()) return false
             left.removeLast()
             star.removeLast()
         }
@@ -1622,6 +1755,41 @@ impl Solution {
             }
         }
         left.is_empty()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    checkValidString(s: string): boolean {
+        const left: number[] = [];
+        const star: number[] = [];
+        for (let i = 0; i < s.length; i++) {
+            const ch = s[i];
+            if (ch === '(') {
+                left.push(i);
+            } else if (ch === '*') {
+                star.push(i);
+            } else {
+                if (left.length === 0 && star.length === 0) {
+                    return false;
+                }
+                if (left.length > 0) {
+                    left.pop();
+                } else {
+                    star.pop();
+                }
+            }
+        }
+
+        while (left.length > 0 && star.length > 0) {
+            if (left.pop()! > star.pop()!) return false;
+        }
+        return left.length === 0;
     }
 }
 ```
@@ -1935,6 +2103,39 @@ impl Solution {
             }
         }
         left_min == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    checkValidString(s: string): boolean {
+        let leftMin = 0;
+        let leftMax = 0;
+
+        for (const c of s) {
+            if (c === '(') {
+                leftMin++;
+                leftMax++;
+            } else if (c === ')') {
+                leftMin--;
+                leftMax--;
+            } else {
+                leftMin--;
+                leftMax++;
+            }
+            if (leftMax < 0) {
+                return false;
+            }
+            if (leftMin < 0) {
+                leftMin = 0;
+            }
+        }
+        return leftMin === 0;
     }
 }
 ```

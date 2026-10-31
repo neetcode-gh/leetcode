@@ -234,6 +234,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    lengthOfLongestSubstringTwoDistinct(s: string): number {
+        let res = 0,
+            n = s.length;
+
+        for (let i = 0; i < n; i++) {
+            let seen = new Set<string>();
+            let curLen = 0;
+            for (let j = i; j < n; j++) {
+                seen.add(s[j]);
+                if (seen.size > 2) {
+                    break;
+                }
+                curLen++;
+            }
+            res = Math.max(res, curLen);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,6 +523,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    lengthOfLongestSubstringTwoDistinct(s: string): number {
+        let res = 0,
+            n = s.length;
+        let seen = new Map<string, number>();
+        let j = 0;
+
+        for (let i = 0; i < n; i++) {
+            seen.set(s[i], (seen.get(s[i]) || 0) + 1);
+
+            while (seen.size > 2) {
+                let c = s[j];
+                seen.set(c, seen.get(c)! - 1);
+                if (seen.get(c) === 0) {
+                    seen.delete(c);
+                }
+                j++;
+            }
+            res = Math.max(res, i - j + 1);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,6 +766,30 @@ impl Solution {
             }
         }
         (n - j) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    lengthOfLongestSubstringTwoDistinct(s: string): number {
+        let n = s.length;
+        let count = new Map<string, number>();
+        let j = 0,
+            i = 0;
+        for (i = 0; i < n; i++) {
+            count.set(s[i], (count.get(s[i]) || 0) + 1);
+            if (count.size > 2) {
+                count.set(s[j], count.get(s[j])! - 1);
+                if (count.get(s[j]) === 0) count.delete(s[j]);
+                j++;
+            }
+        }
+        return i - j;
     }
 }
 ```

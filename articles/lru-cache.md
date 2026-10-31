@@ -406,6 +406,57 @@ impl LRUCache {
 }
 ```
 
+```typescript
+class LRUCache {
+    private cache: number[][];
+    private capacity: number;
+
+    /**
+     * @param {number} capacity
+     */
+    constructor(capacity: number) {
+        this.cache = [];
+        this.capacity = capacity;
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        for (let i = 0; i < this.cache.length; i++) {
+            if (this.cache[i][0] === key) {
+                let tmp = this.cache.splice(i, 1)[0];
+                this.cache.push(tmp);
+                return tmp[1];
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @return {void}
+     */
+    put(key: number, value: number): void {
+        for (let i = 0; i < this.cache.length; i++) {
+            if (this.cache[i][0] === key) {
+                this.cache.splice(i, 1);
+                this.cache.push([key, value]);
+                return;
+            }
+        }
+
+        if (this.cache.length === this.capacity) {
+            this.cache.shift();
+        }
+
+        this.cache.push([key, value]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1093,6 +1144,100 @@ impl LRUCache {
 }
 ```
 
+```typescript
+class Node {
+    key: number;
+    val: number;
+    prev: Node | null;
+    next: Node | null;
+
+    /**
+     * @param {number} key
+     * @param {number} val
+     */
+    constructor(key: number, val: number) {
+        this.key = key;
+        this.val = val;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class LRUCache {
+    private cap: number;
+    private cache: Map<number, Node>;
+    private left: Node;
+    private right: Node;
+
+    /**
+     * @param {number} capacity
+     */
+    constructor(capacity: number) {
+        this.cap = capacity;
+        this.cache = new Map();
+        this.left = new Node(0, 0);
+        this.right = new Node(0, 0);
+        this.left.next = this.right;
+        this.right.prev = this.left;
+    }
+
+    /**
+     * @param {Node} node
+     */
+    remove(node: Node): void {
+        const prev = node.prev!;
+        const nxt = node.next!;
+        prev.next = nxt;
+        nxt.prev = prev;
+    }
+
+    /**
+     * @param {Node} node
+     */
+    insert(node: Node): void {
+        const prev = this.right.prev!;
+        prev.next = node;
+        node.prev = prev;
+        node.next = this.right;
+        this.right.prev = node;
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        if (this.cache.has(key)) {
+            const node = this.cache.get(key)!;
+            this.remove(node);
+            this.insert(node);
+            return node.val;
+        }
+        return -1;
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @return {void}
+     */
+    put(key: number, value: number): void {
+        if (this.cache.has(key)) {
+            this.remove(this.cache.get(key)!);
+        }
+        const newNode = new Node(key, value);
+        this.cache.set(key, newNode);
+        this.insert(newNode);
+
+        if (this.cache.size > this.cap) {
+            const lru = this.left.next!;
+            this.remove(lru);
+            this.cache.delete(lru.key);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1310,46 +1455,46 @@ public class LRUCache {
 
 ```go
 type LRUCache struct {
-	capacity int
-	cache    map[int]*list.Element
-	list     *list.List
+    capacity int
+    cache    map[int]*list.Element
+    list     *list.List
 }
 
 type entry struct {
-	key, value int
+    key, value int
 }
 
 func Constructor(capacity int) LRUCache {
-	return LRUCache{
-		capacity: capacity,
-		cache:    make(map[int]*list.Element),
-		list:     list.New(),
-	}
+    return LRUCache{
+        capacity: capacity,
+        cache:    make(map[int]*list.Element),
+        list:     list.New(),
+    }
 }
 
 func (this *LRUCache) Get(key int) int {
-	if node, exists := this.cache[key]; exists {
-		this.list.MoveToFront(node)
-		return node.Value.(entry).value
-	}
-	return -1
+    if node, exists := this.cache[key]; exists {
+        this.list.MoveToFront(node)
+        return node.Value.(entry).value
+    }
+    return -1
 }
 
 func (this *LRUCache) Put(key int, value int) {
-	if node, exists := this.cache[key]; exists {
-		this.list.MoveToFront(node)
-		node.Value = entry{key, value}
-		return
-	}
+    if node, exists := this.cache[key]; exists {
+        this.list.MoveToFront(node)
+        node.Value = entry{key, value}
+        return
+    }
 
-	if this.list.Len() == this.capacity {
-		back := this.list.Back()
-		this.list.Remove(back)
-		delete(this.cache, back.Value.(entry).key)
-	}
+    if this.list.Len() == this.capacity {
+        back := this.list.Back()
+        this.list.Remove(back)
+        delete(this.cache, back.Value.(entry).key)
+    }
 
-	node := this.list.PushFront(entry{key, value})
-	this.cache[key] = node
+    node := this.list.PushFront(entry{key, value})
+    this.cache[key] = node
 }
 ```
 
@@ -1453,6 +1598,48 @@ impl LRUCache {
             self.order.push(key);
         }
         self.map.insert(key, value as usize);
+    }
+}
+```
+
+```typescript
+class LRUCache {
+    private cache: Map<number, number>;
+    private capacity: number;
+
+    /**
+     * @param {number} capacity
+     */
+    constructor(capacity: number) {
+        this.cache = new Map();
+        this.capacity = capacity;
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        if (!this.cache.has(key)) return -1;
+        const value = this.cache.get(key)!;
+        this.cache.delete(key);
+        this.cache.set(key, value);
+        return value;
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @return {void}
+     */
+    put(key: number, value: number): void {
+        if (this.cache.has(key)) {
+            this.cache.delete(key);
+        } else if (this.cache.size === this.capacity) {
+            const firstKey = this.cache.keys().next().value!;
+            this.cache.delete(firstKey);
+        }
+        this.cache.set(key, value);
     }
 }
 ```

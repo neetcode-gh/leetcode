@@ -343,6 +343,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} grid
+     * @return {number}
+     */
+    numIslands(grid: string[][]): number {
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        let islands = 0;
+
+        const dfs = (r: number, c: number): void => {
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] === '0')
+                return;
+
+            grid[r][c] = '0';
+            for (const [dr, dc] of directions) {
+                dfs(r + dr, c + dc);
+            }
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === '1') {
+                    dfs(r, c);
+                    islands++;
+                }
+            }
+        }
+
+        return islands;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -760,6 +801,61 @@ impl Solution {
             }
         }
         islands
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} grid
+     * @return {number}
+     */
+    numIslands(grid: string[][]): number {
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        let islands = 0;
+
+        const bfs = (r: number, c: number): void => {
+            const q = new Queue();
+            q.push([r, c]);
+            grid[r][c] = '0';
+
+            while (!q.isEmpty()) {
+                const [row, col]: number[] = q.pop();
+                for (const [dr, dc] of directions) {
+                    const nr = row + dr,
+                        nc = col + dc;
+                    if (
+                        nr >= 0 &&
+                        nc >= 0 &&
+                        nr < ROWS &&
+                        nc < COLS &&
+                        grid[nr][nc] === '1'
+                    ) {
+                        q.push([nr, nc]);
+                        grid[nr][nc] = '0';
+                    }
+                }
+            }
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === '1') {
+                    bfs(r, c);
+                    islands++;
+                }
+            }
+        }
+
+        return islands;
     }
 }
 ```
@@ -1433,6 +1529,98 @@ impl Solution {
             }
         }
         islands
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    constructor(n: number) {
+        this.Parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] >= this.Size[pv]) {
+            this.Size[pu] += this.Size[pv];
+            this.Parent[pv] = pu;
+        } else {
+            this.Size[pv] += this.Size[pu];
+            this.Parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {character[][]} grid
+     * @return {number}
+     */
+    numIslands(grid: string[][]): number {
+        const ROWS = grid.length;
+        const COLS = grid[0].length;
+        const dsu = new DSU(ROWS * COLS);
+
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        let islands = 0;
+
+        const index = (r: number, c: number): number => r * COLS + c;
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === '1') {
+                    islands++;
+                    for (let [dr, dc] of directions) {
+                        let nr = r + dr,
+                            nc = c + dc;
+                        if (
+                            nr >= 0 &&
+                            nc >= 0 &&
+                            nr < ROWS &&
+                            nc < COLS &&
+                            grid[nr][nc] === '1'
+                        ) {
+                            if (dsu.union(index(r, c), index(nr, nc))) {
+                                islands--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return islands;
     }
 }
 ```

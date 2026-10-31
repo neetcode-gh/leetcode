@@ -391,6 +391,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} flights
+     * @param {number} src
+     * @param {number} dst
+     * @param {number} k
+     * @return {number}
+     */
+    findCheapestPrice(n: number, flights: number[][], src: number, dst: number, k: number): number {
+        const INF = Infinity;
+        const adj: number[][][] = Array.from({ length: n }, () => []);
+        const dist: number[][] = Array.from({ length: n }, () => Array(k + 5).fill(INF));
+
+        for (let [u, v, cst] of flights) {
+            adj[u].push([v, cst]);
+        }
+
+        dist[src][0] = 0;
+        const minHeap = new MinPriorityQueue((entry: number[]) => entry[0]);
+        minHeap.push([0, src, -1]); // cost, node, stops
+        while (!minHeap.isEmpty()) {
+            const [cst, node, stops]: number[] = minHeap.pop();
+            if (node === dst) return cst;
+            if (stops === k || dist[node][stops + 1] < cst) continue;
+            for (let [nei, w] of adj[node]) {
+                const nextCst = cst + w;
+                const nextStops = stops + 1;
+                if (dist[nei][nextStops + 1] > nextCst) {
+                    dist[nei][nextStops + 1] = nextCst;
+                    minHeap.push([nextCst, nei, nextStops]);
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -675,6 +715,41 @@ impl Solution {
         }
 
         if prices[dst as usize] == i32::MAX { -1 } else { prices[dst as usize] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} flights
+     * @param {number} src
+     * @param {number} dst
+     * @param {number} k
+     * @return {number}
+     */
+    findCheapestPrice(n: number, flights: number[][], src: number, dst: number, k: number): number {
+        let prices: number[] = new Array(n).fill(Number.MAX_SAFE_INTEGER);
+        prices[src] = 0;
+
+        for (let i = 0; i <= k; i++) {
+            const tmpPrices = [...prices];
+
+            for (const flight of flights) {
+                const s = flight[0];
+                const d = flight[1];
+                const p = flight[2];
+
+                if (prices[s] === Number.MAX_SAFE_INTEGER) continue;
+
+                if (prices[s] + p < tmpPrices[d]) tmpPrices[d] = prices[s] + p;
+            }
+
+            prices = tmpPrices;
+        }
+
+        return prices[dst] === Number.MAX_SAFE_INTEGER ? -1 : prices[dst];
     }
 }
 ```
@@ -1040,6 +1115,44 @@ impl Solution {
         }
 
         if prices[dst as usize] == i32::MAX { -1 } else { prices[dst as usize] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} flights
+     * @param {number} src
+     * @param {number} dst
+     * @param {number} k
+     * @return {number}
+     */
+    findCheapestPrice(n: number, flights: number[][], src: number, dst: number, k: number): number {
+        const prices: number[] = Array(n).fill(Infinity);
+        prices[src] = 0;
+        const adj: number[][][] = Array.from({ length: n }, () => []);
+
+        for (const [u, v, cst] of flights) {
+            adj[u].push([v, cst]);
+        }
+
+        const q = new Queue([[0, src, 0]]); // [cost, node, stops]
+
+        while (!q.isEmpty()) {
+            const [cst, node, stops]: number[] = q.pop();
+            if (stops > k) continue;
+
+            for (const [nei, w] of adj[node]) {
+                const nextCost = cst + w;
+                if (nextCost < prices[nei]) {
+                    prices[nei] = nextCost;
+                    q.push([nextCost, nei, stops + 1]);
+                }
+            }
+        }
+        return prices[dst] === Infinity ? -1 : prices[dst];
     }
 }
 ```

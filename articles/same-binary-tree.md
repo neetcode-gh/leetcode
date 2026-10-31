@@ -274,6 +274,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {boolean}
+     */
+    isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+        if (!p && !q) {
+            return true;
+        }
+        if (p && q && p.val === q.val) {
+            return (
+                this.isSameTree(p.left, q.left) &&
+                this.isSameTree(p.right, q.right)
+            );
+        } else {
+            return false;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -628,6 +651,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {boolean}
+     */
+    isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+        const stack: [TreeNode | null, TreeNode | null][] = [[p, q]];
+
+        while (stack.length) {
+            const [node1, node2] = stack.pop()!;
+
+            if (!node1 && !node2) continue;
+            if (!node1 || !node2 || node1.val !== node2.val) {
+                return false;
+            }
+            stack.push([node1.right, node2.right]);
+            stack.push([node1.left, node2.left]);
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -926,8 +975,8 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
  */
 class Solution {
     fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
-        val q1 = ArrayDeque<TreeNode?>()
-        val q2 = ArrayDeque<TreeNode?>()
+        val q1 = LinkedList<TreeNode?>()
+        val q2 = LinkedList<TreeNode?>()
 
         q1.add(p)
         q2.add(q)
@@ -1031,6 +1080,45 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {boolean}
+     */
+    isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+        const q1 = new Queue();
+        const q2 = new Queue();
+        q1.push(p);
+        q2.push(q);
+
+        while (!q1.isEmpty() && !q2.isEmpty()) {
+            for (let i = q1.size(); i > 0; i--) {
+                let nodeP: TreeNode | null = q1.pop();
+                let nodeQ: TreeNode | null = q2.pop();
+
+                if (nodeP === null && nodeQ === null) continue;
+                if (
+                    nodeP === null ||
+                    nodeQ === null ||
+                    nodeP.val !== nodeQ.val
+                ) {
+                    return false;
+                }
+
+                q1.push(nodeP.left);
+                q1.push(nodeP.right);
+                q2.push(nodeQ.left);
+                q2.push(nodeQ.right);
+            }
+        }
+
+        return true;
     }
 }
 ```

@@ -244,16 +244,44 @@ class Solution {
 ```
 
 ```rust
-// Note: Cycle detection via HashSet is not directly possible with
-// Option<Box<ListNode>> in safe Rust since Box provides unique
-// ownership (no shared references to track identity). This approach
-// requires raw pointers or a different representation.
-// The Floyd's algorithm below (Solution 2) is the idiomatic Rust approach.
+// Definition for singly-linked list (raw pointers, so a cycle can exist).
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: *mut ListNode,
+// }
 impl Solution {
-    pub fn has_cycle(head: Option<Box<ListNode>>) -> bool {
-        // Cannot form a cycle with owned Box<ListNode> in safe Rust.
-        // See the fast & slow pointer approach for the idiomatic solution.
+    pub fn has_cycle(head: *mut ListNode) -> bool {
+        let mut seen: HashSet<*mut ListNode> = HashSet::new();
+        let mut cur = head;
+        while !cur.is_null() {
+            if seen.contains(&cur) {
+                return true;
+            }
+            seen.insert(cur);
+            cur = unsafe { (*cur).next };
+        }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    hasCycle(head: ListNode | null): boolean {
+        let seen = new Set<ListNode>();
+        let cur = head;
+        while (cur) {
+            if (seen.has(cur)) {
+                return true;
+            }
+            seen.add(cur);
+            cur = cur.next;
+        }
+        return false;
     }
 }
 ```
@@ -514,23 +542,49 @@ class Solution {
 ```
 
 ```rust
-// Note: A true cycle cannot exist with Option<Box<ListNode>> in safe Rust
-// because Box enforces unique ownership. In LeetCode's Rust environment,
-// cycle problems typically use raw pointers. Below is the Floyd's algorithm
-// translated using raw pointers, matching the Java logic.
+// Definition for singly-linked list (raw pointers, so a cycle can exist).
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: *mut ListNode,
+// }
 impl Solution {
-    pub fn has_cycle(head: Option<Box<ListNode>>) -> bool {
-        // With owned Box<ListNode>, cycles cannot form in safe Rust.
-        // If using raw pointers (*const ListNode), the algorithm is:
-        //   let mut slow = head_ptr;
-        //   let mut fast = head_ptr;
-        //   while !fast.is_null() && unsafe { (*fast).next } != std::ptr::null() {
-        //       fast = unsafe { (*(*fast).next).next_ptr };
-        //       slow = unsafe { (*slow).next_ptr };
-        //       if fast == slow { return true; }
-        //   }
-        //   false
+    pub fn has_cycle(head: *mut ListNode) -> bool {
+        let mut slow = head;
+        let mut fast = head;
+        unsafe {
+            while !fast.is_null() && !(*fast).next.is_null() {
+                fast = (*(*fast).next).next;
+                slow = (*slow).next;
+                if fast == slow {
+                    return true;
+                }
+            }
+        }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    hasCycle(head: ListNode | null): boolean {
+        let fast = head;
+        let slow = head;
+
+        while (fast !== null && fast.next !== null) {
+            fast = fast.next.next;
+            slow = slow!.next;
+
+            if (fast === slow) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ```

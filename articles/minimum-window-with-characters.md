@@ -238,41 +238,41 @@ public class Solution {
 
 ```go
 func minWindow(s string, t string) string {
-	if t == "" {
-		return ""
-	}
+    if t == "" {
+        return ""
+    }
 
-	countT := make(map[rune]int)
-	for _, c := range t {
-		countT[c]++
-	}
+    countT := make(map[rune]int)
+    for _, c := range t {
+        countT[c]++
+    }
 
-	res := []int{-1, -1}
-	resLen := int(^uint(0) >> 1)
-	for i := 0; i < len(s); i++ {
-		countS := make(map[rune]int)
-		for j := i; j < len(s); j++ {
-			countS[rune(s[j])]++
+    res := []int{-1, -1}
+    resLen := int(^uint(0) >> 1)
+    for i := 0; i < len(s); i++ {
+        countS := make(map[rune]int)
+        for j := i; j < len(s); j++ {
+            countS[rune(s[j])]++
 
-			flag := true
-			for c, cnt := range countT {
-				if cnt > countS[c] {
-					flag = false
-					break
-				}
-			}
+            flag := true
+            for c, cnt := range countT {
+                if cnt > countS[c] {
+                    flag = false
+                    break
+                }
+            }
 
-			if flag && (j-i+1) < resLen {
-				resLen = j - i + 1
-				res = []int{i, j}
-			}
-		}
-	}
+            if flag && (j-i+1) < resLen {
+                resLen = j - i + 1
+                res = []int{i, j}
+            }
+        }
+    }
 
-	if res[0] == -1 {
-		return ""
-	}
-	return s[res[0]:res[1]+1]
+    if res[0] == -1 {
+        return ""
+    }
+    return s[res[0]:res[1]+1]
 }
 ```
 
@@ -394,6 +394,49 @@ impl Solution {
         } else {
             String::from_utf8(s[res.0..=res.1].to_vec()).unwrap()
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {string}
+     */
+    minWindow(s: string, t: string): string {
+        if (t === '') return '';
+
+        let countT: { [key: string]: number } = {};
+        for (let c of t) {
+            countT[c] = (countT[c] || 0) + 1;
+        }
+
+        let res = [-1, -1];
+        let resLen = Infinity;
+
+        for (let i = 0; i < s.length; i++) {
+            let countS: { [key: string]: number } = {};
+            for (let j = i; j < s.length; j++) {
+                countS[s[j]] = (countS[s[j]] || 0) + 1;
+
+                let flag = true;
+                for (let c in countT) {
+                    if ((countS[c] || 0) < countT[c]) {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                if (flag && j - i + 1 < resLen) {
+                    resLen = j - i + 1;
+                    res = [i, j];
+                }
+            }
+        }
+
+        return resLen === Infinity ? '' : s.slice(res[0], res[1] + 1);
     }
 }
 ```
@@ -670,47 +713,47 @@ public class Solution {
 
 ```go
 func minWindow(s string, t string) string {
-	if t == "" {
-		return ""
-	}
+    if t == "" {
+        return ""
+    }
 
-	countT := make(map[rune]int)
-	for _, c := range t {
-		countT[c]++
-	}
+    countT := make(map[rune]int)
+    for _, c := range t {
+        countT[c]++
+    }
 
-	have, need := 0, len(countT)
-	res := []int{-1, -1}
-	resLen := math.MaxInt32
-	l := 0
-	window := make(map[rune]int)
+    have, need := 0, len(countT)
+    res := []int{-1, -1}
+    resLen := math.MaxInt32
+    l := 0
+    window := make(map[rune]int)
 
-	for r := 0; r < len(s); r++ {
-		c := rune(s[r])
-		window[c]++
+    for r := 0; r < len(s); r++ {
+        c := rune(s[r])
+        window[c]++
 
-		if countT[c] > 0 && window[c] == countT[c] {
-			have++
-		}
+        if countT[c] > 0 && window[c] == countT[c] {
+            have++
+        }
 
-		for have == need {
-			if (r - l + 1) < resLen {
-				res = []int{l, r}
-				resLen = r - l + 1
-			}
+        for have == need {
+            if (r - l + 1) < resLen {
+                res = []int{l, r}
+                resLen = r - l + 1
+            }
 
-			window[rune(s[l])]--
-			if countT[rune(s[l])] > 0 && window[rune(s[l])] < countT[rune(s[l])] {
-				have--
-			}
-			l++
-		}
-	}
+            window[rune(s[l])]--
+            if countT[rune(s[l])] > 0 && window[rune(s[l])] < countT[rune(s[l])] {
+                have--
+            }
+            l++
+        }
+    }
 
-	if res[0] == -1 {
-		return ""
-	}
-	return s[res[0]:res[1]+1]
+    if res[0] == -1 {
+        return ""
+    }
+    return s[res[0]:res[1]+1]
 }
 ```
 
@@ -858,6 +901,55 @@ impl Solution {
         } else {
             String::from_utf8(s[res.0..=res.1].to_vec()).unwrap()
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {string}
+     */
+    minWindow(s: string, t: string): string {
+        if (t === '') return '';
+
+        let countT: { [key: string]: number } = {};
+        let window: { [key: string]: number } = {};
+        for (let c of t) {
+            countT[c] = (countT[c] || 0) + 1;
+        }
+
+        let have = 0,
+            need = Object.keys(countT).length;
+        let res = [-1, -1];
+        let resLen = Infinity;
+        let l = 0;
+
+        for (let r = 0; r < s.length; r++) {
+            let c = s[r];
+            window[c] = (window[c] || 0) + 1;
+
+            if (countT[c] && window[c] === countT[c]) {
+                have++;
+            }
+
+            while (have === need) {
+                if (r - l + 1 < resLen) {
+                    resLen = r - l + 1;
+                    res = [l, r];
+                }
+
+                window[s[l]]--;
+                if (countT[s[l]] && window[s[l]] < countT[s[l]]) {
+                    have--;
+                }
+                l++;
+            }
+        }
+
+        return resLen === Infinity ? '' : s.slice(res[0], res[1] + 1);
     }
 }
 ```

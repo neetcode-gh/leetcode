@@ -255,10 +255,10 @@ class Solution {
         val right = dfs(node.right)
 
         if (left && right) {
-            if (node.left != null && node.left.`val` != node.`val`) {
+            if (node.left != null && node.left!!.`val` != node.`val`) {
                 return false
             }
-            if (node.right != null && node.right.`val` != node.`val`) {
+            if (node.right != null && node.right!!.`val` != node.`val`) {
                 return false
             }
             count++
@@ -339,6 +339,56 @@ impl Solution {
                 false
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    private count: number;
+
+    constructor() {
+        this.count = 0;
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @return {boolean}
+     */
+    dfs(node: TreeNode | null): boolean {
+        if (node === null) {
+            return true;
+        }
+
+        let left = this.dfs(node.left);
+        let right = this.dfs(node.right);
+
+        // If both the children form uni-value subtrees, we compare the value of
+        // children's node with the node value.
+        if (left && right) {
+            if (node.left !== null && node.left.val !== node.val) {
+                return false;
+            }
+            if (node.right !== null && node.right.val !== node.val) {
+                return false;
+            }
+            this.count++;
+            return true;
+        }
+
+        // Else if any of the child does not form a uni-value subtree, the subtree
+        // rooted at node cannot be a uni-value subtree.
+        return false;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    countUnivalSubtrees(root: TreeNode | null): number {
+        this.count = 0;
+        this.dfs(root);
+        return this.count;
     }
 }
 ```
@@ -572,8 +622,8 @@ class Solution {
         val isRightUnival = dfs(root.right, count)
 
         if (isLeftUnival && isRightUnival &&
-            (root.left == null || root.left.`val` == root.`val`) &&
-            (root.right == null || root.right.`val` == root.`val`)
+            (root.left == null || root.left!!.`val` == root.`val`) &&
+            (root.right == null || root.right!!.`val` == root.`val`)
         ) {
             count[0]++
             return true
@@ -642,6 +692,46 @@ impl Solution {
                 false
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number[]} count
+     * @return {boolean}
+     */
+    dfs(root: TreeNode | null, count: number[]): boolean {
+        if (root === null) {
+            return true;
+        }
+
+        let isLeftUnival = this.dfs(root.left, count);
+        let isRightUnival = this.dfs(root.right, count);
+
+        if (
+            isLeftUnival &&
+            isRightUnival &&
+            (root.left === null || root.left.val === root.val) &&
+            (root.right === null || root.right.val === root.val)
+        ) {
+            count[0]++;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    countUnivalSubtrees(root: TreeNode | null): number {
+        let count = [0];
+        this.dfs(root, count);
+        return count[0];
     }
 }
 ```

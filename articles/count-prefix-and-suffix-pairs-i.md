@@ -323,6 +323,206 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    countPrefixSuffixPairs(words: string[]): number {
+        const isPrefixAndSuffix = (s1: string, s2: string): boolean => {
+            if (s1.length > s2.length) return false;
+
+            for (let i = 0; i < s1.length; i++) {
+                if (s1[i] !== s2[i]) return false;
+            }
+
+            let j = 0;
+            for (let i = s2.length - s1.length; i < s2.length; i++) {
+                if (s1[j] !== s2[i]) return false;
+                j++;
+            }
+
+            return true;
+        };
+
+        let res = 0;
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                if (isPrefixAndSuffix(words[i], words[j])) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+- Time complexity: $O(n ^ 2 * m)$
+- Space complexity: $O(1)$
+
+> Where $n$ is the size of the input array $words$, and $m$ is the maximum length of a string.
+
+---
+
+## 2. Brute Force (Using Built-In Function)
+
+### Intuition
+Most programming languages provide built-in methods to check if a string starts with or ends with another string. We can use these to simplify the prefix and suffix checks.
+
+### Algorithm
+1. Loop through all pairs `(i, j)` where `i < j`.
+2. For each pair, check if `words[j]` starts with `words[i]` using the built-in prefix check.
+3. Also check if `words[j]` ends with `words[i]` using the built-in suffix check.
+4. If both conditions are `true`, increment the result counter.
+5. Return the total count.
+
+::tabs-start
+
+```python
+class Solution:
+    def countPrefixSuffixPairs(self, words: List[str]) -> int:
+        res = 0
+
+        for i in range(len(words)):
+            for j in range(i + 1, len(words)):
+                w1, w2 = words[i], words[j]
+                if w2.startswith(w1) and w2.endswith(w1):
+                    res += 1
+
+        return res
+```
+
+```java
+public class Solution {
+    public int countPrefixSuffixPairs(String[] words) {
+        int res = 0;
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                String w1 = words[i], w2 = words[j];
+                if (w2.startsWith(w1) && w2.endsWith(w1)) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int countPrefixSuffixPairs(vector<string>& words) {
+        int res = 0;
+        for (int i = 0; i < words.size(); i++) {
+            for (int j = i + 1; j < words.size(); j++) {
+                string w1 = words[i], w2 = words[j];
+                if (w2.rfind(w1, 0) == 0 &&
+                    w2.compare(w2.size() - w1.size(), w1.size(), w1) == 0) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    countPrefixSuffixPairs(words) {
+        let res = 0;
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                let w1 = words[i], w2 = words[j];
+                if (w2.startsWith(w1) && w2.endsWith(w1)) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPrefixSuffixPairs(string[] words) {
+        int res = 0;
+        for (int i = 0; i < words.Length; i++) {
+            for (int j = i + 1; j < words.Length; j++) {
+                string w1 = words[i], w2 = words[j];
+                if (w2.StartsWith(w1) && w2.EndsWith(w1)) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countPrefixSuffixPairs(words []string) int {
+    res := 0
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            w1, w2 := words[i], words[j]
+            if strings.HasPrefix(w2, w1) && strings.HasSuffix(w2, w1) {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPrefixSuffixPairs(words: Array<String>): Int {
+        var res = 0
+        for (i in words.indices) {
+            for (j in i + 1 until words.size) {
+                val w1 = words[i]
+                val w2 = words[j]
+                if (w2.startsWith(w1) && w2.endsWith(w1)) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPrefixSuffixPairs(_ words: [String]) -> Int {
+        var res = 0
+        for i in 0..<words.count {
+            for j in (i + 1)..<words.count {
+                let w1 = words[i]
+                let w2 = words[j]
+                if w2.hasPrefix(w1) && w2.hasSuffix(w1) {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn count_prefix_suffix_pairs(words: Vec<String>) -> i32 {
@@ -341,12 +541,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    countPrefixSuffixPairs(words: string[]): number {
+        let res = 0;
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                let w1 = words[i], w2 = words[j];
+                if (w2.startsWith(w1) && w2.endsWith(w1)) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n ^ 2 * m)$
-- Space complexity: $O(1)$
+* Time complexity: $O(n ^ 2 * m)$
+* Space complexity: $O(1)$
 
 > Where $n$ is the size of the input array $words$, and $m$ is the maximum length of a string.
 
@@ -823,6 +1044,74 @@ impl Solution {
             trie.add(w);
         }
         res
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: Map<string, TrieNode>;
+    count: number;
+
+    constructor() {
+        this.children = new Map();
+        this.count = 0;
+    }
+}
+
+class Trie {
+    private root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} w
+     * @return {void}
+     */
+    add(w: string): void {
+        let cur = this.root;
+        let n = w.length;
+        for (let i = 0; i < n; i++) {
+            let key = w[i] + w[n - 1 - i];
+            if (!cur.children.has(key)) {
+                cur.children.set(key, new TrieNode());
+            }
+            cur = cur.children.get(key)!;
+            cur.count++;
+        }
+    }
+
+    /**
+     * @param {string} words
+     * @return {number}
+     */
+    count(w: string): number {
+        let cur = this.root;
+        let n = w.length;
+        for (let i = 0; i < n; i++) {
+            let key = w[i] + w[n - 1 - i];
+            if (!cur.children.has(key)) return 0;
+            cur = cur.children.get(key)!;
+        }
+        return cur.count;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    countPrefixSuffixPairs(words: string[]): number {
+        let res = 0;
+        let root = new Trie();
+        for (let i = words.length - 1; i >= 0; i--) {
+            res += root.count(words[i]);
+            root.add(words[i]);
+        }
+        return res;
     }
 }
 ```

@@ -143,15 +143,15 @@ class Solution {
 
 ```swift
 class Solution {
-    func kthSmallestProduct(_ nums1: [Int], _ nums2: [Int], _ k: Int64) -> Int64 {
-        var prod = [Int64]()
+    func kthSmallestProduct(_ nums1: [Int], _ nums2: [Int], _ k: Int) -> Int {
+        var prod = [Int]()
         for x in nums1 {
             for y in nums2 {
-                prod.append(Int64(x) * Int64(y))
+                prod.append(x * y)
             }
         }
         prod.sort()
-        return prod[Int(k) - 1]
+        return prod[k - 1]
     }
 }
 ```
@@ -167,6 +167,27 @@ impl Solution {
         }
         prod.sort();
         prod[(k - 1) as usize]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallestProduct(nums1: number[], nums2: number[], k: number): number {
+        const prod: number[] = [];
+        for (let x of nums1) {
+            for (let y of nums2) {
+                prod.push(x * y);
+            }
+        }
+        prod.sort((a, b) => a - b);
+        return prod[k - 1];
     }
 }
 ```
@@ -429,6 +450,182 @@ public class Solution {
 }
 ```
 
+```go
+func kthSmallestProduct(nums1 []int, nums2 []int, k int64) int64 {
+    lowerBound := func(arr []int, target int64) int {
+        l, r := 0, len(arr)
+        for l < r {
+            m := (l + r) / 2
+            if int64(arr[m]) < target {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+        return l
+    }
+
+    upperBound := func(arr []int, target int64) int {
+        l, r := 0, len(arr)
+        for l < r {
+            m := (l + r) / 2
+            if int64(arr[m]) <= target {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+        return l
+    }
+
+    floorDiv := func(a, b int64) int64 {
+        q := a / b
+        if (a%b != 0) && ((a < 0) != (b < 0)) {
+            q--
+        }
+        return q
+    }
+
+    count := func(prod int64) int64 {
+        var cnt int64 = 0
+        n2 := len(nums2)
+        for _, a := range nums1 {
+            if a > 0 {
+                bound := floorDiv(prod, int64(a))
+                cnt += int64(upperBound(nums2, bound))
+            } else if a < 0 {
+                threshold := int64(math.Ceil(float64(prod) / float64(a)))
+                cnt += int64(n2 - lowerBound(nums2, threshold))
+            } else if prod >= 0 {
+                cnt += int64(n2)
+            }
+        }
+        return cnt
+    }
+
+    var left, right int64 = -10_000_000_000, 10_000_000_000
+    for left <= right {
+        mid := left + (right-left)/2
+        if count(mid) < k {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return left
+}
+```
+
+```kotlin
+class Solution {
+    fun kthSmallestProduct(nums1: IntArray, nums2: IntArray, k: Long): Long {
+        var left = -10_000_000_000L
+        var right = 10_000_000_000L
+        while (left <= right) {
+            val mid = left + (right - left) / 2
+            if (count(nums1, nums2, mid) < k) {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return left
+    }
+
+    private fun count(nums1: IntArray, nums2: IntArray, prod: Long): Long {
+        var cnt = 0L
+        val n2 = nums2.size
+        for (a in nums1) {
+            if (a > 0) {
+                val bound = Math.floorDiv(prod, a.toLong())
+                cnt += upperBound(nums2, bound)
+            } else if (a < 0) {
+                val threshold = Math.ceil(prod.toDouble() / a).toLong()
+                cnt += n2 - lowerBound(nums2, threshold)
+            } else {
+                if (prod >= 0) {
+                    cnt += n2
+                }
+            }
+        }
+        return cnt
+    }
+
+    private fun lowerBound(arr: IntArray, target: Long): Int {
+        var l = 0
+        var r = arr.size
+        while (l < r) {
+            val m = (l + r) / 2
+            if (arr[m] < target) l = m + 1 else r = m
+        }
+        return l
+    }
+
+    private fun upperBound(arr: IntArray, target: Long): Int {
+        var l = 0
+        var r = arr.size
+        while (l < r) {
+            val m = (l + r) / 2
+            if (arr[m] <= target) l = m + 1 else r = m
+        }
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthSmallestProduct(_ nums1: [Int], _ nums2: [Int], _ k: Int) -> Int {
+        var left = -10_000_000_000, right = 10_000_000_000
+        while left <= right {
+            let mid = left + (right - left) / 2
+            if count(nums1, nums2, mid) < k {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return left
+    }
+
+    private func count(_ nums1: [Int], _ nums2: [Int], _ prod: Int) -> Int {
+        var cnt = 0
+        let n2 = nums2.count
+        for a in nums1 {
+            if a > 0 {
+                var bound = prod / a
+                if prod % a != 0 && prod < 0 { bound -= 1 }
+                cnt += upperBound(nums2, bound)
+            } else if a < 0 {
+                let threshold = Int(ceil(Double(prod) / Double(a)))
+                cnt += n2 - lowerBound(nums2, threshold)
+            } else if prod >= 0 {
+                cnt += n2
+            }
+        }
+        return cnt
+    }
+
+    private func lowerBound(_ arr: [Int], _ target: Int) -> Int {
+        var l = 0, r = arr.count
+        while l < r {
+            let m = (l + r) / 2
+            if arr[m] < target { l = m + 1 } else { r = m }
+        }
+        return l
+    }
+
+    private func upperBound(_ arr: [Int], _ target: Int) -> Int {
+        var l = 0, r = arr.count
+        while l < r {
+            let m = (l + r) / 2
+            if arr[m] <= target { l = m + 1 } else { r = m }
+        }
+        return l
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn kth_smallest_product(nums1: Vec<i32>, nums2: Vec<i32>, k: i64) -> i64 {
@@ -483,6 +680,61 @@ impl Solution {
             }
         }
         left
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallestProduct(nums1: number[], nums2: number[], k: number): number {
+        const lowerBound = (arr: number[], target: number): number => {
+            let l = 0,
+                r = arr.length;
+            while (l < r) {
+                const m = (l + r) >>> 1;
+                if (arr[m] < target) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+
+        const upperBound = (arr: number[], target: number): number => {
+            let l = 0,
+                r = arr.length;
+            while (l < r) {
+                const m = (l + r) >>> 1;
+                if (arr[m] <= target) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+
+        let left = -1e10,
+            right = 1e10;
+        const n2 = nums2.length;
+        while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            let cnt = 0;
+            for (const a of nums1) {
+                if (a > 0) {
+                    cnt += upperBound(nums2, Math.floor(mid / a));
+                } else if (a < 0) {
+                    cnt += n2 - lowerBound(nums2, Math.ceil(mid / a));
+                } else if (mid >= 0) {
+                    cnt += n2;
+                }
+                if (cnt >= k) break;
+            }
+            if (cnt < k) left = mid + 1;
+            else right = mid;
+        }
+        return left;
     }
 }
 ```
@@ -908,6 +1160,245 @@ public class Solution {
 }
 ```
 
+```go
+func kthSmallestProduct(nums1 []int, nums2 []int, k int64) int64 {
+    n1, n2 := len(nums1), len(nums2)
+    pos1 := 0 // first non-negative in nums1
+    for pos1 < n1 && nums1[pos1] < 0 {
+        pos1++
+    }
+    pos2 := 0 // first non-negative in nums2
+    for pos2 < n2 && nums2[pos2] < 0 {
+        pos2++
+    }
+
+    count := func(prod int64) int64 {
+        var cnt int64 = 0
+
+        // negative * negative -> positive
+        i, j := 0, pos2-1
+        for i < pos1 && j >= 0 {
+            if int64(nums1[i])*int64(nums2[j]) > prod {
+                i++
+            } else {
+                cnt += int64(pos1 - i)
+                j--
+            }
+        }
+
+        // positive * positive -> positive
+        i, j = pos1, n2-1
+        for i < n1 && j >= pos2 {
+            if int64(nums1[i])*int64(nums2[j]) > prod {
+                j--
+            } else {
+                cnt += int64(j - pos2 + 1)
+                i++
+            }
+        }
+
+        // negative * positive -> negative
+        i, j = 0, pos2
+        for i < pos1 && j < n2 {
+            if int64(nums1[i])*int64(nums2[j]) > prod {
+                j++
+            } else {
+                cnt += int64(n2 - j)
+                i++
+            }
+        }
+
+        // positive * negative -> negative
+        i, j = pos1, 0
+        for i < n1 && j < pos2 {
+            if int64(nums1[i])*int64(nums2[j]) > prod {
+                i++
+            } else {
+                cnt += int64(n1 - i)
+                j++
+            }
+        }
+
+        return cnt
+    }
+
+    var left, right int64 = -10_000_000_000, 10_000_000_000
+    for left <= right {
+        mid := left + (right-left)/2
+        if count(mid) < k {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return left
+}
+```
+
+```kotlin
+class Solution {
+    fun kthSmallestProduct(nums1: IntArray, nums2: IntArray, k: Long): Long {
+        val n1 = nums1.size
+        val n2 = nums2.size
+        var pos1 = 0 // first non-negative in nums1
+        while (pos1 < n1 && nums1[pos1] < 0) {
+            pos1++
+        }
+        var pos2 = 0 // first non-negative in nums2
+        while (pos2 < n2 && nums2[pos2] < 0) {
+            pos2++
+        }
+
+        var left = -10_000_000_000L
+        var right = 10_000_000_000L
+        while (left <= right) {
+            val mid = left + (right - left) / 2
+            if (count(nums1, nums2, pos1, pos2, n1, n2, mid) < k) {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return left
+    }
+
+    private fun count(
+        nums1: IntArray, nums2: IntArray,
+        pos1: Int, pos2: Int, n1: Int, n2: Int,
+        prod: Long
+    ): Long {
+        var cnt = 0L
+
+        // negative * negative -> positive
+        var i = 0
+        var j = pos2 - 1
+        while (i < pos1 && j >= 0) {
+            if (nums1[i].toLong() * nums2[j] > prod) {
+                i++
+            } else {
+                cnt += (pos1 - i)
+                j--
+            }
+        }
+
+        // positive * positive -> positive
+        i = pos1
+        j = n2 - 1
+        while (i < n1 && j >= pos2) {
+            if (nums1[i].toLong() * nums2[j] > prod) {
+                j--
+            } else {
+                cnt += (j - pos2 + 1)
+                i++
+            }
+        }
+
+        // negative * positive -> negative
+        i = 0
+        j = pos2
+        while (i < pos1 && j < n2) {
+            if (nums1[i].toLong() * nums2[j] > prod) {
+                j++
+            } else {
+                cnt += (n2 - j)
+                i++
+            }
+        }
+
+        // positive * negative -> negative
+        i = pos1
+        j = 0
+        while (i < n1 && j < pos2) {
+            if (nums1[i].toLong() * nums2[j] > prod) {
+                i++
+            } else {
+                cnt += (n1 - i)
+                j++
+            }
+        }
+
+        return cnt
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthSmallestProduct(_ nums1: [Int], _ nums2: [Int], _ k: Int) -> Int {
+        let n1 = nums1.count, n2 = nums2.count
+        var pos1 = 0 // first non-negative in nums1
+        while pos1 < n1 && nums1[pos1] < 0 {
+            pos1 += 1
+        }
+        var pos2 = 0 // first non-negative in nums2
+        while pos2 < n2 && nums2[pos2] < 0 {
+            pos2 += 1
+        }
+
+        func count(_ prod: Int) -> Int {
+            var cnt = 0
+
+            // negative * negative -> positive
+            var i = 0, j = pos2 - 1
+            while i < pos1 && j >= 0 {
+                if nums1[i] * nums2[j] > prod {
+                    i += 1
+                } else {
+                    cnt += pos1 - i
+                    j -= 1
+                }
+            }
+
+            // positive * positive -> positive
+            i = pos1; j = n2 - 1
+            while i < n1 && j >= pos2 {
+                if nums1[i] * nums2[j] > prod {
+                    j -= 1
+                } else {
+                    cnt += j - pos2 + 1
+                    i += 1
+                }
+            }
+
+            // negative * positive -> negative
+            i = 0; j = pos2
+            while i < pos1 && j < n2 {
+                if nums1[i] * nums2[j] > prod {
+                    j += 1
+                } else {
+                    cnt += n2 - j
+                    i += 1
+                }
+            }
+
+            // positive * negative -> negative
+            i = pos1; j = 0
+            while i < n1 && j < pos2 {
+                if nums1[i] * nums2[j] > prod {
+                    i += 1
+                } else {
+                    cnt += n1 - i
+                    j += 1
+                }
+            }
+
+            return cnt
+        }
+
+        var left = -10_000_000_000, right = 10_000_000_000
+        while left <= right {
+            let mid = left + (right - left) / 2
+            if count(mid) < k {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return left
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn kth_smallest_product(nums1: Vec<i32>, nums2: Vec<i32>, k: i64) -> i64 {
@@ -978,6 +1469,93 @@ impl Solution {
             }
         }
         left
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallestProduct(nums1: number[], nums2: number[], k: number): number {
+        const n1 = nums1.length,
+            n2 = nums2.length;
+
+        let pos1 = 0; // first non-negative in nums1
+        while (pos1 < n1 && nums1[pos1] < 0) {
+            pos1++;
+        }
+        let pos2 = 0; // first non-negative in nums2
+        while (pos2 < n2 && nums2[pos2] < 0) {
+            pos2++;
+        }
+
+        let left = -1e10,
+            right = 1e10;
+        while (left <= right) {
+            const mid = left + Math.floor((right - left) / 2);
+            let cnt = 0;
+
+            // negative * negative -> positive
+            let i = 0,
+                j = pos2 - 1;
+            while (i < pos1 && j >= 0) {
+                if (nums1[i] * nums2[j] > mid) {
+                    i++;
+                } else {
+                    cnt += pos1 - i;
+                    j--;
+                }
+            }
+
+            // positive * positive -> positive
+            i = pos1;
+            j = n2 - 1;
+            while (i < n1 && j >= pos2) {
+                if (nums1[i] * nums2[j] > mid) {
+                    j--;
+                } else {
+                    cnt += j - pos2 + 1;
+                    i++;
+                }
+            }
+
+            // negative * positive -> negative
+            i = 0;
+            j = pos2;
+            while (i < pos1 && j < n2) {
+                if (nums1[i] * nums2[j] > mid) {
+                    j++;
+                } else {
+                    cnt += n2 - j;
+                    i++;
+                }
+            }
+
+            // positive * negative -> negative
+            i = pos1;
+            j = 0;
+            while (i < n1 && j < pos2) {
+                if (nums1[i] * nums2[j] > mid) {
+                    i++;
+                } else {
+                    cnt += n1 - i;
+                    j++;
+                }
+            }
+
+            if (cnt < k) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return left;
     }
 }
 ```

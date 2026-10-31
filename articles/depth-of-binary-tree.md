@@ -228,7 +228,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -250,6 +249,24 @@ impl Solution {
                 )
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maxDepth(root: TreeNode | null): number {
+        if (root === null) {
+            return 0;
+        }
+
+        return (
+            1 + Math.max(this.maxDepth(root.left), this.maxDepth(root.right))
+        );
     }
 }
 ```
@@ -588,7 +605,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -612,6 +628,32 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maxDepth(root: TreeNode | null): number {
+        const stack: [TreeNode | null, number][] = [[root, 1]];
+        let res = 0;
+
+        while (stack.length > 0) {
+            const current = stack.pop()!;
+            const node = current[0];
+            const depth = current[1];
+
+            if (node !== null) {
+                res = Math.max(res, depth);
+                stack.push([node.left, depth + 1]);
+                stack.push([node.right, depth + 1]);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -973,7 +1015,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -1006,6 +1047,37 @@ impl Solution {
             level += 1;
         }
         level
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maxDepth(root: TreeNode | null): number {
+        const q = new Queue();
+        if (root !== null) {
+            q.push(root);
+        }
+
+        let level = 0;
+        while (q.size() > 0) {
+            const size = q.size();
+            for (let i = 0; i < size; i++) {
+                const node: TreeNode = q.pop();
+                if (node.left !== null) {
+                    q.push(node.left);
+                }
+                if (node.right !== null) {
+                    q.push(node.right);
+                }
+            }
+            level++;
+        }
+        return level;
     }
 }
 ```

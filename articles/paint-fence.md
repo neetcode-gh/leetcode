@@ -240,6 +240,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    numWays(n: number, k: number): number {
+        const memo: { [key: number]: number } = {};
+
+        const total_ways = (i: number): number => {
+            if (i === 1) {
+                return k;
+            }
+
+            if (i === 2) {
+                return k * k;
+            }
+
+            // Check if we have already calculated total_ways(i)
+            if (i in memo) {
+                return memo[i];
+            }
+
+            // Use the recurrence relation to calculate total_ways(i)
+            memo[i] = (k - 1) * (total_ways(i - 1) + total_ways(i - 2));
+            return memo[i];
+        };
+
+        return total_ways(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -452,6 +486,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    numWays(n: number, k: number): number {
+        // Base cases for the problem to avoid index out of bound issues
+        if (n === 1) return k;
+        if (n === 2) return k * k;
+
+        let totalWays: number[] = new Array(n + 1);
+        totalWays[1] = k;
+        totalWays[2] = k * k;
+
+        for (let i = 3; i <= n; i++) {
+            totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2]);
+        }
+
+        return totalWays[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -627,7 +686,7 @@ class Solution {
         var twoPostsBack = k
         var onePostBack = k * k
 
-        for _ in 3...n {
+        for _ in stride(from: 3, through: n, by: 1) {
             let curr = (k - 1) * (onePostBack + twoPostsBack)
             twoPostsBack = onePostBack
             onePostBack = curr
@@ -653,6 +712,30 @@ impl Solution {
         }
 
         one_post_back
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    numWays(n: number, k: number): number {
+        if (n === 1) return k;
+
+        let twoPostsBack = k;
+        let onePostBack = k * k;
+
+        for (let i = 3; i <= n; i++) {
+            let curr = (k - 1) * (onePostBack + twoPostsBack);
+            twoPostsBack = onePostBack;
+            onePostBack = curr;
+        }
+
+        return onePostBack;
     }
 }
 ```

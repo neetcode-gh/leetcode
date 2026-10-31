@@ -354,6 +354,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findAllConcatenatedWordsInADict(words: string[]): string[] {
+        let n = words.length;
+        let res: string[] = [];
+        let wordSet = new Set<string>(words);
+        let maxLen = 0;
+
+        for (let w of words) {
+            maxLen = Math.max(maxLen, w.length);
+        }
+
+        const dfs = (concatWord: string[], totLen: number): void => {
+            if (concatWord.length > 1) {
+                let word = concatWord.join('');
+                if (wordSet.has(word)) {
+                    res.push(word);
+                    wordSet.delete(word);
+                }
+            }
+
+            for (let i = 0; i < words.length; i++) {
+                if (totLen + words[i].length > maxLen) continue;
+                concatWord.push(words[i]);
+                dfs(concatWord, totLen + words[i].length);
+                concatWord.pop();
+            }
+        };
+
+        dfs([], 0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -638,6 +677,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findAllConcatenatedWordsInADict(words: string[]): string[] {
+        const wordSet = new Set<string>(words);
+
+        const dfs = (word: string): boolean => {
+            for (let i = 1; i < word.length; i++) {
+                const prefix = word.substring(0, i);
+                const suffix = word.substring(i);
+
+                if (
+                    (wordSet.has(prefix) && wordSet.has(suffix)) ||
+                    (wordSet.has(prefix) && dfs(suffix))
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        const res: string[] = [];
+        for (let w of words) {
+            if (dfs(w)) {
+                res.push(w);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -858,8 +932,8 @@ func findAllConcatenatedWordsInADict(words []string) []string {
 
     var dfs func(word string) bool
     dfs = func(word string) bool {
-        if val, ok := dpSet[word]; ok {
-            return val
+        if _, ok := dpSet[word]; ok {
+            return dp[word]
         }
 
         for i := 1; i < len(word); i++ {
@@ -985,6 +1059,48 @@ impl Solution {
             .filter(|w| dfs(w, &word_set, &mut dp))
             .cloned()
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findAllConcatenatedWordsInADict(words: string[]): string[] {
+        const wordSet = new Set<string>(words);
+        const dp = new Map<string, boolean>();
+
+        const dfs = (word: string): boolean => {
+            if (dp.has(word)) {
+                return dp.get(word)!;
+            }
+
+            for (let i = 1; i < word.length; i++) {
+                const prefix = word.substring(0, i);
+                const suffix = word.substring(i);
+
+                if (
+                    (wordSet.has(prefix) && wordSet.has(suffix)) ||
+                    (wordSet.has(prefix) && dfs(suffix))
+                ) {
+                    dp.set(word, true);
+                    return true;
+                }
+            }
+            dp.set(word, false);
+            return false;
+        };
+
+        const res: string[] = [];
+        for (let w of words) {
+            if (dfs(w)) {
+                res.push(w);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1289,6 +1405,40 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    findAllConcatenatedWordsInADict(words: string[]): string[] {
+        const wordSet = new Set<string>(words);
+        const res: string[] = [];
+
+        for (const word of words) {
+            const m = word.length;
+            const dp: boolean[] = new Array(m + 1).fill(false);
+            dp[0] = true;
+
+            for (let i = 1; i <= m; i++) {
+                for (let j = 0; j < i; j++) {
+                    if (j === 0 && i === m) continue;
+                    if (dp[j] && wordSet.has(word.substring(j, i))) {
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            if (dp[m]) {
+                res.push(word);
+            }
+        }
+        return res;
     }
 }
 ```

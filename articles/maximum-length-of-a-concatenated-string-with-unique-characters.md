@@ -58,7 +58,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxLength(List<String> arr) {
+    public int maxLength(String[] arr) {
         Set<Character> charSet = new HashSet<>();
         return backtrack(0, arr, charSet);
     }
@@ -74,18 +74,18 @@ public class Solution {
         return false;
     }
 
-    private int backtrack(int i, List<String> arr, Set<Character> charSet) {
-        if (i == arr.size()) {
+    private int backtrack(int i, String[] arr, Set<Character> charSet) {
+        if (i == arr.length) {
             return charSet.size();
         }
 
         int res = 0;
-        if (!overlap(charSet, arr.get(i))) {
-            for (char c : arr.get(i).toCharArray()) {
+        if (!overlap(charSet, arr[i])) {
+            for (char c : arr[i].toCharArray()) {
                 charSet.add(c);
             }
             res = backtrack(i + 1, arr, charSet);
-            for (char c : arr.get(i).toCharArray()) {
+            for (char c : arr[i].toCharArray()) {
                 charSet.remove(c);
             }
         }
@@ -184,7 +184,7 @@ class Solution {
 public class Solution {
     private HashSet<char> charSet = new HashSet<char>();
 
-    public int MaxLength(IList<string> arr) {
+    public int MaxLength(string[] arr) {
         return Backtrack(0, arr);
     }
 
@@ -199,8 +199,8 @@ public class Solution {
         return false;
     }
 
-    private int Backtrack(int i, IList<string> arr) {
-        if (i == arr.Count) {
+    private int Backtrack(int i, string[] arr) {
+        if (i == arr.Length) {
             return charSet.Count;
         }
 
@@ -266,7 +266,7 @@ func maxLength(arr []string) int {
 
 ```kotlin
 class Solution {
-    fun maxLength(arr: List<String>): Int {
+    fun maxLength(arr: Array<String>): Int {
         val charSet = mutableSetOf<Char>()
 
         fun overlap(s: String): Boolean {
@@ -385,6 +385,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @return {number}
+     */
+    maxLength(arr: string[]): number {
+        let charSet = new Set<string>();
+
+        const overlap = (charSet: Set<string>, s: string): boolean => {
+            let prev = new Set<string>();
+            for (const c of s) {
+                if (charSet.has(c) || prev.has(c)) {
+                    return true;
+                }
+                prev.add(c);
+            }
+            return false;
+        };
+
+        const backtrack = (i: number): number => {
+            if (i === arr.length) {
+                return charSet.size;
+            }
+
+            let res = 0;
+            if (!overlap(charSet, arr[i])) {
+                for (const c of arr[i]) {
+                    charSet.add(c);
+                }
+                res = backtrack(i + 1);
+                for (const c of arr[i]) {
+                    charSet.delete(c);
+                }
+            }
+
+            return Math.max(res, backtrack(i + 1));
+        };
+
+        return backtrack(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -447,7 +491,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxLength(List<String> arr) {
+    public int maxLength(String[] arr) {
         boolean[] charSet = new boolean[26];
         return backtrack(0, arr, charSet);
     }
@@ -470,15 +514,15 @@ public class Solution {
         return false;
     }
 
-    private int backtrack(int i, List<String> arr, boolean[] charSet) {
-        if (i == arr.size()) {
+    private int backtrack(int i, String[] arr, boolean[] charSet) {
+        if (i == arr.length) {
             return 0;
         }
 
         int res = 0;
-        if (!overlap(charSet, arr.get(i))) {
-            res = arr.get(i).length() + backtrack(i + 1, arr, charSet);
-            for (char c : arr.get(i).toCharArray()) {
+        if (!overlap(charSet, arr[i])) {
+            res = arr[i].length() + backtrack(i + 1, arr, charSet);
+            for (char c : arr[i].toCharArray()) {
                 charSet[getIdx(c)] = false;
             }
         }
@@ -580,7 +624,7 @@ class Solution {
 public class Solution {
     private bool[] charSet = new bool[26];
 
-    public int MaxLength(IList<string> arr) {
+    public int MaxLength(string[] arr) {
         return Backtrack(0, arr);
     }
 
@@ -602,8 +646,8 @@ public class Solution {
         return false;
     }
 
-    private int Backtrack(int i, IList<string> arr) {
-        if (i == arr.Count) {
+    private int Backtrack(int i, string[] arr) {
+        if (i == arr.Length) {
             return 0;
         }
 
@@ -669,7 +713,7 @@ func maxLength(arr []string) int {
 
 ```kotlin
 class Solution {
-    fun maxLength(arr: List<String>): Int {
+    fun maxLength(arr: Array<String>): Int {
         val charSet = BooleanArray(26)
 
         fun getIdx(c: Char): Int = c - 'a'
@@ -796,6 +840,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @return {number}
+     */
+    maxLength(arr: string[]): number {
+        let charSet: boolean[] = new Array(26).fill(false);
+
+        const getIdx = (c: string): number => c.charCodeAt(0) - 'a'.charCodeAt(0);
+
+        const overlap = (charSet: boolean[], s: string): boolean => {
+            for (let i = 0; i < s.length; i++) {
+                let c = getIdx(s[i]);
+                if (charSet[c]) {
+                    for (let j = 0; j < i; j++) {
+                        charSet[getIdx(s[j])] = false;
+                    }
+                    return true;
+                }
+                charSet[c] = true;
+            }
+            return false;
+        };
+
+        const backtrack = (i: number): number => {
+            if (i === arr.length) {
+                return 0;
+            }
+
+            let res = 0;
+            if (!overlap(charSet, arr[i])) {
+                res = arr[i].length + backtrack(i + 1);
+                for (const c of arr[i]) {
+                    charSet[getIdx(c)] = false;
+                }
+            }
+            return Math.max(res, backtrack(i + 1));
+        };
+
+        return backtrack(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -857,7 +946,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxLength(List<String> arr) {
+    public int maxLength(String[] arr) {
         List<int[]> A = new ArrayList<>();
 
         for (String s : arr) {
@@ -988,7 +1077,7 @@ class Solution {
 public class Solution {
     private List<int[]> A = new List<int[]>();
 
-    public int MaxLength(IList<string> arr) {
+    public int MaxLength(string[] arr) {
         foreach (string s in arr) {
             int cur = 0;
             bool valid = true;
@@ -1075,7 +1164,7 @@ func maxLength(arr []string) int {
 
 ```kotlin
 class Solution {
-    fun maxLength(arr: List<String>): Int {
+    fun maxLength(arr: Array<String>): Int {
         val A = mutableListOf<IntArray>()
 
         for (s in arr) {
@@ -1195,6 +1284,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @return {number}
+     */
+    maxLength(arr: string[]): number {
+        let A: number[][] = [];
+
+        for (const s of arr) {
+            let cur = 0;
+            let valid = true;
+
+            for (const c of s) {
+                if (cur & (1 << (c.charCodeAt(0) - 97))) {
+                    valid = false;
+                    break;
+                }
+                cur |= 1 << (c.charCodeAt(0) - 97);
+            }
+
+            if (valid) {
+                A.push([cur, s.length]);
+            }
+        }
+
+        const dfs = (i: number, subSeq: number): number => {
+            if (i === A.length) {
+                return 0;
+            }
+
+            let res = dfs(i + 1, subSeq);
+
+            let [curSeq, length] = A[i];
+            if ((subSeq & curSeq) === 0) {
+                res = Math.max(res, length + dfs(i + 1, subSeq | curSeq));
+            }
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1253,7 +1387,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxLength(List<String> arr) {
+    public int maxLength(String[] arr) {
         List<int[]> A = new ArrayList<>();
 
         for (String s : arr) {
@@ -1375,7 +1509,7 @@ class Solution {
 public class Solution {
     private List<int[]> A = new List<int[]>();
 
-    public int MaxLength(IList<string> arr) {
+    public int MaxLength(string[] arr) {
         foreach (string s in arr) {
             int cur = 0;
             bool valid = true;
@@ -1456,7 +1590,7 @@ func maxLength(arr []string) int {
 
 ```kotlin
 class Solution {
-    fun maxLength(arr: List<String>): Int {
+    fun maxLength(arr: Array<String>): Int {
         val A = mutableListOf<IntArray>()
 
         for (s in arr) {
@@ -1569,6 +1703,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @return {number}
+     */
+    maxLength(arr: string[]): number {
+        let A: number[][] = [];
+
+        for (const s of arr) {
+            let cur = 0;
+            let valid = true;
+
+            for (const c of s) {
+                if (cur & (1 << (c.charCodeAt(0) - 97))) {
+                    valid = false;
+                    break;
+                }
+                cur |= 1 << (c.charCodeAt(0) - 97);
+            }
+
+            if (valid) {
+                A.push([cur, s.length]);
+            }
+        }
+
+        const dfs = (i: number, subSeq: number): number => {
+            let res = 0;
+            for (let j = i; j < A.length; j++) {
+                let [curSeq, length] = A[j];
+                if ((subSeq & curSeq) === 0) {
+                    res = Math.max(res, length + dfs(j + 1, subSeq | curSeq));
+                }
+            }
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1628,7 +1804,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxLength(List<String> arr) {
+    public int maxLength(String[] arr) {
         Set<Integer> dp = new HashSet<>();
         dp.add(0);
         int res = 0;
@@ -1756,7 +1932,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MaxLength(IList<string> arr) {
+    public int MaxLength(string[] arr) {
         HashSet<int> dp = new HashSet<int>();
         dp.Add(0);
         int res = 0;
@@ -1858,7 +2034,7 @@ func maxLength(arr []string) int {
 
 ```kotlin
 class Solution {
-    fun maxLength(arr: List<String>): Int {
+    fun maxLength(arr: Array<String>): Int {
         var dp = mutableSetOf(0)
         var res = 0
 
@@ -1980,6 +2156,53 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @return {number}
+     */
+    maxLength(arr: string[]): number {
+        let dp = new Set<number>();
+        dp.add(0);
+        let res = 0;
+
+        for (const s of arr) {
+            let cur = 0;
+            let valid = true;
+
+            for (const c of s) {
+                let bit = 1 << (c.charCodeAt(0) - 97);
+                if (cur & bit) {
+                    valid = false;
+                    break;
+                }
+                cur |= bit;
+            }
+
+            if (!valid) {
+                continue;
+            }
+
+            let next_dp = new Set<number>(dp);
+            for (let seq of dp) {
+                if (seq & cur || next_dp.has(seq | cur)) {
+                    continue;
+                }
+                next_dp.add(seq | cur);
+                res = Math.max(
+                    res,
+                    (seq | cur).toString(2).split('0').join('').length,
+                );
+            }
+            dp = next_dp;
+        }
+
+        return res;
     }
 }
 ```

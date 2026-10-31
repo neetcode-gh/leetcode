@@ -413,6 +413,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {number[]} succProb
+     * @param {number} start_node
+     * @param {number} end_node
+     * @return {number}
+     */
+    maxProbability(
+        n: number,
+        edges: number[][],
+        succProb: number[],
+        start_node: number,
+        end_node: number,
+    ): number {
+        let adj = new Map<number, number[][]>();
+        for (let i = 0; i < n; i++) adj.set(i, []);
+
+        for (let i = 0; i < edges.length; i++) {
+            let [src, dst] = edges[i];
+            adj.get(src)!.push([dst, succProb[i]]);
+            adj.get(dst)!.push([src, succProb[i]]);
+        }
+
+        let pq = new MaxPriorityQueue((x: number[]) => x[0]);
+        pq.enqueue([1.0, start_node]);
+        let visited = new Set<number>();
+
+        while (!pq.isEmpty()) {
+            let [prob, cur]: number[] = pq.dequeue();
+            visited.add(cur);
+
+            if (cur === end_node) return prob;
+
+            for (let [nei, edgeProb] of adj.get(cur)!) {
+                if (!visited.has(nei)) {
+                    pq.enqueue([prob * edgeProb, nei]);
+                }
+            }
+        }
+
+        return 0.0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -836,6 +884,55 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {number[]} succProb
+     * @param {number} start_node
+     * @param {number} end_node
+     * @return {number}
+     */
+    maxProbability(
+        n: number,
+        edges: number[][],
+        succProb: number[],
+        start_node: number,
+        end_node: number,
+    ): number {
+        let adj: number[][][] = Array.from({ length: n }, () => []);
+        for (let i = 0; i < edges.length; i++) {
+            let [src, dst] = edges[i];
+            adj[src].push([dst, succProb[i]]);
+            adj[dst].push([src, succProb[i]]);
+        }
+
+        let maxProb: number[] = Array(n).fill(0);
+        maxProb[start_node] = 1.0;
+        let pq = new MaxPriorityQueue((x: number[]) => x[1]);
+        pq.enqueue([start_node, 1.0]);
+
+        while (!pq.isEmpty()) {
+            let [node, curr_prob]: number[] = pq.dequeue();
+
+            if (node === end_node) return curr_prob;
+            if (curr_prob < maxProb[node]) continue;
+
+            for (let [nei, edge_prob] of adj[node]) {
+                let new_prob = curr_prob * edge_prob;
+                if (new_prob > maxProb[nei]) {
+                    maxProb[nei] = new_prob;
+                    pq.enqueue([nei, new_prob]);
+                }
+            }
+        }
+
+        return 0.0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1130,6 +1227,49 @@ impl Solution {
         }
 
         max_prob[end_node as usize]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {number[]} succProb
+     * @param {number} start_node
+     * @param {number} end_node
+     * @return {number}
+     */
+    maxProbability(
+        n: number,
+        edges: number[][],
+        succProb: number[],
+        start_node: number,
+        end_node: number,
+    ): number {
+        let maxProb: number[] = new Array(n).fill(0.0);
+        maxProb[start_node] = 1.0;
+
+        for (let i = 0; i < n; i++) {
+            let updated = false;
+            for (let j = 0; j < edges.length; j++) {
+                let [src, dst] = edges[j];
+
+                if (maxProb[src] * succProb[j] > maxProb[dst]) {
+                    maxProb[dst] = maxProb[src] * succProb[j];
+                    updated = true;
+                }
+
+                if (maxProb[dst] * succProb[j] > maxProb[src]) {
+                    maxProb[src] = maxProb[dst] * succProb[j];
+                    updated = true;
+                }
+            }
+            if (!updated) break;
+        }
+
+        return maxProb[end_node];
     }
 }
 ```
@@ -1485,6 +1625,51 @@ impl Solution {
         }
 
         max_prob[end]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {number[]} succProb
+     * @param {number} start_node
+     * @param {number} end_node
+     * @return {number}
+     */
+    maxProbability(
+        n: number,
+        edges: number[][],
+        succProb: number[],
+        start_node: number,
+        end_node: number,
+    ): number {
+        let adj: number[][][] = Array.from({ length: n }, () => []);
+        for (let i = 0; i < edges.length; i++) {
+            let [src, dst] = edges[i];
+            adj[src].push([dst, succProb[i]]);
+            adj[dst].push([src, succProb[i]]);
+        }
+
+        let maxProb: number[] = new Array(n).fill(0.0);
+        maxProb[start_node] = 1.0;
+        const q = new Queue([start_node]);
+
+        while (!q.isEmpty()) {
+            let node: number = q.pop();
+
+            for (let [nei, edgeProb] of adj[node]) {
+                let newProb = maxProb[node] * edgeProb;
+                if (newProb > maxProb[nei]) {
+                    maxProb[nei] = newProb;
+                    q.push(nei);
+                }
+            }
+        }
+
+        return maxProb[end_node];
     }
 }
 ```

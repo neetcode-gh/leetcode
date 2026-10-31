@@ -178,6 +178,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    subarraySum(nums: number[], k: number): number {
+        let res = 0;
+        for (let i = 0; i < nums.length; i++) {
+            let sum = 0;
+            for (let j = i; j < nums.length; j++) {
+                sum += nums[j];
+                if (sum == k) res++;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,6 +402,31 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    subarraySum(nums: number[], k: number): number {
+        let res = 0,
+            curSum = 0;
+        const prefixSums = new Map<number, number>();
+        prefixSums.set(0, 1);
+
+        for (let num of nums) {
+            curSum += num;
+            let diff = curSum - k;
+            res += prefixSums.get(diff) || 0;
+            prefixSums.set(curSum, (prefixSums.get(curSum) || 0) + 1);
+        }
+
+        return res;
     }
 }
 ```

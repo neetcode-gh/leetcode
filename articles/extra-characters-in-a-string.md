@@ -257,6 +257,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const words = new Set<string>(dictionary);
+
+        const dfs = (i: number): number => {
+            if (i === s.length) {
+                return 0;
+            }
+
+            let res = 1 + dfs(i + 1);
+            for (let j = i; j < s.length; j++) {
+                if (words.has(s.slice(i, j + 1))) {
+                    res = Math.min(res, dfs(j + 1));
+                }
+            }
+
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -530,6 +560,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const words = new Set<string>(dictionary);
+        const n = s.length;
+        const dp: number[] = new Array(n + 1).fill(-1);
+        dp[n] = 0;
+
+        const dfs = (i: number): number => {
+            if (dp[i] !== -1) return dp[i];
+            let res = 1 + dfs(i + 1);
+            for (let j = i; j < n; j++) {
+                if (words.has(s.slice(i, j + 1))) {
+                    res = Math.min(res, dfs(j + 1));
+                }
+            }
+            dp[i] = res;
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -740,6 +800,31 @@ impl Solution {
             }
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const words = new Set<string>(dictionary);
+        const n = s.length;
+        const dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i] = 1 + dp[i + 1];
+            for (let j = i; j < n; j++) {
+                if (words.has(s.slice(i, j + 1))) {
+                    dp[i] = Math.min(dp[i], dp[j + 1]);
+                }
+            }
+        }
+        return dp[0];
     }
 }
 ```
@@ -1087,6 +1172,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const dp = new Map<number, number>();
+        dp.set(s.length, 0);
+
+        const dfs = (i: number): number => {
+            if (dp.has(i)) return dp.get(i)!;
+
+            let res = 1 + dfs(i + 1);
+            for (const word of dictionary) {
+                if (i + word.length > s.length) continue;
+
+                let flag = true;
+                for (let j = 0; j < word.length; j++) {
+                    if (s[i + j] !== word[j]) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    res = Math.min(res, dfs(i + word.length));
+                }
+            }
+            dp.set(i, res);
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1296,6 +1419,34 @@ impl Solution {
             }
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const n = s.length;
+        const dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i] = 1 + dp[i + 1];
+            for (const word of dictionary) {
+                if (
+                    i + word.length <= n &&
+                    s.slice(i, i + word.length) === word
+                ) {
+                    dp[i] = Math.min(dp[i], dp[i + word.length]);
+                }
+            }
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1883,6 +2034,78 @@ impl Solution {
 }
 ```
 
+```typescript
+class TrieNode {
+    children: { [key: string]: TrieNode };
+    isWord: boolean;
+
+    constructor() {
+        this.children = {};
+        this.isWord = false;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        let curr = this.root;
+        for (const c of word) {
+            if (!curr.children[c]) {
+                curr.children[c] = new TrieNode();
+            }
+            curr = curr.children[c];
+        }
+        curr.isWord = true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const trie = new Trie();
+        for (const word of dictionary) {
+            trie.addWord(word);
+        }
+
+        const dp: number[] = Array(s.length + 1).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i === s.length) return 0;
+            if (dp[i] !== -1) return dp[i];
+
+            let res = 1 + dfs(i + 1);
+            let curr = trie.root;
+
+            for (let j = i; j < s.length; j++) {
+                if (!curr.children[s[j]]) break;
+                curr = curr.children[s[j]];
+                if (curr.isWord) {
+                    res = Math.min(res, dfs(j + 1));
+                }
+            }
+
+            dp[i] = res;
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2402,6 +2625,72 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: { [key: string]: TrieNode };
+    isWord: boolean;
+
+    constructor() {
+        this.children = {};
+        this.isWord = false;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        let curr = this.root;
+        for (const c of word) {
+            if (!curr.children[c]) {
+                curr.children[c] = new TrieNode();
+            }
+            curr = curr.children[c];
+        }
+        curr.isWord = true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} dictionary
+     * @return {number}
+     */
+    minExtraChar(s: string, dictionary: string[]): number {
+        const trie = new Trie();
+        for (const word of dictionary) {
+            trie.addWord(word);
+        }
+
+        const n = s.length;
+        const dp = new Int32Array(n + 1);
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i] = 1 + dp[i + 1];
+            let curr = trie.root;
+
+            for (let j = i; j < n; j++) {
+                if (!curr.children[s[j]]) break;
+                curr = curr.children[s[j]];
+                if (curr.isWord) {
+                    dp[i] = Math.min(dp[i], dp[j + 1]);
+                }
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

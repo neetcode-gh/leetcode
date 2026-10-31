@@ -206,6 +206,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} spells
+     * @param {number[]} potions
+     * @param {number} success
+     * @return {number[]}
+     */
+    successfulPairs(
+        spells: number[],
+        potions: number[],
+        success: number,
+    ): number[] {
+        let res: number[] = [];
+
+        for (let s of spells) {
+            let cnt = 0;
+            for (let p of potions) {
+                if (s * p >= success) {
+                    cnt++;
+                }
+            }
+            res.push(cnt);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,6 +519,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} spells
+     * @param {number[]} potions
+     * @param {number} success
+     * @return {number[]}
+     */
+    successfulPairs(
+        spells: number[],
+        potions: number[],
+        success: number,
+    ): number[] {
+        potions.sort((a, b) => a - b);
+        let res: number[] = [];
+
+        for (let s of spells) {
+            let l = 0,
+                r = potions.length - 1,
+                idx = potions.length;
+
+            while (l <= r) {
+                let m = Math.floor((l + r) / 2);
+                if (s * potions[m] >= success) {
+                    r = m - 1;
+                    idx = m;
+                } else {
+                    l = m + 1;
+                }
+            }
+
+            res.push(potions.length - idx);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -752,6 +821,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} spells
+     * @param {number[]} potions
+     * @param {number} success
+     * @return {number[]}
+     */
+    successfulPairs(
+        spells: number[],
+        potions: number[],
+        success: number,
+    ): number[] {
+        const n = spells.length,
+            m = potions.length;
+        const S = [...spells];
+        const count = new Map<number, number>();
+        spells.sort((a, b) => a - b);
+        potions.sort((a, b) => a - b);
+
+        let j = m - 1;
+        for (let i = 0; i < n; i++) {
+            while (j >= 0 && spells[i] * potions[j] >= success) {
+                j--;
+            }
+            count.set(spells[i], m - j - 1);
+        }
+
+        return S.map((s) => count.get(s)!);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1003,6 +1105,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} spells
+     * @param {number[]} potions
+     * @param {number} success
+     * @return {number[]}
+     */
+    successfulPairs(
+        spells: number[],
+        potions: number[],
+        success: number,
+    ): number[] {
+        const n = spells.length,
+            m = potions.length;
+        const sIdx = Array.from({ length: n }, (_, i) => i);
+
+        sIdx.sort((a, b) => spells[a] - spells[b]);
+        potions.sort((a, b) => a - b);
+
+        let j = m - 1;
+        const res: number[] = new Array(n).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            while (j >= 0 && spells[sIdx[i]] * potions[j] >= success) {
+                j--;
+            }
+            res[sIdx[i]] = m - j - 1;
+        }
+
+        return res;
     }
 }
 ```

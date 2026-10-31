@@ -162,23 +162,24 @@ public class Solution {
 ```
 
 ```go
-func reverseBits(n uint32) uint32 {
-	binary := ""
-	for i := 0; i < 32; i++ {
-		if n&(1<<i) != 0 {
-			binary += "1"
-		} else {
-			binary += "0"
-		}
-	}
+func reverseBits(num int) int {
+    n := uint32(num)
+    binary := ""
+    for i := 0; i < 32; i++ {
+        if n&(1<<i) != 0 {
+            binary += "1"
+        } else {
+            binary += "0"
+        }
+    }
 
-	var res uint32 = 0
-	for i, bit := range binary {
-		if bit == '1' {
-			res |= (1 << (31 - i))
-		}
-	}
-	return res
+    var res uint32 = 0
+    for i, bit := range binary {
+        if bit == '1' {
+            res |= (1 << (31 - i))
+        }
+    }
+    return int(res)
 }
 ```
 
@@ -246,6 +247,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a positive integer
+     * @return {number} - a positive integer
+     */
+    reverseBits(n: number): number {
+        let binary = '';
+        for (let i = 0; i < 32; i++) {
+            if (n & (1 << i)) {
+                binary += '1';
+            } else {
+                binary += '0';
+            }
+        }
+
+        let res = 0;
+        for (let i = 0; i < 32; i++) {
+            if (binary[31 - i] === '1') {
+                res |= 1 << i;
+            }
+        }
+
+        return res >>> 0;
     }
 }
 ```
@@ -352,13 +381,14 @@ public class Solution {
 ```
 
 ```go
-func reverseBits(n uint32) uint32 {
-	var res uint32 = 0
-	for i := 0; i < 32; i++ {
-		bit := (n >> i) & 1
-		res |= (bit << (31 - i))
-	}
-	return res
+func reverseBits(num int) int {
+    n := uint32(num)
+    var res uint32 = 0
+    for i := 0; i < 32; i++ {
+        bit := (n >> i) & 1
+        res |= (bit << (31 - i))
+    }
+    return int(res)
 }
 ```
 
@@ -398,6 +428,23 @@ impl Solution {
             res += bit << (31 - i);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a positive integer
+     * @return {number} - a positive integer
+     */
+    reverseBits(n: number): number {
+        let res = 0;
+        for (let i = 0; i < 32; i++) {
+            const bit = (n >>> i) & 1;
+            res += bit << (31 - i);
+        }
+        return res >>> 0;
     }
 }
 ```
@@ -524,14 +571,15 @@ public class Solution {
 ```
 
 ```go
-func reverseBits(n uint32) uint32 {
-	res := n
-	res = (res >> 16) | (res << 16)
-	res = ((res & 0xff00ff00) >> 8) | ((res & 0x00ff00ff) << 8)
-	res = ((res & 0xf0f0f0f0) >> 4) | ((res & 0x0f0f0f0f) << 4)
-	res = ((res & 0xcccccccc) >> 2) | ((res & 0x33333333) << 2)
-	res = ((res & 0xaaaaaaaa) >> 1) | ((res & 0x55555555) << 1)
-	return res
+func reverseBits(num int) int {
+    n := uint32(num)
+    res := n
+    res = (res >> 16) | (res << 16)
+    res = ((res & 0xff00ff00) >> 8) | ((res & 0x00ff00ff) << 8)
+    res = ((res & 0xf0f0f0f0) >> 4) | ((res & 0x0f0f0f0f) << 4)
+    res = ((res & 0xcccccccc) >> 2) | ((res & 0x33333333) << 2)
+    res = ((res & 0xaaaaaaaa) >> 1) | ((res & 0x55555555) << 1)
+    return int(res)
 }
 ```
 
@@ -573,6 +621,24 @@ impl Solution {
         ret = ((ret & 0xcccccccc) >> 2) | ((ret & 0x33333333) << 2);
         ret = ((ret & 0xaaaaaaaa) >> 1) | ((ret & 0x55555555) << 1);
         ret
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n - a positive integer
+     * @return {number} - a positive integer
+     */
+    reverseBits(n: number): number {
+        let ret = n >>> 0;
+        ret = (ret >>> 16) | (ret << 16);
+        ret = ((ret & 0xff00ff00) >>> 8) | ((ret & 0x00ff00ff) << 8);
+        ret = ((ret & 0xf0f0f0f0) >>> 4) | ((ret & 0x0f0f0f0f) << 4);
+        ret = ((ret & 0xcccccccc) >>> 2) | ((ret & 0x33333333) << 2);
+        ret = ((ret & 0xaaaaaaaa) >>> 1) | ((ret & 0x55555555) << 1);
+        return ret >>> 0;
     }
 }
 ```

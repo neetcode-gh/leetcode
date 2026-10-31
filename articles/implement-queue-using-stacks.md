@@ -311,7 +311,7 @@ class MyQueue() {
         while (stack1.size > 1) {
             stack2.addLast(stack1.removeLast())
         }
-        val res = stack1.last()
+        val res = stack1.peekLast()
         while (stack2.isNotEmpty()) {
             stack1.addLast(stack2.removeLast())
         }
@@ -410,6 +410,61 @@ impl MyQueue {
 
     fn empty(&self) -> bool {
         self.stack1.is_empty()
+    }
+}
+```
+
+```typescript
+class MyQueue {
+    private stack1: number[];
+    private stack2: number[];
+
+    constructor() {
+        this.stack1 = [];
+        this.stack2 = [];
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x: number): void {
+        this.stack1.push(x);
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        while (this.stack1.length > 1) {
+            this.stack2.push(this.stack1.pop()!);
+        }
+        const res = this.stack1.pop()!;
+        while (this.stack2.length) {
+            this.stack1.push(this.stack2.pop()!);
+        }
+        return res;
+    }
+
+    /**
+     * @return {number}
+     */
+    peek(): number {
+        while (this.stack1.length > 1) {
+            this.stack2.push(this.stack1.pop()!);
+        }
+        const res = this.stack1[this.stack1.length - 1];
+        while (this.stack2.length) {
+            this.stack1.push(this.stack2.pop()!);
+        }
+        return res;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    empty(): boolean {
+        return this.stack1.length === 0;
     }
 }
 ```
@@ -702,7 +757,7 @@ class MyQueue() {
                 s2.addLast(s1.removeLast())
             }
         }
-        return s2.last()
+        return s2.peekLast()
     }
 
     fun empty(): Boolean {
@@ -787,6 +842,57 @@ impl MyQueue {
 
     fn empty(&self) -> bool {
         self.s1.is_empty() && self.s2.is_empty()
+    }
+}
+```
+
+```typescript
+class MyQueue {
+    private s1: number[];
+    private s2: number[];
+
+    constructor() {
+        this.s1 = [];
+        this.s2 = [];
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x: number): void {
+        this.s1.push(x);
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        if (this.s2.length === 0) {
+            while (this.s1.length > 0) {
+                this.s2.push(this.s1.pop()!);
+            }
+        }
+        return this.s2.pop()!;
+    }
+
+    /**
+     * @return {number}
+     */
+    peek(): number {
+        if (this.s2.length === 0) {
+            while (this.s1.length > 0) {
+                this.s2.push(this.s1.pop()!);
+            }
+        }
+        return this.s2[this.s2.length - 1];
+    }
+
+    /**
+     * @return {boolean}
+     */
+    empty(): boolean {
+        return this.s1.length === 0 && this.s2.length === 0;
     }
 }
 ```

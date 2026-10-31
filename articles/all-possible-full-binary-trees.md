@@ -396,6 +396,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    allPossibleFBT(n: number): TreeNode[] {
+        const backtrack = (n: number): TreeNode[] => {
+            if (n === 0) {
+                return [];
+            }
+            if (n === 1) {
+                return [new TreeNode(0)];
+            }
+
+            let res: TreeNode[] = [];
+            for (let l = 0; l < n; l++) {
+                let r = n - 1 - l;
+                let leftTrees = backtrack(l);
+                let rightTrees = backtrack(r);
+
+                for (let t1 of leftTrees) {
+                    for (let t2 of rightTrees) {
+                        res.push(new TreeNode(0, t1, t2));
+                    }
+                }
+            }
+            return res;
+        };
+
+        return backtrack(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -688,6 +723,36 @@ impl Solution {
             left += 2;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    allPossibleFBT(n: number): TreeNode[] {
+        if (n % 2 === 0) {
+            return [];
+        }
+        if (n === 1) {
+            return [new TreeNode(0)];
+        }
+
+        let res: TreeNode[] = [];
+        for (let left = 1; left < n; left += 2) {
+            let leftSubTree = this.allPossibleFBT(left);
+            let rightSubTree = this.allPossibleFBT(n - 1 - left);
+            for (let l of leftSubTree) {
+                for (let r of rightSubTree) {
+                    let root = new TreeNode(0, l, r);
+                    res.push(root);
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1086,6 +1151,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    allPossibleFBT(n: number): TreeNode[] {
+        let dp: TreeNode[][] = new Array(n + 1);
+
+        const dfs = (n: number): TreeNode[] => {
+            if (n % 2 === 0) {
+                return [];
+            }
+            if (n === 1) {
+                return [new TreeNode(0)];
+            }
+            if (dp[n]) {
+                return dp[n];
+            }
+
+            let res: TreeNode[] = [];
+            for (let left = 1; left < n; left += 2) {
+                let leftSubTree = dfs(left);
+                let rightSubTree = dfs(n - 1 - left);
+                for (let t1 of leftSubTree) {
+                    for (let t2 of rightSubTree) {
+                        res.push(new TreeNode(0, t1, t2));
+                    }
+                }
+            }
+
+            return (dp[n] = res);
+        };
+
+        return dfs(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1419,6 +1523,38 @@ impl Solution {
         }
 
         dp[n].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    allPossibleFBT(n: number): TreeNode[] {
+        if (n % 2 === 0) {
+            return [];
+        }
+
+        let dp: TreeNode[][] = Array.from({ length: n + 1 }, () => []);
+        dp[1] = [new TreeNode(0)];
+
+        for (let nodes = 3; nodes <= n; nodes += 2) {
+            let res: TreeNode[] = [];
+            for (let left = 1; left < nodes; left += 2) {
+                let right = nodes - 1 - left;
+                for (let t1 of dp[left]) {
+                    for (let t2 of dp[right]) {
+                        res.push(new TreeNode(0, t1, t2));
+                    }
+                }
+            }
+            dp[nodes] = res;
+        }
+
+        return dp[n];
     }
 }
 ```

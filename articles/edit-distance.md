@@ -265,6 +265,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} word1
+     * @param {string} word2
+     * @return {number}
+     */
+    minDistance(word1: string, word2: string): number {
+        const m = word1.length,
+            n = word2.length;
+
+        const dfs = (i: number, j: number): number => {
+            if (i === m) return n - j;
+            if (j === n) return m - i;
+            if (word1[i] === word2[j]) {
+                return dfs(i + 1, j + 1);
+            }
+            let res = Math.min(dfs(i + 1, j), dfs(i, j + 1));
+            res = Math.min(res, dfs(i + 1, j + 1));
+            return res + 1;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -601,6 +628,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} word1
+     * @param {string} word2
+     * @return {number}
+     */
+    minDistance(word1: string, word2: string): number {
+        const m = word1.length,
+            n = word2.length;
+        let dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(-1));
+        const dfs = (i: number, j: number): number => {
+            if (i === m) return n - j;
+            if (j === n) return m - i;
+            if (dp[i][j] != -1) return dp[i][j];
+
+            if (word1[i] === word2[j]) {
+                dp[i][j] = dfs(i + 1, j + 1);
+            } else {
+                let res = Math.min(dfs(i + 1, j), dfs(i, j + 1));
+                res = Math.min(res, dfs(i + 1, j + 1));
+                dp[i][j] = res + 1;
+            }
+            return dp[i][j];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -918,6 +976,44 @@ impl Solution {
             }
         }
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} word1
+     * @param {string} word2
+     * @return {number}
+     */
+    minDistance(word1: string, word2: string): number {
+        const dp: number[][] = new Array(word1.length + 1)
+            .fill(0)
+            .map(() => new Array(word2.length + 1).fill(0));
+
+        for (let j = 0; j <= word2.length; j++) {
+            dp[word1.length][j] = word2.length - j;
+        }
+        for (let i = 0; i <= word1.length; i++) {
+            dp[i][word2.length] = word1.length - i;
+        }
+
+        for (let i = word1.length - 1; i >= 0; i--) {
+            for (let j = word2.length - 1; j >= 0; j--) {
+                if (word1[i] === word2[j]) {
+                    dp[i][j] = dp[i + 1][j + 1];
+                } else {
+                    dp[i][j] =
+                        1 +
+                        Math.min(
+                            dp[i + 1][j],
+                            Math.min(dp[i][j + 1], dp[i + 1][j + 1]),
+                        );
+                }
+            }
+        }
+        return dp[0][0];
     }
 }
 ```
@@ -1309,6 +1405,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} word1
+     * @param {string} word2
+     * @return {number}
+     */
+    minDistance(word1: string, word2: string): number {
+        let m = word1.length,
+            n = word2.length;
+        if (m < n) {
+            [m, n] = [n, m];
+            [word1, word2] = [word2, word1];
+        }
+
+        let dp: number[] = new Array(n + 1).fill(0);
+        let nextDp: number[] = new Array(n + 1).fill(0);
+
+        for (let j = 0; j <= n; j++) {
+            dp[j] = n - j;
+        }
+
+        for (let i = m - 1; i >= 0; i--) {
+            nextDp[n] = m - i;
+            for (let j = n - 1; j >= 0; j--) {
+                if (word1[i] === word2[j]) {
+                    nextDp[j] = dp[j + 1];
+                } else {
+                    nextDp[j] =
+                        1 + Math.min(dp[j], Math.min(nextDp[j + 1], dp[j + 1]));
+                }
+            }
+            dp = [...nextDp];
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1658,6 +1794,45 @@ impl Solution {
             }
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} word1
+     * @param {string} word2
+     * @return {number}
+     */
+    minDistance(word1: string, word2: string): number {
+        let m = word1.length,
+            n = word2.length;
+        if (m < n) {
+            [m, n] = [n, m];
+            [word1, word2] = [word2, word1];
+        }
+
+        let dp: number[] = new Array(n + 1).fill(0);
+        for (let j = 0; j <= n; j++) {
+            dp[j] = n - j;
+        }
+
+        for (let i = m - 1; i >= 0; i--) {
+            let nextDp = dp[n];
+            dp[n] = m - i;
+            for (let j = n - 1; j >= 0; j--) {
+                let temp = dp[j];
+                if (word1[i] === word2[j]) {
+                    dp[j] = nextDp;
+                } else {
+                    dp[j] = 1 + Math.min(dp[j], dp[j + 1], nextDp);
+                }
+                nextDp = temp;
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

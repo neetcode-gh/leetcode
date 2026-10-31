@@ -106,6 +106,19 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @return {number}
+     */
+    getSum(a: number, b: number): number {
+        return a + b;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,6 +402,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @return {number}
+     */
+    getSum(a: number, b: number): number {
+        let carry = 0,
+            res = 0,
+            mask = 0xffffffff;
+
+        for (let i = 0; i < 32; i++) {
+            let a_bit = (a >> i) & 1;
+            let b_bit = (b >> i) & 1;
+            let cur_bit = a_bit ^ b_bit ^ carry;
+            carry = a_bit + b_bit + carry >= 2 ? 1 : 0;
+            if (cur_bit) {
+                res |= 1 << i;
+            }
+        }
+
+        if (res > 0x7fffffff) {
+            res = ~(res ^ mask);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -586,6 +630,24 @@ impl Solution {
             b = carry;
         }
         a
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @return {number}
+     */
+    getSum(a: number, b: number): number {
+        while (b !== 0) {
+            let carry = (a & b) << 1;
+            a ^= b;
+            b = carry;
+        }
+        return a;
     }
 }
 ```

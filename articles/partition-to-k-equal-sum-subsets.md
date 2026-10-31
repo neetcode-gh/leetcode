@@ -340,6 +340,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    canPartitionKSubsets(nums: number[], k: number): boolean {
+        const sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % k !== 0) return false;
+
+        const target = sum / k;
+        nums.sort((a, b) => b - a);
+        const used: boolean[] = Array(nums.length).fill(false);
+
+        const backtrack = (i: number, k: number, subsetSum: number): boolean => {
+            if (k === 0) return true;
+            if (subsetSum === target) return backtrack(0, k - 1, 0);
+
+            for (let j = i; j < nums.length; j++) {
+                if (used[j] || subsetSum + nums[j] > target) continue;
+                used[j] = true;
+                if (backtrack(j + 1, k, subsetSum + nums[j])) return true;
+                used[j] = false;
+            }
+            return false;
+        };
+
+        return backtrack(0, k, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,6 +743,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    canPartitionKSubsets(nums: number[], k: number): boolean {
+        const sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % k !== 0) return false;
+
+        const target = sum / k;
+        nums.sort((a, b) => b - a);
+        const used: boolean[] = Array(nums.length).fill(false);
+
+        const backtrack = (i: number, k: number, subsetSum: number): boolean => {
+            if (k === 0) return true;
+            if (subsetSum === target) return backtrack(0, k - 1, 0);
+
+            for (let j = i; j < nums.length; j++) {
+                if (used[j] || subsetSum + nums[j] > target) continue;
+                used[j] = true;
+                if (backtrack(j + 1, k, subsetSum + nums[j])) return true;
+                used[j] = false;
+                if (subsetSum === 0) {
+                    // Pruning
+                    return false;
+                }
+            }
+            return false;
+        };
+
+        return backtrack(0, k, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1057,6 +1127,46 @@ impl Solution {
         }
 
         backtrack(&nums, target, 0, k, 0, (1 << n) - 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    canPartitionKSubsets(nums: number[], k: number): boolean {
+        const total = nums.reduce((a, b) => a + b, 0);
+        if (total % k !== 0) return false;
+
+        const target = total / k;
+        const n = nums.length;
+        nums.sort((a, b) => b - a);
+
+        const backtrack = (
+            i: number,
+            k: number,
+            subsetSum: number,
+            mask: number,
+        ): boolean => {
+            if (k === 0) return true;
+            if (subsetSum === target) return backtrack(0, k - 1, 0, mask);
+            for (let j = i; j < n; j++) {
+                if ((mask & (1 << j)) === 0 || subsetSum + nums[j] > target) {
+                    continue;
+                }
+                if (backtrack(j + 1, k, subsetSum + nums[j], mask ^ (1 << j))) {
+                    return true;
+                }
+                if (subsetSum === 0) return false;
+            }
+            return false;
+        };
+
+        return backtrack(0, k, 0, (1 << n) - 1);
     }
 }
 ```
@@ -1531,6 +1641,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    canPartitionKSubsets(nums: number[], k: number): boolean {
+        const total = nums.reduce((a, b) => a + b, 0);
+        if (total % k !== 0) return false;
+
+        const target = total / k;
+        const n = nums.length;
+        const dp: (boolean | undefined)[] = new Array(1 << n);
+        nums.sort((a, b) => b - a);
+
+        const backtrack = (
+            i: number,
+            k: number,
+            subsetSum: number,
+            mask: number,
+        ): boolean => {
+            if (dp[mask] !== undefined) return dp[mask]!;
+            if (k === 0) {
+                dp[mask] = true;
+                return true;
+            }
+            if (subsetSum === target) {
+                dp[mask] = backtrack(0, k - 1, 0, mask);
+                return dp[mask]!;
+            }
+            for (let j = i; j < n; j++) {
+                if ((mask & (1 << j)) === 0 || subsetSum + nums[j] > target) {
+                    continue;
+                }
+                if (backtrack(j + 1, k, subsetSum + nums[j], mask ^ (1 << j))) {
+                    dp[mask] = true;
+                    return true;
+                }
+                if (subsetSum === 0) break;
+            }
+            dp[mask] = false;
+            return false;
+        };
+
+        return backtrack(0, k, 0, (1 << n) - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1814,6 +1974,39 @@ impl Solution {
         }
 
         dp[big_n - 1] == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {boolean}
+     */
+    canPartitionKSubsets(nums: number[], k: number): boolean {
+        const total = nums.reduce((a, b) => a + b, 0);
+        if (total % k !== 0) return false;
+
+        const target = total / k;
+        nums.sort((a, b) => b - a);
+
+        const n = nums.length;
+        const N = 1 << n;
+        const dp: number[] = new Array(N).fill(-1);
+        dp[0] = 0;
+
+        for (let mask = 0; mask < N; mask++) {
+            if (dp[mask] === -1) continue;
+            for (let i = 0; i < n; i++) {
+                if ((mask & (1 << i)) === 0 && dp[mask] + nums[i] <= target) {
+                    dp[mask | (1 << i)] = (dp[mask] + nums[i]) % target;
+                }
+            }
+        }
+
+        return dp[N - 1] === 0;
     }
 }
 ```

@@ -255,6 +255,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    twoCitySchedCost(costs: number[][]): number {
+        let n = costs.length / 2;
+
+        const dfs = (i: number, aCount: number, bCount: number): number => {
+            if (i === costs.length) {
+                return 0;
+            }
+
+            let res = Infinity;
+            if (aCount > 0) {
+                res = costs[i][0] + dfs(i + 1, aCount - 1, bCount);
+            }
+
+            if (bCount > 0) {
+                res = Math.min(
+                    res,
+                    costs[i][1] + dfs(i + 1, aCount, bCount - 1),
+                );
+            }
+
+            return res;
+        };
+
+        return dfs(0, n, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +605,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    twoCitySchedCost(costs: number[][]): number {
+        let n = costs.length / 2;
+        let dp: number[][] = Array.from({ length: n + 1 }, () =>
+            new Array(n + 1).fill(-1),
+        );
+
+        const dfs = (i: number, aCount: number, bCount: number): number => {
+            if (i === costs.length) {
+                return 0;
+            }
+            if (dp[aCount][bCount] !== -1) {
+                return dp[aCount][bCount];
+            }
+
+            let res = Infinity;
+            if (aCount > 0) {
+                res = costs[i][0] + dfs(i + 1, aCount - 1, bCount);
+            }
+            if (bCount > 0) {
+                res = Math.min(
+                    res,
+                    costs[i][1] + dfs(i + 1, aCount, bCount - 1),
+                );
+            }
+
+            dp[aCount][bCount] = res;
+            return res;
+        };
+
+        return dfs(0, n, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,6 +920,44 @@ impl Solution {
         }
 
         dp[n][n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    twoCitySchedCost(costs: number[][]): number {
+        let n = costs.length / 2;
+        let dp: number[][] = Array.from({ length: n + 1 }, () =>
+            new Array(n + 1).fill(0),
+        );
+
+        for (let aCount = 0; aCount <= n; aCount++) {
+            for (let bCount = 0; bCount <= n; bCount++) {
+                let i = aCount + bCount;
+                if (i === 0) continue;
+
+                dp[aCount][bCount] = Infinity;
+                if (aCount > 0) {
+                    dp[aCount][bCount] = Math.min(
+                        dp[aCount][bCount],
+                        dp[aCount - 1][bCount] + costs[i - 1][0],
+                    );
+                }
+                if (bCount > 0) {
+                    dp[aCount][bCount] = Math.min(
+                        dp[aCount][bCount],
+                        dp[aCount][bCount - 1] + costs[i - 1][1],
+                    );
+                }
+            }
+        }
+
+        return dp[n][n];
     }
 }
 ```
@@ -1128,6 +1240,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    twoCitySchedCost(costs: number[][]): number {
+        let n = costs.length / 2;
+        let dp: number[] = new Array(n + 1).fill(0);
+
+        for (let aCount = 0; aCount <= n; aCount++) {
+            for (let bCount = 0; bCount <= n; bCount++) {
+                let i = aCount + bCount;
+                if (i === 0) continue;
+
+                let tmp = dp[bCount];
+                dp[bCount] = Infinity;
+                if (aCount > 0) {
+                    dp[bCount] = Math.min(dp[bCount], tmp + costs[i - 1][0]);
+                }
+                if (bCount > 0) {
+                    dp[bCount] = Math.min(
+                        dp[bCount],
+                        dp[bCount - 1] + costs[i - 1][1],
+                    );
+                }
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1360,6 +1506,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    twoCitySchedCost(costs: number[][]): number {
+        let diffs: number[][] = [];
+        for (let cost of costs) {
+            diffs.push([cost[1] - cost[0], cost[0], cost[1]]);
+        }
+
+        diffs.sort((a, b) => a[0] - b[0]);
+
+        let res = 0;
+        for (let i = 0; i < diffs.length; i++) {
+            if (i < diffs.length / 2) {
+                res += diffs[i][2];
+            } else {
+                res += diffs[i][1];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1520,6 +1694,25 @@ impl Solution {
             res += costs[i][1] + costs[i + n][0];
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    twoCitySchedCost(costs: number[][]): number {
+        costs.sort((a, b) => a[1] - a[0] - (b[1] - b[0]));
+        let n = costs.length / 2,
+            res = 0;
+
+        for (let i = 0; i < n; i++) {
+            res += costs[i][1] + costs[i + n][0];
+        }
+        return res;
     }
 }
 ```

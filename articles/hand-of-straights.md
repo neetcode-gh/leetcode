@@ -275,6 +275,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} hand
+     * @param {number} groupSize
+     * @return {boolean}
+     */
+    isNStraightHand(hand: number[], groupSize: number): boolean {
+        if (hand.length % groupSize !== 0) {
+            return false;
+        }
+
+        const count: { [key: number]: number } = {};
+        for (const num of hand) {
+            count[num] = (count[num] || 0) + 1;
+        }
+
+        hand.sort((a, b) => a - b);
+        for (const num of hand) {
+            if (count[num] > 0) {
+                for (let i = num; i < num + groupSize; i++) {
+                    if (!count[i]) return false;
+                    count[i] -= 1;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -637,6 +668,48 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} hand
+     * @param {number} groupSize
+     * @return {boolean}
+     */
+    isNStraightHand(hand: number[], groupSize: number): boolean {
+        if (hand.length % groupSize !== 0) {
+            return false;
+        }
+
+        const count: { [key: number]: number } = {};
+        for (const n of hand) {
+            count[n] = (count[n] || 0) + 1;
+        }
+
+        const minPQ = new MinPriorityQueue();
+        for (const key in count) {
+            minPQ.push(Number(key));
+        }
+
+        while (!minPQ.isEmpty()) {
+            const first: number = minPQ.front();
+            for (let i = first; i < first + groupSize; i++) {
+                if (!(i in count) || count[i] === 0) {
+                    return false;
+                }
+                count[i] -= 1;
+                if (count[i] === 0) {
+                    if (i !== minPQ.front()) {
+                        return false;
+                    }
+                    minPQ.pop();
+                }
+            }
+        }
+        return true;
     }
 }
 ```
@@ -1004,6 +1077,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} hand
+     * @param {number} groupSize
+     * @return {boolean}
+     */
+    isNStraightHand(hand: number[], groupSize: number): boolean {
+        if (hand.length % groupSize !== 0) return false;
+
+        let count = new Map<number, number>();
+        hand.forEach((num) => count.set(num, (count.get(num) || 0) + 1));
+
+        let q = new Queue();
+        let lastNum = -1,
+            openGroups = 0;
+
+        Array.from(count.keys())
+            .sort((a, b) => a - b)
+            .forEach((num) => {
+                if (
+                    (openGroups > 0 && num > lastNum + 1) ||
+                    openGroups > count.get(num)!
+                ) {
+                    return false;
+                }
+
+                q.push(count.get(num)! - openGroups);
+                lastNum = num;
+                openGroups = count.get(num)!;
+
+                if (q.size() === groupSize) {
+                    openGroups -= q.pop();
+                }
+            });
+
+        return openGroups === 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1319,6 +1433,37 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} hand
+     * @param {number} groupSize
+     * @return {boolean}
+     */
+    isNStraightHand(hand: number[], groupSize: number): boolean {
+        if (hand.length % groupSize !== 0) return false;
+
+        const count = new Map<number, number>();
+        hand.forEach((num) => count.set(num, (count.get(num) || 0) + 1));
+
+        for (const num of hand) {
+            let start = num;
+            while (count.get(start - 1)! > 0) start--;
+            while (start <= num) {
+                while (count.get(start)! > 0) {
+                    for (let i = start; i < start + groupSize; i++) {
+                        if (!count.get(i)) return false;
+                        count.set(i, count.get(i)! - 1);
+                    }
+                }
+                start++;
+            }
+        }
+        return true;
     }
 }
 ```

@@ -304,6 +304,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlips(s: string): number {
+        const n = s.length;
+        let res = n;
+        let alt1 = '',
+            alt2 = '';
+
+        for (let i = 0; i < n; i++) {
+            alt1 += i % 2 === 0 ? '0' : '1';
+            alt2 += i % 2 === 0 ? '1' : '0';
+        }
+
+        const diff = (a: string, b: string): number => {
+            let cnt = 0;
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) cnt++;
+            }
+            return cnt;
+        };
+
+        for (let i = 0; i < n; i++) {
+            const newS = s.slice(i) + s.slice(0, i);
+            res = Math.min(res, Math.min(diff(alt1, newS), diff(alt2, newS)));
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -588,6 +623,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlips(s: string): number {
+        const n = s.length;
+        let res = n;
+
+        for (let i = 0; i < n; i++) {
+            let start0 = s[i] !== '0' ? 1 : 0;
+            let start1 = s[i] !== '1' ? 1 : 0;
+            let c = '0';
+            let j = (i + 1) % n;
+
+            while (j !== i) {
+                start1 += s[j] !== c ? 1 : 0;
+                start0 += s[j] === c ? 1 : 0;
+                c = c === '1' ? '0' : '1';
+                j = (j + 1) % n;
+            }
+
+            res = Math.min(res, Math.min(start1, start0));
+        }
+
+        return res;
     }
 }
 ```
@@ -959,6 +1025,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlips(s: string): number {
+        const n = s.length;
+        s = s + s;
+        let alt1: string[] = [],
+            alt2: string[] = [];
+
+        for (let i = 0; i < s.length; i++) {
+            alt1.push(i % 2 === 0 ? '0' : '1');
+            alt2.push(i % 2 === 0 ? '1' : '0');
+        }
+
+        let res = n,
+            diff1 = 0,
+            diff2 = 0,
+            l = 0;
+
+        for (let r = 0; r < s.length; r++) {
+            if (s[r] !== alt1[r]) diff1++;
+            if (s[r] !== alt2[r]) diff2++;
+
+            if (r - l + 1 > n) {
+                if (s[l] !== alt1[l]) diff1--;
+                if (s[l] !== alt2[l]) diff2--;
+                l++;
+            }
+
+            if (r - l + 1 === n) {
+                res = Math.min(res, diff1, diff2);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1300,6 +1408,45 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlips(s: string): number {
+        const n = s.length;
+        let res = n,
+            diff1 = 0,
+            diff2 = 0,
+            l = 0;
+
+        let rstart_0 = '0',
+            lstart_0 = '0';
+
+        for (let r = 0; r < 2 * n; r++) {
+            if (s[r % n] !== rstart_0) diff1++;
+            if (s[r % n] === rstart_0) diff2++;
+
+            if (r - l + 1 > n) {
+                if (s[l] !== lstart_0) diff1--;
+                if (s[l] === lstart_0) diff2--;
+                l++;
+                lstart_0 = lstart_0 === '0' ? '1' : '0';
+            }
+
+            if (r - l + 1 === n) {
+                res = Math.min(res, Math.min(diff1, diff2));
+            }
+
+            rstart_0 = rstart_0 === '0' ? '1' : '0';
+        }
+
+        return res;
     }
 }
 ```
@@ -1688,6 +1835,49 @@ impl Solution {
         }
 
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minFlips(s: string): number {
+        let start_1 = 0;
+        const n = s.length;
+
+        for (let i = 0; i < n; i++) {
+            if (i & 1) {
+                start_1 += s[i] === '1' ? 1 : 0;
+            } else {
+                start_1 += s[i] === '0' ? 1 : 0;
+            }
+        }
+
+        let start_0 = n - start_1;
+        let ans = Math.min(start_0, start_1);
+        if (n % 2 === 0) {
+            return ans;
+        }
+
+        let dp0 = start_0,
+            dp1 = start_1;
+        for (const c of s) {
+            [dp0, dp1] = [dp1, dp0];
+            if (c === '1') {
+                dp0++;
+                dp1--;
+            } else {
+                dp0--;
+                dp1++;
+            }
+            ans = Math.min(ans, dp0, dp1);
+        }
+
+        return ans;
     }
 }
 ```

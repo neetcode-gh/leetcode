@@ -207,6 +207,46 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool Dfs(int m, int n, int[][] maze, int[] curr, int[] destination, bool[,] visit) {
+        if (visit[curr[0], curr[1]]) {
+            return false;
+        }
+
+        if (curr[0] == destination[0] && curr[1] == destination[1]) {
+            return true;
+        }
+
+        visit[curr[0], curr[1]] = true;
+        int[] dirX = { 0, 1, 0, -1 };
+        int[] dirY = { -1, 0, 1, 0 };
+
+        for (int i = 0; i < 4; i++) {
+            int r = curr[0], c = curr[1];
+            // Move the ball in the chosen direction until it can.
+            while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] == 0) {
+                r += dirX[i];
+                c += dirY[i];
+            }
+
+            // Revert the last move to get the cell to which the ball rolls.
+            if (Dfs(m, n, maze, new int[] { r - dirX[i], c - dirY[i] }, destination, visit)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasPath(int[][] maze, int[] start, int[] destination) {
+        int m = maze.Length;
+        int n = maze[0].Length;
+        bool[,] visit = new bool[m, n];
+        return Dfs(m, n, maze, start, destination, visit);
+    }
+}
+```
+
 ```go
 func hasPath(maze [][]int, start []int, destination []int) bool {
     m, n := len(maze), len(maze[0])
@@ -352,6 +392,76 @@ impl Solution {
         }
 
         dfs(&maze, [start[0] as usize, start[1] as usize], &dest, &mut visit, m, n)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @param {number[][]} maze
+     * @param {number[]} curr
+     * @param {number[]} destination
+     * @param {boolean[][]} visit
+     * @return {boolean}
+     */
+    dfs(
+        m: number,
+        n: number,
+        maze: number[][],
+        curr: number[],
+        destination: number[],
+        visit: boolean[][],
+    ): boolean {
+        if (visit[curr[0]][curr[1]]) {
+            return false;
+        }
+        if (curr[0] === destination[0] && curr[1] === destination[1]) {
+            return true;
+        }
+        visit[curr[0]][curr[1]] = true;
+        const dirX = [0, 1, 0, -1];
+        const dirY = [-1, 0, 1, 0];
+        for (let i = 0; i < 4; i++) {
+            let r = curr[0];
+            let c = curr[1];
+            // Move the ball in the chosen direction until it can.
+            while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] === 0) {
+                r += dirX[i];
+                c += dirY[i];
+            }
+            // Revert the last move to get the cell to which the ball rolls.
+            if (
+                this.dfs(
+                    m,
+                    n,
+                    maze,
+                    [r - dirX[i], c - dirY[i]],
+                    destination,
+                    visit,
+                )
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {boolean}
+     */
+    hasPath(maze: number[][], start: number[], destination: number[]): boolean {
+        const m = maze.length;
+        const n = maze[0].length;
+        const visit: boolean[][] = Array.from({ length: m }, () =>
+            Array(n).fill(false),
+        );
+        return this.dfs(m, n, maze, start, destination, visit);
     }
 }
 ```
@@ -507,6 +617,91 @@ public:
 };
 ```
 
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {boolean}
+     */
+    hasPath(maze, start, destination) {
+        const m = maze.length;
+        const n = maze[0].length;
+        const visit = Array.from({ length: m }, () => Array(n).fill(false));
+        const dirX = [0, 1, 0, -1];
+        const dirY = [-1, 0, 1, 0];
+
+        const queue = new Queue([start]);
+        visit[start[0]][start[1]] = true;
+
+        while (!queue.isEmpty()) {
+            const curr = queue.pop();
+            if (curr[0] === destination[0] && curr[1] === destination[1]) {
+                return true;
+            }
+            for (let i = 0; i < 4; i++) {
+                let r = curr[0];
+                let c = curr[1];
+                // Move the ball in the chosen direction until it can.
+                while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] === 0) {
+                    r += dirX[i];
+                    c += dirY[i];
+                }
+                // Revert the last move to get the cell to which the ball rolls.
+                r -= dirX[i];
+                c -= dirY[i];
+                if (!visit[r][c]) {
+                    queue.push([r, c]);
+                    visit[r][c] = true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool HasPath(int[][] maze, int[] start, int[] destination) {
+        int m = maze.Length;
+        int n = maze[0].Length;
+        bool[,] visit = new bool[m, n];
+        int[] dirX = { 0, 1, 0, -1 };
+        int[] dirY = { -1, 0, 1, 0 };
+
+        Queue<int[]> queue = new Queue<int[]>();
+        queue.Enqueue(start);
+        visit[start[0], start[1]] = true;
+
+        while (queue.Count > 0) {
+            int[] curr = queue.Dequeue();
+            if (curr[0] == destination[0] && curr[1] == destination[1]) {
+                return true;
+            }
+            for (int i = 0; i < 4; i++) {
+                int r = curr[0];
+                int c = curr[1];
+                // Move the ball in the chosen direction until it can.
+                while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] == 0) {
+                    r += dirX[i];
+                    c += dirY[i];
+                }
+                // Revert the last move to get the cell to which the ball rolls.
+                r -= dirX[i];
+                c -= dirY[i];
+                if (!visit[r, c]) {
+                    queue.Enqueue(new int[] { r, c });
+                    visit[r, c] = true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ```go
 func hasPath(maze [][]int, start []int, destination []int) bool {
     m, n := len(maze), len(maze[0])
@@ -660,6 +855,53 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {boolean}
+     */
+    hasPath(maze: number[][], start: number[], destination: number[]): boolean {
+        const m = maze.length;
+        const n = maze[0].length;
+        const visit: boolean[][] = Array.from({ length: m }, () =>
+            Array(n).fill(false),
+        );
+        const dirX = [0, 1, 0, -1];
+        const dirY = [-1, 0, 1, 0];
+
+        const queue = new Queue([start]);
+        visit[start[0]][start[1]] = true;
+
+        while (!queue.isEmpty()) {
+            const curr: number[] = queue.pop();
+            if (curr[0] === destination[0] && curr[1] === destination[1]) {
+                return true;
+            }
+            for (let i = 0; i < 4; i++) {
+                let r = curr[0];
+                let c = curr[1];
+                // Move the ball in the chosen direction until it can.
+                while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] === 0) {
+                    r += dirX[i];
+                    c += dirY[i];
+                }
+                // Revert the last move to get the cell to which the ball rolls.
+                r -= dirX[i];
+                c -= dirY[i];
+                if (!visit[r][c]) {
+                    queue.push([r, c]);
+                    visit[r][c] = true;
+                }
+            }
+        }
+        return false;
     }
 }
 ```

@@ -290,6 +290,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @return {TreeNode}
+     */
+    removeLeafNodes(root: TreeNode | null, target: number): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+
+        root.left = this.removeLeafNodes(root.left, target);
+        root.right = this.removeLeafNodes(root.right, target);
+
+        if (!root.left && !root.right && root.val === target) {
+            return null;
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -771,6 +795,53 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @return {TreeNode}
+     */
+    removeLeafNodes(root: TreeNode | null, target: number): TreeNode | null {
+        const stack: TreeNode[] = [root!];
+        const visit = new Set<TreeNode>();
+        const parents = new Map<TreeNode, TreeNode | null>();
+        parents.set(root!, null);
+
+        while (stack.length > 0) {
+            const node = stack.pop()!;
+            if (!node.left && !node.right) {
+                if (node.val === target) {
+                    const p = parents.get(node);
+                    if (!p) {
+                        return null;
+                    }
+                    if (p.left === node) {
+                        p.left = null;
+                    }
+                    if (p.right === node) {
+                        p.right = null;
+                    }
+                }
+            } else if (!visit.has(node)) {
+                visit.add(node);
+                stack.push(node);
+                if (node.left) {
+                    stack.push(node.left);
+                    parents.set(node.left, node);
+                }
+                if (node.right) {
+                    stack.push(node.right);
+                    parents.set(node.right, node);
+                }
+            }
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1146,7 +1217,7 @@ class Solution {
                 cur = cur.left
             }
 
-            cur = stack.last()
+            cur = stack.peekLast()
             if (cur.right != null && cur.right != visited) {
                 cur = cur.right
                 continue
@@ -1156,7 +1227,7 @@ class Solution {
             if (cur.left == null && cur.right == null && cur.`val` == target) {
                 if (stack.isEmpty()) return null
 
-                val parent = stack.last()
+                val parent = stack.peekLast()
                 if (parent.left == cur) {
                     parent.left = null
                 } else if (parent.right == cur) {
@@ -1261,6 +1332,54 @@ impl Solution {
         }
 
         Some(node)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @return {TreeNode}
+     */
+    removeLeafNodes(root: TreeNode | null, target: number): TreeNode | null {
+        if (!root) return null;
+
+        const stack: TreeNode[] = [];
+        let cur: TreeNode | null = root,
+            visited: TreeNode | null = null;
+
+        while (stack.length > 0 || cur !== null) {
+            while (cur !== null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+
+            cur = stack[stack.length - 1];
+            if (cur.right && cur.right !== visited) {
+                cur = cur.right;
+                continue;
+            }
+
+            stack.pop();
+            if (!cur.left && !cur.right && cur.val === target) {
+                if (stack.length === 0) return null;
+
+                const parent = stack[stack.length - 1];
+                if (parent.left === cur) {
+                    parent.left = null;
+                } else if (parent.right === cur) {
+                    parent.right = null;
+                }
+            } else {
+                visited = cur;
+            }
+
+            cur = null;
+        }
+
+        return root;
     }
 }
 ```

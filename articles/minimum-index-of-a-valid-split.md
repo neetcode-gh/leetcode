@@ -141,7 +141,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MinimumIndex(IList<int> nums) {
+    public int MinimumIndex(List<int> nums) {
         int n = nums.Count;
 
         for (int i = 0; i < n - 1; i++) {
@@ -453,7 +453,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MinimumIndex(IList<int> nums) {
+    public int MinimumIndex(List<int> nums) {
         Dictionary<int, int> left = new Dictionary<int, int>();
         Dictionary<int, int> right = new Dictionary<int, int>();
         int n = nums.Count;
@@ -782,7 +782,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MinimumIndex(IList<int> nums) {
+    public int MinimumIndex(List<int> nums) {
         int majority = 0, count = 0;
         foreach (int num in nums) {
             if (count == 0) majority = num;

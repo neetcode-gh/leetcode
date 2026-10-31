@@ -220,6 +220,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    longestIdealString(s: string, k: number): number {
+        const dfs = (i: number, prev: number): number => {
+            if (i === s.length) {
+                return 0;
+            }
+            const skip = dfs(i + 1, prev);
+            let include = 0;
+            if (prev === -1 || Math.abs(s.charCodeAt(i) - prev) <= k) {
+                include = 1 + dfs(i + 1, s.charCodeAt(i));
+            }
+            return Math.max(skip, include);
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -527,6 +552,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    longestIdealString(s: string, k: number): number {
+        const dp: number[][] = Array.from({ length: s.length }, () => Array(27).fill(-1));
+
+        const dfs = (i: number, prev: number): number => {
+            if (i === s.length) {
+                return 0;
+            }
+            if (dp[i][prev + 1] !== -1) {
+                return dp[i][prev + 1];
+            }
+            const skip = dfs(i + 1, prev);
+            let include = 0;
+            if (
+                prev === -1 ||
+                Math.abs(s.charCodeAt(i) - ('a'.charCodeAt(0) + prev)) <= k
+            ) {
+                include = 1 + dfs(i + 1, s.charCodeAt(i) - 'a'.charCodeAt(0));
+            }
+            dp[i][prev + 1] = Math.max(skip, include);
+            return Math.max(skip, include);
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -770,6 +829,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    longestIdealString(s: string, k: number): number {
+        const n = s.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(26).fill(0));
+
+        for (let i = 1; i <= n; i++) {
+            const curr = s.charCodeAt(i - 1) - 'a'.charCodeAt(0);
+            for (let prev = 0; prev < 26; prev++) {
+                dp[i][prev] = Math.max(dp[i][prev], dp[i - 1][prev]);
+                if (Math.abs(curr - prev) <= k) {
+                    dp[i][curr] = Math.max(dp[i][curr], 1 + dp[i - 1][prev]);
+                }
+            }
+        }
+        return Math.max(...dp[n]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1005,6 +1089,32 @@ impl Solution {
         }
 
         *dp.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    longestIdealString(s: string, k: number): number {
+        const dp: number[] = Array(26).fill(0);
+
+        for (const c of s) {
+            const curr = c.charCodeAt(0) - 'a'.charCodeAt(0);
+            let longest = 1;
+            for (let prev = 0; prev < 26; prev++) {
+                if (Math.abs(curr - prev) <= k) {
+                    longest = Math.max(longest, 1 + dp[prev]);
+                }
+            }
+            dp[curr] = Math.max(dp[curr], longest);
+        }
+
+        return Math.max(...dp);
     }
 }
 ```

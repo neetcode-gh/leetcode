@@ -190,7 +190,7 @@ public class Solution {
         new char[] {'6', '9'}, new char[] {'8', '8'}, new char[] {'9', '6'}
     };
 
-    public IList<string> FindStrobogrammatic(int n) {
+    public List<string> FindStrobogrammatic(int n) {
         return GenerateStroboNumbers(n, n);
     }
 
@@ -365,6 +365,52 @@ impl Solution {
         }
 
         generate(n, n, &reversible_pairs)
+    }
+}
+```
+
+```typescript
+class Solution {
+    reversiblePairs: string[][] = [
+        ['0', '0'],
+        ['1', '1'],
+        ['6', '9'],
+        ['8', '8'],
+        ['9', '6'],
+    ];
+
+    generateStroboNumbers(n: number, finalLength: number): string[] {
+        if (n == 0) {
+            // 0-digit strobogrammatic number is an empty string.
+            return [''];
+        }
+
+        if (n == 1) {
+            // 1-digit strobogrammatic numbers.
+            return ['0', '1', '8'];
+        }
+
+        let prevStroboNums = this.generateStroboNumbers(n - 2, finalLength);
+        let currStroboNums: string[] = [];
+
+        for (let prevStroboNum of prevStroboNums) {
+            for (let pair of this.reversiblePairs) {
+                // We can only append 0's if it is not first digit.
+                if (pair[0] != '0' || n != finalLength) {
+                    currStroboNums.push(pair[0] + prevStroboNum + pair[1]);
+                }
+            }
+        }
+
+        return currStroboNums;
+    }
+
+    /**
+     * @param {number} n
+     * @return {string[]}
+     */
+    findStrobogrammatic(n: number): string[] {
+        return this.generateStroboNumbers(n, n);
     }
 }
 ```
@@ -580,7 +626,7 @@ public class Solution {
         new char[] {'6', '9'}, new char[] {'8', '8'}, new char[] {'9', '6'}
     };
 
-    public IList<string> FindStrobogrammatic(int n) {
+    public List<string> FindStrobogrammatic(int n) {
         Queue<string> q = new Queue<string>();
         int currStringsLength;
 
@@ -747,6 +793,55 @@ impl Solution {
         }
 
         q
+    }
+}
+```
+
+```typescript
+class Solution {
+    reversiblePairs: string[][] = [
+        ['0', '0'],
+        ['1', '1'],
+        ['6', '9'],
+        ['8', '8'],
+        ['9', '6'],
+    ];
+
+    /**
+     * @param {number} n
+     * @return {string[]}
+     */
+    findStrobogrammatic(n: number): string[] {
+        let currStringsLength: number;
+        let q: string[] = [];
+
+        // When n is even, it means when decreasing by 2 we will go till 0.
+        if (n % 2 == 0) {
+            // We will start with 0-digit strobogrammatic numbers.
+            currStringsLength = 0;
+            q = [''];
+        } else {
+            // We will start with 1-digit strobogrammatic numbers.
+            currStringsLength = 1;
+            q = ['0', '1', '8'];
+        }
+
+        while (currStringsLength < n) {
+            currStringsLength += 2;
+            let nextLevel: string[] = [];
+
+            q.forEach((number) => {
+                this.reversiblePairs.forEach((pair) => {
+                    if (currStringsLength != n || pair[0] != '0') {
+                        nextLevel.push(pair[0] + number + pair[1]);
+                    }
+                });
+            });
+
+            q = nextLevel;
+        }
+
+        return q;
     }
 }
 ```

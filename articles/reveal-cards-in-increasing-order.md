@@ -242,6 +242,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} deck
+     * @return {number[]}
+     */
+    deckRevealedIncreasing(deck: number[]): number[] {
+        deck.sort((a, b) => a - b);
+        let n = deck.length;
+        let res: number[] = new Array(n).fill(0);
+        const q = new Queue();
+
+        for (let i = 0; i < n; i++) {
+            q.push(i);
+        }
+
+        for (let num of deck) {
+            let i: number = q.pop();
+            res[i] = num;
+            if (!q.isEmpty()) {
+                q.push(q.pop());
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -462,6 +491,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} deck
+     * @return {number[]}
+     */
+    deckRevealedIncreasing(deck: number[]): number[] {
+        deck.sort((a, b) => a - b);
+        const q = new Queue();
+
+        for (let i = deck.length - 1; i >= 0; i--) {
+            if (!q.isEmpty()) {
+                q.push(q.pop());
+            }
+            q.push(deck[i]);
+        }
+
+        return q.toArray().reverse();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,6 +695,31 @@ impl Solution {
         }
 
         dq.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} deck
+     * @return {number[]}
+     */
+    deckRevealedIncreasing(deck: number[]): number[] {
+        deck.sort((a, b) => a - b);
+        const dq = new Deque([deck.pop()]);
+
+        for (let i = deck.length - 1; i >= 0; i--) {
+            let val = dq.popBack();
+            dq.pushFront(val);
+            dq.pushFront(deck[i]);
+        }
+
+        let res: number[] = [];
+        while (!dq.isEmpty()) {
+            res.push(dq.popFront());
+        }
+        return res;
     }
 }
 ```
@@ -901,6 +977,36 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} deck
+     * @return {number[]}
+     */
+    deckRevealedIncreasing(deck: number[]): number[] {
+        let n = deck.length;
+        let res: number[] = new Array(n).fill(0);
+        let skip = false;
+        let deckIndex = 0,
+            i = 0;
+
+        deck.sort((a, b) => a - b);
+
+        while (deckIndex < n) {
+            if (res[i] === 0) {
+                if (!skip) {
+                    res[i] = deck[deckIndex++];
+                }
+                skip = !skip;
+            }
+            i = (i + 1) % n;
+        }
+
+        return res;
     }
 }
 ```

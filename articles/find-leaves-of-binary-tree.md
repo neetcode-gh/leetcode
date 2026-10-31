@@ -233,7 +233,7 @@ class Solution {
 public class Solution {
     private List<(int height, int val)> pairs;
 
-    public IList<IList<int>> FindLeaves(TreeNode root) {
+    public List<List<int>> FindLeaves(TreeNode root) {
         pairs = new List<(int, int)>();
         GetHeight(root);
 
@@ -243,7 +243,7 @@ public class Solution {
         int n = pairs.Count;
         int height = 0;
         int i = 0;
-        var solution = new List<IList<int>>();
+        var solution = new List<List<int>>();
 
         while (i < n) {
             var nums = new List<int>();
@@ -479,6 +479,61 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private pairs: number[][] = [];
+
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    findLeaves(root: TreeNode | null): number[][] {
+        this.pairs = [];
+
+        const getHeight = (node: TreeNode | null): number => {
+            if (node === null) {
+                return -1;
+            }
+
+            // first calculate the height of the left and right children
+            const leftHeight = getHeight(node.left);
+            const rightHeight = getHeight(node.right);
+
+            // based on the height of the left and right children, obtain the height of the current (parent) node
+            const currHeight = Math.max(leftHeight, rightHeight) + 1;
+
+            // collect the pair -> (height, val)
+            this.pairs.push([currHeight, node.val]);
+
+            // return the height of the current node
+            return currHeight;
+        };
+
+        getHeight(root);
+
+        // sort all the (height, val) pairs
+        this.pairs.sort((a, b) => a[0] - b[0]);
+
+        const n = this.pairs.length;
+        let height = 0;
+        let i = 0;
+        const solution: number[][] = [];
+
+        while (i < n) {
+            const nums: number[] = [];
+            while (i < n && this.pairs[i][0] === height) {
+                nums.push(this.pairs[i][1]);
+                i++;
+            }
+            solution.push(nums);
+            height++;
+        }
+
+        return solution;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -652,10 +707,10 @@ class Solution {
  * }
  */
 public class Solution {
-    private List<IList<int>> solution;
+    private List<List<int>> solution;
 
-    public IList<IList<int>> FindLeaves(TreeNode root) {
-        solution = new List<IList<int>>();
+    public List<List<int>> FindLeaves(TreeNode root) {
+        solution = new List<List<int>>();
         GetHeight(root);
         return solution;
     }
@@ -816,6 +871,40 @@ impl Solution {
                 curr_height
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    private solution: number[][] = [];
+
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    findLeaves(root: TreeNode | null): number[][] {
+        this.solution = [];
+
+        const getHeight = (node: TreeNode | null): number => {
+            if (node === null) {
+                return -1;
+            }
+
+            const leftHeight = getHeight(node.left);
+            const rightHeight = getHeight(node.right);
+            const currHeight = Math.max(leftHeight, rightHeight) + 1;
+
+            if (this.solution.length === currHeight) {
+                this.solution.push([]);
+            }
+
+            this.solution[currHeight].push(node.val);
+            return currHeight;
+        };
+
+        getHeight(root);
+        return this.solution;
     }
 }
 ```

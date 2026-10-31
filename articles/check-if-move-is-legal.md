@@ -314,7 +314,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func checkMove(_ board: inout [[Character]], _ rMove: Int, _ cMove: Int, _ color: Character) -> Bool {
+    func checkMove(_ board: [[Character]], _ rMove: Int, _ cMove: Int, _ color: Character) -> Bool {
+        var board = board
         let ROWS = board.count, COLS = board[0].count
         let direction = [[1, 0], [-1, 0], [0, 1], [0, -1],
                          [1, 1], [-1, -1], [1, -1], [-1, 1]]
@@ -350,10 +351,9 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
-    pub fn check_move(board: &mut Vec<Vec<char>>, r_move: i32, c_move: i32, color: char) -> bool {
+    pub fn check_move(mut board: Vec<Vec<char>>, r_move: i32, c_move: i32, color: char) -> bool {
         let rows = board.len() as i32;
         let cols = board[0].len() as i32;
         let direction: Vec<[i32; 2]> = vec![
@@ -364,7 +364,7 @@ impl Solution {
         board[r_move as usize][c_move as usize] = color;
 
         for d in &direction {
-            if Self::legal(board, r_move, c_move, color, d, rows, cols) {
+            if Self::legal(&board, r_move, c_move, color, d, rows, cols) {
                 return true;
             }
         }
@@ -389,6 +389,60 @@ impl Solution {
             col += dc;
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @param {number} rMove
+     * @param {number} cMove
+     * @param {character} color
+     * @return {boolean}
+     */
+    checkMove(board: string[][], rMove: number, cMove: number, color: string): boolean {
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const direction = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+            [1, 1],
+            [-1, -1],
+            [1, -1],
+            [-1, 1],
+        ];
+
+        board[rMove][cMove] = color;
+
+        const legal = (row: number, col: number, color: string, [dr, dc]: number[]): boolean => {
+            row += dr;
+            col += dc;
+            let length = 1;
+
+            while (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+                length++;
+                if (board[row][col] === '.') {
+                    return false;
+                }
+                if (board[row][col] === color) {
+                    return length >= 3;
+                }
+                row += dr;
+                col += dc;
+            }
+            return false;
+        };
+
+        for (let d of direction) {
+            if (legal(rMove, cMove, color, d)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ```
@@ -638,7 +692,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func checkMove(_ board: inout [[Character]], _ rMove: Int, _ cMove: Int, _ color: Character) -> Bool {
+    func checkMove(_ board: [[Character]], _ rMove: Int, _ cMove: Int, _ color: Character) -> Bool {
+        var board = board
         let ROWS = board.count, COLS = board[0].count
         let direction = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1]
 
@@ -668,10 +723,9 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
-    pub fn check_move(board: &mut Vec<Vec<char>>, r_move: i32, c_move: i32, color: char) -> bool {
+    pub fn check_move(mut board: Vec<Vec<char>>, r_move: i32, c_move: i32, color: char) -> bool {
         let rows = board.len() as i32;
         let cols = board[0].len() as i32;
         let direction = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
@@ -701,6 +755,48 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @param {number} rMove
+     * @param {number} cMove
+     * @param {character} color
+     * @return {boolean}
+     */
+    checkMove(board: string[][], rMove: number, cMove: number, color: string): boolean {
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const direction = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
+
+        board[rMove][cMove] = color;
+
+        for (let d = 0; d < 9; d++) {
+            let row = rMove,
+                col = cMove;
+            for (let length = 1; ; ++length) {
+                row += direction[d];
+                col += direction[d + 1];
+
+                if (
+                    row < 0 ||
+                    col < 0 ||
+                    row >= ROWS ||
+                    col >= COLS ||
+                    board[row][col] === '.'
+                )
+                    break;
+                if (board[row][col] === color) {
+                    if (length > 1) return true;
+                    break;
+                }
+            }
+        }
+        return false;
     }
 }
 ```

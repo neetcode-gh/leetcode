@@ -267,6 +267,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    longestPalindrome(s: string): string {
+        let res = '';
+        let resLen = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            for (let j = i; j < s.length; j++) {
+                let l = i,
+                    r = j;
+                while (l < r && s[l] === s[r]) {
+                    l++;
+                    r--;
+                }
+
+                if (l >= r && resLen < j - i + 1) {
+                    res = s.slice(i, j + 1);
+                    resLen = j - i + 1;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -539,6 +570,38 @@ impl Solution {
         }
 
         String::from_utf8(s[res_idx..res_idx + res_len].to_vec()).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    longestPalindrome(s: string): string {
+        let resIdx = 0,
+            resLen = 0;
+        const n = s.length;
+
+        const dp: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let j = i; j < n; j++) {
+                if (s[i] === s[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                    if (resLen < j - i + 1) {
+                        resIdx = i;
+                        resLen = j - i + 1;
+                    }
+                }
+            }
+        }
+
+        return s.slice(resIdx, resIdx + resLen);
     }
 }
 ```
@@ -908,6 +971,47 @@ impl Solution {
         }
 
         String::from_utf8(s[res_idx..res_idx + res_len].to_vec()).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    longestPalindrome(s: string): string {
+        let resIdx = 0;
+        let resLen = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            // odd length
+            let l = i;
+            let r = i;
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
+                if (r - l + 1 > resLen) {
+                    resIdx = l;
+                    resLen = r - l + 1;
+                }
+                l--;
+                r++;
+            }
+
+            // even length
+            l = i;
+            r = i + 1;
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
+                if (r - l + 1 > resLen) {
+                    resIdx = l;
+                    resLen = r - l + 1;
+                }
+                l--;
+                r++;
+            }
+        }
+
+        return s.substring(resIdx, resIdx + resLen);
     }
 }
 ```
@@ -1302,6 +1406,55 @@ impl Solution {
 
         let res_idx = (center_idx - res_len) / 2;
         String::from_utf8(s_bytes[res_idx..res_idx + res_len].to_vec()).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number[]}
+     */
+    manacher(s: string): number[] {
+        const t = '#' + s.split('').join('#') + '#';
+        const n = t.length;
+        const p: number[] = new Array(n).fill(0);
+        let l = 0,
+            r = 0;
+        for (let i = 0; i < n; i++) {
+            p[i] = i < r ? Math.min(r - i, p[l + (r - i)]) : 0;
+            while (
+                i + p[i] + 1 < n &&
+                i - p[i] - 1 >= 0 &&
+                t[i + p[i] + 1] === t[i - p[i] - 1]
+            ) {
+                p[i]++;
+            }
+            if (i + p[i] > r) {
+                l = i - p[i];
+                r = i + p[i];
+            }
+        }
+        return p;
+    }
+
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    longestPalindrome(s: string): string {
+        const p = this.manacher(s);
+        let resLen = 0,
+            center_idx = 0;
+        for (let i = 0; i < p.length; i++) {
+            if (p[i] > resLen) {
+                resLen = p[i];
+                center_idx = i;
+            }
+        }
+        const resIdx = (center_idx - resLen) / 2;
+        return s.substring(resIdx, resIdx + resLen);
     }
 }
 ```

@@ -575,6 +575,64 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @returns {string}
+     */
+    foreignDictionary(words: string[]): string {
+        const adj: { [key: string]: Set<string> } = {};
+        for (const word of words) {
+            for (const char of word) {
+                adj[char] = new Set();
+            }
+        }
+
+        for (let i = 0; i < words.length - 1; i++) {
+            const w1 = words[i];
+            const w2 = words[i + 1];
+            const minLen = Math.min(w1.length, w2.length);
+            if (
+                w1.length > w2.length &&
+                w1.slice(0, minLen) === w2.slice(0, minLen)
+            ) {
+                return '';
+            }
+            for (let j = 0; j < minLen; j++) {
+                if (w1[j] !== w2[j]) {
+                    adj[w1[j]].add(w2[j]);
+                    break;
+                }
+            }
+        }
+
+        const visited: { [key: string]: boolean } = {};
+        const res: string[] = [];
+
+        const dfs = (char: string): boolean => {
+            if (char in visited) return visited[char];
+            visited[char] = true;
+
+            for (const neighChar of adj[char]) {
+                if (dfs(neighChar)) return true;
+            }
+
+            visited[char] = false;
+            res.push(char);
+            return false;
+        };
+
+        for (const char in adj) {
+            if (dfs(char)) return '';
+        }
+
+        res.reverse();
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1149,6 +1207,71 @@ impl Solution {
         }
 
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @returns {string}
+     */
+    foreignDictionary(words: string[]): string {
+        let adj: { [key: string]: Set<string> } = {};
+        let indegree: { [key: string]: number } = {};
+        for (let w of words) {
+            for (let c of w) {
+                adj[c] = new Set();
+                indegree[c] = 0;
+            }
+        }
+
+        for (let i = 0; i < words.length - 1; i++) {
+            let w1 = words[i],
+                w2 = words[i + 1];
+            let minLen = Math.min(w1.length, w2.length);
+            if (
+                w1.length > w2.length &&
+                w1.slice(0, minLen) === w2.slice(0, minLen)
+            ) {
+                return '';
+            }
+            for (let j = 0; j < minLen; j++) {
+                if (w1[j] !== w2[j]) {
+                    if (!adj[w1[j]].has(w2[j])) {
+                        adj[w1[j]].add(w2[j]);
+                        indegree[w2[j]] += 1;
+                    }
+                    break;
+                }
+            }
+        }
+
+        let q = new Queue();
+        for (let c in indegree) {
+            if (indegree[c] === 0) {
+                q.push(c);
+            }
+        }
+
+        let res: string[] = [];
+        while (!q.isEmpty()) {
+            let char: string = q.pop();
+            res.push(char);
+            for (let neighbor of adj[char]) {
+                indegree[neighbor] -= 1;
+                if (indegree[neighbor] === 0) {
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        if (res.length !== Object.keys(indegree).length) {
+            return '';
+        }
+
+        return res.join('');
     }
 }
 ```

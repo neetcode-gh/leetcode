@@ -251,6 +251,38 @@ impl MedianFinder {
 }
 ```
 
+```typescript
+class MedianFinder {
+    private data: number[];
+
+    constructor() {
+        this.data = [];
+    }
+
+    /**
+     *
+     * @param {number} num
+     * @return {void}
+     */
+    addNum(num: number): void {
+        this.data.push(num);
+    }
+
+    /**
+     * @return {number}
+     */
+    findMedian(): number {
+        this.data.sort((a, b) => a - b);
+        let n = this.data.length;
+        if (n & 1) {
+            return this.data[Math.floor(n / 2)];
+        } else {
+            return (this.data[n / 2] + this.data[n / 2 - 1]) / 2;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -675,6 +707,48 @@ impl MedianFinder {
             *self.small_heap.peek().unwrap() as f64
         } else {
             self.large_heap.peek().unwrap().0 as f64
+        }
+    }
+}
+```
+
+```typescript
+class MedianFinder {
+    private small: any;
+    private large: any;
+
+    constructor() {
+        this.small = new PriorityQueue((a: number, b: number) => b - a); // Max heap for smaller half
+        this.large = new PriorityQueue((a: number, b: number) => a - b); // Min heap for larger half
+    }
+
+    /**
+     * @param {number} num
+     */
+    addNum(num: number): void {
+        if (this.large.isEmpty() || num > this.large.front()) {
+            this.large.enqueue(num);
+        } else {
+            this.small.enqueue(num);
+        }
+
+        if (this.small.size() > this.large.size() + 1) {
+            this.large.enqueue(this.small.dequeue());
+        } else if (this.large.size() > this.small.size() + 1) {
+            this.small.enqueue(this.large.dequeue());
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    findMedian(): number {
+        if (this.small.size() > this.large.size()) {
+            return this.small.front();
+        } else if (this.large.size() > this.small.size()) {
+            return this.large.front();
+        } else {
+            return (this.small.front() + this.large.front()) / 2.0;
         }
     }
 }

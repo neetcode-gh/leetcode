@@ -229,6 +229,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    stringMatching(words: string[]): string[] {
+        let res: string[] = [];
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = 0; j < words.length; j++) {
+                if (i === j) {
+                    continue;
+                }
+
+                if (words[j].includes(words[i])) {
+                    res.push(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -436,6 +463,30 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    stringMatching(words: string[]): string[] {
+        let res: string[] = [];
+        words.sort((a, b) => a.length - b.length);
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                if (words[j].includes(words[i])) {
+                    res.push(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -997,6 +1048,67 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    stringMatching(words: string[]): string[] {
+        const kmp = (word1: string, word2: string): number => {
+            const lps: number[] = Array(word2.length).fill(0);
+            let prevLPS = 0,
+                i = 1;
+
+            while (i < word2.length) {
+                if (word2[i] === word2[prevLPS]) {
+                    lps[i++] = ++prevLPS;
+                } else if (prevLPS === 0) {
+                    lps[i++] = 0;
+                } else {
+                    prevLPS = lps[prevLPS - 1];
+                }
+            }
+
+            i = 0;
+            let j = 0;
+            while (i < word1.length) {
+                if (word1[i] === word2[j]) {
+                    i++;
+                    j++;
+                } else {
+                    if (j === 0) {
+                        i++;
+                    } else {
+                        j = lps[j - 1];
+                    }
+                }
+
+                if (j === word2.length) {
+                    return i - word2.length;
+                }
+            }
+
+            return -1;
+        };
+
+        let res: string[] = [];
+        words.sort((a, b) => a.length - b.length);
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                if (kmp(words[j], words[i]) !== -1) {
+                    res.push(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1387,6 +1499,129 @@ func stringMatching(words []string) []string {
 }
 ```
 
+```kotlin
+class Solution {
+    fun stringMatching(words: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+        words.sortBy { it.length }
+
+        for (i in words.indices) {
+            for (j in i + 1 until words.size) {
+                if (rabinKarp(words[j], words[i]) != -1) {
+                    res.add(words[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+
+    private fun rabinKarp(word1: String, word2: String): Int {
+        val base1 = 31L
+        val mod1 = 768258391L
+        val base2 = 37L
+        val mod2 = 685683731L
+        val n = word1.length
+        val m = word2.length
+
+        var power1 = 1L
+        var power2 = 1L
+        for (k in 0 until m) {
+            power1 = (power1 * base1) % mod1
+            power2 = (power2 * base2) % mod2
+        }
+
+        var word1Hash1 = 0L
+        var word1Hash2 = 0L
+        var word2Hash1 = 0L
+        var word2Hash2 = 0L
+
+        for (i in 0 until m) {
+            word1Hash1 = (word1Hash1 * base1 + word2[i].code) % mod1
+            word1Hash2 = (word1Hash2 * base2 + word2[i].code) % mod2
+            word2Hash1 = (word2Hash1 * base1 + word1[i].code) % mod1
+            word2Hash2 = (word2Hash2 * base2 + word1[i].code) % mod2
+        }
+
+        for (i in 0..n - m) {
+            if (word2Hash1 == word1Hash1 && word2Hash2 == word1Hash2) {
+                return i
+            }
+
+            if (i + m < n) {
+                word2Hash1 = (word2Hash1 * base1 - word1[i].code * power1 + word1[i + m].code) % mod1
+                word2Hash2 = (word2Hash2 * base2 - word1[i].code * power2 + word1[i + m].code) % mod2
+
+                if (word2Hash1 < 0) word2Hash1 += mod1
+                if (word2Hash2 < 0) word2Hash2 += mod2
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func stringMatching(_ words: [String]) -> [String] {
+        var res = [String]()
+        let words = words.sorted { $0.count < $1.count }
+
+        for i in 0..<words.count {
+            for j in (i + 1)..<max(i + 1, words.count) {
+                if rabinKarp(Array(words[j].utf8), Array(words[i].utf8)) != -1 {
+                    res.append(words[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+
+    private func rabinKarp(_ word1: [UInt8], _ word2: [UInt8]) -> Int {
+        let base1 = 31, mod1 = 768258391
+        let base2 = 37, mod2 = 685683731
+        let n = word1.count, m = word2.count
+
+        var power1 = 1, power2 = 1
+        for _ in 0..<m {
+            power1 = (power1 * base1) % mod1
+            power2 = (power2 * base2) % mod2
+        }
+
+        var word1Hash1 = 0, word1Hash2 = 0
+        var word2Hash1 = 0, word2Hash2 = 0
+
+        for i in 0..<m {
+            word1Hash1 = (word1Hash1 * base1 + Int(word2[i])) % mod1
+            word1Hash2 = (word1Hash2 * base2 + Int(word2[i])) % mod2
+            word2Hash1 = (word2Hash1 * base1 + Int(word1[i])) % mod1
+            word2Hash2 = (word2Hash2 * base2 + Int(word1[i])) % mod2
+        }
+
+        if n < m { return -1 }
+        for i in 0...(n - m) {
+            if word2Hash1 == word1Hash1 && word2Hash2 == word1Hash2 {
+                return i
+            }
+
+            if i + m < n {
+                word2Hash1 = (word2Hash1 * base1 - Int(word1[i]) * power1 + Int(word1[i + m])) % mod1
+                word2Hash2 = (word2Hash2 * base2 - Int(word1[i]) * power2 + Int(word1[i + m])) % mod2
+
+                if word2Hash1 < 0 { word2Hash1 += mod1 }
+                if word2Hash2 < 0 { word2Hash2 += mod2 }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn string_matching(words: Vec<String>) -> Vec<String> {
@@ -1446,6 +1681,82 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    stringMatching(words: string[]): string[] {
+        const rabinKarp = (word1: string, word2: string): number => {
+            const base1 = 31,
+                mod1 = 768258391;
+            const base2 = 37,
+                mod2 = 685683731;
+            const n = word1.length,
+                m = word2.length;
+
+            let power1 = 1,
+                power2 = 1;
+            for (let k = 0; k < m; k++) {
+                power1 = (power1 * base1) % mod1;
+                power2 = (power2 * base2) % mod2;
+            }
+
+            let hash1 = 0,
+                hash2 = 0;
+            let cur1 = 0,
+                cur2 = 0;
+
+            for (let i = 0; i < m; i++) {
+                hash1 = (hash1 * base1 + word2.charCodeAt(i)) % mod1;
+                hash2 = (hash2 * base2 + word2.charCodeAt(i)) % mod2;
+                cur1 = (cur1 * base1 + word1.charCodeAt(i)) % mod1;
+                cur2 = (cur2 * base2 + word1.charCodeAt(i)) % mod2;
+            }
+
+            for (let i = 0; i <= n - m; i++) {
+                if (cur1 === hash1 && cur2 === hash2) {
+                    return i;
+                }
+
+                if (i + m < n) {
+                    cur1 =
+                        (cur1 * base1 -
+                            word1.charCodeAt(i) * power1 +
+                            word1.charCodeAt(i + m)) %
+                        mod1;
+                    cur2 =
+                        (cur2 * base2 -
+                            word1.charCodeAt(i) * power2 +
+                            word1.charCodeAt(i + m)) %
+                        mod2;
+
+                    cur1 = (cur1 + mod1) % mod1;
+                    cur2 = (cur2 + mod2) % mod2;
+                }
+            }
+
+            return -1;
+        };
+
+        words.sort((a, b) => a.length - b.length);
+        let res: string[] = [];
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                if (rabinKarp(words[j], words[i]) !== -1) {
+                    res.push(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1768,6 +2079,104 @@ func stringMatching(words []string) []string {
 }
 ```
 
+```kotlin
+class Solution {
+    fun stringMatching(words: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+        words.sortBy { it.length }
+
+        for (i in words.indices) {
+            for (j in i + 1 until words.size) {
+                if (zAlgorithm(words[j], words[i]) != -1) {
+                    res.add(words[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+
+    private fun zAlgorithm(word1: String, word2: String): Int {
+        val s = word2 + "$" + word1
+        val n = s.length
+        val z = IntArray(n)
+        var l = 0
+        var r = 0
+
+        for (i in 1 until n) {
+            if (i <= r) {
+                z[i] = minOf(r - i + 1, z[i - l])
+            }
+            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+                z[i]++
+            }
+            if (i + z[i] - 1 > r) {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+
+        for (i in word2.length + 1 until n) {
+            if (z[i] == word2.length) {
+                return i - word2.length - 1
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func stringMatching(_ words: [String]) -> [String] {
+        var res = [String]()
+        let words = words.sorted { $0.count < $1.count }
+
+        for i in 0..<words.count {
+            for j in (i + 1)..<max(i + 1, words.count) {
+                if zAlgorithm(words[j], words[i]) != -1 {
+                    res.append(words[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+
+    private func zAlgorithm(_ word1: String, _ word2: String) -> Int {
+        let s = Array(word2 + "$" + word1)
+        let n = s.count
+        let m = word2.count
+        var z = [Int](repeating: 0, count: n)
+        var l = 0, r = 0
+
+        for i in 1..<n {
+            if i <= r {
+                z[i] = min(r - i + 1, z[i - l])
+            }
+            while i + z[i] < n && s[z[i]] == s[i + z[i]] {
+                z[i] += 1
+            }
+            if i + z[i] - 1 > r {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+
+        for i in (m + 1)..<max(m + 1, n) {
+            if z[i] == m {
+                return i - m - 1
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn string_matching(words: Vec<String>) -> Vec<String> {
@@ -1816,6 +2225,59 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    stringMatching(words: string[]): string[] {
+        const zAlgorithm = (word1: string, word2: string): number => {
+            const s = word2 + '$' + word1;
+            const n = s.length;
+            const z: number[] = Array(n).fill(0);
+            let l = 0,
+                r = 0;
+
+            for (let i = 1; i < n; i++) {
+                if (i <= r) {
+                    z[i] = Math.min(r - i + 1, z[i - l]);
+                }
+                while (i + z[i] < n && s[z[i]] === s[i + z[i]]) {
+                    z[i]++;
+                }
+                if (i + z[i] - 1 > r) {
+                    l = i;
+                    r = i + z[i] - 1;
+                }
+            }
+
+            for (let i = word2.length + 1; i < n; i++) {
+                if (z[i] === word2.length) {
+                    return i - word2.length - 1;
+                }
+            }
+
+            return -1;
+        };
+
+        words.sort((a, b) => a.length - b.length);
+        let res: string[] = [];
+
+        for (let i = 0; i < words.length; i++) {
+            for (let j = i + 1; j < words.length; j++) {
+                if (zAlgorithm(words[j], words[i]) !== -1) {
+                    res.push(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -2210,6 +2672,112 @@ func stringMatching(words []string) []string {
 }
 ```
 
+```kotlin
+class TrieNode {
+    val children = arrayOfNulls<TrieNode>(26)
+    var cnt = 0
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun insertSuffixes(word: String) {
+        for (i in word.indices) {
+            var node = root
+            for (j in i until word.length) {
+                val idx = word[j] - 'a'
+                if (node.children[idx] == null) {
+                    node.children[idx] = TrieNode()
+                }
+
+                node = node.children[idx]!!
+                node.cnt++
+            }
+        }
+    }
+
+    fun search(word: String): Boolean {
+        var node = root
+        for (c in word) {
+            node = node.children[c - 'a']!!
+        }
+        return node.cnt > 1
+    }
+}
+
+class Solution {
+    fun stringMatching(words: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+        val trie = Trie()
+
+        for (word in words) {
+            trie.insertSuffixes(word)
+        }
+
+        for (word in words) {
+            if (trie.search(word)) {
+                res.add(word)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [TrieNode?](repeating: nil, count: 26)
+    var cnt = 0
+}
+
+class Trie {
+    let root = TrieNode()
+
+    func insertSuffixes(_ word: [Int]) {
+        for i in 0..<word.count {
+            var node = root
+            for j in i..<word.count {
+                let idx = word[j]
+                if node.children[idx] == nil {
+                    node.children[idx] = TrieNode()
+                }
+
+                node = node.children[idx]!
+                node.cnt += 1
+            }
+        }
+    }
+
+    func search(_ word: [Int]) -> Bool {
+        var node = root
+        for idx in word {
+            node = node.children[idx]!
+        }
+        return node.cnt > 1
+    }
+}
+
+class Solution {
+    func stringMatching(_ words: [String]) -> [String] {
+        var res = [String]()
+        let trie = Trie()
+
+        for word in words {
+            trie.insertSuffixes(word.utf8.map { Int($0) - 97 })
+        }
+
+        for word in words {
+            if trie.search(word.utf8.map { Int($0) - 97 }) {
+                res.append(word)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ```rust
 struct TrieNode {
     children: [Option<Box<TrieNode>>; 26],
@@ -2272,6 +2840,81 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: (TrieNode | null)[];
+    cnt: number;
+
+    constructor() {
+        this.children = new Array(26).fill(null);
+        this.cnt = 0;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    insertSuffixes(word: string): void {
+        for (let i = 0; i < word.length; i++) {
+            let node = this.root;
+            for (let j = i; j < word.length; j++) {
+                let idx = word.charCodeAt(j) - 97;
+                if (!node.children[idx]) {
+                    node.children[idx] = new TrieNode();
+                }
+
+                node = node.children[idx]!;
+                node.cnt++;
+            }
+        }
+    }
+
+    /**
+     * @param {string} word
+     * @return {boolean}
+     */
+    search(word: string): boolean {
+        let node = this.root;
+        for (let i = 0; i < word.length; i++) {
+            let idx = word.charCodeAt(i) - 97;
+            node = node.children[idx]!;
+        }
+        return node.cnt > 1;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    stringMatching(words: string[]): string[] {
+        const res: string[] = [];
+        const trie = new Trie();
+
+        for (let word of words) {
+            trie.insertSuffixes(word);
+        }
+
+        for (let word of words) {
+            if (trie.search(word)) {
+                res.push(word);
+            }
+        }
+
+        return res;
     }
 }
 ```

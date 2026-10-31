@@ -106,6 +106,18 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArrayByParity(nums: number[]): number[] {
+        return nums.sort((a, b) => (a & 1) - (b & 1));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,6 +380,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArrayByParity(nums: number[]): number[] {
+        const even: number[] = [];
+        const odd: number[] = [];
+
+        for (let num of nums) {
+            if (num % 2) {
+                odd.push(num);
+            } else {
+                even.push(num);
+            }
+        }
+
+        let idx = 0;
+        for (let e of even) {
+            nums[idx++] = e;
+        }
+        for (let o of odd) {
+            nums[idx++] = o;
+        }
+
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +594,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArrayByParity(nums: number[]): number[] {
+        let i = 0,
+            j = nums.length - 1;
+        while (i < j) {
+            if ((nums[i] & 1) == 1) {
+                [nums[i], nums[j]] = [nums[j], nums[i]];
+                j--;
+            } else {
+                i++;
+            }
+        }
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -707,6 +772,24 @@ impl Solution {
             }
         }
         nums
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortArrayByParity(nums: number[]): number[] {
+        for (let l = 0, r = 0; r < nums.length; r++) {
+            if (nums[r] % 2 == 0) {
+                [nums[l], nums[r]] = [nums[r], nums[l]];
+                l++;
+            }
+        }
+        return nums;
     }
 }
 ```

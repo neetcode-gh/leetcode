@@ -175,6 +175,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @return {number}
+     */
+    minCostClimbingStairs(cost: number[]): number {
+        const dfs = (i: number): number => {
+            if (i >= cost.length) {
+                return 0;
+            }
+            return cost[i] + Math.min(dfs(i + 1), dfs(i + 2));
+        };
+        return Math.min(dfs(0), dfs(1));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -410,6 +428,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @return {number}
+     */
+    minCostClimbingStairs(cost: number[]): number {
+        const memo = new Int32Array(cost.length).fill(-1);
+        const dfs = (i: number): number => {
+            if (i >= cost.length) {
+                return 0;
+            }
+            if (memo[i] !== -1) {
+                return memo[i];
+            }
+            memo[i] = cost[i] + Math.min(dfs(i + 1), dfs(i + 2));
+            return memo[i];
+        };
+        return Math.min(dfs(0), dfs(1));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -594,6 +635,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @return {number}
+     */
+    minCostClimbingStairs(cost: number[]): number {
+        const n = cost.length;
+        const dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = 2; i <= n; i++) {
+            dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -715,7 +775,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func minCostClimbingStairs(_ cost: inout [Int]) -> Int {
+    func minCostClimbingStairs(_ cost: [Int]) -> Int {
+        var cost = cost
         for i in stride(from: cost.count - 3, through: 0, by: -1) {
             cost[i] += min(cost[i + 1], cost[i + 2])
         }
@@ -728,10 +789,25 @@ class Solution {
 impl Solution {
     pub fn min_cost_climbing_stairs(mut cost: Vec<i32>) -> i32 {
         let n = cost.len();
-        for i in (0..=(n as i32 - 3) as usize).rev() {
+        for i in (0..n.saturating_sub(2)).rev() {
             cost[i] += cost[i + 1].min(cost[i + 2]);
         }
         cost[0].min(cost[1])
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} cost
+     * @return {number}
+     */
+    minCostClimbingStairs(cost: number[]): number {
+        for (let i = cost.length - 3; i >= 0; i--) {
+            cost[i] += Math.min(cost[i + 1], cost[i + 2]);
+        }
+        return Math.min(cost[0], cost[1]);
     }
 }
 ```

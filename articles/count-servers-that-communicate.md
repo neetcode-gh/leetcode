@@ -353,6 +353,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    countServers(grid: number[][]): number {
+        let m = grid.length,
+            n = grid[0].length;
+        let res = 0;
+
+        for (let r = 0; r < m; r++) {
+            for (let c = 0; c < n; c++) {
+                if (grid[r][c] === 0) continue;
+
+                let found = false;
+                for (let col = 0; col < n; col++) {
+                    if (col !== c && grid[r][col] === 1) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    for (let row = 0; row < m; row++) {
+                        if (row !== r && grid[row][c] === 1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found) res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -650,6 +691,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    countServers(grid: number[][]): number {
+        let ROWS = grid.length,
+            COLS = grid[0].length;
+        let row_cnt: number[] = new Array(ROWS).fill(0);
+        let col_cnt: number[] = new Array(COLS).fill(0);
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 1) {
+                    row_cnt[r]++;
+                    col_cnt[c]++;
+                }
+            }
+        }
+
+        let res = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 1 && Math.max(row_cnt[r], col_cnt[c]) > 1) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1008,6 +1084,44 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    countServers(grid: number[][]): number {
+        let res = 0;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+
+        // Rows
+        for (let r = 0; r < ROWS; r++) {
+            let rowSum = grid[r].reduce((a, b) => a + b, 0);
+            if (rowSum <= 1) continue;
+            res += rowSum;
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 1) grid[r][c] = -1; // Mark
+            }
+        }
+
+        // Cols
+        for (let c = 0; c < COLS; c++) {
+            let colSum = 0,
+                unmarked = 0;
+            for (let r = 0; r < ROWS; r++) {
+                colSum += Math.abs(grid[r][c]);
+                if (grid[r][c] > 0) unmarked++;
+                else if (grid[r][c] < 0) grid[r][c] = 1; // Unmark
+            }
+            if (colSum >= 2) res += unmarked;
+        }
+
+        return res;
     }
 }
 ```

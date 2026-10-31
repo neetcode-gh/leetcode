@@ -183,6 +183,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} order
+     * @param {string} s
+     * @return {string}
+     */
+    customSortString(order: string, s: string): string {
+        const rank: { [key: string]: number } = {};
+        for (let i = 0; i < order.length; i++) {
+            rank[order[i]] = i;
+        }
+
+        return [...s]
+            .sort((a, b) => {
+                const ra = rank[a] ?? 26;
+                const rb = rank[b] ?? 26;
+                return ra - rb;
+            })
+            .join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -470,6 +494,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} order
+     * @param {string} s
+     * @return {string}
+     */
+    customSortString(order: string, s: string): string {
+        const count: number[] = new Array(26).fill(0);
+        for (let c of s) {
+            count[c.charCodeAt(0) - 97]++;
+        }
+
+        const res: string[] = [];
+        for (let c of order) {
+            let idx = c.charCodeAt(0) - 97;
+            while (count[idx] > 0) {
+                res.push(c);
+                count[idx]--;
+            }
+        }
+
+        for (let idx = 0; idx < 26; idx++) {
+            let c = String.fromCharCode(97 + idx);
+            while (count[idx] > 0) {
+                res.push(c);
+                count[idx]--;
+            }
+        }
+
+        return res.join('');
     }
 }
 ```

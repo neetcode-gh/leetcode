@@ -224,6 +224,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @param {number[]} neededTime
+     * @return {number}
+     */
+    minCost(colors: string, neededTime: number[]): number {
+        const n = neededTime.length;
+        let res = 0,
+            i = 0;
+        while (i < n) {
+            let j = i,
+                maxi = 0,
+                curr = 0;
+            while (j < n && colors[j] === colors[i]) {
+                maxi = Math.max(maxi, neededTime[j]);
+                curr += neededTime[j];
+                j++;
+            }
+            res += curr - maxi;
+            i = j;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -445,6 +473,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @param {number[]} neededTime
+     * @return {number}
+     */
+    minCost(colors: string, neededTime: number[]): number {
+        let l = 0,
+            res = 0;
+        for (let r = 1; r < colors.length; r++) {
+            if (colors[l] === colors[r]) {
+                if (neededTime[l] < neededTime[r]) {
+                    res += neededTime[l];
+                    l = r;
+                } else {
+                    res += neededTime[r];
+                }
+            } else {
+                l = r;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -621,6 +676,28 @@ impl Solution {
             maxi = maxi.max(needed_time[i]);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @param {number[]} neededTime
+     * @return {number}
+     */
+    minCost(colors: string, neededTime: number[]): number {
+        let res = 0,
+            maxi = 0;
+        for (let i = 0; i < colors.length; i++) {
+            if (i > 0 && colors[i] !== colors[i - 1]) {
+                maxi = 0;
+            }
+            res += Math.min(maxi, neededTime[i]);
+            maxi = Math.max(maxi, neededTime[i]);
+        }
+        return res;
     }
 }
 ```

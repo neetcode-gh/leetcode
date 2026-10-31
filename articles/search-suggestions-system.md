@@ -195,8 +195,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<string>> SuggestedProducts(string[] products, string searchWord) {
-        var res = new List<IList<string>>();
+    public List<List<string>> SuggestedProducts(string[] products, string searchWord) {
+        var res = new List<List<string>>();
         int m = searchWord.Length;
         Array.Sort(products);
 
@@ -236,8 +236,6 @@ public class Solution {
 ```
 
 ```go
-import "sort"
-
 func suggestedProducts(products []string, searchWord string) [][]string {
     res := [][]string{}
     m := len(searchWord)
@@ -414,6 +412,53 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} products
+     * @param {string} searchWord
+     * @return {string[][]}
+     */
+    suggestedProducts(products: string[], searchWord: string): string[][] {
+        let res: string[][] = [];
+        let m = searchWord.length;
+        products.sort();
+
+        for (let i = 0; i < m; i++) {
+            let cur: string[] = [];
+            for (let w of products) {
+                if (w.length <= i) continue;
+
+                let flag = true;
+                for (let j = 0; j <= i; j++) {
+                    if (w[j] !== searchWord[j]) {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    cur.push(w);
+                    if (cur.length === 3) break;
+                }
+            }
+
+            if (cur.length === 0) {
+                while (i < m) {
+                    res.push([]);
+                    i++;
+                }
+                break;
+            }
+
+            res.push(cur);
+        }
+
+        return res;
     }
 }
 ```
@@ -635,8 +680,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<string>> SuggestedProducts(string[] products, string searchWord) {
-        var res = new List<IList<string>>();
+    public List<List<string>> SuggestedProducts(string[] products, string searchWord) {
+        var res = new List<List<string>>();
         int m = searchWord.Length;
         Array.Sort(products);
 
@@ -678,11 +723,6 @@ public class Solution {
 ```
 
 ```go
-import (
-    "sort"
-    "strings"
-)
-
 func suggestedProducts(products []string, searchWord string) [][]string {
     res := [][]string{}
     m := len(searchWord)
@@ -863,6 +903,62 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} products
+     * @param {string} searchWord
+     * @return {string[][]}
+     */
+    suggestedProducts(products: string[], searchWord: string): string[][] {
+        let res: string[][] = [];
+        let m = searchWord.length;
+        products.sort();
+
+        let prefix: string[] = [];
+        let start = 0;
+
+        for (let i = 0; i < m; i++) {
+            prefix.push(searchWord[i]);
+            start = this.binarySearch(products, prefix.join(''), start);
+
+            let cur: string[] = [];
+            for (let j = start; j < Math.min(start + 3, products.length); j++) {
+                if (products[j].startsWith(prefix.join(''))) {
+                    cur.push(products[j]);
+                } else {
+                    break;
+                }
+            }
+
+            res.push(cur);
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {string[]} products
+     * @param {string} target
+     * @param {number} start
+     * @return {number}
+     */
+    binarySearch(products: string[], target: string, start: number): number {
+        let l = start,
+            r = products.length;
+        while (l < r) {
+            let mid = Math.floor(l + (r - l) / 2);
+            if (products[mid] >= target) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -896,6 +992,9 @@ This approach is identical to the previous one, but uses built-in binary search 
 ::tabs-start
 
 ```python
+from bisect import bisect_left
+
+
 class Solution:
     def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
         res = []
@@ -918,6 +1017,37 @@ class Solution:
             res.append(cur)
 
         return res
+```
+
+```java
+public class Solution {
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        List<List<String>> res = new ArrayList<>();
+        int m = searchWord.length();
+        Arrays.sort(products);
+
+        String prefix = "";
+        int start = 0;
+        for (int i = 0; i < m; i++) {
+            prefix += searchWord.charAt(i);
+            int idx = Arrays.binarySearch(products, start, products.length, prefix);
+            start = idx >= 0 ? idx : -(idx + 1);
+
+            List<String> cur = new ArrayList<>();
+            for (int j = start; j < Math.min(start + 3, products.length); j++) {
+                if (products[j].startsWith(prefix)) {
+                    cur.add(products[j]);
+                } else {
+                    break;
+                }
+            }
+
+            res.add(cur);
+        }
+
+        return res;
+    }
+}
 ```
 
 ```cpp
@@ -951,12 +1081,84 @@ public:
 };
 ```
 
-```go
-import (
-    "sort"
-    "strings"
-)
+```javascript
+class Solution {
+    /**
+     * @param {string[]} products
+     * @param {string} searchWord
+     * @return {string[][]}
+     */
+    suggestedProducts(products, searchWord) {
+        // JavaScript has no built-in bisect, so lowerBound plays that role.
+        const lowerBound = (arr, target, lo) => {
+            let hi = arr.length;
+            while (lo < hi) {
+                const mid = (lo + hi) >> 1;
+                if (arr[mid] < target) lo = mid + 1;
+                else hi = mid;
+            }
+            return lo;
+        };
 
+        const res = [];
+        products.sort();
+
+        let prefix = '';
+        let start = 0;
+        for (const c of searchWord) {
+            prefix += c;
+            start = lowerBound(products, prefix, start);
+
+            const cur = [];
+            for (let j = start; j < Math.min(start + 3, products.length); j++) {
+                if (products[j].startsWith(prefix)) {
+                    cur.push(products[j]);
+                } else {
+                    break;
+                }
+            }
+
+            res.push(cur);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<string>> SuggestedProducts(string[] products, string searchWord) {
+        List<List<string>> res = new List<List<string>>();
+        int m = searchWord.Length;
+        Array.Sort(products, StringComparer.Ordinal);
+
+        string prefix = "";
+        int start = 0;
+        for (int i = 0; i < m; i++) {
+            prefix += searchWord[i];
+            int idx = Array.BinarySearch(products, start, products.Length - start,
+                                         prefix, StringComparer.Ordinal);
+            start = idx >= 0 ? idx : ~idx;
+
+            List<string> cur = new List<string>();
+            for (int j = start; j < Math.Min(start + 3, products.Length); j++) {
+                if (products[j].StartsWith(prefix, StringComparison.Ordinal)) {
+                    cur.Add(products[j]);
+                } else {
+                    break;
+                }
+            }
+
+            res.Add(cur);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
 func suggestedProducts(products []string, searchWord string) [][]string {
     res := [][]string{}
     m := len(searchWord)
@@ -992,6 +1194,79 @@ func min(a, b int) int {
 }
 ```
 
+```kotlin
+class Solution {
+    fun suggestedProducts(products: Array<String>, searchWord: String): List<List<String>> {
+        val res = mutableListOf<List<String>>()
+        products.sort()
+
+        var prefix = ""
+        var start = 0
+        for (c in searchWord) {
+            prefix += c
+            val idx = products.binarySearch(prefix, start)
+            start = if (idx >= 0) idx else -(idx + 1)
+
+            val cur = mutableListOf<String>()
+            for (j in start until minOf(start + 3, products.size)) {
+                if (products[j].startsWith(prefix)) {
+                    cur.add(products[j])
+                } else {
+                    break
+                }
+            }
+
+            res.add(cur)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func suggestedProducts(_ products: [String], _ searchWord: String) -> [[String]] {
+        // Swift has no built-in bisect, so lowerBound plays that role.
+        func lowerBound(_ arr: [String], _ target: String, _ lo: Int) -> Int {
+            var lo = lo, hi = arr.count
+            while lo < hi {
+                let mid = (lo + hi) / 2
+                if arr[mid] < target {
+                    lo = mid + 1
+                } else {
+                    hi = mid
+                }
+            }
+            return lo
+        }
+
+        var res = [[String]]()
+        let products = products.sorted()
+
+        var prefix = ""
+        var start = 0
+        for c in searchWord {
+            prefix.append(c)
+            start = lowerBound(products, prefix, start)
+
+            var cur = [String]()
+            for j in start..<min(start + 3, products.count) {
+                if products[j].hasPrefix(prefix) {
+                    cur.append(products[j])
+                } else {
+                    break
+                }
+            }
+
+            res.append(cur)
+        }
+
+        return res
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn suggested_products(products: Vec<String>, search_word: String) -> Vec<Vec<String>> {
@@ -1017,6 +1292,51 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} products
+     * @param {string} searchWord
+     * @return {string[][]}
+     */
+    suggestedProducts(products: string[], searchWord: string): string[][] {
+        // TypeScript has no built-in bisect, so lowerBound plays that role.
+        const lowerBound = (arr: string[], target: string, lo: number): number => {
+            let hi = arr.length;
+            while (lo < hi) {
+                const mid = (lo + hi) >> 1;
+                if (arr[mid] < target) lo = mid + 1;
+                else hi = mid;
+            }
+            return lo;
+        };
+
+        const res: string[][] = [];
+        products.sort();
+
+        let prefix = '';
+        let start = 0;
+        for (const c of searchWord) {
+            prefix += c;
+            start = lowerBound(products, prefix, start);
+
+            const cur: string[] = [];
+            for (let j = start; j < Math.min(start + 3, products.length); j++) {
+                if (products[j].startsWith(prefix)) {
+                    cur.push(products[j]);
+                } else {
+                    break;
+                }
+            }
+
+            res.push(cur);
+        }
+
+        return res;
     }
 }
 ```
@@ -1184,8 +1504,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<IList<string>> SuggestedProducts(string[] products, string searchWord) {
-        var res = new List<IList<string>>();
+    public List<List<string>> SuggestedProducts(string[] products, string searchWord) {
+        var res = new List<List<string>>();
         Array.Sort(products);
 
         int l = 0, r = products.Length - 1;
@@ -1214,8 +1534,6 @@ public class Solution {
 ```
 
 ```go
-import "sort"
-
 func suggestedProducts(products []string, searchWord string) [][]string {
     res := [][]string{}
     sort.Strings(products)
@@ -1361,6 +1679,49 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} products
+     * @param {string} searchWord
+     * @return {string[][]}
+     */
+    suggestedProducts(products: string[], searchWord: string): string[][] {
+        let res: string[][] = [];
+        products.sort();
+
+        let l = 0,
+            r = products.length - 1;
+        for (let i = 0; i < searchWord.length; i++) {
+            let c = searchWord[i];
+
+            while (
+                l <= r &&
+                (products[l].length <= i || products[l][i] !== c)
+            ) {
+                l++;
+            }
+            while (
+                l <= r &&
+                (products[r].length <= i || products[r][i] !== c)
+            ) {
+                r--;
+            }
+
+            let cur: string[] = [];
+            let remain = r - l + 1;
+            for (let j = 0; j < Math.min(3, remain); j++) {
+                cur.push(products[l + j]);
+            }
+
+            res.push(cur);
+        }
+
+        return res;
     }
 }
 ```

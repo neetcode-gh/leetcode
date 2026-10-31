@@ -302,6 +302,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {void}
+     */
+    setZeroes(matrix: number[][]): void {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        const mark = matrix.map((row) => [...row]);
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (matrix[r][c] === 0) {
+                    for (let col = 0; col < COLS; col++) {
+                        mark[r][col] = 0;
+                    }
+                    for (let row = 0; row < ROWS; row++) {
+                        mark[row][c] = 0;
+                    }
+                }
+            }
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                matrix[r][c] = mark[r][c];
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -584,6 +617,38 @@ impl Solution {
         for r in 0..rows {
             for c in 0..cols {
                 if row_zero[r] || col_zero[c] {
+                    matrix[r][c] = 0;
+                }
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {void}
+     */
+    setZeroes(matrix: number[][]): void {
+        const rows = matrix.length,
+            cols = matrix[0].length;
+        const rowZero: boolean[] = Array(rows).fill(false);
+        const colZero: boolean[] = Array(cols).fill(false);
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if (matrix[r][c] === 0) {
+                    rowZero[r] = true;
+                    colZero[c] = true;
+                }
+            }
+        }
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if (rowZero[r] || colZero[c]) {
                     matrix[r][c] = 0;
                 }
             }
@@ -1009,6 +1074,53 @@ impl Solution {
 
         if row_zero {
             for c in 0..cols {
+                matrix[0][c] = 0;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {void}
+     */
+    setZeroes(matrix: number[][]): void {
+        const ROWS = matrix.length;
+        const COLS = matrix[0].length;
+        let rowZero = false;
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (matrix[r][c] == 0) {
+                    matrix[0][c] = 0;
+                    if (r > 0) {
+                        matrix[r][0] = 0;
+                    } else {
+                        rowZero = true;
+                    }
+                }
+            }
+        }
+
+        for (let r = 1; r < ROWS; r++) {
+            for (let c = 1; c < COLS; c++) {
+                if (matrix[0][c] == 0 || matrix[r][0] == 0) {
+                    matrix[r][c] = 0;
+                }
+            }
+        }
+
+        if (matrix[0][0] == 0) {
+            for (let r = 0; r < ROWS; r++) {
+                matrix[r][0] = 0;
+            }
+        }
+
+        if (rowZero) {
+            for (let c = 0; c < COLS; c++) {
                 matrix[0][c] = 0;
             }
         }

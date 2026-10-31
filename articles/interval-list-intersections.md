@@ -209,6 +209,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} firstList
+     * @param {number[][]} secondList
+     * @return {number[][]}
+     */
+    intervalIntersection(firstList: number[][], secondList: number[][]): number[][] {
+        const res: number[][] = [];
+        for (let i = 0; i < firstList.length; i++) {
+            const [startA, endA] = firstList[i];
+            for (let j = 0; j < secondList.length; j++) {
+                const [startB, endB] = secondList[j];
+                if (
+                    (startA <= startB && startB <= endA) ||
+                    (startB <= startA && startA <= endB)
+                ) {
+                    res.push([Math.max(startA, startB), Math.min(endA, endB)]);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,6 +535,40 @@ impl Solution {
             prev = x;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} firstList
+     * @param {number[][]} secondList
+     * @return {number[][]}
+     */
+    intervalIntersection(firstList: number[][], secondList: number[][]): number[][] {
+        let mp = new Map<number, number>();
+        for (let [s, e] of firstList) {
+            mp.set(s, (mp.get(s) || 0) + 1);
+            mp.set(e + 1, (mp.get(e + 1) || 0) - 1);
+        }
+        for (let [s, e] of secondList) {
+            mp.set(s, (mp.get(s) || 0) + 1);
+            mp.set(e + 1, (mp.get(e + 1) || 0) - 1);
+        }
+
+        let keys = Array.from(mp.keys()).sort((a, b) => a - b);
+        let res: number[][] = [],
+            active = 0,
+            prev = 0;
+        for (let x of keys) {
+            if (active === 2) {
+                res.push([prev, x - 1]);
+            }
+            active += mp.get(x)!;
+            prev = x;
+        }
+        return res;
     }
 }
 ```
@@ -816,6 +876,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} firstList
+     * @param {number[][]} secondList
+     * @return {number[][]}
+     */
+    intervalIntersection(firstList: number[][], secondList: number[][]): number[][] {
+        const res: number[][] = [];
+        let i = 0,
+            j = 0;
+
+        while (i < firstList.length && j < secondList.length) {
+            const [startA, endA] = firstList[i];
+            const [startB, endB] = secondList[j];
+
+            const start = Math.max(startA, startB);
+            const end = Math.min(endA, endB);
+
+            if (start <= end) {
+                res.push([start, end]);
+            }
+
+            if (endA < endB) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+
+        return res;
     }
 }
 ```

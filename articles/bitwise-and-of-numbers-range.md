@@ -112,7 +112,7 @@ class Solution {
 class Solution {
     func rangeBitwiseAnd(_ left: Int, _ right: Int) -> Int {
         var res = left
-        for i in (left + 1)...right {
+        for i in stride(from: left + 1, through: right, by: 1) {
             res &= i
         }
         return res
@@ -128,6 +128,23 @@ impl Solution {
             res &= i;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    rangeBitwiseAnd(left: number, right: number): number {
+        let res = left;
+        for (let i = left + 1; i <= right; i++) {
+            res &= i;
+        }
+        return res;
     }
 }
 ```
@@ -341,6 +358,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    rangeBitwiseAnd(left: number, right: number): number {
+        let res = 0;
+        for (let i = 0; i < 32; i++) {
+            const bit = (left >> i) & 1;
+            if (!bit) {
+                continue;
+            }
+            const next = Math.pow(2, i + 1);
+            const remain = left % next;
+            const diff = next - remain;
+            if (right - left < diff) {
+                res |= 1 << i;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -500,6 +543,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    rangeBitwiseAnd(left: number, right: number): number {
+        let i = 0;
+        while (left !== right) {
+            left >>= 1;
+            right >>= 1;
+            i++;
+        }
+        return left << i;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -622,6 +684,22 @@ impl Solution {
             right &= right - 1;
         }
         right
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    rangeBitwiseAnd(left: number, right: number): number {
+        while (left < right) {
+            right &= right - 1;
+        }
+        return right;
     }
 }
 ```

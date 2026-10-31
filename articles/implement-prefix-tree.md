@@ -332,52 +332,52 @@ public class PrefixTree {
 
 ```go
 type TrieNode struct {
-	children [26]*TrieNode
-	endOfWord bool
+    children [26]*TrieNode
+    endOfWord bool
 }
 
 type PrefixTree struct {
-	root *TrieNode
+    root *TrieNode
 }
 
 func Constructor() PrefixTree {
-	return PrefixTree{root: &TrieNode{}}
+    return PrefixTree{root: &TrieNode{}}
 }
 
 func (this *PrefixTree) Insert(word string) {
-	cur := this.root
-	for _, c := range word {
-		i := c - 'a'
-		if cur.children[i] == nil {
-			cur.children[i] = &TrieNode{}
-		}
-		cur = cur.children[i]
-	}
-	cur.endOfWord = true
+    cur := this.root
+    for _, c := range word {
+        i := c - 'a'
+        if cur.children[i] == nil {
+            cur.children[i] = &TrieNode{}
+        }
+        cur = cur.children[i]
+    }
+    cur.endOfWord = true
 }
 
 func (this *PrefixTree) Search(word string) bool {
-	cur := this.root
-	for _, c := range word {
-		i := c - 'a'
-		if cur.children[i] == nil {
-			return false
-		}
-		cur = cur.children[i]
-	}
-	return cur.endOfWord
+    cur := this.root
+    for _, c := range word {
+        i := c - 'a'
+        if cur.children[i] == nil {
+            return false
+        }
+        cur = cur.children[i]
+    }
+    return cur.endOfWord
 }
 
 func (this *PrefixTree) StartsWith(prefix string) bool {
-	cur := this.root
-	for _, c := range prefix {
-		i := c - 'a'
-		if cur.children[i] == nil {
-			return false
-		}
-		cur = cur.children[i]
-	}
-	return true
+    cur := this.root
+    for _, c := range prefix {
+        i := c - 'a'
+        if cur.children[i] == nil {
+            return false
+        }
+        cur = cur.children[i]
+    }
+    return true
 }
 ```
 
@@ -539,6 +539,74 @@ impl PrefixTree {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: (TrieNode | null)[];
+    endOfWord: boolean;
+
+    constructor() {
+        this.children = new Array(26).fill(null);
+        this.endOfWord = false;
+    }
+}
+
+class PrefixTree {
+    private root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    insert(word: string): void {
+        let cur = this.root;
+        for (let c of word) {
+            let i = c.charCodeAt(0) - 97;
+            if (cur.children[i] === null) {
+                cur.children[i] = new TrieNode();
+            }
+            cur = cur.children[i]!;
+        }
+        cur.endOfWord = true;
+    }
+
+    /**
+     * @param {string} word
+     * @return {boolean}
+     */
+    search(word: string): boolean {
+        let cur = this.root;
+        for (let c of word) {
+            let i = c.charCodeAt(0) - 97;
+            if (cur.children[i] === null) {
+                return false;
+            }
+            cur = cur.children[i]!;
+        }
+        return cur.endOfWord;
+    }
+
+    /**
+     * @param {string} prefix
+     * @return {boolean}
+     */
+    startsWith(prefix: string): boolean {
+        let cur = this.root;
+        for (let c of prefix) {
+            let i = c.charCodeAt(0) - 97;
+            if (cur.children[i] === null) {
+                return false;
+            }
+            cur = cur.children[i]!;
+        }
+        return true;
     }
 }
 ```
@@ -800,49 +868,49 @@ public class PrefixTree {
 
 ```go
 type TrieNode struct {
-	children map[rune]*TrieNode
-	endOfWord bool
+    children map[rune]*TrieNode
+    endOfWord bool
 }
 
 type PrefixTree struct {
-	root *TrieNode
+    root *TrieNode
 }
 
 func Constructor() PrefixTree {
-	return PrefixTree{root: &TrieNode{children: make(map[rune]*TrieNode)}}
+    return PrefixTree{root: &TrieNode{children: make(map[rune]*TrieNode)}}
 }
 
 func (this *PrefixTree) Insert(word string) {
-	cur := this.root
-	for _, c := range word {
-		if cur.children[c] == nil {
-			cur.children[c] = &TrieNode{children: make(map[rune]*TrieNode)}
-		}
-		cur = cur.children[c]
-	}
-	cur.endOfWord = true
+    cur := this.root
+    for _, c := range word {
+        if cur.children[c] == nil {
+            cur.children[c] = &TrieNode{children: make(map[rune]*TrieNode)}
+        }
+        cur = cur.children[c]
+    }
+    cur.endOfWord = true
 }
 
 func (this *PrefixTree) Search(word string) bool {
-	cur := this.root
-	for _, c := range word {
-		if cur.children[c] == nil {
-			return false
-		}
-		cur = cur.children[c]
-	}
-	return cur.endOfWord
+    cur := this.root
+    for _, c := range word {
+        if cur.children[c] == nil {
+            return false
+        }
+        cur = cur.children[c]
+    }
+    return cur.endOfWord
 }
 
 func (this *PrefixTree) StartsWith(prefix string) bool {
-	cur := this.root
-	for _, c := range prefix {
-		if cur.children[c] == nil {
-			return false
-		}
-		cur = cur.children[c]
-	}
-	return true
+    cur := this.root
+    for _, c := range prefix {
+        if cur.children[c] == nil {
+            return false
+        }
+        cur = cur.children[c]
+    }
+    return true
 }
 ```
 
@@ -993,6 +1061,71 @@ impl PrefixTree {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: Map<string, TrieNode>;
+    endOfWord: boolean;
+
+    constructor() {
+        this.children = new Map();
+        this.endOfWord = false;
+    }
+}
+
+class PrefixTree {
+    private root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    insert(word: string): void {
+        let cur = this.root;
+        for (let c of word) {
+            if (!cur.children.has(c)) {
+                cur.children.set(c, new TrieNode());
+            }
+            cur = cur.children.get(c)!;
+        }
+        cur.endOfWord = true;
+    }
+
+    /**
+     * @param {string} word
+     * @return {boolean}
+     */
+    search(word: string): boolean {
+        let cur = this.root;
+        for (let c of word) {
+            if (!cur.children.has(c)) {
+                return false;
+            }
+            cur = cur.children.get(c)!;
+        }
+        return cur.endOfWord;
+    }
+
+    /**
+     * @param {string} prefix
+     * @return {boolean}
+     */
+    startsWith(prefix: string): boolean {
+        let cur = this.root;
+        for (let c of prefix) {
+            if (!cur.children.has(c)) {
+                return false;
+            }
+            cur = cur.children.get(c)!;
+        }
+        return true;
     }
 }
 ```

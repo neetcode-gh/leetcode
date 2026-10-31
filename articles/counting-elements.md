@@ -193,6 +193,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countElements(arr: number[]): number {
+        let count = 0;
+        for (const x of arr) {
+            if (arr.includes(x + 1)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -356,6 +374,25 @@ impl Solution {
             }
         }
         count
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countElements(arr: number[]): number {
+        const hashSet = new Set<number>(arr);
+        let count = 0;
+        for (const x of arr) {
+            if (hashSet.has(x + 1)) {
+                count++;
+            }
+        }
+        return count;
     }
 }
 ```
@@ -564,6 +601,30 @@ impl Solution {
             run_length += 1;
         }
         count
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countElements(arr: number[]): number {
+        arr.sort((a, b) => a - b);
+        let count = 0;
+        let runLength = 1;
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i - 1] !== arr[i]) {
+                if (arr[i - 1] + 1 === arr[i]) {
+                    count += runLength;
+                }
+                runLength = 0;
+            }
+            runLength++;
+        }
+        return count;
     }
 }
 ```

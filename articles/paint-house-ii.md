@@ -409,6 +409,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs: number[][]): number {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+        const memo = new Map<string, number>();
+
+        const memoSolve = (houseNumber: number, color: number): number => {
+            if (houseNumber === n - 1) {
+                return costs[houseNumber][color];
+            }
+
+            const key = `${houseNumber} ${color}`;
+            if (memo.has(key)) {
+                return memo.get(key)!;
+            }
+
+            let minRemainingCost = Infinity;
+            for (let nextColor = 0; nextColor < k; nextColor++) {
+                if (color === nextColor) continue;
+                let currentRemainingCost = memoSolve(
+                    houseNumber + 1,
+                    nextColor,
+                );
+                minRemainingCost = Math.min(
+                    currentRemainingCost,
+                    minRemainingCost,
+                );
+            }
+            const totalCost = costs[houseNumber][color] + minRemainingCost;
+            memo.set(key, totalCost);
+            return totalCost;
+        };
+
+        let minCost = Infinity;
+        for (let color = 0; color < k; color++) {
+            minCost = Math.min(minCost, memoSolve(0, color));
+        }
+        return minCost;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -680,6 +728,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs: number[][]): number {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+
+        for (let house = 1; house < n; house++) {
+            for (let color = 0; color < k; color++) {
+                let minCost = Infinity;
+                for (
+                    let previousColor = 0;
+                    previousColor < k;
+                    previousColor++
+                ) {
+                    if (color === previousColor) continue;
+                    minCost = Math.min(
+                        minCost,
+                        costs[house - 1][previousColor],
+                    );
+                }
+                costs[house][color] += minCost;
+            }
+        }
+
+        return Math.min(...costs[n - 1]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -711,25 +793,26 @@ This approach maintains the same logic but uses an auxiliary array instead of mo
 ::tabs-start
 
 ```python
-def minCostII(self, costs: List[List[int]]) -> int:
+class Solution:
+    def minCostII(self, costs: List[List[int]]) -> int:
 
-    n = len(costs)
-    if n == 0: return 0
-    k = len(costs[0])
+        n = len(costs)
+        if n == 0: return 0
+        k = len(costs[0])
 
-    previous_row = costs[0]
+        previous_row = costs[0]
 
-    for house in range(1, n):
-        current_row = [0] * k
-        for color in range(k):
-            best = math.inf
-            for previous_color in range(k):
-                if color == previous_color: continue
-                best = min(best, previous_row[previous_color])
-            current_row[color] += costs[house][color] + best
-        previous_row = current_row
+        for house in range(1, n):
+            current_row = [0] * k
+            for color in range(k):
+                best = math.inf
+                for previous_color in range(k):
+                    if color == previous_color: continue
+                    best = min(best, previous_row[previous_color])
+                current_row[color] += costs[house][color] + best
+            previous_row = current_row
 
-    return min(previous_row)
+        return min(previous_row)
 ```
 
 ```java
@@ -979,6 +1062,41 @@ impl Solution {
         }
 
         *previous_row.iter().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs: number[][]): number {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+
+        let previousRow = [...costs[0]];
+
+        for (let house = 1; house < n; house++) {
+            const currentRow: number[] = new Array(k).fill(0);
+            for (let color = 0; color < k; color++) {
+                let minCost = Infinity;
+                for (
+                    let previousColor = 0;
+                    previousColor < k;
+                    previousColor++
+                ) {
+                    if (color === previousColor) continue;
+                    minCost = Math.min(minCost, previousRow[previousColor]);
+                }
+                currentRow[color] = costs[house][color] + minCost;
+            }
+            previousRow = currentRow;
+        }
+
+        return Math.min(...previousRow);
     }
 }
 ```
@@ -1356,6 +1474,54 @@ impl Solution {
         }
 
         *costs[n - 1].iter().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs: number[][]): number {
+        const n = costs.length;
+        if (n === 0) return 0;
+
+        const k = costs[0].length;
+
+        for (let house = 1; house < n; house++) {
+            // Find the colors with the minimum and second to minimum
+            // in the previous row.
+            let minColor: number | null = null;
+            let secondMinColor: number | null = null;
+
+            for (let color = 0; color < k; color++) {
+                const cost = costs[house - 1][color];
+
+                if (minColor === null || cost < costs[house - 1][minColor]) {
+                    secondMinColor = minColor;
+                    minColor = color;
+                } else if (
+                    secondMinColor === null ||
+                    cost < costs[house - 1][secondMinColor]
+                ) {
+                    secondMinColor = color;
+                }
+            }
+
+            // And now update the costs for the current row.
+            for (let color = 0; color < k; color++) {
+                if (color === minColor) {
+                    costs[house][color] += costs[house - 1][secondMinColor!];
+                } else {
+                    costs[house][color] += costs[house - 1][minColor!];
+                }
+            }
+        }
+
+        // The answer will now be the minimum of the last row.
+        return Math.min(...costs[n - 1]);
     }
 }
 ```
@@ -1822,6 +1988,60 @@ impl Solution {
         }
 
         prev_min
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs: number[][]): number {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+
+        let prevMin: number | null = null,
+            prevSecondMin: number | null = null,
+            prevMinColor: number | null = null;
+        for (let color = 0; color < k; color++) {
+            const cost = costs[0][color];
+            if (prevMin === null || cost < prevMin) {
+                prevSecondMin = prevMin;
+                prevMinColor = color;
+                prevMin = cost;
+            } else if (prevSecondMin === null || cost < prevSecondMin) {
+                prevSecondMin = cost;
+            }
+        }
+
+        for (let house = 1; house < n; house++) {
+            let min: number | null = null,
+                secondMin: number | null = null,
+                minColor: number | null = null;
+            for (let color = 0; color < k; color++) {
+                let cost = costs[house][color];
+                if (color === prevMinColor) {
+                    cost += prevSecondMin!;
+                } else {
+                    cost += prevMin!;
+                }
+                if (min === null || cost < min) {
+                    secondMin = min;
+                    minColor = color;
+                    min = cost;
+                } else if (secondMin === null || cost < secondMin) {
+                    secondMin = cost;
+                }
+            }
+            prevMin = min;
+            prevSecondMin = secondMin;
+            prevMinColor = minColor;
+        }
+
+        return prevMin!;
     }
 }
 ```

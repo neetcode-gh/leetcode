@@ -71,7 +71,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public void PrintLinkedListInReverse(ImmutableListNode head) {
+    public void PrintLinkedListInReverse(IImmutableListNode head) {
         if (head != null) {
             PrintLinkedListInReverse(head.GetNext());
             head.PrintValue();
@@ -112,14 +112,35 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
-//         if let Some(next) = head.get_next() {
-//             Self::print_linked_list_in_reverse(next);
-//         }
-//         head.print_value();
-//     }
+// This is the ImmutableListNode's API interface.
+// You should not implement it, or speculate about its implementation.
+// impl ImmutableListNode {
+//     fn print_value(&self);                             // print the value of this node
+//     fn get_next(&self) -> Option<&ImmutableListNode>;  // return the next node
 // }
+impl Solution {
+    pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+        if let Some(next) = head.get_next() {
+            Self::print_linked_list_in_reverse(next);
+        }
+        head.print_value();
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ImmutableListNode} head
+     * @return {void}
+     */
+    printLinkedListInReverse(head: ImmutableListNode | null): void {
+        if (head !== null) {
+            this.printLinkedListInReverse(head.getNext());
+            head.printValue();
+        }
+    }
+}
 ```
 
 ::tabs-end
@@ -219,15 +240,15 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public void PrintLinkedListInReverse(ImmutableListNode head) {
-        Stack<ImmutableListNode> stack = new Stack<ImmutableListNode>();
+    public void PrintLinkedListInReverse(IImmutableListNode head) {
+        Stack<IImmutableListNode> stack = new Stack<IImmutableListNode>();
         while (head != null) {
             stack.Push(head);
             head = head.GetNext();
         }
 
         while (stack.Count > 0) {
-            ImmutableListNode node = stack.Pop();
+            IImmutableListNode node = stack.Pop();
             node.PrintValue();
         }
     }
@@ -287,19 +308,47 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
-//         let mut stack: Vec<&ImmutableListNode> = Vec::new();
-//         let mut curr = Some(head);
-//         while let Some(node) = curr {
-//             stack.push(node);
-//             curr = node.get_next();
-//         }
-//         while let Some(node) = stack.pop() {
-//             node.print_value();
-//         }
-//     }
+// This is the ImmutableListNode's API interface.
+// You should not implement it, or speculate about its implementation.
+// impl ImmutableListNode {
+//     fn print_value(&self);                             // print the value of this node
+//     fn get_next(&self) -> Option<&ImmutableListNode>;  // return the next node
 // }
+impl Solution {
+    pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+        let mut stack: Vec<&ImmutableListNode> = Vec::new();
+        let mut cur = Some(head);
+        while let Some(node) = cur {
+            stack.push(node);
+            cur = node.get_next();
+        }
+
+        while let Some(node) = stack.pop() {
+            node.print_value();
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ImmutableListNode} head
+     * @return {void}
+     */
+    printLinkedListInReverse(head: ImmutableListNode | null): void {
+        const stack: ImmutableListNode[] = [];
+        while (head !== null) {
+            stack.push(head);
+            head = head.getNext();
+        }
+
+        while (stack.length > 0) {
+            const node = stack.pop()!;
+            node.printValue();
+        }
+    }
+}
 ```
 
 ::tabs-end
@@ -488,14 +537,14 @@ class Solution {
 
 ```csharp
 public class Solution {
-    private void PrintLinkedListInReverseRecursively(ImmutableListNode head, int size) {
+    private void PrintLinkedListInReverseRecursively(IImmutableListNode head, int size) {
         if (size > 0 && head != null) {
             PrintLinkedListInReverseRecursively(head.GetNext(), size - 1);
             head.PrintValue();
         }
     }
 
-    private int GetLinkedListSize(ImmutableListNode head) {
+    private int GetLinkedListSize(IImmutableListNode head) {
         int size = 0;
         while (head != null) {
             size++;
@@ -504,12 +553,12 @@ public class Solution {
         return size;
     }
 
-    public void PrintLinkedListInReverse(ImmutableListNode head) {
+    public void PrintLinkedListInReverse(IImmutableListNode head) {
         int linkedListSize = GetLinkedListSize(head);
         int blockSize = (int)Math.Ceiling(Math.Sqrt(linkedListSize));
 
-        Stack<ImmutableListNode> blocks = new Stack<ImmutableListNode>();
-        ImmutableListNode curr = head;
+        Stack<IImmutableListNode> blocks = new Stack<IImmutableListNode>();
+        IImmutableListNode curr = head;
         for (int i = 0; i < linkedListSize; i++) {
             if (i % blockSize == 0) {
                 blocks.Push(curr);
@@ -641,42 +690,105 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     fn print_reverse_recursive(head: &ImmutableListNode, size: usize) {
-//         if size > 0 {
-//             if let Some(next) = head.get_next() {
-//                 Self::print_reverse_recursive(next, size - 1);
-//             }
-//             head.print_value();
-//         }
-//     }
-//
-//     fn get_size(head: &ImmutableListNode) -> usize {
-//         let mut size = 0;
-//         let mut curr = Some(head);
-//         while let Some(node) = curr {
-//             size += 1;
-//             curr = node.get_next();
-//         }
-//         size
-//     }
-//
-//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
-//         let n = Self::get_size(head);
-//         let block_size = (n as f64).sqrt().ceil() as usize;
-//         let mut blocks: Vec<&ImmutableListNode> = Vec::new();
-//         let mut curr = Some(head);
-//         for i in 0..n {
-//             if i % block_size == 0 {
-//                 blocks.push(curr.unwrap());
-//             }
-//             curr = curr.unwrap().get_next();
-//         }
-//         while let Some(block) = blocks.pop() {
-//             Self::print_reverse_recursive(block, block_size);
-//         }
-//     }
+// This is the ImmutableListNode's API interface.
+// You should not implement it, or speculate about its implementation.
+// impl ImmutableListNode {
+//     fn print_value(&self);                             // print the value of this node
+//     fn get_next(&self) -> Option<&ImmutableListNode>;  // return the next node
 // }
+impl Solution {
+    fn print_reverse_recursively(head: Option<&ImmutableListNode>, size: usize) {
+        if let Some(node) = head {
+            if size > 0 {
+                Self::print_reverse_recursively(node.get_next(), size - 1);
+                node.print_value();
+            }
+        }
+    }
+
+    fn get_linked_list_size(head: &ImmutableListNode) -> usize {
+        let mut size = 0;
+        let mut cur = Some(head);
+        while let Some(node) = cur {
+            size += 1;
+            cur = node.get_next();
+        }
+        size
+    }
+
+    pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+        let linked_list_size = Self::get_linked_list_size(head);
+        let block_size = (linked_list_size as f64).sqrt().ceil() as usize;
+
+        let mut blocks: Vec<&ImmutableListNode> = Vec::new();
+        let mut curr = Some(head);
+        for i in 0..linked_list_size {
+            let node = curr.unwrap();
+            if i % block_size == 0 {
+                blocks.push(node);
+            }
+            curr = node.get_next();
+        }
+
+        while let Some(block) = blocks.pop() {
+            Self::print_reverse_recursively(Some(block), block_size);
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ImmutableListNode} head
+     * @param {number} size
+     * @return {void}
+     */
+    printLinkedListInReverseRecursively(
+        head: ImmutableListNode | null,
+        size: number,
+    ): void {
+        if (size > 0 && head !== null) {
+            this.printLinkedListInReverseRecursively(head.getNext(), size - 1);
+            head.printValue();
+        }
+    }
+
+    /**
+     * @param {ImmutableListNode} head
+     * @return {number}
+     */
+    getLinkedListSize(head: ImmutableListNode | null): number {
+        let size = 0;
+        while (head !== null) {
+            size++;
+            head = head.getNext();
+        }
+        return size;
+    }
+
+    /**
+     * @param {ImmutableListNode} head
+     * @return {void}
+     */
+    printLinkedListInReverse(head: ImmutableListNode | null): void {
+        const linkedListSize = this.getLinkedListSize(head);
+        const blockSize = Math.ceil(Math.sqrt(linkedListSize));
+
+        const blocks: (ImmutableListNode | null)[] = [];
+        let curr = head;
+        for (let i = 0; i < linkedListSize; i++) {
+            if (i % blockSize === 0) {
+                blocks.push(curr);
+            }
+            curr = curr!.getNext();
+        }
+
+        while (blocks.length > 0) {
+            this.printLinkedListInReverseRecursively(blocks.pop()!, blockSize);
+        }
+    }
+}
 ```
 
 ::tabs-end
@@ -829,7 +941,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    private void Helper(ImmutableListNode start, ImmutableListNode end) {
+    private void Helper(IImmutableListNode start, IImmutableListNode end) {
         if (start == null || start == end) {
             return;
         }
@@ -838,8 +950,8 @@ public class Solution {
             return;
         }
 
-        ImmutableListNode slow = start;
-        ImmutableListNode fast = start;
+        IImmutableListNode slow = start;
+        IImmutableListNode fast = start;
 
         while (fast != end && fast.GetNext() != end) {
             slow = slow.GetNext();
@@ -850,7 +962,7 @@ public class Solution {
         Helper(start, slow);
     }
 
-    public void PrintLinkedListInReverse(ImmutableListNode head) {
+    public void PrintLinkedListInReverse(IImmutableListNode head) {
         Helper(head, null);
     }
 }
@@ -942,33 +1054,87 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     fn helper(start: Option<&ImmutableListNode>, end: Option<&ImmutableListNode>) {
-//         let s = match start {
-//             Some(node) => node,
-//             None => return,
-//         };
-//         if start == end {
-//             return;
-//         }
-//         if s.get_next() == end {
-//             s.print_value();
-//             return;
-//         }
-//         let mut slow = start;
-//         let mut fast = start;
-//         while fast != end && fast.and_then(|f| f.get_next()) != end {
-//             slow = slow.and_then(|n| n.get_next());
-//             fast = fast.and_then(|n| n.get_next()).and_then(|n| n.get_next());
-//         }
-//         Self::helper(slow, end);
-//         Self::helper(start, slow);
-//     }
-//
-//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
-//         Self::helper(Some(head), None);
-//     }
+// This is the ImmutableListNode's API interface.
+// You should not implement it, or speculate about its implementation.
+// impl ImmutableListNode {
+//     fn print_value(&self);                             // print the value of this node
+//     fn get_next(&self) -> Option<&ImmutableListNode>;  // return the next node
 // }
+impl Solution {
+    fn same(a: Option<&ImmutableListNode>, b: Option<&ImmutableListNode>) -> bool {
+        match (a, b) {
+            (None, None) => true,
+            (Some(x), Some(y)) => std::ptr::eq(x, y),
+            _ => false,
+        }
+    }
+
+    fn helper(start: Option<&ImmutableListNode>, end: Option<&ImmutableListNode>) {
+        let s = match start {
+            None => return,
+            Some(s) => s,
+        };
+        if Self::same(start, end) {
+            return;
+        }
+        if Self::same(s.get_next(), end) {
+            s.print_value();
+            return;
+        }
+
+        let mut slow = s;
+        let mut fast = Some(s);
+        while !Self::same(fast, end) && !Self::same(fast.unwrap().get_next(), end) {
+            slow = slow.get_next().unwrap();
+            fast = fast.unwrap().get_next().unwrap().get_next();
+        }
+
+        Self::helper(Some(slow), end);
+        Self::helper(start, Some(slow));
+    }
+
+    pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+        Self::helper(Some(head), None);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ImmutableListNode} start
+     * @param {ImmutableListNode} end
+     * @return {void}
+     */
+    helper(start: ImmutableListNode | null, end: ImmutableListNode | null): void {
+        if (start === null || start === end) {
+            return;
+        }
+        if (start.getNext() === end) {
+            start.printValue();
+            return;
+        }
+
+        let slow = start;
+        let fast = start;
+
+        while (fast !== end && fast.getNext() !== end) {
+            slow = slow.getNext();
+            fast = fast.getNext().getNext();
+        }
+
+        this.helper(slow, end);
+        this.helper(start, slow);
+    }
+
+    /**
+     * @param {ImmutableListNode} head
+     * @return {void}
+     */
+    printLinkedListInReverse(head: ImmutableListNode | null): void {
+        this.helper(head, null);
+    }
+}
 ```
 
 ::tabs-end
@@ -1072,9 +1238,9 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public void PrintLinkedListInReverse(ImmutableListNode head) {
-        ImmutableListNode curr;
-        ImmutableListNode end = null;
+    public void PrintLinkedListInReverse(IImmutableListNode head) {
+        IImmutableListNode curr;
+        IImmutableListNode end = null;
 
         while (head != end) {
             curr = head;
@@ -1140,22 +1306,56 @@ class Solution {
 ```
 
 ```rust
-// impl Solution {
-//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
-//         let mut end: Option<&ImmutableListNode> = None;
-//         let mut h: Option<&ImmutableListNode> = Some(head);
-//         while h != end {
-//             let mut curr = h;
-//             while curr.and_then(|n| n.get_next()) != end {
-//                 curr = curr.and_then(|n| n.get_next());
-//             }
-//             if let Some(node) = curr {
-//                 node.print_value();
-//             }
-//             end = curr;
-//         }
-//     }
+// This is the ImmutableListNode's API interface.
+// You should not implement it, or speculate about its implementation.
+// impl ImmutableListNode {
+//     fn print_value(&self);                             // print the value of this node
+//     fn get_next(&self) -> Option<&ImmutableListNode>;  // return the next node
 // }
+impl Solution {
+    fn same(a: Option<&ImmutableListNode>, b: Option<&ImmutableListNode>) -> bool {
+        match (a, b) {
+            (None, None) => true,
+            (Some(x), Some(y)) => std::ptr::eq(x, y),
+            _ => false,
+        }
+    }
+
+    pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+        let mut end: Option<&ImmutableListNode> = None;
+
+        while !Self::same(Some(head), end) {
+            let mut curr = head;
+            while !Self::same(curr.get_next(), end) {
+                curr = curr.get_next().unwrap();
+            }
+            curr.print_value();
+            end = Some(curr);
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ImmutableListNode} head
+     * @return {void}
+     */
+    printLinkedListInReverse(head: ImmutableListNode | null): void {
+        let curr: ImmutableListNode;
+        let end: ImmutableListNode | null = null;
+
+        while (head !== end) {
+            curr = head!;
+            while (curr.getNext() !== end) {
+                curr = curr.getNext();
+            }
+            curr.printValue();
+            end = curr;
+        }
+    }
+}
 ```
 
 ::tabs-end

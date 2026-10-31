@@ -282,7 +282,7 @@ class Solution {
             }
             var num: Int64 = 0
             for j in i..<n {
-                num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                num = num &* 10 &+ Int64(chars[j].asciiValue! - Character("0").asciiValue!)
                 splits.append(num)
                 if dfs(j + 1, &splits) {
                     return true
@@ -333,6 +333,45 @@ impl Solution {
         }
 
         dfs(bytes, 0, &mut vec![])
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    splitString(s: string): boolean {
+        const n = s.length;
+
+        const isValid = (splits: number[]): boolean => {
+            for (let i = 1; i < splits.length; i++) {
+                if (splits[i] !== splits[i - 1] - 1) {
+                    return false;
+                }
+            }
+            return splits.length > 1;
+        };
+
+        const dfs = (i: number, splits: number[]): boolean => {
+            if (i === n) {
+                return isValid(splits);
+            }
+            let num = 0;
+            for (let j = i; j < n; j++) {
+                num = num * 10 + Number(s[j]);
+                splits.push(num);
+                if (dfs(j + 1, splits)) {
+                    return true;
+                }
+                splits.pop();
+            }
+            return false;
+        };
+
+        return dfs(0, []);
     }
 }
 ```
@@ -585,7 +624,7 @@ class Solution {
             }
             var num: Int64 = 0
             for j in index..<n {
-                num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                num = num &* 10 &+ Int64(chars[j].asciiValue! - Character("0").asciiValue!)
                 if num + 1 == prev && dfs(j + 1, num) {
                     return true
                 }
@@ -595,7 +634,7 @@ class Solution {
 
         var val: Int64 = 0
         for i in 0..<(n - 1) {
-            val = val * 10 + Int64(chars[i].asciiValue! - Character("0").asciiValue!)
+            val = val &* 10 &+ Int64(chars[i].asciiValue! - Character("0").asciiValue!)
             if dfs(i + 1, val) {
                 return true
             }
@@ -635,6 +674,42 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    splitString(s: string): boolean {
+        const n = s.length;
+
+        const dfs = (index: number, prev: number): boolean => {
+            if (index === n) {
+                return true;
+            }
+            let num = 0;
+            for (let j = index; j < n; j++) {
+                num = num * 10 + Number(s[j]);
+                if (num + 1 === prev && dfs(j + 1, num)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        let val = 0;
+        for (let i = 0; i < n - 1; i++) {
+            val = val * 10 + Number(s[i]);
+            if (dfs(i + 1, val)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ```
@@ -907,7 +982,7 @@ class Solution {
             }
             var num: Int64 = 0
             for j in index..<n {
-                num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                num = num &* 10 &+ Int64(chars[j].asciiValue! - Character("0").asciiValue!)
                 if num + 1 == prev && dfs(j + 1, num) {
                     return true
                 }
@@ -920,7 +995,7 @@ class Solution {
 
         var val: Int64 = 0
         for i in 0..<(n - 1) {
-            val = val * 10 + Int64(chars[i].asciiValue! - Character("0").asciiValue!)
+            val = val &* 10 &+ Int64(chars[i].asciiValue! - Character("0").asciiValue!)
             if dfs(i + 1, val) {
                 return true
             }
@@ -963,6 +1038,45 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    splitString(s: string): boolean {
+        const n = s.length;
+
+        const dfs = (index: number, prev: number): boolean => {
+            if (index === n) {
+                return true;
+            }
+            let num = 0;
+            for (let j = index; j < n; j++) {
+                num = num * 10 + Number(s[j]);
+                if (num + 1 === prev && dfs(j + 1, num)) {
+                    return true;
+                }
+                if (num >= prev) {
+                    break;
+                }
+            }
+            return false;
+        };
+
+        let val = 0;
+        for (let i = 0; i < n - 1; i++) {
+            val = val * 10 + Number(s[i]);
+            if (dfs(i + 1, val)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ```
@@ -1249,7 +1363,7 @@ class Solution {
         var val: Int64 = 0
 
         for i in 0..<(n - 1) {
-            val = val * 10 + Int64(chars[i].asciiValue! - Character("0").asciiValue!)
+            val = val &* 10 &+ Int64(chars[i].asciiValue! - Character("0").asciiValue!)
             stack.append((i + 1, val))
 
             while !stack.isEmpty {
@@ -1257,7 +1371,7 @@ class Solution {
                 var num: Int64 = 0
 
                 for j in index..<n {
-                    num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                    num = num &* 10 &+ Int64(chars[j].asciiValue! - Character("0").asciiValue!)
                     if num + 1 == prev {
                         if j + 1 == n {
                             return true
@@ -1304,6 +1418,44 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    splitString(s: string): boolean {
+        const n = s.length;
+        let stack: number[][] = [];
+        let val = 0;
+
+        for (let i = 0; i < n - 1; i++) {
+            val = val * 10 + Number(s[i]);
+            stack.push([i + 1, val]);
+
+            while (stack.length) {
+                let [index, prev] = stack.pop()!;
+                let num = 0;
+
+                for (let j = index; j < n; j++) {
+                    num = num * 10 + Number(s[j]);
+                    if (num + 1 === prev) {
+                        if (j + 1 === n) {
+                            return true;
+                        }
+                        stack.push([j + 1, num]);
+                    } else if (num >= prev) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
 ```

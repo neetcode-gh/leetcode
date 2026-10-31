@@ -348,6 +348,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    islandPerimeter(grid: number[][]): number {
+        const rows = grid.length,
+            cols = grid[0].length;
+        const visited: boolean[][] = Array.from({ length: rows }, () =>
+            Array(cols).fill(false),
+        );
+
+        const dfs = (i: number, j: number): number => {
+            if (i < 0 || j < 0 || i >= rows || j >= cols || grid[i][j] === 0) {
+                return 1;
+            }
+            if (visited[i][j]) {
+                return 0;
+            }
+
+            visited[i][j] = true;
+            return (
+                dfs(i, j + 1) + dfs(i + 1, j) + dfs(i, j - 1) + dfs(i - 1, j)
+            );
+        };
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                if (grid[i][j] === 1) {
+                    return dfs(i, j);
+                }
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -766,6 +805,65 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    islandPerimeter(grid: number[][]): number {
+        const rows = grid.length,
+            cols = grid[0].length;
+        const visited: boolean[][] = Array.from({ length: rows }, () =>
+            Array(cols).fill(false),
+        );
+        const directions = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+        ];
+
+        const bfs = (r: number, c: number): number => {
+            const queue = new Queue([[r, c]]);
+            visited[r][c] = true;
+            let perimeter = 0;
+            while (!queue.isEmpty()) {
+                const [x, y]: number[] = queue.pop();
+
+                for (const [dx, dy] of directions) {
+                    const nx = x + dx,
+                        ny = y + dy;
+
+                    if (
+                        nx < 0 ||
+                        ny < 0 ||
+                        nx >= rows ||
+                        ny >= cols ||
+                        grid[nx][ny] === 0
+                    ) {
+                        perimeter++;
+                    } else if (!visited[nx][ny]) {
+                        visited[nx][ny] = true;
+                        queue.push([nx, ny]);
+                    }
+                }
+            }
+            return perimeter;
+        };
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                if (grid[i][j] === 1) {
+                    return bfs(i, j);
+                }
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -978,6 +1076,31 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    islandPerimeter(grid: number[][]): number {
+        const m = grid.length,
+            n = grid[0].length;
+        let res = 0;
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                if (grid[i][j] === 1) {
+                    res += i + 1 >= m || grid[i + 1][j] === 0 ? 1 : 0;
+                    res += j + 1 >= n || grid[i][j + 1] === 0 ? 1 : 0;
+                    res += i - 1 < 0 || grid[i - 1][j] === 0 ? 1 : 0;
+                    res += j - 1 < 0 || grid[i][j - 1] === 0 ? 1 : 0;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1216,6 +1339,34 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    islandPerimeter(grid: number[][]): number {
+        const m = grid.length,
+            n = grid[0].length;
+        let res = 0;
+        for (let r = 0; r < m; r++) {
+            for (let c = 0; c < n; c++) {
+                if (grid[r][c] == 1) {
+                    res += 4;
+                    if (r > 0 && grid[r - 1][c] == 1) {
+                        res -= 2;
+                    }
+                    if (c > 0 && grid[r][c - 1] == 1) {
+                        res -= 2;
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```

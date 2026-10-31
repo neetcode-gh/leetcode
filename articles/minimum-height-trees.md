@@ -361,6 +361,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findMinHeightTrees(n: number, edges: number[][]): number[] {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const dfs = (node: number, parent: number): number => {
+            let hgt = 0;
+            for (const nei of adj[node]) {
+                if (nei === parent) continue;
+                hgt = Math.max(hgt, 1 + dfs(nei, node));
+            }
+            return hgt;
+        };
+
+        let minHgt = n;
+        const result: number[] = [];
+        for (let i = 0; i < n; i++) {
+            const curHgt = dfs(i, -1);
+            if (curHgt === minHgt) {
+                result.push(i);
+            } else if (curHgt < minHgt) {
+                result.length = 0;
+                result.push(i);
+                minHgt = curHgt;
+            }
+        }
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -951,6 +991,74 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findMinHeightTrees(n: number, edges: number[][]): number[] {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        // top two heights for each node
+        const dp: number[][] = Array.from({ length: n }, () => [0, 0]);
+
+        const dfs = (node: number, parent: number): void => {
+            for (const nei of adj[node]) {
+                if (nei === parent) continue;
+                dfs(nei, node);
+                const curHgt = 1 + dp[nei][0];
+                if (curHgt > dp[node][0]) {
+                    dp[node][1] = dp[node][0];
+                    dp[node][0] = curHgt;
+                } else if (curHgt > dp[node][1]) {
+                    dp[node][1] = curHgt;
+                }
+            }
+        };
+
+        const dfs1 = (node: number, parent: number, topHgt: number): void => {
+            if (topHgt > dp[node][0]) {
+                dp[node][1] = dp[node][0];
+                dp[node][0] = topHgt;
+            } else if (topHgt > dp[node][1]) {
+                dp[node][1] = topHgt;
+            }
+
+            for (const nei of adj[node]) {
+                if (nei === parent) continue;
+                const toChild =
+                    1 +
+                    (dp[node][0] === 1 + dp[nei][0]
+                        ? dp[node][1]
+                        : dp[node][0]);
+                dfs1(nei, node, toChild);
+            }
+        };
+
+        dfs(0, -1);
+        dfs1(0, -1, 0);
+
+        let minHgt = n;
+        const res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            minHgt = Math.min(minHgt, dp[i][0]);
+        }
+        for (let i = 0; i < n; i++) {
+            if (minHgt === dp[i][0]) {
+                res.push(i);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1531,6 +1639,74 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findMinHeightTrees(n: number, edges: number[][]): number[] {
+        if (n === 1) return [0];
+
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const dfs = (node: number, parent: number): number[] => {
+            let farthestNode = node;
+            let maxDistance = 0;
+
+            for (const neighbor of adj[node]) {
+                if (neighbor !== parent) {
+                    const [farthest, dist] = dfs(neighbor, node);
+                    if (dist + 1 > maxDistance) {
+                        maxDistance = dist + 1;
+                        farthestNode = farthest;
+                    }
+                }
+            }
+            return [farthestNode, maxDistance];
+        };
+
+        const findCentroids = (
+            node: number,
+            parent: number,
+            centroids: number[],
+        ): boolean => {
+            if (node === nodeB) {
+                centroids.push(node);
+                return true;
+            }
+
+            for (const neighbor of adj[node]) {
+                if (neighbor !== parent) {
+                    if (findCentroids(neighbor, node, centroids)) {
+                        centroids.push(node);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        const [nodeA] = dfs(0, -1);
+        const [nodeB, diameter] = dfs(nodeA, -1);
+
+        const centroids: number[] = [];
+        findCentroids(nodeA, -1, centroids);
+
+        const L = centroids.length;
+        return diameter % 2 === 0
+            ? [centroids[Math.floor(L / 2)]]
+            : [centroids[Math.floor(L / 2) - 1], centroids[Math.floor(L / 2)]];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1941,6 +2117,53 @@ impl Solution {
         }
 
         vec![]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findMinHeightTrees(n: number, edges: number[][]): number[] {
+        if (n === 1) return [0];
+
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [n1, n2] of edges) {
+            adj[n1].push(n2);
+            adj[n2].push(n1);
+        }
+
+        const edgeCnt: number[] = Array(n).fill(0);
+        const leaves = new Queue();
+
+        for (let i = 0; i < n; i++) {
+            edgeCnt[i] = adj[i].length;
+            if (adj[i].length === 1) {
+                leaves.push(i);
+            }
+        }
+
+        while (!leaves.isEmpty()) {
+            if (n <= 2) return leaves.toArray();
+            const size: number = leaves.size();
+            for (let i = 0; i < size; i++) {
+                const node: number = leaves.pop();
+                n--;
+                for (const nei of adj[node]) {
+                    edgeCnt[nei]--;
+                    if (edgeCnt[nei] === 1) {
+                        leaves.push(nei);
+                    }
+                }
+            }
+        }
+
+        return [];
     }
 }
 ```

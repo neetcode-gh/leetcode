@@ -156,6 +156,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    hasDuplicate(nums: number[]): boolean {
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[i] === nums[j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,8 +302,8 @@ class Solution {
 ```swift
 class Solution {
     func hasDuplicate(_ nums: [Int]) -> Bool {
-        var nums = nums.sorted()
-        for i in 1..<nums.count {
+        let nums = nums.sorted()
+        for i in stride(from: 1, to: nums.count, by: 1) {
             if nums[i] == nums[i - 1] {
                 return true
             }
@@ -304,6 +323,24 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    hasDuplicate(nums: number[]): boolean {
+        nums.sort((a, b) => a - b);
+        for (let i = 1; i < nums.length; i++) {
+            if (nums[i] === nums[i - 1]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ```
@@ -470,6 +507,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    hasDuplicate(nums: number[]): boolean {
+        const seen = new Set<number>();
+        for (const num of nums) {
+            if (seen.has(num)) {
+                return true;
+            }
+            seen.add(num);
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +627,18 @@ impl Solution {
     pub fn has_duplicate(nums: Vec<i32>) -> bool {
         let set: HashSet<i32> = nums.iter().copied().collect();
         set.len() < nums.len()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    hasDuplicate(nums: number[]): boolean {
+        return new Set(nums).size < nums.length;
     }
 }
 ```

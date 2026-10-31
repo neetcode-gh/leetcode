@@ -239,6 +239,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    countSubstrings(s: string): number {
+        let res = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            for (let j = i; j < s.length; j++) {
+                let l = i,
+                    r = j;
+                while (l < r && s[l] === s[r]) {
+                    l++;
+                    r--;
+                }
+                res += l >= r ? 1 : 0;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +495,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    countSubstrings(s: string): number {
+        let res = 0;
+        const n = s.length;
+        const dp: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let j = i; j < n; j++) {
+                if (s[i] === s[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                    res++;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -784,6 +837,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    countSubstrings(s: string): number {
+        let res = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            // odd length
+            let l = i;
+            let r = i;
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
+                res++;
+                l--;
+                r++;
+            }
+
+            // even length
+            l = i;
+            r = i + 1;
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
+                res++;
+                l--;
+                r++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1048,6 +1135,39 @@ impl Solution {
             r += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    countSubstrings(s: string): number {
+        let res = 0;
+        for (let i = 0; i < s.length; i++) {
+            res += this.countPali(s, i, i);
+            res += this.countPali(s, i, i + 1);
+        }
+        return res;
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    countPali(s: string, l: number, r: number): number {
+        let res = 0;
+        while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
+            res++;
+            l--;
+            r++;
+        }
+        return res;
     }
 }
 ```
@@ -1421,6 +1541,50 @@ impl Solution {
             }
         }
         p
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number[]}
+     */
+    manacher(s: string): number[] {
+        const t = '#' + s.split('').join('#') + '#';
+        const n = t.length;
+        const p: number[] = new Array(n).fill(0);
+        let l = 0,
+            r = 0;
+        for (let i = 0; i < n; i++) {
+            p[i] = i < r ? Math.min(r - i, p[l + (r - i)]) : 0;
+            while (
+                i + p[i] + 1 < n &&
+                i - p[i] - 1 >= 0 &&
+                t[i + p[i] + 1] === t[i - p[i] - 1]
+            ) {
+                p[i]++;
+            }
+            if (i + p[i] > r) {
+                l = i - p[i];
+                r = i + p[i];
+            }
+        }
+        return p;
+    }
+
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    countSubstrings(s: string): number {
+        const p = this.manacher(s);
+        let res = 0;
+        for (let i of p) {
+            res += Math.floor((i + 1) / 2);
+        }
+        return res;
     }
 }
 ```

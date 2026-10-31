@@ -138,6 +138,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findPeakElement(nums: number[]): number {
+        for (let i = 0; i < nums.length - 1; i++) {
+            if (nums[i] > nums[i + 1]) {
+                return i;
+            }
+        }
+        return nums.length - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -352,6 +369,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findPeakElement(nums: number[]): number {
+        let l = 0,
+            r = nums.length - 1;
+
+        while (l <= r) {
+            let m = Math.floor(l + (r - l) / 2);
+            if (m > 0 && nums[m] < nums[m - 1]) {
+                r = m - 1;
+            } else if (m < nums.length - 1 && nums[m] < nums[m + 1]) {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -552,6 +595,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findPeakElement(nums: number[]): number {
+        const binarySearch = (l: number, r: number): number => {
+            if (l === r) {
+                return l;
+            }
+            let m = Math.floor((l + r) / 2);
+            if (nums[m] > nums[m + 1]) {
+                return binarySearch(l, m);
+            } else {
+                return binarySearch(m + 1, r);
+            }
+        };
+
+        return binarySearch(0, nums.length - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -745,6 +812,30 @@ impl Solution {
         }
 
         l as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findPeakElement(nums: number[]): number {
+        let l = 0,
+            r = nums.length - 1;
+
+        while (l < r) {
+            let m = (l + r) >> 1;
+            if (nums[m] > nums[m + 1]) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return l;
     }
 }
 ```

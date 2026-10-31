@@ -27,58 +27,58 @@ class FileSystem:
         def __init__(self):
             self.dirs = {}
             self.files = {}
-    
+
     def __init__(self):
         self.root = self.Dir()
-    
+
     def ls(self, path: str) -> List[str]:
         t = self.root
         files = []
-        
+
         if path != "/":
             d = path.split("/")
 
             for i in range(1, len(d) - 1):
                 t = t.dirs[d[i]]
-            
+
             if d[-1] in t.files:
                 files.append(d[-1])
                 return files
             else:
                 t = t.dirs[d[-1]]
-        
+
         files.extend(t.dirs.keys())
         files.extend(t.files.keys())
         files.sort()
         return files
-    
+
     def mkdir(self, path: str) -> None:
         t = self.root
         d = path.split("/")
-        
+
         for i in range(1, len(d)):
             if d[i] not in t.dirs:
                 t.dirs[d[i]] = self.Dir()
             t = t.dirs[d[i]]
-    
+
     def addContentToFile(self, filePath: str, content: str) -> None:
         t = self.root
         d = filePath.split("/")
-        
+
         for i in range(1, len(d) - 1):
             t = t.dirs[d[i]]
-        
+
         if d[-1] not in t.files:
             t.files[d[-1]] = ""
         t.files[d[-1]] += content
-    
+
     def readContentFromFile(self, filePath: str) -> str:
         t = self.root
         d = filePath.split("/")
-        
+
         for i in range(1, len(d) - 1):
             t = t.dirs[d[i]]
-        
+
         return t.files[d[-1]]
 ```
 
@@ -155,13 +155,13 @@ private:
         unordered_map<string, Dir*> dirs;
         unordered_map<string, string> files;
     };
-    
+
     Dir* root;
-    
+
     vector<string> split(const string& path) {
         vector<string> result;
         string current = "";
-        
+
         for (char c : path) {
             if (c == '/') {
                 if (!current.empty()) {
@@ -175,26 +175,26 @@ private:
         if (!current.empty()) {
             result.push_back(current);
         }
-        
+
         return result;
     }
-    
+
 public:
     FileSystem() {
         root = new Dir();
     }
-    
+
     vector<string> ls(string path) {
         Dir* t = root;
         vector<string> files;
-        
+
         if (path != "/") {
             vector<string> d = split(path);
-            
+
             for (int i = 0; i < d.size() - 1; i++) {
                 t = t->dirs[d[i]];
             }
-            
+
             if (t->files.find(d[d.size() - 1]) != t->files.end()) {
                 files.push_back(d[d.size() - 1]);
                 return files;
@@ -202,23 +202,23 @@ public:
                 t = t->dirs[d[d.size() - 1]];
             }
         }
-        
+
         for (auto& pair : t->dirs) {
             files.push_back(pair.first);
         }
-        
+
         for (auto& pair : t->files) {
             files.push_back(pair.first);
         }
-        
+
         sort(files.begin(), files.end());
         return files;
     }
-    
+
     void mkdir(string path) {
         Dir* t = root;
         vector<string> d = split(path);
-        
+
         for (int i = 0; i < d.size(); i++) {
             if (t->dirs.find(d[i]) == t->dirs.end()) {
                 t->dirs[d[i]] = new Dir();
@@ -226,26 +226,26 @@ public:
             t = t->dirs[d[i]];
         }
     }
-    
+
     void addContentToFile(string filePath, string content) {
         Dir* t = root;
         vector<string> d = split(filePath);
-        
+
         for (int i = 0; i < d.size() - 1; i++) {
             t = t->dirs[d[i]];
         }
-        
+
         t->files[d[d.size() - 1]] += content;
     }
-    
+
     string readContentFromFile(string filePath) {
         Dir* t = root;
         vector<string> d = split(filePath);
-        
+
         for (int i = 0; i < d.size() - 1; i++) {
             t = t->dirs[d[i]];
         }
-        
+
         return t->files[d[d.size() - 1]];
     }
 };
@@ -259,22 +259,22 @@ class FileSystem {
             files: new Map()
         };
     }
-    
-    /** 
+
+    /**
      * @param {string} path
      * @return {string[]}
      */
     ls(path) {
         let t = this.root;
         let files = [];
-        
+
         if (path !== "/") {
             const d = path.split("/").filter(x => x !== "");
-            
+
             for (let i = 0; i < d.length - 1; i++) {
                 t = t.dirs.get(d[i]);
             }
-            
+
             if (t.files.has(d[d.length - 1])) {
                 files.push(d[d.length - 1]);
                 return files;
@@ -282,21 +282,21 @@ class FileSystem {
                 t = t.dirs.get(d[d.length - 1]);
             }
         }
-        
+
         files.push(...t.dirs.keys());
         files.push(...t.files.keys());
         files.sort();
         return files;
     }
-    
-    /** 
+
+    /**
      * @param {string} path
      * @return {void}
      */
     mkdir(path) {
         let t = this.root;
         const d = path.split("/").filter(x => x !== "");
-        
+
         for (let i = 0; i < d.length; i++) {
             if (!t.dirs.has(d[i])) {
                 t.dirs.set(d[i], {
@@ -307,37 +307,37 @@ class FileSystem {
             t = t.dirs.get(d[i]);
         }
     }
-    
-    /** 
-     * @param {string} filePath 
+
+    /**
+     * @param {string} filePath
      * @param {string} content
      * @return {void}
      */
     addContentToFile(filePath, content) {
         let t = this.root;
         const d = filePath.split("/").filter(x => x !== "");
-        
+
         for (let i = 0; i < d.length - 1; i++) {
             t = t.dirs.get(d[i]);
         }
-        
+
         const fileName = d[d.length - 1];
         const currentContent = t.files.get(fileName) || "";
         t.files.set(fileName, currentContent + content);
     }
-    
-    /** 
+
+    /**
      * @param {string} filePath
      * @return {string}
      */
     readContentFromFile(filePath) {
         let t = this.root;
         const d = filePath.split("/").filter(x => x !== "");
-        
+
         for (let i = 0; i < d.length - 1; i++) {
             t = t.dirs.get(d[i]);
         }
-        
+
         return t.files.get(d[d.length - 1]);
     }
 }
@@ -356,7 +356,7 @@ public class FileSystem {
         root = new Dir();
     }
 
-    public IList<string> Ls(string path) {
+    public List<string> Ls(string path) {
         Dir t = root;
         List<string> files = new List<string>();
 
@@ -636,7 +636,6 @@ class FileSystem {
 }
 ```
 
-
 ```rust
 struct Dir {
     dirs: HashMap<String, Dir>,
@@ -711,6 +710,105 @@ impl FileSystem {
             t = t.dirs.get(parts[i]).unwrap();
         }
         t.files.get(parts[parts.len() - 1]).unwrap().clone()
+    }
+}
+```
+
+```typescript
+interface Dir {
+    dirs: Map<string, Dir>;
+    files: Map<string, string>;
+}
+
+class FileSystem {
+    private root: Dir;
+
+    constructor() {
+        this.root = {
+            dirs: new Map(),
+            files: new Map()
+        };
+    }
+
+    /**
+     * @param {string} path
+     * @return {string[]}
+     */
+    ls(path: string): string[] {
+        let t = this.root;
+        let files: string[] = [];
+
+        if (path !== "/") {
+            const d = path.split("/").filter(x => x !== "");
+
+            for (let i = 0; i < d.length - 1; i++) {
+                t = t.dirs.get(d[i])!;
+            }
+
+            if (t.files.has(d[d.length - 1])) {
+                files.push(d[d.length - 1]);
+                return files;
+            } else {
+                t = t.dirs.get(d[d.length - 1])!;
+            }
+        }
+
+        files.push(...t.dirs.keys());
+        files.push(...t.files.keys());
+        files.sort();
+        return files;
+    }
+
+    /**
+     * @param {string} path
+     * @return {void}
+     */
+    mkdir(path: string): void {
+        let t = this.root;
+        const d = path.split("/").filter(x => x !== "");
+
+        for (let i = 0; i < d.length; i++) {
+            if (!t.dirs.has(d[i])) {
+                t.dirs.set(d[i], {
+                    dirs: new Map(),
+                    files: new Map()
+                });
+            }
+            t = t.dirs.get(d[i])!;
+        }
+    }
+
+    /**
+     * @param {string} filePath
+     * @param {string} content
+     * @return {void}
+     */
+    addContentToFile(filePath: string, content: string): void {
+        let t = this.root;
+        const d = filePath.split("/").filter(x => x !== "");
+
+        for (let i = 0; i < d.length - 1; i++) {
+            t = t.dirs.get(d[i])!;
+        }
+
+        const fileName = d[d.length - 1];
+        const currentContent = t.files.get(fileName) || "";
+        t.files.set(fileName, currentContent + content);
+    }
+
+    /**
+     * @param {string} filePath
+     * @return {string}
+     */
+    readContentFromFile(filePath: string): string {
+        let t = this.root;
+        const d = filePath.split("/").filter(x => x !== "");
+
+        for (let i = 0; i < d.length - 1; i++) {
+            t = t.dirs.get(d[i])!;
+        }
+
+        return t.files.get(d[d.length - 1])!;
     }
 }
 ```
@@ -819,6 +917,57 @@ Instead of maintaining separate maps for directories and files, we can use a sin
 
 ::tabs-start
 
+```python
+class FileSystem:
+    class File:
+        def __init__(self):
+            self.isfile = False
+            self.files = {}
+            self.content = ""
+
+    def __init__(self):
+        self.root = self.File()
+
+    def ls(self, path: str) -> List[str]:
+        t = self.root
+        files = []
+        if path != "/":
+            d = path.split("/")
+            for i in range(1, len(d)):
+                t = t.files[d[i]]
+            if t.isfile:
+                files.append(d[-1])
+                return files
+        res_files = sorted(t.files.keys())
+        return res_files
+
+    def mkdir(self, path: str) -> None:
+        t = self.root
+        d = path.split("/")
+        for i in range(1, len(d)):
+            if d[i] not in t.files:
+                t.files[d[i]] = self.File()
+            t = t.files[d[i]]
+
+    def addContentToFile(self, filePath: str, content: str) -> None:
+        t = self.root
+        d = filePath.split("/")
+        for i in range(1, len(d) - 1):
+            t = t.files[d[i]]
+        if d[-1] not in t.files:
+            t.files[d[-1]] = self.File()
+        t = t.files[d[-1]]
+        t.isfile = True
+        t.content += content
+
+    def readContentFromFile(self, filePath: str) -> str:
+        t = self.root
+        d = filePath.split("/")
+        for i in range(1, len(d) - 1):
+            t = t.files[d[i]]
+        return t.files[d[-1]].content
+```
+
 ```java
 class FileSystem {
 
@@ -827,7 +976,7 @@ class FileSystem {
         HashMap < String, File > files = new HashMap < > ();
         String content = "";
     }
-    
+
     File root;
     public FileSystem() {
         root = new File();
@@ -883,57 +1032,6 @@ class FileSystem {
         return t.files.get(d[d.length - 1]).content;
     }
 }
-```
-
-```python
-class FileSystem:
-    class File:
-        def __init__(self):
-            self.isfile = False
-            self.files = {}
-            self.content = ""
-
-    def __init__(self):
-        self.root = self.File()
-
-    def ls(self, path: str) -> List[str]:
-        t = self.root
-        files = []
-        if path != "/":
-            d = path.split("/")
-            for i in range(1, len(d)):
-                t = t.files[d[i]]
-            if t.isfile:
-                files.append(d[-1])
-                return files
-        res_files = sorted(t.files.keys())
-        return res_files
-
-    def mkdir(self, path: str) -> None:
-        t = self.root
-        d = path.split("/")
-        for i in range(1, len(d)):
-            if d[i] not in t.files:
-                t.files[d[i]] = self.File()
-            t = t.files[d[i]]
-
-    def addContentToFile(self, filePath: str, content: str) -> None:
-        t = self.root
-        d = filePath.split("/")
-        for i in range(1, len(d) - 1):
-            t = t.files[d[i]]
-        if d[-1] not in t.files:
-            t.files[d[-1]] = self.File()
-        t = t.files[d[-1]]
-        t.isfile = True
-        t.content += content
-
-    def readContentFromFile(self, filePath: str) -> str:
-        t = self.root
-        d = filePath.split("/")
-        for i in range(1, len(d) - 1):
-            t = t.files[d[i]]
-        return t.files[d[-1]].content
 ```
 
 ```cpp
@@ -1111,7 +1209,7 @@ public class FileSystem {
         root = new File();
     }
 
-    public IList<string> Ls(string path) {
+    public List<string> Ls(string path) {
         File t = root;
         List<string> files = new List<string>();
         if (path != "/") {
@@ -1357,7 +1455,6 @@ class FileSystem {
 }
 ```
 
-
 ```rust
 struct FileNode {
     is_file: bool,
@@ -1431,6 +1528,84 @@ impl FileSystem {
             .unwrap()
             .content
             .clone()
+    }
+}
+```
+
+```typescript
+interface FileNode {
+    isfile: boolean;
+    files: Map<string, FileNode>;
+    content: string;
+}
+
+class FileSystem {
+    private root: FileNode;
+
+    constructor() {
+        this.root = {
+            isfile: false,
+            files: new Map(),
+            content: ""
+        };
+    }
+
+    ls(path: string): string[] {
+        let t = this.root;
+        let files: string[] = [];
+        if (path !== "/") {
+            const d = path.split("/").filter(x => x !== "");
+            for (let i = 0; i < d.length; i++) {
+                t = t.files.get(d[i])!;
+            }
+            if (t.isfile) {
+                return [d[d.length - 1]];
+            }
+        }
+        files = [...t.files.keys()].sort();
+        return files;
+    }
+
+    mkdir(path: string): void {
+        let t = this.root;
+        const d = path.split("/").filter(x => x !== "");
+        for (let i = 0; i < d.length; i++) {
+            if (!t.files.has(d[i])) {
+                t.files.set(d[i], {
+                    isfile: false,
+                    files: new Map(),
+                    content: ""
+                });
+            }
+            t = t.files.get(d[i])!;
+        }
+    }
+
+    addContentToFile(filePath: string, content: string): void {
+        let t = this.root;
+        const d = filePath.split("/").filter(x => x !== "");
+        for (let i = 0; i < d.length - 1; i++) {
+            t = t.files.get(d[i])!;
+        }
+        if (!t.files.has(d[d.length - 1])) {
+            t.files.set(d[d.length - 1], {
+                isfile: false,
+                files: new Map(),
+                content: ""
+            });
+        }
+        t = t.files.get(d[d.length - 1])!;
+        t.isfile = true;
+        t.content += content;
+    }
+
+    readContentFromFile(filePath: string): string {
+        let t = this.root;
+        const d = filePath.split("/").filter(x => x !== "");
+        for (let i = 0; i < d.length - 1; i++) {
+            t = t.files.get(d[i])!;
+        }
+        return t.files.get(d[d.length - 1])!.content;
     }
 }
 ```

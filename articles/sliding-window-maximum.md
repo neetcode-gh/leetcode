@@ -197,6 +197,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    maxSlidingWindow(nums: number[], k: number): number[] {
+        let output: number[] = [];
+
+        for (let i = 0; i <= nums.length - k; i++) {
+            let maxi = nums[i];
+            for (let j = i; j < i + k; j++) {
+                maxi = Math.max(maxi, nums[j]);
+            }
+            output.push(maxi);
+        }
+
+        return output;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -759,6 +782,81 @@ impl Solution {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @constructor
+     * @param {number} N
+     * @param {number[]} A
+     */
+    constructor(N: number, A: number[]) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = [];
+        this.build(N, A);
+    }
+
+    /**
+     * @param {number} N
+     * @param {number[]} A
+     * @return {void}
+     */
+    build(N: number, A: number[]): void {
+        this.tree = new Array(2 * this.n).fill(-Infinity);
+        for (let i = 0; i < N; i++) {
+            this.tree[this.n + i] = A[i];
+        }
+        for (let i = this.n - 1; i > 0; i--) {
+            this.tree[i] = Math.max(this.tree[i << 1], this.tree[(i << 1) | 1]);
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        let res = -Infinity;
+        l += this.n;
+        r += this.n + 1;
+
+        while (l < r) {
+            if (l & 1) res = Math.max(res, this.tree[l++]);
+            if (r & 1) res = Math.max(res, this.tree[--r]);
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    maxSlidingWindow(nums: number[], k: number): number[] {
+        let n = nums.length;
+        let segTree = new SegmentTree(n, nums);
+        let output: number[] = [];
+
+        for (let i = 0; i <= n - k; i++) {
+            output.push(segTree.query(i, i + k - 1));
+        }
+
+        return output;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1009,6 +1107,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    maxSlidingWindow(nums: number[], k: number): number[] {
+        const heap = new MaxPriorityQueue((x: number[]) => x[0]);
+        const output: number[] = [];
+        const length = nums.length;
+
+        for (let i = 0; i < length; i++) {
+            heap.enqueue([nums[i], i]);
+
+            if (i >= k - 1) {
+                while (heap.front()[1] <= i - k) {
+                    heap.dequeue();
+                }
+                output.push(heap.front()[0]);
+            }
+        }
+
+        return output;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1233,42 +1359,42 @@ public class Solution {
 
 ```go
 func maxSlidingWindow(nums []int, k int) []int {
-	n := len(nums)
-	leftMax := make([]int, n)
-	rightMax := make([]int, n)
+    n := len(nums)
+    leftMax := make([]int, n)
+    rightMax := make([]int, n)
 
-	leftMax[0] = nums[0]
-	rightMax[n-1] = nums[n-1]
+    leftMax[0] = nums[0]
+    rightMax[n-1] = nums[n-1]
 
-	for i := 1; i < n; i++ {
-		if i%k == 0 {
-			leftMax[i] = nums[i]
-		} else {
-			leftMax[i] = max(leftMax[i-1], nums[i])
-		}
-	}
+    for i := 1; i < n; i++ {
+        if i%k == 0 {
+            leftMax[i] = nums[i]
+        } else {
+            leftMax[i] = max(leftMax[i-1], nums[i])
+        }
+    }
 
-	for i := 1; i < n; i++ {
-		if (n-1-i)%k == 0 {
-			rightMax[n-1-i] = nums[n-1-i]
-		} else {
-			rightMax[n-1-i] = max(rightMax[n-i], nums[n-1-i])
-		}
-	}
+    for i := 1; i < n; i++ {
+        if (n-1-i)%k == 0 {
+            rightMax[n-1-i] = nums[n-1-i]
+        } else {
+            rightMax[n-1-i] = max(rightMax[n-i], nums[n-1-i])
+        }
+    }
 
-	output := make([]int, n-k+1)
+    output := make([]int, n-k+1)
 
-	for i := 0; i < n-k+1; i++ {
-		output[i] = max(leftMax[i+k-1], rightMax[i])
-	}
-	return output
+    for i := 0; i < n-k+1; i++ {
+        output[i] = max(leftMax[i+k-1], rightMax[i])
+    }
+    return output
 }
 
 func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+    if a > b {
+        return a
+    }
+    return b
 }
 ```
 
@@ -1373,6 +1499,49 @@ impl Solution {
         }
 
         output
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    maxSlidingWindow(nums: number[], k: number): number[] {
+        const n = nums.length;
+        const leftMax: number[] = new Array(n);
+        const rightMax: number[] = new Array(n);
+
+        leftMax[0] = nums[0];
+        rightMax[n - 1] = nums[n - 1];
+
+        for (let i = 1; i < n; i++) {
+            if (i % k === 0) {
+                leftMax[i] = nums[i];
+            } else {
+                leftMax[i] = Math.max(leftMax[i - 1], nums[i]);
+            }
+
+            if ((n - 1 - i) % k === 0) {
+                rightMax[n - 1 - i] = nums[n - 1 - i];
+            } else {
+                rightMax[n - 1 - i] = Math.max(
+                    rightMax[n - i],
+                    nums[n - 1 - i],
+                );
+            }
+        }
+
+        const output: number[] = new Array(n - k + 1);
+
+        for (let i = 0; i < n - k + 1; i++) {
+            output[i] = Math.max(leftMax[i + k - 1], rightMax[i]);
+        }
+
+        return output;
     }
 }
 ```
@@ -1599,7 +1768,7 @@ class Solution {
         var r = 0
 
         while (r < nums.size) {
-            while (q.isNotEmpty() && nums[q.last()] < nums[r]) {
+            while (q.isNotEmpty() && nums[q.peekLast()] < nums[r]) {
                 q.removeLast()
             }
             q.addLast(r)
@@ -1679,6 +1848,42 @@ impl Solution {
         }
 
         output
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    maxSlidingWindow(nums: number[], k: number): number[] {
+        const n = nums.length;
+        const output: number[] = new Array(n - k + 1);
+        const q = new Deque();
+        let l = 0,
+            r = 0;
+
+        while (r < n) {
+            while (q.size() && nums[q.back()] < nums[r]) {
+                q.popBack();
+            }
+            q.pushBack(r);
+
+            if (l > q.front()) {
+                q.popFront();
+            }
+
+            if (r + 1 >= k) {
+                output[l] = nums[q.front()];
+                l++;
+            }
+            r++;
+        }
+
+        return output;
     }
 }
 ```

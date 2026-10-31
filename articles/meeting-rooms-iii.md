@@ -371,12 +371,51 @@ impl Solution {
             }
         }
 
-        meeting_count
-            .iter()
-            .enumerate()
-            .max_by_key(|&(_, &count)| count)
-            .unwrap()
-            .0 as i32
+        let mut res = 0;
+        for i in 1..meeting_count.len() {
+            if meeting_count[i] > meeting_count[res] {
+                res = i;
+            }
+        }
+        res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @return {number}
+     */
+    mostBooked(n: number, meetings: number[][]): number {
+        meetings.sort((a, b) => a[0] - b[0]);
+        const rooms: number[] = new Array(n).fill(0); // end times of meetings in rooms
+        const meetingCount: number[] = new Array(n).fill(0);
+
+        for (const [start, end] of meetings) {
+            let minRoom = 0;
+            let found = false;
+
+            for (let i = 0; i < n; i++) {
+                if (rooms[i] <= start) {
+                    meetingCount[i]++;
+                    rooms[i] = end;
+                    found = true;
+                    break;
+                }
+                if (rooms[minRoom] > rooms[i]) {
+                    minRoom = i;
+                }
+            }
+
+            if (found) continue;
+            meetingCount[minRoom]++;
+            rooms[minRoom] += end - start;
+        }
+
+        return meetingCount.indexOf(Math.max(...meetingCount));
     }
 }
 ```
@@ -829,12 +868,54 @@ impl Solution {
             count[room] += 1;
         }
 
-        count
-            .iter()
-            .enumerate()
-            .max_by_key(|&(_, &c)| c)
-            .unwrap()
-            .0 as i32
+        let mut res = 0;
+        for i in 1..count.len() {
+            if count[i] > count[res] {
+                res = i;
+            }
+        }
+        res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @return {number}
+     */
+    mostBooked(n: number, meetings: number[][]): number {
+        meetings.sort((a, b) => a[0] - b[0]);
+        const available = new PriorityQueue((a: number, b: number) => a - b);
+        const used = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
+        );
+        for (let i = 0; i < n; i++) {
+            available.enqueue(i);
+        }
+        const count: number[] = new Array(n).fill(0);
+
+        for (const [start, end] of meetings) {
+            while (!used.isEmpty() && used.front()[0] <= start) {
+                const room: number = used.dequeue()[1];
+                available.enqueue(room);
+            }
+
+            let room: number;
+            let newEnd = end;
+            if (available.isEmpty()) {
+                const [endTime, usedRoom]: number[] = used.dequeue();
+                newEnd = endTime + (end - start);
+                available.enqueue(usedRoom);
+            }
+            room = available.dequeue();
+            used.enqueue([newEnd, room]);
+            count[room]++;
+        }
+
+        return count.indexOf(Math.max(...count));
     }
 }
 ```
@@ -1206,12 +1287,46 @@ impl Solution {
             count[room] += 1;
         }
 
-        count
-            .iter()
-            .enumerate()
-            .max_by_key(|&(_, &c)| c)
-            .unwrap()
-            .0 as i32
+        let mut res = 0;
+        for i in 1..count.len() {
+            if count[i] > count[res] {
+                res = i;
+            }
+        }
+        res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @return {number}
+     */
+    mostBooked(n: number, meetings: number[][]): number {
+        meetings.sort((a, b) => a[0] - b[0]);
+        const available = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
+        );
+        for (let i = 0; i < n; i++) {
+            available.enqueue([0, i]);
+        }
+        const count: number[] = new Array(n).fill(0);
+
+        for (const [start, end] of meetings) {
+            while (!available.isEmpty() && available.front()[0] < start) {
+                const [endTime, room]: number[] = available.dequeue();
+                available.enqueue([start, room]);
+            }
+
+            const [endTime, room]: number[] = available.dequeue();
+            available.enqueue([endTime + (end - start), room]);
+            count[room]++;
+        }
+
+        return count.indexOf(Math.max(...count));
     }
 }
 ```

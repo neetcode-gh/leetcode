@@ -363,6 +363,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @param {number[]} time
+     * @return {number}
+     */
+    minimumTime(n: number, relations: number[][], time: number[]): number {
+        let adj: number[][] = Array.from({ length: n + 1 }, () => []);
+        let maxTime = new Map<number, number>();
+
+        for (let [src, dst] of relations) {
+            adj[src].push(dst);
+        }
+
+        const dfs = (src: number): number => {
+            if (maxTime.has(src)) {
+                return maxTime.get(src)!;
+            }
+
+            let res = time[src - 1];
+            for (let nei of adj[src]) {
+                res = Math.max(res, time[src - 1] + dfs(nei));
+            }
+            maxTime.set(src, res);
+            return res;
+        };
+
+        for (let i = 1; i <= n; i++) {
+            dfs(i);
+        }
+
+        return Math.max(...maxTime.values());
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -765,6 +803,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @param {number[]} time
+     * @return {number}
+     */
+    minimumTime(n: number, relations: number[][], time: number[]): number {
+        let adj: number[][] = Array.from({ length: n }, () => []);
+        for (let [src, dst] of relations) {
+            adj[src - 1].push(dst - 1);
+        }
+
+        let maxTime: number[] = Array(n).fill(-1);
+        let processed: boolean[] = Array(n).fill(false);
+
+        for (let i = 0; i < n; i++) {
+            if (maxTime[i] === -1) {
+                let stack: number[] = [i];
+                while (stack.length > 0) {
+                    let node = stack.pop()!;
+                    if (processed[node]) {
+                        let best = 0;
+                        for (let nei of adj[node]) {
+                            best = Math.max(best, maxTime[nei]);
+                        }
+                        maxTime[node] = time[node] + best;
+                    } else {
+                        processed[node] = true;
+                        stack.push(node);
+                        for (let nei of adj[node]) {
+                            if (maxTime[nei] === -1) {
+                                stack.push(nei);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return Math.max(...maxTime);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1129,6 +1212,49 @@ impl Solution {
         }
 
         *max_time.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @param {number[]} time
+     * @return {number}
+     */
+    minimumTime(n: number, relations: number[][], time: number[]): number {
+        let adj: number[][] = Array.from({ length: n }, () => []);
+        let indegree: number[] = Array(n).fill(0);
+        let maxTime = [...time];
+
+        for (let [src, dst] of relations) {
+            adj[src - 1].push(dst - 1);
+            indegree[dst - 1]++;
+        }
+
+        let queue = new Queue();
+        for (let i = 0; i < n; i++) {
+            if (indegree[i] === 0) {
+                queue.push(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            let node: number = queue.pop();
+            for (let nei of adj[node]) {
+                maxTime[nei] = Math.max(
+                    maxTime[nei],
+                    maxTime[node] + time[nei],
+                );
+                if (--indegree[nei] === 0) {
+                    queue.push(nei);
+                }
+            }
+        }
+
+        return Math.max(...maxTime);
     }
 }
 ```

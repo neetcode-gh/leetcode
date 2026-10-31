@@ -328,6 +328,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    rightSideView(root: TreeNode | null): number[] {
+        let res: number[] = [];
+
+        function dfs(node: TreeNode | null, depth: number): void {
+            if (!node) return;
+
+            if (res.length === depth) {
+                res.push(node.val);
+            }
+
+            dfs(node.right, depth + 1);
+            dfs(node.left, depth + 1);
+        }
+
+        dfs(root, 0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -712,6 +738,39 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    rightSideView(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        const q = new Queue();
+
+        q.push(root);
+
+        while (!q.isEmpty()) {
+            let rightSide: TreeNode | null = null;
+            const qLen = q.size();
+
+            for (let i = 0; i < qLen; i++) {
+                const node: TreeNode | null = q.pop();
+                if (node) {
+                    rightSide = node;
+                    q.push(node.left);
+                    q.push(node.right);
+                }
+            }
+            if (rightSide) {
+                res.push(rightSide.val);
+            }
+        }
+        return res;
     }
 }
 ```

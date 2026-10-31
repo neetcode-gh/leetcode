@@ -107,7 +107,10 @@ class Solution {
         let totalCost = 0;
 
         // Using @datastructures-js/priority-queue
-        const pq = MinPriorityQueue.fromArray(sticks);
+        const pq = new MinPriorityQueue();
+        for (const stick of sticks) {
+            pq.enqueue(stick);
+        }
 
         while (pq.size() > 1) {
             const stick1 = pq.dequeue();
@@ -311,6 +314,36 @@ impl Solution {
         }
 
         total_cost
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} sticks
+     * @return {number}
+     */
+    connectSticks(sticks: number[]): number {
+        let totalCost = 0;
+
+        // Using @datastructures-js/priority-queue
+        const pq = new MinPriorityQueue();
+        for (const stick of sticks) {
+            pq.enqueue(stick);
+        }
+
+        while (pq.size() > 1) {
+            const stick1: number = pq.dequeue();
+            const stick2: number = pq.dequeue();
+
+            const cost = stick1 + stick2;
+            totalCost += cost;
+
+            pq.enqueue(cost);
+        }
+
+        return totalCost;
     }
 }
 ```

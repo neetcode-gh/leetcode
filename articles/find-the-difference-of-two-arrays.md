@@ -354,6 +354,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[][]}
+     */
+    findDifference(nums1: number[], nums2: number[]): number[][] {
+        const res1 = new Set<number>();
+        const res2 = new Set<number>();
+
+        for (const num1 of nums1) {
+            let found = false;
+            for (const num2 of nums2) {
+                if (num1 === num2) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                res1.add(num1);
+            }
+        }
+
+        for (const num2 of nums2) {
+            let found = false;
+            for (const num1 of nums1) {
+                if (num1 === num2) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                res2.add(num2);
+            }
+        }
+
+        return [Array.from(res1), Array.from(res2)];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -628,6 +670,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[][]}
+     */
+    findDifference(nums1: number[], nums2: number[]): number[][] {
+        nums1.sort((a, b) => a - b);
+        nums2.sort((a, b) => a - b);
+
+        const helper = (A: number[], B: number[]): number[] => {
+            const res: number[] = [];
+            let j = 0;
+            let prev = -Infinity;
+
+            for (const num of A) {
+                if (num === prev) continue;
+                while (j < B.length && B[j] < num) j++;
+                if (j === B.length || B[j] !== num) res.push(num);
+                prev = num;
+            }
+
+            return res;
+        };
+
+        return [helper(nums1, nums2), helper(nums2, nums1)];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -829,6 +902,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[][]}
+     */
+    findDifference(nums1: number[], nums2: number[]): number[][] {
+        const num1Set = new Set<number>(nums1);
+        const num2Set = new Set<number>(nums2);
+        const res1: number[] = [];
+        const res2: number[] = [];
+
+        for (const num of num1Set) {
+            if (!num2Set.has(num)) res1.push(num);
+        }
+
+        for (const num of num2Set) {
+            if (!num1Set.has(num)) res2.push(num);
+        }
+
+        return [res1, res2];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1009,6 +1108,25 @@ impl Solution {
             num_set1.difference(&num_set2).cloned().collect(),
             num_set2.difference(&num_set1).cloned().collect(),
         ]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[][]}
+     */
+    findDifference(nums1: number[], nums2: number[]): number[][] {
+        const numSet1 = new Set<number>(nums1);
+        const numSet2 = new Set<number>(nums2);
+
+        const res1 = Array.from(numSet1).filter((num) => !numSet2.has(num));
+        const res2 = Array.from(numSet2).filter((num) => !numSet1.has(num));
+
+        return [res1, res2];
     }
 }
 ```

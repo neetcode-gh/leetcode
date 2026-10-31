@@ -157,6 +157,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(grid [][]int) int {
     n := len(grid)
 
@@ -257,6 +259,35 @@ impl Solution {
             res = res.min(helper(&grid, 0, c, n));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minFallingPathSum(grid: number[][]): number {
+        const N = grid.length;
+
+        const helper = (r: number, c: number): number => {
+            if (r === N - 1) return grid[r][c];
+            let res = Infinity;
+            for (let nextCol = 0; nextCol < N; nextCol++) {
+                if (c !== nextCol) {
+                    res = Math.min(res, grid[r][c] + helper(r + 1, nextCol));
+                }
+            }
+            return res;
+        };
+
+        let res = Infinity;
+        for (let c = 0; c < N; c++) {
+            res = Math.min(res, helper(0, c));
+        }
+        return res;
     }
 }
 ```
@@ -454,6 +485,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(grid [][]int) int {
     n := len(grid)
     memo := make([][]int, n)
@@ -585,6 +618,40 @@ impl Solution {
             res = res.min(helper(&grid, &mut memo, 0, c, n));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minFallingPathSum(grid: number[][]): number {
+        const N = grid.length;
+        const memo: number[][] = Array.from({ length: N }, () =>
+            Array(N).fill(-Infinity),
+        );
+
+        const helper = (r: number, c: number): number => {
+            if (r === N - 1) return grid[r][c];
+            if (memo[r][c] !== -Infinity) return memo[r][c];
+            let res = Infinity;
+            for (let nextCol = 0; nextCol < N; nextCol++) {
+                if (c !== nextCol) {
+                    res = Math.min(res, grid[r][c] + helper(r + 1, nextCol));
+                }
+            }
+            memo[r][c] = res;
+            return res;
+        };
+
+        let res = Infinity;
+        for (let c = 0; c < N; c++) {
+            res = Math.min(res, helper(0, c));
+        }
+        return res;
     }
 }
 ```
@@ -758,6 +825,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(grid [][]int) int {
     n := len(grid)
     dp := make([][]int, n)
@@ -861,6 +930,40 @@ impl Solution {
         }
 
         *dp[0].iter().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minFallingPathSum(grid: number[][]): number {
+        const N = grid.length;
+        const dp: number[][] = Array.from({ length: N }, () =>
+            Array(N).fill(Infinity),
+        );
+
+        for (let c = 0; c < N; c++) {
+            dp[N - 1][c] = grid[N - 1][c];
+        }
+
+        for (let r = N - 2; r >= 0; r--) {
+            for (let c = 0; c < N; c++) {
+                for (let nextCol = 0; nextCol < N; nextCol++) {
+                    if (c !== nextCol) {
+                        dp[r][c] = Math.min(
+                            dp[r][c],
+                            grid[r][c] + dp[r + 1][nextCol],
+                        );
+                    }
+                }
+            }
+        }
+
+        return Math.min(...dp[0]);
     }
 }
 ```
@@ -1030,6 +1133,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(grid [][]int) int {
     n := len(grid)
     dp := make([]int, n)
@@ -1124,6 +1229,36 @@ impl Solution {
         }
 
         *dp.iter().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minFallingPathSum(grid: number[][]): number {
+        const N = grid.length;
+        let dp = grid[0];
+
+        for (let r = 1; r < N; r++) {
+            const nextDp: number[] = Array(N).fill(Infinity);
+            for (let currC = 0; currC < N; currC++) {
+                for (let prevC = 0; prevC < N; prevC++) {
+                    if (prevC !== currC) {
+                        nextDp[currC] = Math.min(
+                            nextDp[currC],
+                            grid[r][currC] + dp[prevC],
+                        );
+                    }
+                }
+            }
+            dp = nextDp;
+        }
+
+        return Math.min(...dp);
     }
 }
 ```
@@ -1375,6 +1510,11 @@ public class Solution {
 ```
 
 ```go
+import (
+    "math"
+    "sort"
+)
+
 func minFallingPathSum(grid [][]int) int {
     n := len(grid)
 
@@ -1548,6 +1688,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minFallingPathSum(grid: number[][]): number {
+        const N = grid.length;
+
+        const getMinTwo = (row: number[][]): number[][] => {
+            const twoSmallest: number[][] = [];
+            for (const [val, idx] of row) {
+                if (twoSmallest.length < 2) {
+                    twoSmallest.push([val, idx]);
+                } else if (twoSmallest[1][0] > val) {
+                    twoSmallest.pop();
+                    twoSmallest.push([val, idx]);
+                }
+                twoSmallest.sort((a, b) => a[0] - b[0]);
+            }
+            return twoSmallest;
+        };
+
+        const firstRow = grid[0].map((val, idx) => [val, idx]);
+        let dp = getMinTwo(firstRow);
+
+        for (let r = 1; r < N; r++) {
+            const nextDp: number[][] = [];
+            for (let c = 0; c < grid[0].length; c++) {
+                const currVal = grid[r][c];
+                let minVal = Infinity;
+                for (const [prevVal, prevC] of dp) {
+                    if (c !== prevC) {
+                        minVal = Math.min(minVal, currVal + prevVal);
+                    }
+                }
+                nextDp.push([minVal, c]);
+            }
+            dp = getMinTwo(nextDp);
+        }
+
+        return Math.min(...dp.map(([val]) => val));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1657,7 +1843,7 @@ public:
         int dpIdx1 = -1, dpIdx2 = -1;
         int dpVal1 = 0, dpVal2 = 0;
 
-        for (int i = 1; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             int nextDpIdx1 = -1, nextDpIdx2 = -1;
             int nextDpVal1 = INT_MAX, nextDpVal2 = INT_MAX;
 
@@ -1774,13 +1960,15 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(grid [][]int) int {
     n := len(grid)
     if n == 1 {
         return grid[0][0]
     }
 
-    dpIdx1, dpIdx2 := -1, -1
+    dpIdx1 := -1
     dpVal1, dpVal2 := 0, 0
 
     for i := 0; i < n; i++ {
@@ -1802,7 +1990,7 @@ func minFallingPathSum(grid [][]int) int {
             }
         }
 
-        dpIdx1, dpIdx2, dpVal1, dpVal2 = nextDpIdx1, nextDpIdx2, nextDpVal1, nextDpVal2
+        dpIdx1, dpVal1, dpVal2 = nextDpIdx1, nextDpVal1, nextDpVal2
     }
 
     return dpVal1
@@ -1928,6 +2116,53 @@ impl Solution {
         }
 
         dp_val1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    minFallingPathSum(grid: number[][]): number {
+        const n = grid.length;
+        if (n === 1) return grid[0][0];
+
+        let dpIdx1 = -1,
+            dpIdx2 = -1;
+        let dpVal1 = 0,
+            dpVal2 = 0;
+
+        for (let i = 0; i < n; i++) {
+            let nextDpIdx1 = -1,
+                nextDpIdx2 = -1;
+            let nextDpVal1 = Infinity,
+                nextDpVal2 = Infinity;
+
+            for (let j = 0; j < n; j++) {
+                let cur = j !== dpIdx1 ? dpVal1 : dpVal2;
+                cur += grid[i][j];
+
+                if (nextDpIdx1 === -1 || cur < nextDpVal1) {
+                    nextDpIdx2 = nextDpIdx1;
+                    nextDpVal2 = nextDpVal1;
+                    nextDpIdx1 = j;
+                    nextDpVal1 = cur;
+                } else if (nextDpIdx2 === -1 || cur < nextDpVal2) {
+                    nextDpIdx2 = j;
+                    nextDpVal2 = cur;
+                }
+            }
+
+            dpIdx1 = nextDpIdx1;
+            dpIdx2 = nextDpIdx2;
+            dpVal1 = nextDpVal1;
+            dpVal2 = nextDpVal2;
+        }
+
+        return dpVal1;
     }
 }
 ```

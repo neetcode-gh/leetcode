@@ -292,6 +292,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    insertionSortList(head: ListNode | null): ListNode | null {
+        let arr: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            arr.push(cur.val);
+            cur = cur.next;
+        }
+
+        arr.sort((a, b) => a - b);
+        cur = head;
+
+        for (let val of arr) {
+            cur!.val = val;
+            cur = cur!.next;
+        }
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,6 +588,25 @@ impl Solution {
             }
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    insertionSortList(head: ListNode | null): ListNode | null {
+        for (let cur = head!.next; cur; cur = cur.next) {
+            for (let tmp = head!; tmp !== cur; tmp = tmp.next!) {
+                if (tmp.val > cur.val) {
+                    [tmp.val, cur.val] = [cur.val, tmp.val];
+                }
+            }
+        }
+        return head;
     }
 }
 ```
@@ -923,6 +969,40 @@ impl Solution {
         }
 
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    insertionSortList(head: ListNode | null): ListNode | null {
+        let dummy = new ListNode(0, head);
+        let prev = head!,
+            cur = head!.next;
+
+        while (cur) {
+            if (cur.val >= prev.val) {
+                prev = cur;
+                cur = cur.next;
+                continue;
+            }
+
+            let tmp = dummy;
+            while (tmp.next!.val < cur.val) {
+                tmp = tmp.next!;
+            }
+
+            prev.next = cur.next;
+            cur.next = tmp.next;
+            tmp.next = cur;
+            cur = prev.next;
+        }
+
+        return dummy.next;
     }
 }
 ```

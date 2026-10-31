@@ -48,7 +48,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> addToArrayForm(int[] num, int k) {
+    public int[] addToArrayForm(int[] num, int k) {
         List<Integer> result = new ArrayList<>();
         for (int i = num.length - 1; i >= 0; i--) {
             k += num[i];
@@ -60,7 +60,7 @@ public class Solution {
             k /= 10;
         }
         Collections.reverse(result);
-        return result;
+        return result.stream().mapToInt(Integer::intValue).toArray();
     }
 }
 ```
@@ -120,7 +120,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> AddToArrayForm(int[] num, int k) {
+    public int[] AddToArrayForm(int[] num, int k) {
         List<int> result = new List<int>();
         for (int i = num.Length - 1; i >= 0; i--) {
             k += num[i];
@@ -132,7 +132,7 @@ public class Solution {
             k /= 10;
         }
         result.Reverse();
-        return result;
+        return result.ToArray();
     }
 }
 ```
@@ -195,7 +195,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn add_to_array_form(num: Vec<i32>, k: i32) -> Vec<i32> {
@@ -218,6 +217,35 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} num
+     * @param {number} k
+     * @return {number[]}
+     */
+    addToArrayForm(num: number[], k: number): number[] {
+        num.reverse();
+        let i = 0;
+        while (k > 0) {
+            const digit = k % 10;
+            if (i < num.length) {
+                num[i] += digit;
+            } else {
+                num.push(digit);
+            }
+            const carry = Math.floor(num[i] / 10);
+            num[i] %= 10;
+            k = Math.floor(k / 10) + carry;
+            i++;
+        }
+        num.reverse();
+        return num;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,7 +301,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> addToArrayForm(int[] num, int k) {
+    public int[] addToArrayForm(int[] num, int k) {
         LinkedList<Integer> result = new LinkedList<>();
         int carry = 0, i = num.length - 1;
 
@@ -288,7 +316,7 @@ public class Solution {
             i--;
         }
 
-        return result;
+        return result.stream().mapToInt(Integer::intValue).toArray();
     }
 }
 ```
@@ -351,7 +379,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> AddToArrayForm(int[] num, int k) {
+    public int[] AddToArrayForm(int[] num, int k) {
         LinkedList<int> result = new LinkedList<int>();
         int carry = 0, i = num.Length - 1;
 
@@ -366,7 +394,7 @@ public class Solution {
             i--;
         }
 
-        return result.ToList();
+        return result.ToArray();
     }
 }
 ```
@@ -444,7 +472,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn add_to_array_form(num: Vec<i32>, k: i32) -> Vec<i32> {
@@ -469,6 +496,40 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} num
+     * @param {number} k
+     * @return {number[]}
+     */
+    addToArrayForm(num: number[], k: number): number[] {
+        let res = new Deque();
+        let carry = 0,
+            i = num.length - 1;
+
+        while (i >= 0 || k > 0 || carry > 0) {
+            const digit = k % 10;
+            const sum = carry + (i >= 0 ? num[i] : 0) + digit;
+
+            res.pushFront(sum % 10);
+            carry = Math.floor(sum / 10);
+
+            k = Math.floor(k / 10);
+            i--;
+        }
+
+        const resultArray: number[] = [];
+        while (!res.isEmpty()) {
+            resultArray.push(res.popFront());
+        }
+
+        return resultArray;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

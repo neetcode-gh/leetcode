@@ -229,7 +229,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -257,6 +256,34 @@ impl Solution {
         }
 
         0.max(dfs(0, 0, 0, 0, &grid, n as i32))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const n = grid.length;
+        const dfs = (r1: number, c1: number, r2: number, c2: number): number => {
+            if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] === -1 || grid[r2][c2] === -1)
+                return -1000;
+
+            if (r1 === n - 1 && c1 === n - 1 && r2 === n - 1 && c2 === n - 1)
+                return grid[r1][c1];
+
+            let res = dfs(r1 + 1, c1, r2 + 1, c2);
+            res = Math.max(res, dfs(r1 + 1, c1, r2, c2 + 1));
+            res = Math.max(res, dfs(r1, c1 + 1, r2 + 1, c2));
+            res = Math.max(res, dfs(r1, c1 + 1, r2, c2 + 1));
+            res += grid[r1][c1] + grid[r2][c2];
+            if (r1 === r2 && c1 === c2) res -= grid[r1][c1];
+            return res;
+        };
+        return Math.max(0, dfs(0, 0, 0, 0));
     }
 }
 ```
@@ -588,7 +615,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -625,6 +651,50 @@ impl Solution {
         }
 
         0.max(dfs(0, 0, 0, 0, &grid, &mut dp, n as i32))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const n = grid.length;
+        const dp: number[][][][] = Array.from({ length: n }, () =>
+            Array.from({ length: n }, () =>
+                Array.from({ length: n }, () =>
+                    Array(n).fill(-Infinity)
+                )
+            )
+        );
+
+        const dfs = (r1: number, c1: number, r2: number, c2: number): number => {
+            if (r1 >= n || c1 >= n || r2 >= n || c2 >= n ||
+                grid[r1][c1] === -1 || grid[r2][c2] === -1) {
+                return -1000;
+            }
+            if (r1 === n - 1 && c1 === n - 1 && r2 === n - 1 && c2 === n - 1) {
+                return grid[r1][c1];
+            }
+            if (dp[r1][c1][r2][c2] !== -Infinity) {
+                return dp[r1][c1][r2][c2];
+            }
+
+            let res = dfs(r1 + 1, c1, r2 + 1, c2);
+            res = Math.max(res, dfs(r1 + 1, c1, r2, c2 + 1));
+            res = Math.max(res, dfs(r1, c1 + 1, r2 + 1, c2));
+            res = Math.max(res, dfs(r1, c1 + 1, r2, c2 + 1));
+            res += grid[r1][c1] + grid[r2][c2];
+            if (r1 === r2 && c1 === c2) res -= grid[r1][c1];
+
+            dp[r1][c1][r2][c2] = res;
+            return res;
+        };
+
+        return Math.max(0, dfs(0, 0, 0, 0));
     }
 }
 ```
@@ -960,7 +1030,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -998,6 +1067,47 @@ impl Solution {
         }
 
         0.max(dfs(0, 0, 0, &grid, &mut dp, n as i32))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const n = grid.length;
+        const dp: number[][][] = Array.from({ length: n }, () =>
+            Array.from({ length: n }, () =>
+                Array(n).fill(-Infinity)
+            )
+        );
+
+        const dfs = (r1: number, c1: number, r2: number): number => {
+            const c2 = r1 + c1 - r2;
+            if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] === -1 || grid[r2][c2] === -1)
+                return -1000;
+
+            if (r1 === n - 1 && c1 === n - 1)
+                return grid[r1][c1];
+
+            if (dp[r1][c1][r2] !== -Infinity)
+                return dp[r1][c1][r2];
+
+            let res = dfs(r1 + 1, c1, r2 + 1);
+            res = Math.max(res, dfs(r1 + 1, c1, r2));
+            res = Math.max(res, dfs(r1, c1 + 1, r2 + 1));
+            res = Math.max(res, dfs(r1, c1 + 1, r2));
+
+            res += grid[r1][c1];
+            if (!(r1 === r2 && c1 === c2)) res += grid[r2][c2];
+
+            return dp[r1][c1][r2] = res;
+        };
+
+        return Math.max(0, dfs(0, 0, 0));
     }
 }
 ```
@@ -1346,7 +1456,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -1383,6 +1492,46 @@ impl Solution {
         }
 
         0.max(dp[0][0][0])
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const n = grid.length;
+        const dp: number[][][] = Array.from({ length: n }, () =>
+            Array.from({ length: n }, () => Array(n).fill(-1e9))
+        );
+
+        for (let r1 = n - 1; r1 >= 0; r1--) {
+            for (let c1 = n - 1; c1 >= 0; c1--) {
+                for (let r2 = n - 1; r2 >= 0; r2--) {
+                    let c2 = r1 + c1 - r2;
+                    if (c2 < 0 || c2 >= n) continue;
+                    if (grid[r1][c1] === -1 || grid[r2][c2] === -1) continue;
+
+                    if (r1 === n - 1 && c1 === n - 1) {
+                        dp[r1][c1][r2] = grid[r1][c1];
+                    } else {
+                        let res = -1e9;
+                        if (r1 + 1 < n && r2 + 1 < n) res = Math.max(res, dp[r1 + 1][c1][r2 + 1]);
+                        if (r1 + 1 < n) res = Math.max(res, dp[r1 + 1][c1][r2]);
+                        if (c1 + 1 < n && r2 + 1 < n) res = Math.max(res, dp[r1][c1 + 1][r2 + 1]);
+                        if (c1 + 1 < n) res = Math.max(res, dp[r1][c1 + 1][r2]);
+                        if (res === -1e9) continue;
+                        res += grid[r1][c1];
+                        if (r1 !== r2 || c1 !== c2) res += grid[r2][c2];
+                        dp[r1][c1][r2] = res;
+                    }
+                }
+            }
+        }
+        return Math.max(0, dp[0][0][0]);
     }
 }
 ```
@@ -1725,7 +1874,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
@@ -1757,6 +1905,43 @@ impl Solution {
         }
 
         0.max(prev[n - 1][n - 1])
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    cherryPickup(grid: number[][]): number {
+        const n = grid.length;
+        let prev: number[][] = Array.from({ length: n }, () => Array(n).fill(-Infinity));
+        prev[0][0] = grid[0][0];
+
+        for (let k = 1; k < 2 * n - 1; k++) {
+            let dp: number[][] = Array.from({ length: n }, () => Array(n).fill(-Infinity));
+            for (let r1 = Math.max(0, k - (n - 1)); r1 <= Math.min(n - 1, k); r1++) {
+                let c1 = k - r1;
+                if (c1 >= n || grid[r1][c1] === -1) continue;
+                for (let r2 = Math.max(0, k - (n - 1)); r2 <= Math.min(n - 1, k); r2++) {
+                    let c2 = k - r2;
+                    if (c2 >= n || grid[r2][c2] === -1) continue;
+                    let val = prev[r1][r2];
+                    if (r1 > 0) val = Math.max(val, prev[r1 - 1][r2]);
+                    if (r2 > 0) val = Math.max(val, prev[r1][r2 - 1]);
+                    if (r1 > 0 && r2 > 0) val = Math.max(val, prev[r1 - 1][r2 - 1]);
+                    if (val < 0) continue;
+                    val += grid[r1][c1];
+                    if (r1 !== r2) val += grid[r2][c2];
+                    dp[r1][r2] = val;
+                }
+            }
+            prev = dp;
+        }
+
+        return Math.max(0, prev[n - 1][n - 1]);
     }
 }
 ```

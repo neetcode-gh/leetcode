@@ -171,6 +171,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numTrees(n: number): number {
+        if (n <= 1) {
+            return 1;
+        }
+
+        let res = 0;
+        for (let i = 1; i <= n; i++) {
+            res += this.numTrees(i - 1) * this.numTrees(n - i);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -410,6 +430,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private dp: Map<number, number>;
+
+    constructor() {
+        this.dp = new Map<number, number>();
+    }
+
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numTrees(n: number): number {
+        if (n <= 1) {
+            return 1;
+        }
+        if (this.dp.has(n)) {
+            return this.dp.get(n)!;
+        }
+
+        let res = 0;
+        for (let i = 1; i <= n; i++) {
+            res += this.numTrees(i - 1) * this.numTrees(n - i);
+        }
+
+        this.dp.set(n, res);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,7 +641,7 @@ class Solution {
     func numTrees(_ n: Int) -> Int {
         var numTree = [Int](repeating: 1, count: n + 1)
 
-        for nodes in 2...n {
+        for nodes in stride(from: 2, through: n, by: 1) {
             var total = 0
             for root in 1...nodes {
                 let left = root - 1
@@ -622,6 +673,30 @@ impl Solution {
         }
 
         num_tree[n] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numTrees(n: number): number {
+        const numTree: number[] = Array(n + 1).fill(1);
+
+        for (let nodes = 2; nodes <= n; nodes++) {
+            let total = 0;
+            for (let root = 1; root <= nodes; root++) {
+                let left = root - 1;
+                let right = nodes - root;
+                total += numTree[left] * numTree[right];
+            }
+            numTree[nodes] = total;
+        }
+
+        return numTree[n];
     }
 }
 ```
@@ -769,6 +844,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numTrees(n: number): number {
+        let res = BigInt(1);
+        for (let i = BigInt(1); i < BigInt(n); i++) {
+            res *= BigInt(n) + i + BigInt(1);
+            res /= i;
+        }
+        return Number(res / BigInt(n));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -848,7 +940,7 @@ public class Solution {
     public int NumTrees(int n) {
         long res = 1;
         for (int i = 0; i < n; i++) {
-            res *= (4 * i + 2) / (i + 2.0);
+            res = res * (4 * i + 2) / (i + 2);
         }
         return (int)res;
     }
@@ -897,6 +989,22 @@ impl Solution {
             res *= (4 * i + 2) as f64 / (i + 2) as f64;
         }
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numTrees(n: number): number {
+        let res = 1;
+        for (let i = 0; i < n; i++) {
+            res *= (4 * i + 2) / (i + 2);
+        }
+        return Math.floor(res);
     }
 }
 ```

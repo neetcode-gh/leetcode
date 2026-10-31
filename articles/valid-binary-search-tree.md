@@ -419,6 +419,70 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} val
+     * @param {number} limit
+     * @returns {boolean}
+     */
+    left_check(val: number, limit: number): boolean {
+        return val < limit;
+    }
+
+    /**
+     * @param {number} val
+     * @param {number} limit
+     * @returns {boolean}
+     */
+    right_check(val: number, limit: number): boolean {
+        return val > limit;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @returns {boolean}
+     */
+    isValidBST(root: TreeNode | null): boolean {
+        if (!root) {
+            return true;
+        }
+
+        if (
+            !this.isValid(root.left, root.val, this.left_check) ||
+            !this.isValid(root.right, root.val, this.right_check)
+        ) {
+            return false;
+        }
+
+        return this.isValidBST(root.left) && this.isValidBST(root.right);
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @param {number} limit
+     * @param {function} check
+     * @returns {boolean}
+     */
+    isValid(
+        root: TreeNode | null,
+        limit: number,
+        check: (val: number, limit: number) => boolean,
+    ): boolean {
+        if (!root) {
+            return true;
+        }
+        if (!check.call(this, root.val, limit)) {
+            return false;
+        }
+        return (
+            this.isValid(root.left, limit, check) &&
+            this.isValid(root.right, limit, check)
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -728,6 +792,36 @@ impl Solution {
         }
 
         valid(&root, i64::MIN, i64::MAX)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isValidBST(root: TreeNode | null): boolean {
+        return this.valid(root, -Infinity, Infinity);
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number} left
+     * @param {number} right
+     */
+    valid(node: TreeNode | null, left: number, right: number): boolean {
+        if (node === null) {
+            return true;
+        }
+        if (!(left < node.val && node.val < right)) {
+            return false;
+        }
+        return (
+            this.valid(node.left, left, node.val) &&
+            this.valid(node.right, node.val, right)
+        );
     }
 }
 ```
@@ -1130,6 +1224,38 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isValidBST(root: TreeNode | null): boolean {
+        if (root === null) {
+            return true;
+        }
+
+        const queue = new Queue([[root, -Infinity, Infinity]]);
+
+        while (queue.size() > 0) {
+            const [node, left, right]: [TreeNode, number, number] = queue.pop();
+
+            if (!(left < node.val && node.val < right)) {
+                return false;
+            }
+            if (node.left) {
+                queue.push([node.left, left, node.val]);
+            }
+            if (node.right) {
+                queue.push([node.right, node.val, right]);
+            }
+        }
+
+        return true;
     }
 }
 ```

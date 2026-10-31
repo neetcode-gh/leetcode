@@ -40,7 +40,7 @@ class Leaderboard:
         while i < K:
             total += values[i]
             i += 1
-        
+
         return total
 
     def reset(self, playerId: int) -> None:
@@ -51,37 +51,37 @@ class Leaderboard:
 class Leaderboard {
 
     private HashMap<Integer, Integer> scores;
-    
+
     public Leaderboard() {
-      
-        // Since this is a single threaded application and we don't need synchronized access, a 
+
+        // Since this is a single threaded application and we don't need synchronized access, a
         // HashMap is a good choice of data structure as compared to a Hashtable. Read more here:
-        // https://stackoverflow.com/questions/40471/what-are-the-differences-between-a-hashmap-and-a-hashtable-in-java 
+        // https://stackoverflow.com/questions/40471/what-are-the-differences-between-a-hashmap-and-a-hashtable-in-java
         this.scores = new HashMap<Integer, Integer>();
     }
-    
+
     public void addScore(int playerId, int score) {
-        
+
         if (!this.scores.containsKey(playerId)) {
             this.scores.put(playerId, 0);
         }
-        
+
         this.scores.put(playerId, this.scores.get(playerId) + score);
     }
-    
+
     public int top(int K) {
-        
+
         List<Integer> values = new ArrayList<Integer>(this.scores.values());
         Collections.sort(values, Collections.reverseOrder());
-        
+
         int total = 0;
         for (int i = 0; i < K; i++) {
-            total += values.get(i);            
+            total += values.get(i);
         }
-        
+
         return total;
     }
-    
+
     public void reset(int playerId) {
         this.scores.put(playerId, 0);
     }
@@ -103,13 +103,13 @@ public:
     int top(int K) {
         vector<int> values;
         values.reserve(scores.size());
-        
+
         for (const auto& pair : scores) {
             values.push_back(pair.second);
         }
-        
+
         sort(values.begin(), values.end(), greater<int>());
-        
+
         int total = 0;
         for (int i = 0; i < K; i++) {
             total += values[i];
@@ -285,7 +285,6 @@ class Leaderboard {
 }
 ```
 
-
 ```rust
 struct Leaderboard {
     scores: HashMap<i32, i32>,
@@ -308,6 +307,55 @@ impl Leaderboard {
 
     fn reset(&mut self, player_id: i32) {
         self.scores.insert(player_id, 0);
+    }
+}
+```
+
+```typescript
+class Leaderboard {
+    private scores: Map<number, number>;
+
+    constructor() {
+        this.scores = new Map();
+    }
+
+    /**
+     * @param {number} playerId
+     * @param {number} score
+     * @return {void}
+     */
+    addScore(playerId: number, score: number): void {
+        if (!this.scores.has(playerId)) {
+            this.scores.set(playerId, 0);
+        }
+        this.scores.set(playerId, this.scores.get(playerId)! + score);
+    }
+
+    /**
+     * @param {number} K
+     * @return {number}
+     */
+    top(K: number): number {
+        const values = Array.from(this.scores.entries())
+            .sort((a, b) => a[1] - b[1])
+            .map(entry => entry[1]);
+        values.sort((a, b) => b - a);
+
+        let total = 0;
+        let i = 0;
+        while (i < K) {
+            total += values[i];
+            i++;
+        }
+        return total;
+    }
+
+    /**
+     * @param {number} playerId
+     * @return {void}
+     */
+    reset(playerId: number): void {
+        this.scores.set(playerId, 0);
     }
 }
 ```
@@ -357,7 +405,7 @@ class Leaderboard:
         self.scores[playerId] += score
 
     def top(self, K: int) -> int:
-    
+
         # This is a min-heap by default in Python.
         heap = []
         for x in self.scores.values():
@@ -377,42 +425,42 @@ class Leaderboard:
 class Leaderboard {
 
     private HashMap<Integer, Integer> scores;
-    
+
     public Leaderboard() {
         this.scores = new HashMap<Integer, Integer>();
     }
-    
+
     public void addScore(int playerId, int score) {
-        
+
         if (!this.scores.containsKey(playerId)) {
             this.scores.put(playerId, 0);
         }
-        
+
         this.scores.put(playerId, this.scores.get(playerId) + score);
     }
-    
+
     public int top(int K) {
-        
+
         // A min-heap in java containing entries of a hash map. Note that we have to provide
         // a comparator of our own to make sure we get the ordering right of these objects.
         PriorityQueue<Map.Entry<Integer, Integer>> heap = new PriorityQueue<>((a, b) -> a.getValue() - b.getValue());
-        
+
         for (Map.Entry<Integer, Integer> entry : this.scores.entrySet()) {
             heap.offer(entry);
             if (heap.size() > K) {
                 heap.poll();
             }
         }
-        
+
         int total = 0;
         Iterator value = heap.iterator();
-        while (value.hasNext()) { 
-            total += ((Map.Entry<Integer, Integer>)value.next()).getValue();   
+        while (value.hasNext()) {
+            total += ((Map.Entry<Integer, Integer>)value.next()).getValue();
         }
-        
+
         return total;
     }
-    
+
     public void reset(int playerId) {
         this.scores.put(playerId, 0);
     }
@@ -423,30 +471,30 @@ class Leaderboard {
 class Leaderboard {
 private:
     unordered_map<int, int> scores;
-    
+
 public:
     Leaderboard() {
-        
+
     }
-    
+
     void addScore(int playerId, int score) {
         if (scores.find(playerId) == scores.end()) {
             scores[playerId] = 0;
         }
         scores[playerId] += score;
     }
-    
+
     int top(int K) {
         // By default, priority_queue is max-heap, so we use greater<int> for min-heap
         priority_queue<int, vector<int>, greater<int>> heap;
-        
+
         for (const auto& entry : scores) {
             heap.push(entry.second);
             if (heap.size() > K) {
                 heap.pop();
             }
         }
-        
+
         int total = 0;
         while (!heap.empty()) {
             total += heap.top();
@@ -454,7 +502,7 @@ public:
         }
         return total;
     }
-    
+
     void reset(int playerId) {
         scores[playerId] = 0;
     }
@@ -601,8 +649,6 @@ func (this *Leaderboard) Reset(playerId int) {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Leaderboard() {
     private val scores = mutableMapOf<Int, Int>()
 
@@ -665,7 +711,6 @@ class Leaderboard {
 }
 ```
 
-
 ```rust
 struct Leaderboard {
     scores: HashMap<i32, i32>,
@@ -693,6 +738,59 @@ impl Leaderboard {
 
     fn reset(&mut self, player_id: i32) {
         self.scores.insert(player_id, 0);
+    }
+}
+```
+
+```typescript
+class Leaderboard {
+    private scores: { [key: number]: number };
+
+    constructor() {
+        this.scores = {};
+    }
+
+    /**
+     * @param {number} playerId
+     * @param {number} score
+     * @return {void}
+     */
+    addScore(playerId: number, score: number): void {
+        if (!(playerId in this.scores)) {
+            this.scores[playerId] = 0;
+        }
+
+        this.scores[playerId] += score;
+    }
+
+    /**
+     * @param {number} K
+     * @return {number}
+     */
+    top(K: number): number {
+        const heap = new PriorityQueue((a: number, b: number) => a - b); // Using @datastructures-js/priority-queue
+
+        for (const score of Object.values(this.scores)) {
+            heap.enqueue(score);
+            if (heap.size() > K) {
+                heap.dequeue();
+            }
+        }
+
+        let res = 0;
+        while (heap.size() > 0) {
+            res += heap.dequeue();
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {number} playerId
+     * @return {void}
+     */
+    reset(playerId: number): void {
+        this.scores[playerId] = 0;
     }
 }
 ```
@@ -745,9 +843,9 @@ class Leaderboard:
     def addScore(self, playerId: int, score: int) -> None:
 
         # The scores dictionary simply contains the mapping from the
-        # playerId to their score. The sortedScores contain a BST with 
+        # playerId to their score. The sortedScores contain a BST with
         # key as the score and value as the number of players that have
-        # that score.     
+        # that score.
         if playerId not in self.scores:
             self.scores[playerId] = score
             self.sortedScores[-score] = self.sortedScores.get(-score, 0) + 1
@@ -757,29 +855,29 @@ class Leaderboard:
             if val == 1:
                 del self.sortedScores[-preScore]
             else:
-                self.sortedScores[-preScore] = val - 1    
-            
+                self.sortedScores[-preScore] = val - 1
+
             newScore = preScore + score
             self.scores[playerId] = newScore
             self.sortedScores[-newScore] = self.sortedScores.get(-newScore, 0) + 1
-        
+
     def top(self, K: int) -> int:
         count, total = 0, 0
 
         for key, value in self.sortedScores.items():
             times = self.sortedScores.get(key)
-            for _ in range(times): 
+            for _ in range(times):
                 total += -key
                 count += 1
-                
+
                 # Found top-K scores, break.
                 if count == K:
                     break
-                
+
             # Found top-K scores, break.
             if count == K:
                 break
-        
+
         return total
 
     def reset(self, playerId: int) -> None:
@@ -796,82 +894,82 @@ class Leaderboard {
 
     Map<Integer, Integer> scores;
     TreeMap<Integer, Integer> sortedScores;
-    
+
     public Leaderboard() {
         this.scores = new HashMap<Integer, Integer>();
         this.sortedScores = new TreeMap<>(Collections.reverseOrder());
     }
-    
+
     public void addScore(int playerId, int score) {
-        
+
         // The scores dictionary simply contains the mapping from the
-        // playerId to their score. The sortedScores contain a BST with 
+        // playerId to their score. The sortedScores contain a BST with
         // key as the score and value as the number of players that have
-        // that score.        
+        // that score.
         if (!this.scores.containsKey(playerId)) {
             this.scores.put(playerId, score);
             this.sortedScores.put(score, this.sortedScores.getOrDefault(score, 0) + 1);
         } else {
-            
+
             // Since the current player's score is changing, we need to
             // update the sortedScores map to reduce count for the old
             // score.
             int preScore = this.scores.get(playerId);
             int playerCount = this.sortedScores.get(preScore);
-            
-            
+
+
             // If no player has this score, remov it from the tree.
             if (playerCount == 1) {
                 this.sortedScores.remove(preScore);
             } else {
                 this.sortedScores.put(preScore, playerCount - 1);
             }
-            
+
             // Updated score
             int newScore = preScore + score;
             this.scores.put(playerId, newScore);
             this.sortedScores.put(newScore, this.sortedScores.getOrDefault(newScore, 0) + 1);
         }
     }
-    
+
     public int top(int K) {
-        
+
         int count = 0;
         int sum = 0;
-        
+
         // In-order traversal over the scores in the TreeMap
         for (Map.Entry<Integer, Integer> entry: this.sortedScores.entrySet()) {
-            
+
             // Number of players that have this score.
             int times = entry.getValue();
             int key = entry.getKey();
-            
+
             for (int i = 0; i < times; i++) {
                 sum += key;
                 count++;
-                
+
                 // Found top-K scores, break.
                 if (count == K) {
                     break;
                 }
             }
-            
+
             // Found top-K scores, break.
             if (count == K) {
                 break;
             }
         }
-        
+
         return sum;
     }
-    
+
     public void reset(int playerId) {
         int preScore = this.scores.get(playerId);
         this.sortedScores.put(preScore, this.sortedScores.get(preScore) - 1);
         if (this.sortedScores.get(preScore) == 0) {
             this.sortedScores.remove(preScore);
         }
-        
+
         this.scores.remove(playerId);
     }
 }
@@ -1148,8 +1246,6 @@ func (this *Leaderboard) Reset(playerId int) {
 ```
 
 ```kotlin
-import java.util.*
-
 class Leaderboard() {
     private val scores = HashMap<Int, Int>()
     private val sortedScores = TreeMap<Int, Int>(Collections.reverseOrder())
@@ -1258,7 +1354,6 @@ class Leaderboard {
 }
 ```
 
-
 ```rust
 struct Leaderboard {
     scores: HashMap<i32, i32>,
@@ -1312,6 +1407,81 @@ impl Leaderboard {
             self.sorted_scores.remove(&Reverse(pre_score));
         }
         self.scores.remove(&player_id);
+    }
+}
+```
+
+```typescript
+class Leaderboard {
+    private scores: Map<number, number>;
+    private sortedScores: Map<number, number>;
+
+    constructor() {
+        this.scores = new Map();
+        this.sortedScores = new Map();
+    }
+
+    /**
+     * @param {number} playerId
+     * @param {number} score
+     * @return {void}
+     */
+    addScore(playerId: number, score: number): void {
+        if (!this.scores.has(playerId)) {
+            this.scores.set(playerId, score);
+            this.sortedScores.set(score, (this.sortedScores.get(score) || 0) + 1);
+        } else {
+            const preScore = this.scores.get(playerId)!;
+            const playerCount = this.sortedScores.get(preScore)!;
+
+            if (playerCount === 1) {
+                this.sortedScores.delete(preScore);
+            } else {
+                this.sortedScores.set(preScore, playerCount - 1);
+            }
+
+            const newScore = preScore + score;
+            this.scores.set(playerId, newScore);
+            this.sortedScores.set(newScore, (this.sortedScores.get(newScore) || 0) + 1);
+        }
+    }
+
+    /**
+     * @param {number} K
+     * @return {number}
+     */
+    top(K: number): number {
+        const sortedKeys = [...this.sortedScores.keys()].sort((a, b) => b - a);
+        let count = 0, sum = 0;
+
+        for (const key of sortedKeys) {
+            const times = this.sortedScores.get(key)!;
+            for (let i = 0; i < times; i++) {
+                sum += key;
+                count++;
+                if (count === K) break;
+            }
+            if (count === K) break;
+        }
+
+        return sum;
+    }
+
+    /**
+     * @param {number} playerId
+     * @return {void}
+     */
+    reset(playerId: number): void {
+        const preScore = this.scores.get(playerId)!;
+        const playerCount = this.sortedScores.get(preScore)!;
+
+        if (playerCount === 1) {
+            this.sortedScores.delete(preScore);
+        } else {
+            this.sortedScores.set(preScore, playerCount - 1);
+        }
+
+        this.scores.delete(playerId);
     }
 }
 ```

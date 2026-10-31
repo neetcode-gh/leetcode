@@ -384,6 +384,47 @@ impl BSTIterator {
 }
 ```
 
+```typescript
+class BSTIterator {
+    private arr: number[];
+    private itr: number;
+
+    /**
+     * @constructor
+     * @param {TreeNode} root
+     */
+    constructor(root: TreeNode | null) {
+        this.arr = [];
+        this.itr = 0;
+
+        const dfs = (node: TreeNode | null): void => {
+            if (!node) {
+                return;
+            }
+            dfs(node.left);
+            this.arr.push(node.val);
+            dfs(node.right);
+        };
+
+        dfs(root);
+    }
+
+    /**
+     * @return {number}
+     */
+    next(): number {
+        return this.arr[this.itr++];
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.itr < this.arr.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -752,6 +793,47 @@ impl BSTIterator {
 }
 ```
 
+```typescript
+class BSTIterator {
+    private arr: number[];
+    private itr: number;
+
+    /**
+     * @constructor
+     * @param {TreeNode} root
+     */
+    constructor(root: TreeNode | null) {
+        this.arr = [];
+        this.itr = 0;
+
+        let stack: TreeNode[] = [];
+        while (root || stack.length) {
+            while (root) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop()!;
+            this.arr.push(root.val);
+            root = root.right;
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    next(): number {
+        return this.arr[this.itr++];
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.itr < this.arr.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1096,6 +1178,44 @@ impl BSTIterator {
 }
 ```
 
+```typescript
+class BSTIterator {
+    private stack: TreeNode[];
+
+    /**
+     * @constructor
+     * @param {TreeNode} root
+     */
+    constructor(root: TreeNode | null) {
+        this.stack = [];
+        while (root) {
+            this.stack.push(root);
+            root = root.left;
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    next(): number {
+        let res = this.stack.pop()!;
+        let cur = res.right;
+        while (cur) {
+            this.stack.push(cur);
+            cur = cur.left;
+        }
+        return res.val;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.stack.length > 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1413,6 +1533,43 @@ impl BSTIterator {
 
     fn has_next(&self) -> bool {
         self.cur.is_some() || !self.stack.is_empty()
+    }
+}
+```
+
+```typescript
+class BSTIterator {
+    private cur: TreeNode | null;
+    private stack: TreeNode[];
+
+    /**
+     * @constructor
+     * @param {TreeNode} root
+     */
+    constructor(root: TreeNode | null) {
+        this.cur = root;
+        this.stack = [];
+    }
+
+    /**
+     * @return {number}
+     */
+    next(): number {
+        while (this.cur) {
+            this.stack.push(this.cur);
+            this.cur = this.cur.left;
+        }
+
+        let node = this.stack.pop()!;
+        this.cur = node.right;
+        return node.val;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.cur !== null || this.stack.length > 0;
     }
 }
 ```

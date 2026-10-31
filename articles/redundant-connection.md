@@ -356,6 +356,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findRedundantConnection(edges: number[][]): number[] {
+        const n = edges.length;
+        const adj: number[][] = Array.from({ length: n + 1 }, () => []);
+
+        const dfs = (node: number, parent: number, visited: boolean[]): boolean => {
+            if (visited[node]) return true;
+            visited[node] = true;
+            for (const nei of adj[node]) {
+                if (nei === parent) continue;
+                if (dfs(nei, node, visited)) return true;
+            }
+            return false;
+        };
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+            const visited: boolean[] = Array(n + 1).fill(false);
+            if (dfs(u, -1, visited)) {
+                return [u, v];
+            }
+        }
+        return [];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -851,6 +884,57 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findRedundantConnection(edges: number[][]): number[] {
+        const n = edges.length;
+        const adj: number[][] = Array.from({ length: n + 1 }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const visit: boolean[] = Array(n + 1).fill(false);
+        const cycle = new Set<number>();
+        let cycleStart = -1;
+
+        const dfs = (node: number, par: number): boolean => {
+            if (visit[node]) {
+                cycleStart = node;
+                return true;
+            }
+            visit[node] = true;
+            for (const nei of adj[node]) {
+                if (nei === par) continue;
+                if (dfs(nei, node)) {
+                    if (cycleStart !== -1) cycle.add(node);
+                    if (node === cycleStart) {
+                        cycleStart = -1;
+                    }
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        dfs(1, -1);
+
+        for (let i = edges.length - 1; i >= 0; i--) {
+            const [u, v] = edges[i];
+            if (cycle.has(u) && cycle.has(v)) {
+                return [u, v];
+            }
+        }
+        return [];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1249,6 +1333,46 @@ impl Solution {
             }
         }
         vec![]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findRedundantConnection(edges: number[][]): number[] {
+        const n = edges.length;
+        const indegree: number[] = new Array(n + 1).fill(0);
+        const adj: number[][] = Array.from({ length: n + 1 }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+            indegree[u]++;
+            indegree[v]++;
+        }
+
+        const q = new Queue();
+        for (let i = 1; i <= n; i++) {
+            if (indegree[i] === 1) q.push(i);
+        }
+
+        while (!q.isEmpty()) {
+            const node: number = q.pop();
+            indegree[node]--;
+            for (const nei of adj[node]) {
+                indegree[nei]--;
+                if (indegree[nei] === 1) q.push(nei);
+            }
+        }
+
+        for (let i = edges.length - 1; i >= 0; i--) {
+            const [u, v] = edges[i];
+            if (indegree[u] === 2 && indegree[v]) return [u, v];
+        }
+        return [];
     }
 }
 ```
@@ -1677,6 +1801,61 @@ impl Solution {
             }
         }
         vec![]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    findRedundantConnection(edges: number[][]): number[] {
+        const par = new Array(edges.length + 1).fill(0).map((_, i) => i);
+        const rank: number[] = new Array(edges.length + 1).fill(1);
+
+        /**
+         * @param {number} n
+         * @return {number}
+         */
+        function find(n: number): number {
+            let p = par[n];
+            while (p !== par[p]) {
+                par[p] = par[par[p]];
+                p = par[p];
+            }
+            return p;
+        }
+
+        /**
+         * @param {number} n1
+         * @param {number} n2
+         * @return {boolean}
+         */
+        function union(n1: number, n2: number): boolean {
+            const p1 = find(n1);
+            const p2 = find(n2);
+
+            if (p1 === p2) {
+                return false;
+            }
+            if (rank[p1] > rank[p2]) {
+                par[p2] = p1;
+                rank[p1] += rank[p2];
+            } else {
+                par[p1] = p2;
+                rank[p2] += rank[p1];
+            }
+            return true;
+        }
+
+        for (const [n1, n2] of edges) {
+            if (!union(n1, n2)) {
+                return [n1, n2];
+            }
+        }
+        return [];
     }
 }
 ```

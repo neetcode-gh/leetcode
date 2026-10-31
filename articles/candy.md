@@ -321,6 +321,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} ratings
+     * @return {number}
+     */
+    candy(ratings: number[]): number {
+        const n = ratings.length;
+        const arr: number[] = new Array(n).fill(1);
+
+        for (let i = 0; i < n - 1; i++) {
+            if (ratings[i] === ratings[i + 1]) {
+                continue;
+            }
+            if (ratings[i + 1] > ratings[i]) {
+                arr[i + 1] = arr[i] + 1;
+            } else if (arr[i] === arr[i + 1]) {
+                arr[i + 1] = arr[i];
+                arr[i]++;
+                for (let j = i - 1; j >= 0; j--) {
+                    if (ratings[j] > ratings[j + 1]) {
+                        if (arr[j + 1] < arr[j]) {
+                            break;
+                        }
+                        arr[j]++;
+                    }
+                }
+            }
+        }
+
+        return arr.reduce((sum, num) => sum + num, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -564,6 +599,33 @@ impl Solution {
         }
 
         arr.iter().sum()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} ratings
+     * @return {number}
+     */
+    candy(ratings: number[]): number {
+        const n = ratings.length;
+        const arr: number[] = new Array(n).fill(1);
+
+        for (let i = 1; i < n; i++) {
+            if (ratings[i - 1] < ratings[i]) {
+                arr[i] = arr[i - 1] + 1;
+            }
+        }
+
+        for (let i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                arr[i] = Math.max(arr[i], arr[i + 1] + 1);
+            }
+        }
+
+        return arr.reduce((sum, num) => sum + num, 0);
     }
 }
 ```
@@ -906,6 +968,45 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} ratings
+     * @return {number}
+     */
+    candy(ratings: number[]): number {
+        const n = ratings.length;
+        let res = n;
+
+        let i = 1;
+        while (i < n) {
+            if (ratings[i] === ratings[i - 1]) {
+                i++;
+                continue;
+            }
+
+            let inc = 0;
+            while (i < n && ratings[i] > ratings[i - 1]) {
+                inc++;
+                res += inc;
+                i++;
+            }
+
+            let dec = 0;
+            while (i < n && ratings[i] < ratings[i - 1]) {
+                dec++;
+                res += dec;
+                i++;
+            }
+
+            res -= Math.min(inc, dec);
+        }
+
+        return res;
     }
 }
 ```

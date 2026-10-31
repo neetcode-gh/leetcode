@@ -361,6 +361,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    diameterOfBinaryTree(root: TreeNode | null): number {
+        if (!root) return 0;
+
+        let leftHeight = this.maxHeight(root.left);
+        let rightHeight = this.maxHeight(root.right);
+        let diameter = leftHeight + rightHeight;
+        let sub = Math.max(
+            this.diameterOfBinaryTree(root.left),
+            this.diameterOfBinaryTree(root.right),
+        );
+        return Math.max(diameter, sub);
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maxHeight(root: TreeNode | null): number {
+        if (!root) return 0;
+        return (
+            1 + Math.max(this.maxHeight(root.left), this.maxHeight(root.right))
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -694,6 +726,35 @@ impl Solution {
                 1 + left.max(right)
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    diameterOfBinaryTree(root: TreeNode | null): number {
+        const res = [0];
+        this.dfs(root, res);
+        return res[0];
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @param {number[]} res
+     * @return {number}
+     */
+    dfs(root: TreeNode | null, res: number[]): number {
+        if (root === null) {
+            return 0;
+        }
+        const left = this.dfs(root.left, res);
+        const right = this.dfs(root.right, res);
+        res[0] = Math.max(res[0], left + right);
+        return 1 + Math.max(left, right);
     }
 }
 ```
@@ -1064,7 +1125,7 @@ class Solution {
         mp[null] = Pair(0, 0)
 
         while (stack.isNotEmpty()) {
-            val node = stack.last()
+            val node = stack.peekLast()
 
             when {
                 node.left != null && !mp.containsKey(node.left) -> {
@@ -1182,6 +1243,44 @@ impl Solution {
         }
 
         mp.get(&(Rc::as_ptr(&root) as usize)).unwrap().1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    diameterOfBinaryTree(root: TreeNode | null): number {
+        let stack: TreeNode[] = [root!];
+        let mp = new Map<TreeNode | null, number[]>();
+        mp.set(null, [0, 0]);
+
+        while (stack.length > 0) {
+            let node = stack[stack.length - 1];
+
+            if (node.left && !mp.has(node.left)) {
+                stack.push(node.left);
+            } else if (node.right && !mp.has(node.right)) {
+                stack.push(node.right);
+            } else {
+                node = stack.pop()!;
+
+                let [leftHeight, leftDiameter] = mp.get(node.left)!;
+                let [rightHeight, rightDiameter] = mp.get(node.right)!;
+
+                let height = 1 + Math.max(leftHeight, rightHeight);
+                let diameter = Math.max(
+                    leftHeight + rightHeight,
+                    Math.max(leftDiameter, rightDiameter),
+                );
+
+                mp.set(node, [height, diameter]);
+            }
+        }
+        return mp.get(root)![1];
     }
 }
 ```

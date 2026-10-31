@@ -199,6 +199,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func gridGame(grid [][]int) int64 {
     cols := len(grid[0])
     res := int64(math.MaxInt64)
@@ -294,7 +296,7 @@ class Solution {
                 }
 
                 var bottom2 = 0
-                for k in j..<i {
+                for k in stride(from: j, to: i, by: 1) {
                     bottom2 += grid[1][k]
                 }
                 robot2 = max(robot2, top2 + bottom2)
@@ -340,6 +342,46 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    gridGame(grid: number[][]): number {
+        let cols = grid[0].length;
+        let res = Infinity;
+
+        let top1 = 0;
+        for (let i = 0; i < cols; i++) {
+            top1 += grid[0][i];
+            let bottom1 = 0;
+            for (let j = i; j < cols; j++) {
+                bottom1 += grid[1][j];
+            }
+
+            let top2 = 0,
+                robot2 = 0;
+            for (let j = 0; j < cols; j++) {
+                if (j > i) {
+                    top2 += grid[0][j];
+                }
+
+                let bottom2 = 0;
+                for (let k = j; k < i; k++) {
+                    bottom2 += grid[1][k];
+                }
+                robot2 = Math.max(robot2, top2 + bottom2);
+            }
+
+            res = Math.min(res, robot2);
+        }
+
+        return res;
     }
 }
 ```
@@ -502,6 +544,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func gridGame(grid [][]int) int64 {
     N := len(grid[0])
     preRow1 := make([]int64, N)
@@ -603,6 +647,34 @@ impl Solution {
             res = res.min(second_robot);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    gridGame(grid: number[][]): number {
+        const N = grid[0].length;
+        const preRow1 = [...grid[0]];
+        const preRow2 = [...grid[1]];
+
+        for (let i = 1; i < N; i++) {
+            preRow1[i] += preRow1[i - 1];
+            preRow2[i] += preRow2[i - 1];
+        }
+
+        let res = Infinity;
+        for (let i = 0; i < N; i++) {
+            const top = preRow1[N - 1] - preRow1[i];
+            const bottom = i > 0 ? preRow2[i - 1] : 0;
+            const secondRobot = Math.max(top, bottom);
+            res = Math.min(res, secondRobot);
+        }
+        return res;
     }
 }
 ```
@@ -711,6 +783,89 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long GridGame(int[][] grid) {
+        long res = long.MaxValue;
+        long topSum = 0, bottomSum = 0;
+
+        for (int i = 0; i < grid[0].Length; i++) {
+            topSum += grid[0][i];
+        }
+
+        for (int i = 0; i < grid[0].Length; i++) {
+            topSum -= grid[0][i];
+            res = Math.Min(res, Math.Max(topSum, bottomSum));
+            bottomSum += grid[1][i];
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func gridGame(grid [][]int) int64 {
+    var res int64 = 1<<63 - 1
+    var topSum, bottomSum int64 = 0, 0
+
+    for i := 0; i < len(grid[0]); i++ {
+        topSum += int64(grid[0][i])
+    }
+
+    for i := 0; i < len(grid[0]); i++ {
+        topSum -= int64(grid[0][i])
+        res = min(res, max(topSum, bottomSum))
+        bottomSum += int64(grid[1][i])
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun gridGame(grid: Array<IntArray>): Long {
+        var res = Long.MAX_VALUE
+        var topSum = 0L
+        var bottomSum = 0L
+
+        for (i in grid[0].indices) {
+            topSum += grid[0][i]
+        }
+
+        for (i in grid[0].indices) {
+            topSum -= grid[0][i]
+            res = minOf(res, maxOf(topSum, bottomSum))
+            bottomSum += grid[1][i]
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func gridGame(_ grid: [[Int]]) -> Int {
+        var res = Int.max
+        var topSum = 0, bottomSum = 0
+
+        for i in 0..<grid[0].count {
+            topSum += grid[0][i]
+        }
+
+        for i in 0..<grid[0].count {
+            topSum -= grid[0][i]
+            res = min(res, max(topSum, bottomSum))
+            bottomSum += grid[1][i]
+        }
+
+        return res
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn grid_game(grid: Vec<Vec<i32>>) -> i64 {
@@ -725,6 +880,28 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    gridGame(grid: number[][]): number {
+        let res = Infinity;
+        let topSum = grid[0].reduce((a, b) => a + b, 0);
+        let bottomSum = 0;
+
+        for (let i = 0; i < grid[0].length; i++) {
+            topSum -= grid[0][i];
+            res = Math.min(res, Math.max(topSum, bottomSum));
+            bottomSum += grid[1][i];
+        }
+
+        return res;
     }
 }
 ```

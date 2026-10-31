@@ -222,7 +222,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn valid_partition(nums: Vec<i32>) -> bool {
@@ -244,6 +243,37 @@ impl Solution {
             res
         }
         dfs(&nums, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    validPartition(nums: number[]): boolean {
+        const dfs = (i: number): boolean => {
+            if (i === nums.length) return true;
+
+            let res = false;
+            if (i < nums.length - 1 && nums[i] === nums[i + 1]) {
+                res = dfs(i + 2);
+            }
+            if (i < nums.length - 2) {
+                if (
+                    (nums[i] === nums[i + 1] && nums[i + 1] === nums[i + 2]) ||
+                    (nums[i] + 1 === nums[i + 1] &&
+                        nums[i + 1] + 1 === nums[i + 2])
+                ) {
+                    res = res || dfs(i + 3);
+                }
+            }
+            return res;
+        };
+
+        return dfs(0);
     }
 }
 ```
@@ -512,7 +542,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn valid_partition(nums: Vec<i32>) -> bool {
@@ -541,6 +570,42 @@ impl Solution {
         }
 
         dfs(&nums, 0, &mut memo)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    validPartition(nums: number[]): boolean {
+        const memo = new Map<number, boolean>();
+
+        const dfs = (i: number): boolean => {
+            if (i === nums.length) return true;
+            if (memo.has(i)) return memo.get(i)!;
+
+            let res = false;
+            if (i < nums.length - 1 && nums[i] === nums[i + 1]) {
+                res = dfs(i + 2);
+            }
+            if (i < nums.length - 2) {
+                if (
+                    (nums[i] === nums[i + 1] && nums[i + 1] === nums[i + 2]) ||
+                    (nums[i] + 1 === nums[i + 1] &&
+                        nums[i + 1] + 1 === nums[i + 2])
+                ) {
+                    res = res || dfs(i + 3);
+                }
+            }
+
+            memo.set(i, res);
+            return res;
+        };
+
+        return dfs(0);
     }
 }
 ```
@@ -741,7 +806,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn valid_partition(nums: Vec<i32>) -> bool {
@@ -762,6 +826,35 @@ impl Solution {
         }
 
         dp[n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    validPartition(nums: number[]): boolean {
+        const dp: boolean[] = Array(nums.length + 1).fill(false);
+        dp[0] = true;
+
+        for (let i = 2; i <= nums.length; i++) {
+            if (nums[i - 1] === nums[i - 2]) {
+                dp[i] = dp[i] || dp[i - 2];
+            }
+            if (
+                i > 2 &&
+                ((nums[i - 1] === nums[i - 2] && nums[i - 2] === nums[i - 3]) ||
+                    (nums[i - 3] + 1 === nums[i - 2] &&
+                        nums[i - 2] + 1 === nums[i - 1]))
+            ) {
+                dp[i] = dp[i] || dp[i - 3];
+            }
+        }
+
+        return dp[nums.length];
     }
 }
 ```
@@ -1001,7 +1094,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn valid_partition(nums: Vec<i32>) -> bool {
@@ -1027,6 +1119,39 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    validPartition(nums: number[]): boolean {
+        let dp = [false, true, true];
+
+        for (let i = nums.length - 2; i >= 0; i--) {
+            let dp1 = dp[0];
+            if (nums[i] === nums[i + 1] && dp[1]) {
+                dp[0] = true;
+            } else if (
+                i < nums.length - 2 &&
+                dp[2] &&
+                ((nums[i] === nums[i + 1] && nums[i] === nums[i + 2]) ||
+                    (nums[i] + 1 === nums[i + 1] &&
+                        nums[i + 1] === nums[i + 2] - 1))
+            ) {
+                dp[0] = true;
+            } else {
+                dp[0] = false;
+            }
+            dp[2] = dp[1];
+            dp[1] = dp1;
+        }
+
+        return dp[0];
     }
 }
 ```

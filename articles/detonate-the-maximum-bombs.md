@@ -363,6 +363,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} bombs
+     * @return {number}
+     */
+    maximumDetonation(bombs: number[][]): number {
+        let n = bombs.length;
+        let adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                let [x1, y1, r1] = bombs[i];
+                let [x2, y2, r2] = bombs[j];
+                let d = (x1 - x2) ** 2 + (y1 - y2) ** 2;
+
+                if (d <= r1 ** 2) adj[i].push(j);
+                if (d <= r2 ** 2) adj[j].push(i);
+            }
+        }
+
+        const dfs = (i: number, visit: Set<number>): number => {
+            if (visit.has(i)) return 0;
+            visit.add(i);
+            for (let nei of adj[i]) {
+                dfs(nei, visit);
+            }
+            return visit.size;
+        };
+
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            res = Math.max(res, dfs(i, new Set()));
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -774,6 +813,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} bombs
+     * @return {number}
+     */
+    maximumDetonation(bombs: number[][]): number {
+        let n = bombs.length;
+        let adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (let i = 0; i < n; i++) {
+            let [x1, y1, r1] = bombs[i];
+            for (let j = i + 1; j < n; j++) {
+                let [x2, y2, r2] = bombs[j];
+                let d = (x1 - x2) ** 2 + (y1 - y2) ** 2;
+
+                if (d <= r1 ** 2) adj[i].push(j);
+                if (d <= r2 ** 2) adj[j].push(i);
+            }
+        }
+
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            let q = new Queue([i]);
+            let visit: boolean[] = new Array(n).fill(false);
+            visit[i] = true;
+            let count = 1;
+
+            while (!q.isEmpty()) {
+                let node: number = q.pop();
+                for (let nei of adj[node]) {
+                    if (!visit[nei]) {
+                        visit[nei] = true;
+                        count++;
+                        q.push(nei);
+                    }
+                }
+            }
+            res = Math.max(res, count);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1179,6 +1263,51 @@ impl Solution {
             res = res.max(count);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} bombs
+     * @return {number}
+     */
+    maximumDetonation(bombs: number[][]): number {
+        let n = bombs.length;
+        let adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (let i = 0; i < n; i++) {
+            let [x1, y1, r1] = bombs[i];
+            for (let j = i + 1; j < n; j++) {
+                let [x2, y2, r2] = bombs[j];
+                let d = (x1 - x2) ** 2 + (y1 - y2) ** 2;
+
+                if (d <= r1 ** 2) adj[i].push(j);
+                if (d <= r2 ** 2) adj[j].push(i);
+            }
+        }
+
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            let stack: number[] = [i];
+            let visit: boolean[] = new Array(n).fill(false);
+            visit[i] = true;
+            let count = 1;
+
+            while (stack.length) {
+                let node = stack.pop()!;
+                for (let nei of adj[node]) {
+                    if (!visit[nei]) {
+                        visit[nei] = true;
+                        count++;
+                        stack.push(nei);
+                    }
+                }
+            }
+            res = Math.max(res, count);
+        }
+        return res;
     }
 }
 ```

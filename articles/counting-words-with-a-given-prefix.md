@@ -234,6 +234,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} pref
+     * @return {number}
+     */
+    prefixCount(words: string[], pref: string): number {
+        let N = pref.length,
+            res = 0;
+
+        for (let w of words) {
+            if (w.length < N) continue;
+            let inc = 1;
+            for (let i = 0; i < N; i++) {
+                if (w[i] !== pref[i]) {
+                    inc = 0;
+                    break;
+                }
+            }
+            res += inc;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,6 +409,25 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} pref
+     * @return {number}
+     */
+    prefixCount(words: string[], pref: string): number {
+        let res = 0;
+        for (let w of words) {
+            if (w.startsWith(pref)) {
+                res++;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -871,6 +918,65 @@ impl Solution {
         }
 
         prefix_tree.count(pref_bytes)
+    }
+}
+```
+
+```typescript
+class PrefixNode {
+    children: Map<string, PrefixNode>;
+    count: number;
+
+    constructor() {
+        this.children = new Map();
+        this.count = 0;
+    }
+}
+
+class PrefixTree {
+    private root: PrefixNode;
+
+    constructor() {
+        this.root = new PrefixNode();
+    }
+
+    add(w: string, length: number): void {
+        let cur = this.root;
+        for (let i = 0; i < length; i++) {
+            if (!cur.children.has(w[i])) {
+                cur.children.set(w[i], new PrefixNode());
+            }
+            cur = cur.children.get(w[i])!;
+            cur.count++;
+        }
+    }
+
+    count(pref: string): number {
+        let cur = this.root;
+        for (let c of pref) {
+            if (!cur.children.has(c)) {
+                return 0;
+            }
+            cur = cur.children.get(c)!;
+        }
+        return cur.count;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} pref
+     * @return {number}
+     */
+    prefixCount(words: string[], pref: string): number {
+        let prefix_tree = new PrefixTree();
+        for (let w of words) {
+            if (w.length >= pref.length) {
+                prefix_tree.add(w, pref.length);
+            }
+        }
+        return prefix_tree.count(pref);
     }
 }
 ```

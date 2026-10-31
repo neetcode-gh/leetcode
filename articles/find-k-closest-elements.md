@@ -86,7 +86,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+    public List<int> FindClosestElements(int[] arr, int k, int x) {
         var list = arr.ToList();
         list.Sort((a, b) => {
             int diff = Math.Abs(a - x) - Math.Abs(b - x);
@@ -161,6 +161,25 @@ impl Solution {
         let mut result: Vec<i32> = arr[..k].to_vec();
         result.sort();
         result
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} x
+     * @return {number[]}
+     */
+    findClosestElements(arr: number[], k: number, x: number): number[] {
+        arr.sort((a, b) => {
+            const diff = Math.abs(a - x) - Math.abs(b - x);
+            return diff === 0 ? a - b : diff;
+        });
+        const result = arr.slice(0, k);
+        return result.sort((a, b) => a - b);
     }
 }
 ```
@@ -339,7 +358,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+    public List<int> FindClosestElements(int[] arr, int k, int x) {
         int n = arr.Length;
         int idx = 0;
         for (int i = 1; i < n; i++) {
@@ -526,6 +545,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} x
+     * @return {number[]}
+     */
+    findClosestElements(arr: number[], k: number, x: number): number[] {
+        const n = arr.length;
+        let idx = 0;
+        for (let i = 1; i < n; i++) {
+            if (Math.abs(x - arr[idx]) > Math.abs(x - arr[i])) {
+                idx = i;
+            }
+        }
+
+        const res: number[] = [arr[idx]];
+        let l = idx - 1,
+            r = idx + 1;
+
+        while (res.length < k) {
+            if (l >= 0 && r < n) {
+                if (Math.abs(x - arr[l]) <= Math.abs(x - arr[r])) {
+                    res.push(arr[l--]);
+                } else {
+                    res.push(arr[r++]);
+                }
+            } else if (l >= 0) {
+                res.push(arr[l--]);
+            } else if (r < n) {
+                res.push(arr[r++]);
+            }
+        }
+
+        return res.sort((a, b) => a - b);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -631,7 +690,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+    public List<int> FindClosestElements(int[] arr, int k, int x) {
         int l = 0, r = arr.Length - 1;
         while (r - l >= k) {
             if (Math.Abs(x - arr[l]) <= Math.Abs(x - arr[r])) {
@@ -718,6 +777,29 @@ impl Solution {
             }
         }
         arr[l..=r].to_vec()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} x
+     * @return {number[]}
+     */
+    findClosestElements(arr: number[], k: number, x: number): number[] {
+        let l = 0,
+            r = arr.length - 1;
+        while (r - l >= k) {
+            if (Math.abs(x - arr[l]) <= Math.abs(x - arr[r])) {
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return arr.slice(l, r + 1);
     }
 }
 ```
@@ -886,7 +968,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+    public List<int> FindClosestElements(int[] arr, int k, int x) {
         int l = 0, r = arr.Length - 1;
         while (l < r) {
             int mid = (l + r) / 2;
@@ -1054,6 +1136,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} x
+     * @return {number[]}
+     */
+    findClosestElements(arr: number[], k: number, x: number): number[] {
+        let l = 0,
+            r = arr.length - 1;
+        while (l < r) {
+            const mid = Math.floor((l + r) / 2);
+            if (arr[mid] < x) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        l = l - 1;
+        r = l + 1;
+        while (r - l - 1 < k) {
+            if (l < 0) {
+                r++;
+            } else if (r >= arr.length) {
+                l--;
+            } else if (Math.abs(arr[l] - x) <= Math.abs(arr[r] - x)) {
+                l--;
+            } else {
+                r++;
+            }
+        }
+
+        return arr.slice(l + 1, r);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1161,7 +1282,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+    public List<int> FindClosestElements(int[] arr, int k, int x) {
         int l = 0, r = arr.Length - k;
         while (l < r) {
             int m = (l + r) / 2;
@@ -1246,6 +1367,30 @@ impl Solution {
             }
         }
         arr[l..l + k].to_vec()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} x
+     * @return {number[]}
+     */
+    findClosestElements(arr: number[], k: number, x: number): number[] {
+        let l = 0,
+            r = arr.length - k;
+        while (l < r) {
+            const m = Math.floor((l + r) / 2);
+            if (x - arr[m] > arr[m + k] - x) {
+                l = m + 1;
+            } else {
+                r = m;
+            }
+        }
+        return arr.slice(l, l + k);
     }
 }
 ```

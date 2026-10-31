@@ -230,6 +230,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} poured
+     * @param {number} query_row
+     * @param {number} query_glass
+     * @return {number}
+     */
+    champagneTower(poured: number, query_row: number, query_glass: number): number {
+        const rec = (row: number, glass: number): number => {
+            if (row < 0 || glass < 0 || glass > row) {
+                return 0;
+            }
+
+            if (row === 0 && glass === 0) {
+                return poured;
+            }
+
+            const leftParent = Math.max(0, rec(row - 1, glass - 1) - 1);
+            const rightParent = Math.max(0, rec(row - 1, glass) - 1);
+
+            return (leftParent + rightParent) / 2;
+        };
+
+        return Math.min(1, rec(query_row, query_glass));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +554,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} poured
+     * @param {number} query_row
+     * @param {number} query_glass
+     * @return {number}
+     */
+    champagneTower(poured: number, query_row: number, query_glass: number): number {
+        const memo: number[][] = Array.from({ length: query_row + 5 }, (_, i) =>
+            Array(i + 1).fill(-1),
+        );
+        memo[0][0] = poured;
+
+        const rec = (row: number, glass: number): number => {
+            if (row < 0 || glass < 0 || glass > row) {
+                return 0;
+            }
+
+            if (memo[row][glass] != -1) {
+                return memo[row][glass];
+            }
+
+            const leftParent = Math.max(0, rec(row - 1, glass - 1) - 1);
+            const rightParent = Math.max(0, rec(row - 1, glass) - 1);
+
+            memo[row][glass] = (leftParent + rightParent) / 2;
+            return memo[row][glass];
+        };
+
+        return Math.min(1, rec(query_row, query_glass));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -774,6 +838,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} poured
+     * @param {number} query_row
+     * @param {number} query_glass
+     * @return {number}
+     */
+    champagneTower(poured: number, query_row: number, query_glass: number): number {
+        const dp: number[][] = Array.from({ length: query_row + 5 }, (_, i) =>
+            Array(i + 1).fill(0),
+        );
+        dp[0][0] += poured;
+
+        for (let row = 0; row < Math.min(99, query_row + 1); row++) {
+            for (let glass = 0; glass <= row; glass++) {
+                const excess = (dp[row][glass] - 1.0) / 2.0;
+                if (excess > 0) {
+                    dp[row + 1][glass] += excess;
+                    dp[row + 1][glass + 1] += excess;
+                }
+            }
+        }
+
+        return Math.min(1.0, dp[query_row][query_glass]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -964,7 +1057,7 @@ class Solution {
     func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
         var prevRow = [Double(poured)]
 
-        for row in 1...query_row {
+        for row in stride(from: 1, through: query_row, by: 1) {
             var curRow = [Double](repeating: 0, count: row + 1)
             for i in 0..<row {
                 let extra = prevRow[i] - 1
@@ -1000,6 +1093,34 @@ impl Solution {
         }
 
         prev_row[query_glass as usize].min(1.0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} poured
+     * @param {number} query_row
+     * @param {number} query_glass
+     * @return {number}
+     */
+    champagneTower(poured: number, query_row: number, query_glass: number): number {
+        let prev_row: number[] = [poured]; // Flow
+
+        for (let row = 1; row <= query_row; row++) {
+            let cur_row: number[] = new Array(row + 1).fill(0);
+            for (let i = 0; i < row; i++) {
+                let extra = prev_row[i] - 1;
+                if (extra > 0) {
+                    cur_row[i] += 0.5 * extra;
+                    cur_row[i + 1] += 0.5 * extra;
+                }
+            }
+            prev_row = cur_row;
+        }
+
+        return Math.min(1, prev_row[query_glass]);
     }
 }
 ```
@@ -1201,7 +1322,7 @@ class Solution {
         var dp = [Double](repeating: 0, count: query_row + 1)
         dp[0] = Double(poured)
 
-        for row in 1...query_row {
+        for row in stride(from: 1, through: query_row, by: 1) {
             for i in stride(from: row - 1, through: 0, by: -1) {
                 let extra = dp[i] - 1
                 if extra > 0 {
@@ -1238,6 +1359,35 @@ impl Solution {
         }
 
         dp[query_glass as usize].min(1.0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} poured
+     * @param {number} query_row
+     * @param {number} query_glass
+     * @return {number}
+     */
+    champagneTower(poured: number, query_row: number, query_glass: number): number {
+        let dp: number[] = new Array(query_row + 1).fill(0);
+        dp[0] = poured;
+
+        for (let row = 1; row <= query_row; row++) {
+            for (let i = row - 1; i >= 0; i--) {
+                let extra = dp[i] - 1;
+                if (extra > 0) {
+                    dp[i] = 0.5 * extra;
+                    dp[i + 1] += 0.5 * extra;
+                } else {
+                    dp[i] = 0;
+                }
+            }
+        }
+
+        return Math.min(1, dp[query_glass]);
     }
 }
 ```

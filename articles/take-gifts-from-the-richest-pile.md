@@ -174,7 +174,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn pick_gifts(gifts: Vec<i32>, k: i32) -> i64 {
@@ -189,6 +188,29 @@ impl Solution {
             gifts[max_idx] = (gifts[max_idx] as f64).sqrt().floor() as i32;
         }
         gifts.iter().map(|&g| g as i64).sum()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} gifts
+     * @param {number} k
+     * @return {number}
+     */
+    pickGifts(gifts: number[], k: number): number {
+        for (let t = 0; t < k; t++) {
+            let maxIdx = 0;
+            for (let i = 1; i < gifts.length; i++) {
+                if (gifts[i] > gifts[maxIdx]) {
+                    maxIdx = i;
+                }
+            }
+            gifts[maxIdx] = Math.floor(Math.sqrt(gifts[maxIdx]));
+        }
+
+        return gifts.reduce((a, b) => a + b, 0);
     }
 }
 ```
@@ -453,7 +475,6 @@ struct Heap<T> {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn pick_gifts(gifts: Vec<i32>, k: i32) -> i64 {
@@ -465,6 +486,31 @@ impl Solution {
         }
 
         heap.into_iter().map(|g| g as i64).sum()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} gifts
+     * @param {number} k
+     * @return {number}
+     */
+    pickGifts(gifts: number[], k: number): number {
+        const pq = new MaxPriorityQueue();
+        gifts.forEach((g) => pq.enqueue(g));
+
+        for (let t = 0; t < k; t++) {
+            const n: number = pq.dequeue();
+            pq.enqueue(Math.floor(Math.sqrt(n)));
+        }
+
+        let sum = 0;
+        while (!pq.isEmpty()) {
+            sum += pq.dequeue();
+        }
+        return sum;
     }
 }
 ```

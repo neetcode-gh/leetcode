@@ -142,6 +142,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int DeleteAndEarn(int[] nums) {
+        Array.Sort(nums);
+        return Dfs(nums, 0);
+    }
+
+    private int Dfs(int[] nums, int i) {
+        if (i >= nums.Length) return 0;
+
+        int cur = nums[i], pick = 0;
+        while (i < nums.Length && nums[i] == cur) {
+            pick += nums[i];
+            i++;
+        }
+
+        int res = Dfs(nums, i);
+        while (i < nums.Length && nums[i] == cur + 1) {
+            i++;
+        }
+
+        res = Math.Max(res, pick + Dfs(nums, i));
+        return res;
+    }
+}
+```
+
 ```go
 func deleteAndEarn(nums []int) int {
     sort.Ints(nums)
@@ -268,6 +295,39 @@ impl Solution {
         }
 
         dfs(&nums, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    deleteAndEarn(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+
+        const dfs = (i: number): number => {
+            if (i >= nums.length) return 0;
+
+            let cur = nums[i],
+                pick = 0;
+            while (i < nums.length && nums[i] === cur) {
+                pick += nums[i];
+                i++;
+            }
+
+            let res = dfs(i);
+            while (i < nums.length && nums[i] === cur + 1) {
+                i++;
+            }
+
+            res = Math.max(res, pick + dfs(i));
+            return res;
+        };
+
+        return dfs(0);
     }
 }
 ```
@@ -442,6 +502,43 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> val;
+    private int[] memo;
+
+    public int DeleteAndEarn(int[] nums) {
+        val = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            val[num] = val.GetValueOrDefault(num, 0) + num;
+        }
+
+        List<int> uniqueNums = new List<int>(val.Keys);
+        uniqueNums.Sort();
+        memo = new int[uniqueNums.Count];
+        Array.Fill(memo, -1);
+
+        return Dfs(uniqueNums, 0);
+    }
+
+    private int Dfs(List<int> nums, int i) {
+        if (i >= nums.Count) return 0;
+        if (memo[i] != -1) return memo[i];
+
+        int res = val[nums[i]];
+        if (i + 1 < nums.Count && nums[i] + 1 == nums[i + 1]) {
+            res += Dfs(nums, i + 2);
+        } else {
+            res += Dfs(nums, i + 1);
+        }
+
+        res = Math.Max(res, Dfs(nums, i + 1));
+        memo[i] = res;
+        return res;
+    }
+}
+```
+
 ```go
 func deleteAndEarn(nums []int) int {
     val := make(map[int]int)
@@ -604,6 +701,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    deleteAndEarn(nums: number[]): number {
+        const val = new Map<number, number>();
+        nums.forEach((num) => {
+            val.set(num, (val.get(num) || 0) + num);
+        });
+        const uniqueNums = Array.from(new Set(nums)).sort((a, b) => a - b);
+        const memo: number[] = Array(uniqueNums.length).fill(-1);
+
+        const dfs = (nums: number[], i: number): number => {
+            if (i >= nums.length) return 0;
+            if (memo[i] !== -1) return memo[i];
+
+            let res = val.get(nums[i])!;
+            if (i + 1 < nums.length && nums[i] + 1 === nums[i + 1]) {
+                res += dfs(nums, i + 2);
+            } else {
+                res += dfs(nums, i + 1);
+            }
+
+            res = Math.max(res, dfs(nums, i + 1));
+            memo[i] = res;
+            return res;
+        };
+
+        return dfs(uniqueNums, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -731,6 +863,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int DeleteAndEarn(int[] nums) {
+        Dictionary<int, int> val = new Dictionary<int, int>();
+        foreach (int num in nums) val[num] = val.GetValueOrDefault(num, 0) + num;
+        List<int> sortedNums = new List<int>(val.Keys);
+        sortedNums.Sort();
+
+        int[] dp = new int[sortedNums.Count + 1];
+        for (int i = sortedNums.Count - 1; i >= 0; i--) {
+            int take = val[sortedNums[i]];
+            if (i + 1 < sortedNums.Count && sortedNums[i + 1] == sortedNums[i] + 1) {
+                take += dp[i + 2];
+            } else {
+                take += dp[i + 1];
+            }
+            dp[i] = Math.Max(dp[i + 1], take);
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ```go
 func deleteAndEarn(nums []int) int {
     val := make(map[int]int)
@@ -842,6 +998,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    deleteAndEarn(nums: number[]): number {
+        const val = new Map<number, number>();
+        nums.forEach((num) => val.set(num, (val.get(num) || 0) + num));
+        const sortedNums = Array.from(val.keys()).sort((a, b) => a - b);
+
+        const dp: number[] = Array(sortedNums.length + 1).fill(0);
+        for (let i = sortedNums.length - 1; i >= 0; i--) {
+            let take = val.get(sortedNums[i])!;
+            if (
+                i + 1 < sortedNums.length &&
+                sortedNums[i + 1] === sortedNums[i] + 1
+            ) {
+                take += dp[i + 2];
+            } else {
+                take += dp[i + 1];
+            }
+            dp[i] = Math.max(dp[i + 1], take);
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -937,6 +1123,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int DeleteAndEarn(int[] nums) {
+        int m = 0;
+        foreach (int num in nums) m = Math.Max(m, num);
+
+        int[] dp = new int[m + 2];
+        foreach (int num in nums) dp[num] += num;
+        for (int i = m - 1; i > 0; i--) {
+            dp[i] = Math.Max(dp[i + 1], dp[i + 2] + dp[i]);
+        }
+        return dp[1];
+    }
+}
+```
+
 ```go
 func deleteAndEarn(nums []int) int {
     m := 0
@@ -1015,6 +1217,27 @@ impl Solution {
             dp[i] = dp[i + 1].max(dp[i + 2] + dp[i]);
         }
         dp[1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    deleteAndEarn(nums: number[]): number {
+        const m = Math.max(...nums);
+        const dp = new Int32Array(m + 2);
+        for (let num of nums) {
+            dp[num] += num;
+        }
+
+        for (let i = m - 1; i > 0; i--) {
+            dp[i] = Math.max(dp[i + 1], dp[i + 2] + dp[i]);
+        }
+        return dp[1];
     }
 }
 ```
@@ -1153,6 +1376,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int DeleteAndEarn(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) count[num] = count.GetValueOrDefault(num, 0) + num;
+        List<int> uniqueNums = new List<int>(count.Keys);
+        uniqueNums.Sort();
+
+        int earn1 = 0, earn2 = 0;
+        for (int i = 0; i < uniqueNums.Count; i++) {
+            int curEarn = count[uniqueNums[i]];
+            if (i > 0 && uniqueNums[i] == uniqueNums[i - 1] + 1) {
+                int temp = earn2;
+                earn2 = Math.Max(curEarn + earn1, earn2);
+                earn1 = temp;
+            } else {
+                int temp = earn2;
+                earn2 = curEarn + earn2;
+                earn1 = temp;
+            }
+        }
+        return earn2;
+    }
+}
+```
+
 ```go
 func deleteAndEarn(nums []int) int {
     count := make(map[int]int)
@@ -1270,6 +1519,36 @@ impl Solution {
             }
         }
         earn2
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    deleteAndEarn(nums: number[]): number {
+        const count = new Map<number, number>();
+        nums.forEach((num) => count.set(num, (count.get(num) || 0) + num));
+        const uniqueNums = [...count.keys()].sort((a, b) => a - b);
+
+        let earn1 = 0,
+            earn2 = 0;
+        for (let i = 0; i < uniqueNums.length; i++) {
+            const curEarn = count.get(uniqueNums[i])!;
+            if (i > 0 && uniqueNums[i] === uniqueNums[i - 1] + 1) {
+                const temp = earn2;
+                earn2 = Math.max(curEarn + earn1, earn2);
+                earn1 = temp;
+            } else {
+                const temp = earn2;
+                earn2 = curEarn + earn2;
+                earn1 = temp;
+            }
+        }
+        return earn2;
     }
 }
 ```

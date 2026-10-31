@@ -259,6 +259,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @param {number} k
+     * @return {string}
+     */
+    kthDistinct(arr: string[], k: number): string {
+        for (let i = 0; i < arr.length; i++) {
+            let flag = true;
+            for (let j = 0; j < arr.length; j++) {
+                if (i === j) continue;
+
+                if (arr[i] === arr[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) {
+                k--;
+                if (k === 0) {
+                    return arr[i];
+                }
+            }
+        }
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,6 +524,37 @@ impl Solution {
             }
         }
         String::new()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @param {number} k
+     * @return {string}
+     */
+    kthDistinct(arr: string[], k: number): string {
+        const count: { [key: string]: number } = {};
+
+        for (let s of arr) {
+            if (!(s in count)) {
+                count[s] = 0;
+            }
+            count[s]++;
+        }
+
+        for (let s of arr) {
+            if (count[s] === 1) {
+                k--;
+                if (k === 0) {
+                    return s;
+                }
+            }
+        }
+
+        return '';
     }
 }
 ```
@@ -780,6 +842,40 @@ impl Solution {
         }
 
         String::new()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} arr
+     * @param {number} k
+     * @return {string}
+     */
+    kthDistinct(arr: string[], k: number): string {
+        const distinct = new Set<string>();
+        const seen = new Set<string>();
+
+        for (let s of arr) {
+            if (distinct.has(s)) {
+                distinct.delete(s);
+                seen.add(s);
+            } else if (!seen.has(s)) {
+                distinct.add(s);
+            }
+        }
+
+        for (let s of arr) {
+            if (distinct.has(s)) {
+                k--;
+                if (k === 0) {
+                    return s;
+                }
+            }
+        }
+
+        return '';
     }
 }
 ```

@@ -281,6 +281,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    reverseList(head: ListNode | null): ListNode | null {
+        if (!head) {
+            return null;
+        }
+
+        let newHead: ListNode | null = head;
+        if (head.next) {
+            newHead = this.reverseList(head.next);
+            head.next.next = head;
+        }
+        head.next = null;
+
+        return newHead;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +574,27 @@ impl Solution {
             curr = temp;
         }
         prev
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    reverseList(head: ListNode | null): ListNode | null {
+        let prev: ListNode | null = null;
+        let curr = head;
+
+        while (curr) {
+            let temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
     }
 }
 ```

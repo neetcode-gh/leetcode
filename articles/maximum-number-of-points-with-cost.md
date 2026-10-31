@@ -280,6 +280,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        let m = points.length,
+            n = points[0].length;
+
+        function dfs(r: number, c: number): number {
+            if (r === m - 1) return 0;
+            let res = 0;
+            for (let col = 0; col < n; col++) {
+                res = Math.max(
+                    res,
+                    points[r + 1][col] - Math.abs(col - c) + dfs(r + 1, col),
+                );
+            }
+            return res;
+        }
+
+        let ans = 0;
+        for (let c = 0; c < n; c++) {
+            ans = Math.max(ans, points[0][c] + dfs(0, c));
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -620,6 +651,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        let m = points.length,
+            n = points[0].length;
+        let memo: { [key: string]: number } = {};
+
+        function dfs(r: number, c: number): number {
+            let key = r + ',' + c;
+            if (key in memo) return memo[key];
+            if (r === m - 1) return 0;
+
+            let res = 0;
+            for (let col = 0; col < n; col++) {
+                res = Math.max(
+                    res,
+                    points[r + 1][col] - Math.abs(col - c) + dfs(r + 1, col),
+                );
+            }
+            return (memo[key] = res);
+        }
+
+        let ans = 0;
+        for (let c = 0; c < n; c++) {
+            ans = Math.max(ans, points[0][c] + dfs(0, c));
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -949,6 +1015,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        let ROWS = points.length,
+            COLS = points[0].length;
+        let dp: number[] = [...points[0]];
+
+        for (let r = 1; r < ROWS; r++) {
+            let left: number[] = Array(COLS).fill(0);
+            left[0] = dp[0];
+            for (let c = 1; c < COLS; c++)
+                left[c] = Math.max(dp[c], left[c - 1] - 1);
+
+            let right: number[] = Array(COLS).fill(0);
+            right[COLS - 1] = dp[COLS - 1];
+            for (let c = COLS - 2; c >= 0; c--)
+                right[c] = Math.max(dp[c], right[c + 1] - 1);
+
+            let nextDp = [...points[r]];
+            for (let c = 0; c < COLS; c++)
+                nextDp[c] += Math.max(left[c], right[c]);
+
+            dp = nextDp;
+        }
+
+        return Math.max(...dp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1238,6 +1338,36 @@ impl Solution {
         }
 
         *prev.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        let rows = points.length,
+            cols = points[0].length;
+        let prev = points[0].map((v) => v);
+
+        for (let r = 1; r < rows; r++) {
+            let cur: number[] = Array(cols).fill(0);
+            cur[0] = prev[0];
+            for (let c = 1; c < cols; c++)
+                cur[c] = Math.max(prev[c], cur[c - 1] - 1);
+
+            let rightMax = prev[cols - 1];
+            for (let c = cols - 2; c >= 0; c--) {
+                rightMax = Math.max(prev[c], rightMax - 1);
+                cur[c] = Math.max(cur[c], rightMax) + points[r][c];
+            }
+            cur[cols - 1] += points[r][cols - 1];
+            prev = cur;
+        }
+        return Math.max(...prev);
     }
 }
 ```

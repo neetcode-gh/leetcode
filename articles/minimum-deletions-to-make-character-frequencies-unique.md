@@ -244,6 +244,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minDeletions(s: string): number {
+        let count: number[] = new Array(26).fill(0);
+        for (let c of s) {
+            count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        let usedFreq = new Set<number>();
+        let res = 0;
+
+        for (let freq of count) {
+            while (freq > 0 && usedFreq.has(freq)) {
+                freq--;
+                res++;
+            }
+            usedFreq.add(freq);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,8 +395,8 @@ class Solution {
 
         let res = 0;
         while (maxHeap.size() > 1) {
-            let top = maxHeap.dequeue().element;
-            if (maxHeap.front().element === top) {
+            let top = maxHeap.dequeue();
+            if (maxHeap.front() === top) {
                 if (top - 1 > 0) {
                     maxHeap.enqueue(top - 1);
                 }
@@ -579,6 +607,39 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minDeletions(s: string): number {
+        let freq = new Map<string, number>();
+        for (let c of s) {
+            freq.set(c, (freq.get(c) || 0) + 1);
+        }
+
+        const maxHeap = new MaxPriorityQueue();
+        for (let value of freq.values()) {
+            maxHeap.enqueue(value);
+        }
+
+        let res = 0;
+        while (maxHeap.size() > 1) {
+            let top: number = maxHeap.dequeue();
+            if (maxHeap.front() === top) {
+                if (top - 1 > 0) {
+                    maxHeap.enqueue(top - 1);
+                }
+                res++;
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -845,6 +906,36 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minDeletions(s: string): number {
+        let count: number[] = new Array(26).fill(0);
+        for (let c of s) {
+            count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        count.sort((a, b) => b - a);
+
+        let res = 0;
+        let maxAllowedFreq = count[0];
+
+        for (let i = 0; i < 26; i++) {
+            if (count[i] > maxAllowedFreq) {
+                res += count[i] - maxAllowedFreq;
+                count[i] = maxAllowedFreq;
+            }
+            maxAllowedFreq = Math.max(0, count[i] - 1);
+        }
+
+        return res;
     }
 }
 ```

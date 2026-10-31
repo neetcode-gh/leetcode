@@ -274,6 +274,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number[]}
+     */
+    findMissingAndRepeatedValues(grid: number[][]): number[] {
+        const n = grid.length;
+        let doubleVal = 0,
+            missing = 0;
+
+        for (let num = 1; num <= n * n; num++) {
+            let cnt = 0;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (grid[i][j] === num) {
+                        cnt++;
+                    }
+                }
+            }
+
+            if (cnt === 2) {
+                doubleVal = num;
+            } else if (cnt === 0) {
+                missing = num;
+            }
+        }
+
+        return [doubleVal, missing];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,6 +565,37 @@ impl Solution {
         }
 
         vec![double_val, missing]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number[]}
+     */
+    findMissingAndRepeatedValues(grid: number[][]): number[] {
+        const N = grid.length;
+        const count: { [key: number]: number } = {};
+
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < N; j++) {
+                let val = grid[i][j];
+                count[val] = (count[val] || 0) + 1;
+            }
+        }
+
+        let doubleVal = 0,
+            missing = 0;
+
+        for (let num = 1; num <= N * N; num++) {
+            let freq = count[num] || 0;
+            if (freq === 0) missing = num;
+            if (freq === 2) doubleVal = num;
+        }
+
+        return [doubleVal, missing];
     }
 }
 ```
@@ -810,6 +874,40 @@ impl Solution {
         }
 
         vec![double_val, missing]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number[]}
+     */
+    findMissingAndRepeatedValues(grid: number[][]): number[] {
+        const N = grid.length;
+        const seen = new Set<number>();
+        let doubleVal = 0,
+            missing = 0;
+
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < N; j++) {
+                const val = grid[i][j];
+                if (seen.has(val)) {
+                    doubleVal = val;
+                }
+                seen.add(val);
+            }
+        }
+
+        for (let num = 1; num <= N * N; num++) {
+            if (!seen.has(num)) {
+                missing = num;
+                break;
+            }
+        }
+
+        return [doubleVal, missing];
     }
 }
 ```
@@ -1106,6 +1204,40 @@ impl Solution {
         let b = sum - a;
 
         vec![a as i32, b as i32]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number[]}
+     */
+    findMissingAndRepeatedValues(grid: number[][]): number[] {
+        const N = grid.length;
+        let gridSum = 0;
+        let gridSqSum = 0;
+
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < N; j++) {
+                gridSum += grid[i][j];
+                gridSqSum += grid[i][j] * grid[i][j];
+            }
+        }
+
+        let totSum = (N * N * (N * N + 1)) / 2;
+        let diff = gridSum - totSum; // a - b
+
+        let totSqSum = (N * N * (N * N + 1) * (2 * N * N + 1)) / 6;
+        let sqDiff = gridSqSum - totSqSum; // (a^2) - (b^2)
+
+        let sum = sqDiff / diff; // a + b
+
+        let a = (sum + diff) / 2;
+        let b = sum - a;
+
+        return [a, b];
     }
 }
 ```

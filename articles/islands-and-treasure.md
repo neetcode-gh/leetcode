@@ -436,6 +436,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {void}
+     */
+    islandsAndTreasure(grid: number[][]): void {
+        let ROWS = grid.length;
+        let COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const INF = 2147483647;
+        let visit: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+
+        const dfs = (r: number, c: number): number => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                grid[r][c] === -1 ||
+                visit[r][c]
+            ) {
+                return INF;
+            }
+            if (grid[r][c] === 0) {
+                return 0;
+            }
+            visit[r][c] = true;
+            let res = INF;
+            for (let [dx, dy] of directions) {
+                res = Math.min(res, 1 + dfs(r + dx, c + dy));
+            }
+            visit[r][c] = false;
+            return res;
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === INF) {
+                    grid[r][c] = dfs(r, c);
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -920,6 +972,69 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {void}
+     */
+    islandsAndTreasure(grid: number[][]): void {
+        let ROWS = grid.length;
+        let COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const INF = 2147483647;
+        let visit: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+
+        const bfs = (r: number, c: number): number => {
+            const q = new Queue([[r, c]]);
+            const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+                Array(COLS).fill(false),
+            );
+            visit[r][c] = true;
+            let steps = 0;
+
+            while (!q.isEmpty()) {
+                let size = q.size();
+                for (let i = 0; i < size; i++) {
+                    const [row, col]: number[] = q.pop();
+                    if (grid[row][col] === 0) return steps;
+                    for (let [dr, dc] of directions) {
+                        const nr = row + dr,
+                            nc = col + dc;
+                        if (
+                            nr >= 0 &&
+                            nr < ROWS &&
+                            nc >= 0 &&
+                            nc < COLS &&
+                            !visit[nr][nc] &&
+                            grid[nr][nc] !== -1
+                        ) {
+                            visit[nr][nc] = true;
+                            q.push([nr, nc]);
+                        }
+                    }
+                }
+                steps++;
+            }
+            return INF;
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === INF) {
+                    grid[r][c] = bfs(r, c);
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1319,6 +1434,60 @@ impl Solution {
                 grid[ur][uc] = grid[row][col] + 1;
                 q.push_back((ur, uc));
             }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     */
+    islandsAndTreasure(grid: number[][]): void {
+        let ROWS = grid.length;
+        let COLS = grid[0].length;
+        let visit = new Set<string>();
+        let q = new Queue();
+
+        /**
+         * @param {number} r
+         * @param {number} c
+         */
+        function addCell(r: number, c: number): void {
+            if (
+                Math.min(r, c) < 0 ||
+                r === ROWS ||
+                c === COLS ||
+                visit.has(r + ',' + c) ||
+                grid[r][c] === -1
+            ) {
+                return;
+            }
+            visit.add(r + ',' + c);
+            q.push([r, c]);
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 0) {
+                    q.push([r, c]);
+                    visit.add(r + ',' + c);
+                }
+            }
+        }
+
+        let dist = 0;
+        while (!q.isEmpty()) {
+            for (let i = q.size(); i > 0; i--) {
+                let [r, c]: number[] = q.pop();
+                grid[r][c] = dist;
+                addCell(r + 1, c);
+                addCell(r - 1, c);
+                addCell(r, c + 1);
+                addCell(r, c - 1);
+            }
+            dist += 1;
         }
     }
 }

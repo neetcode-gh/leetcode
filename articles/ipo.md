@@ -296,6 +296,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} k
+     * @param {number} w
+     * @param {number[]} profits
+     * @param {number[]} capital
+     * @return {number}
+     */
+    findMaximizedCapital(k: number, w: number, profits: number[], capital: number[]): number {
+        const minCapital = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]); // Min heap
+        const maxProfit = new PriorityQueue((a: number, b: number) => b - a); // Max heap
+
+        for (let i = 0; i < capital.length; i++) {
+            minCapital.enqueue([capital[i], profits[i]]);
+        }
+
+        for (let i = 0; i < k; i++) {
+            while (!minCapital.isEmpty() && minCapital.front()[0] <= w) {
+                maxProfit.enqueue(minCapital.dequeue()[1]);
+            }
+            if (maxProfit.isEmpty()) {
+                break;
+            }
+            w += maxProfit.dequeue();
+        }
+
+        return w;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -611,6 +643,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} k
+     * @param {number} w
+     * @param {number[]} profits
+     * @param {number[]} capital
+     * @return {number}
+     */
+    findMaximizedCapital(k: number, w: number, profits: number[], capital: number[]): number {
+        const minCapital = new PriorityQueue((a: number, b: number) => capital[a] - capital[b]);
+        const maxProfit = new PriorityQueue((a: number, b: number) => profits[b] - profits[a]);
+
+        for (let i = 0; i < capital.length; i++) {
+            minCapital.enqueue(i);
+        }
+
+        for (let i = 0; i < k; i++) {
+            while (!minCapital.isEmpty() && capital[minCapital.front()] <= w) {
+                maxProfit.enqueue(minCapital.dequeue());
+            }
+            if (maxProfit.isEmpty()) {
+                break;
+            }
+            w += profits[maxProfit.dequeue()];
+        }
+
+        return w;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -900,6 +964,38 @@ impl Solution {
         }
 
         w
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} k
+     * @param {number} w
+     * @param {number[]} profits
+     * @param {number[]} capital
+     * @return {number}
+     */
+    findMaximizedCapital(k: number, w: number, profits: number[], capital: number[]): number {
+        const n = profits.length;
+        const indices = Array.from({ length: n }, (_, i) => i);
+        indices.sort((a, b) => capital[a] - capital[b]);
+
+        const maxProfit = new MaxPriorityQueue();
+        let idx = 0;
+        for (let i = 0; i < k; i++) {
+            while (idx < n && capital[indices[idx]] <= w) {
+                maxProfit.enqueue(profits[indices[idx]]);
+                idx++;
+            }
+            if (maxProfit.isEmpty()) {
+                break;
+            }
+            w += maxProfit.dequeue();
+        }
+
+        return w;
     }
 }
 ```

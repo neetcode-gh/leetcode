@@ -197,6 +197,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} people
+     * @param {number} limit
+     * @return {number}
+     */
+    numRescueBoats(people: number[], limit: number): number {
+        people.sort((a, b) => a - b);
+        let res = 0,
+            l = 0,
+            r = people.length - 1;
+        while (l <= r) {
+            let remain = limit - people[r--];
+            res++;
+            if (l <= r && remain >= people[l]) {
+                l++;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -533,6 +557,45 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} people
+     * @param {number} limit
+     * @return {number}
+     */
+    numRescueBoats(people: number[], limit: number): number {
+        const m = Math.max(...people);
+        const count: number[] = new Array(m + 1).fill(0);
+        for (const p of people) {
+            count[p]++;
+        }
+
+        let idx = 0,
+            i = 1;
+        while (idx < people.length) {
+            while (count[i] === 0) {
+                i++;
+            }
+            people[idx++] = i;
+            count[i]--;
+        }
+
+        let res = 0,
+            l = 0,
+            r = people.length - 1;
+        while (l <= r) {
+            const remain = limit - people[r--];
+            res++;
+            if (l <= r && remain >= people[l]) {
+                l++;
+            }
+        }
+        return res;
     }
 }
 ```

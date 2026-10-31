@@ -663,6 +663,85 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} beginWord
+     * @param {string} endWord
+     * @param {string[]} wordList
+     * @return {number}
+     */
+    ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+        if (!wordList.includes(endWord) || beginWord === endWord) {
+            return 0;
+        }
+
+        const n = wordList.length;
+        const m = wordList[0].length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        const mp = new Map<string, number>();
+
+        for (let i = 0; i < n; i++) {
+            mp.set(wordList[i], i);
+        }
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                let cnt = 0;
+                for (let k = 0; k < m; k++) {
+                    if (wordList[i][k] !== wordList[j][k]) {
+                        cnt++;
+                    }
+                }
+                if (cnt === 1) {
+                    adj[i].push(j);
+                    adj[j].push(i);
+                }
+            }
+        }
+
+        const q = new Queue();
+        let res = 1;
+        const visit = new Set<number>();
+
+        for (let i = 0; i < m; i++) {
+            for (let c = 97; c < 123; c++) {
+                if (String.fromCharCode(c) === beginWord[i]) {
+                    continue;
+                }
+                const word =
+                    beginWord.slice(0, i) +
+                    String.fromCharCode(c) +
+                    beginWord.slice(i + 1);
+                if (mp.has(word) && !visit.has(mp.get(word)!)) {
+                    q.push(mp.get(word));
+                    visit.add(mp.get(word)!);
+                }
+            }
+        }
+
+        while (!q.isEmpty()) {
+            res++;
+            let size = q.size();
+            for (let i = 0; i < size; i++) {
+                let node: number = q.pop();
+                if (wordList[node] === endWord) {
+                    return res;
+                }
+                for (let nei of adj[node]) {
+                    if (!visit.has(nei)) {
+                        visit.add(nei);
+                        q.push(nei);
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1030,6 +1109,50 @@ impl Solution {
             }
         }
         0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} beginWord
+     * @param {string} endWord
+     * @param {string[]} wordList
+     * @return {number}
+     */
+    ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+        const words = new Set<string>(wordList);
+        if (!words.has(endWord) || beginWord === endWord) {
+            return 0;
+        }
+        let res = 0;
+        const q = new Queue([beginWord]);
+
+        while (!q.isEmpty()) {
+            res++;
+            let len = q.size();
+            for (let i = 0; i < len; i++) {
+                const node: string = q.pop();
+                if (node === endWord) return res;
+                for (let j = 0; j < node.length; j++) {
+                    for (let c = 97; c < 123; c++) {
+                        if (String.fromCharCode(c) === node[j]) {
+                            continue;
+                        }
+                        const nei =
+                            node.slice(0, j) +
+                            String.fromCharCode(c) +
+                            node.slice(j + 1);
+                        if (words.has(nei)) {
+                            q.push(nei);
+                            words.delete(nei);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
     }
 }
 ```
@@ -1494,6 +1617,60 @@ impl Solution {
             res += 1;
         }
         0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} beginWord
+     * @param {string} endWord
+     * @param {string[]} wordList
+     * @return {number}
+     */
+    ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+        if (!wordList.includes(endWord)) {
+            return 0;
+        }
+
+        const nei: { [key: string]: string[] } = {};
+        wordList.push(beginWord);
+        for (const word of wordList) {
+            for (let j = 0; j < word.length; ++j) {
+                const pattern =
+                    word.substring(0, j) + '*' + word.substring(j + 1);
+                if (!nei[pattern]) {
+                    nei[pattern] = [];
+                }
+                nei[pattern].push(word);
+            }
+        }
+
+        const visit = new Set<string>([beginWord]);
+        const q = new Queue([beginWord]);
+        let res = 1;
+        while (!q.isEmpty()) {
+            const size = q.size();
+            for (let i = 0; i < size; ++i) {
+                const word: string = q.pop();
+                if (word === endWord) {
+                    return res;
+                }
+                for (let j = 0; j < word.length; ++j) {
+                    const pattern =
+                        word.substring(0, j) + '*' + word.substring(j + 1);
+                    for (const neiWord of nei[pattern]) {
+                        if (!visit.has(neiWord)) {
+                            visit.add(neiWord);
+                            q.push(neiWord);
+                        }
+                    }
+                }
+            }
+            ++res;
+        }
+        return 0;
     }
 }
 ```
@@ -1990,6 +2167,57 @@ impl Solution {
             }
         }
         0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} beginWord
+     * @param {string} endWord
+     * @param {string[]} wordList
+     * @return {number}
+     */
+    ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+        if (!wordList.includes(endWord) || beginWord === endWord) {
+            return 0;
+        }
+        const m = wordList[0].length;
+        const wordSet = new Set<string>(wordList);
+        let qb = new Queue([beginWord]);
+        let qe = new Queue([endWord]);
+        let fromBegin: { [key: string]: number } = { [beginWord]: 1 };
+        let fromEnd: { [key: string]: number } = { [endWord]: 1 };
+
+        while (!qb.isEmpty() && !qe.isEmpty()) {
+            if (qb.size() > qe.size()) {
+                [qb, qe] = [qe, qb];
+                [fromBegin, fromEnd] = [fromEnd, fromBegin];
+            }
+            const size = qb.size();
+            for (let k = 0; k < size; k++) {
+                const word: string = qb.pop();
+                const steps = fromBegin[word];
+                for (let i = 0; i < m; i++) {
+                    for (let c = 97; c <= 122; c++) {
+                        if (String.fromCharCode(c) === word[i]) continue;
+                        const nei =
+                            word.slice(0, i) +
+                            String.fromCharCode(c) +
+                            word.slice(i + 1);
+                        if (!wordSet.has(nei)) continue;
+                        if (fromEnd[nei] !== undefined)
+                            return steps + fromEnd[nei];
+                        if (fromBegin[nei] === undefined) {
+                            fromBegin[nei] = steps + 1;
+                            qb.push(nei);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
     }
 }
 ```

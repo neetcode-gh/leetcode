@@ -287,6 +287,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {boolean}
+     */
+    isMatch(s: string, p: string): boolean {
+        let m = s.length,
+            n = p.length;
+
+        const dfs = (i: number, j: number): boolean => {
+            if (j === n) {
+                return i === m;
+            }
+
+            let match = i < m && (s[i] === p[j] || p[j] === '.');
+            if (j + 1 < n && p[j + 1] === '*') {
+                return dfs(i, j + 2) || (match && dfs(i + 1, j));
+            }
+
+            if (match) {
+                return dfs(i + 1, j + 1);
+            }
+
+            return false;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,6 +677,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {boolean}
+     */
+    isMatch(s: string, p: string): boolean {
+        const m = s.length,
+            n = p.length;
+        let dp: (boolean | null)[][] = Array(m + 1)
+            .fill(null)
+            .map(() => Array(n + 1).fill(null));
+
+        const dfs = (i: number, j: number): boolean => {
+            if (j === n) {
+                return i === m;
+            }
+            if (dp[i][j] !== null) {
+                return dp[i][j]!;
+            }
+            const match = i < m && (s[i] === p[j] || p[j] === '.');
+            if (j + 1 < n && p[j + 1] === '*') {
+                dp[i][j] = dfs(i, j + 2) || (match && dfs(i + 1, j));
+            } else {
+                dp[i][j] = match && dfs(i + 1, j + 1);
+            }
+            return dp[i][j]!;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -933,6 +1001,39 @@ impl Solution {
         }
 
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {boolean}
+     */
+    isMatch(s: string, p: string): boolean {
+        const dp: boolean[][] = new Array(s.length + 1)
+            .fill(false)
+            .map(() => new Array(p.length + 1).fill(false));
+        dp[s.length][p.length] = true;
+
+        for (let i = s.length; i >= 0; i--) {
+            for (let j = p.length - 1; j >= 0; j--) {
+                const match = i < s.length && (s[i] === p[j] || p[j] === '.');
+
+                if (j + 1 < p.length && p[j + 1] === '*') {
+                    dp[i][j] = dp[i][j + 2];
+                    if (match) {
+                        dp[i][j] = dp[i + 1][j] || dp[i][j];
+                    }
+                } else if (match) {
+                    dp[i][j] = dp[i + 1][j + 1];
+                }
+            }
+        }
+
+        return dp[0][0];
     }
 }
 ```
@@ -1269,6 +1370,42 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {boolean}
+     */
+    isMatch(s: string, p: string): boolean {
+        let dp: boolean[] = new Array(p.length + 1).fill(false);
+        dp[p.length] = true;
+
+        for (let i = s.length; i >= 0; i--) {
+            let nextDp: boolean[] = new Array(p.length + 1).fill(false);
+            nextDp[p.length] = i === s.length;
+
+            for (let j = p.length - 1; j >= 0; j--) {
+                const match = i < s.length && (s[i] === p[j] || p[j] === '.');
+
+                if (j + 1 < p.length && p[j + 1] === '*') {
+                    nextDp[j] = nextDp[j + 2];
+                    if (match) {
+                        nextDp[j] = nextDp[j] || dp[j];
+                    }
+                } else if (match) {
+                    nextDp[j] = dp[j + 1];
+                }
+            }
+
+            dp = nextDp;
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1619,6 +1756,42 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @return {boolean}
+     */
+    isMatch(s: string, p: string): boolean {
+        let dp: boolean[] = new Array(p.length + 1).fill(false);
+        dp[p.length] = true;
+
+        for (let i = s.length; i >= 0; i--) {
+            let dp1 = dp[p.length];
+            dp[p.length] = i == s.length;
+
+            for (let j = p.length - 1; j >= 0; j--) {
+                const match = i < s.length && (s[i] === p[j] || p[j] === '.');
+                let res = false;
+                if (j + 1 < p.length && p[j + 1] === '*') {
+                    res = dp[j + 2];
+                    if (match) {
+                        res = res || dp[j];
+                    }
+                } else if (match) {
+                    res = dp1;
+                }
+                dp1 = dp[j];
+                dp[j] = res;
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

@@ -245,6 +245,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} ring
+     * @param {string} key
+     * @return {number}
+     */
+    findRotateSteps(ring: string, key: string): number {
+        const dfs = (r: number, k: number): number => {
+            if (k === key.length) return 0;
+
+            let res = Infinity;
+            for (let i = 0; i < ring.length; i++) {
+                if (ring[i] === key[k]) {
+                    const minDist = Math.min(
+                        Math.abs(r - i),
+                        ring.length - Math.abs(r - i),
+                    );
+                    res = Math.min(res, minDist + 1 + dfs(i, k + 1));
+                }
+            }
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +600,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} ring
+     * @param {string} key
+     * @return {number}
+     */
+    findRotateSteps(ring: string, key: string): number {
+        const n = ring.length;
+        const m = key.length;
+        const dp: number[][] = Array.from({ length: n }, () => Array(m).fill(-1));
+
+        const dfs = (r: number, k: number): number => {
+            if (k === key.length) return 0;
+            if (dp[r][k] !== -1) return dp[r][k];
+
+            let res = Infinity;
+            for (let i = 0; i < ring.length; i++) {
+                if (ring[i] === key[k]) {
+                    const minDist = Math.min(
+                        Math.abs(r - i),
+                        ring.length - Math.abs(r - i),
+                    );
+                    res = Math.min(res, minDist + 1 + dfs(i, k + 1));
+                }
+            }
+
+            dp[r][k] = res;
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -864,6 +929,43 @@ impl Solution {
             }
         }
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} ring
+     * @param {string} key
+     * @return {number}
+     */
+    findRotateSteps(ring: string, key: string): number {
+        const n = ring.length;
+        const m = key.length;
+        const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n).fill(Infinity));
+
+        for (let i = 0; i < n; i++) {
+            dp[m][i] = 0;
+        }
+
+        for (let k = m - 1; k >= 0; k--) {
+            for (let r = 0; r < n; r++) {
+                for (let i = 0; i < n; i++) {
+                    if (ring[i] === key[k]) {
+                        const minDist = Math.min(
+                            Math.abs(r - i),
+                            n - Math.abs(r - i),
+                        );
+                        dp[k][r] = Math.min(
+                            dp[k][r],
+                            minDist + 1 + dp[k + 1][i],
+                        );
+                    }
+                }
+            }
+        }
+        return dp[0][0];
     }
 }
 ```
@@ -1176,6 +1278,42 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} ring
+     * @param {string} key
+     * @return {number}
+     */
+    findRotateSteps(ring: string, key: string): number {
+        const n = ring.length;
+        const m = key.length;
+        let dp: number[] = new Array(n).fill(0);
+
+        const adj: number[][] = Array.from({ length: 26 }, () => []);
+        for (let i = 0; i < n; i++) {
+            adj[ring.charCodeAt(i) - 97].push(i);
+        }
+
+        for (let k = m - 1; k >= 0; k--) {
+            const nextDp: number[] = new Array(n).fill(Infinity);
+            for (let r = 0; r < n; r++) {
+                for (const i of adj[key.charCodeAt(k) - 97]) {
+                    const minDist = Math.min(
+                        Math.abs(r - i),
+                        n - Math.abs(r - i),
+                    );
+                    nextDp[r] = Math.min(nextDp[r], minDist + 1 + dp[i]);
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1541,6 +1679,45 @@ impl Solution {
         }
 
         result + m as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} ring
+     * @param {string} key
+     * @return {number}
+     */
+    findRotateSteps(ring: string, key: string): number {
+        const n = ring.length;
+        const m = key.length;
+        const dp = Array(n)
+            .fill(0)
+            .map((_, i) => Math.min(i, n - i));
+
+        const adj: number[][] = Array.from({ length: 26 }, () => []);
+        for (let i = 0; i < n; i++) {
+            adj[ring.charCodeAt(i) - 97].push(i);
+        }
+
+        for (let k = 1; k < m; k++) {
+            for (let r of adj[key.charCodeAt(k) - 97]) {
+                let minDist = Infinity;
+                for (let i of adj[key.charCodeAt(k - 1) - 97]) {
+                    minDist = Math.min(
+                        minDist,
+                        Math.min(Math.abs(r - i), n - Math.abs(r - i)) + dp[i],
+                    );
+                }
+                dp[r] = minDist;
+            }
+        }
+
+        return (
+            Math.min(...adj[key.charCodeAt(m - 1) - 97].map((i) => dp[i])) + m
+        );
     }
 }
 ```
@@ -2013,6 +2190,59 @@ impl Solution {
         }
 
         dp[0] + m as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} ring
+     * @param {string} key
+     * @return {number}
+     */
+    findRotateSteps(ring: string, key: string): number {
+        const n = ring.length,
+            m = key.length;
+
+        let dp: number[] = Array(n).fill(0);
+        let nextDp: number[] = Array(n).fill(0);
+        const adj: number[][] = Array.from({ length: 26 }, () => []);
+
+        for (let i = 0; i < n; i++) {
+            adj[ring.charCodeAt(i) - 97].push(i);
+        }
+
+        for (let k = m - 1; k >= 0; k--) {
+            const c = key.charCodeAt(k) - 97;
+            let it = 0,
+                N = adj[c].length;
+
+            for (let r = 0; r < n; r++) {
+                if (ring.charCodeAt(r) - 97 !== c) {
+                    nextDp[r] = Infinity;
+                    while (it < N && adj[c][it] < r) {
+                        it++;
+                    }
+
+                    const nextIdx = it < N ? adj[c][it] : adj[c][0];
+                    const prevIdx = it > 0 ? adj[c][it - 1] : adj[c][N - 1];
+
+                    nextDp[r] = Math.min(
+                        (r > prevIdx ? r - prevIdx : n - (prevIdx - r)) +
+                            dp[prevIdx],
+                        (nextIdx > r ? nextIdx - r : n - (r - nextIdx)) +
+                            dp[nextIdx],
+                    );
+                } else {
+                    nextDp[r] = dp[r];
+                }
+            }
+
+            [dp, nextDp] = [nextDp, dp];
+        }
+
+        return dp[0] + m;
     }
 }
 ```

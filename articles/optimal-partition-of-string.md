@@ -178,6 +178,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    partitionString(s: string): number {
+        let curSet = new Set<string>();
+        let res = 1;
+        for (let c of s) {
+            if (curSet.has(c)) {
+                res++;
+                curSet.clear();
+            }
+            curSet.add(c);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -378,6 +399,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    partitionString(s: string): number {
+        const lastIdx: number[] = Array(26).fill(-1);
+        let res = 1,
+            start = 0;
+        for (let i = 0; i < s.length; i++) {
+            const j = s.charCodeAt(i) - 97;
+            if (lastIdx[j] >= start) {
+                start = i;
+                res++;
+            }
+            lastIdx[j] = i;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -559,6 +603,28 @@ impl Solution {
             mask |= 1 << i;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    partitionString(s: string): number {
+        let res = 1,
+            mask = 0;
+        for (const c of s) {
+            const i = c.charCodeAt(0) - 97;
+            if (mask & (1 << i)) {
+                mask = 0;
+                res++;
+            }
+            mask |= 1 << i;
+        }
+        return res;
     }
 }
 ```

@@ -208,6 +208,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} digits
+     * @return {number[]}
+     */
+    plusOne(digits: number[]): number[] {
+        if (digits.length === 0) {
+            return [1];
+        }
+
+        if (digits[digits.length - 1] < 9) {
+            digits[digits.length - 1] += 1;
+            return digits;
+        } else {
+            return [...this.plusOne(digits.slice(0, digits.length - 1)), 0];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -507,6 +528,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} digits
+     * @return {number[]}
+     */
+    plusOne(digits: number[]): number[] {
+        let one = 1;
+        let i = 0;
+        digits.reverse();
+
+        while (one) {
+            if (i < digits.length) {
+                if (digits[i] === 9) {
+                    digits[i] = 0;
+                } else {
+                    digits[i] += 1;
+                    one = 0;
+                }
+            } else {
+                digits.push(one);
+                one = 0;
+            }
+            i++;
+        }
+        digits.reverse();
+        return digits;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -702,6 +754,28 @@ impl Solution {
         let mut result = vec![1];
         result.append(&mut digits);
         result
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} digits
+     * @return {number[]}
+     */
+    plusOne(digits: number[]): number[] {
+        const n = digits.length;
+        for (let i = n - 1; i >= 0; i--) {
+            if (digits[i] < 9) {
+                digits[i]++;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        const result: number[] = new Array(n + 1).fill(0);
+        result[0] = 1;
+        return result;
     }
 }
 ```

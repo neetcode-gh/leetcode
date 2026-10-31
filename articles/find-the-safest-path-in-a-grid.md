@@ -72,8 +72,8 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maximumSafenessFactor(List<List<Integer>> grid) {
-        int N = grid.size();
+    public int maximumSafenessFactor(int[][] grid) {
+        int N = grid.length;
         int[][] minDist = precompute(grid, N);
         PriorityQueue<int[]> maxHeap = new PriorityQueue<>((a, b) -> b[0] - a[0]);
         boolean[][] visit = new boolean[N][N];
@@ -101,14 +101,14 @@ public class Solution {
         return 0;
     }
 
-    private int[][] precompute(List<List<Integer>> grid, int N) {
+    private int[][] precompute(int[][] grid, int N) {
         int[][] minDist = new int[N][N];
         for (int[] row : minDist) Arrays.fill(row, -1);
         Queue<int[]> q = new LinkedList<>();
 
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
-                if (grid.get(r).get(c) == 1) {
+                if (grid[r][c] == 1) {
                     q.offer(new int[]{r, c, 0});
                     minDist[r][c] = 0;
                 }
@@ -254,14 +254,14 @@ class Solution {
         };
 
         const minDist = precompute();
-        const maxHeap = new MaxPriorityQueue({ priority: (x) => x[0] });
+        const maxHeap = new MaxPriorityQueue((x) => x[0]);
         const visit = Array.from({ length: N }, () => Array(N).fill(false));
 
         maxHeap.enqueue([minDist[0][0], 0, 0]);
         visit[0][0] = true;
 
         while (!maxHeap.isEmpty()) {
-            let [dist, r, c] = maxHeap.dequeue().element;
+            let [dist, r, c] = maxHeap.dequeue();
 
             if (r === N - 1 && c === N - 1) {
                 return dist;
@@ -289,8 +289,8 @@ public class Solution {
         new int[] {0, 1}, new int[] {0, -1}
     };
 
-    public int MaximumSafenessFactor(IList<IList<int>> grid) {
-        int N = grid.Count;
+    public int MaximumSafenessFactor(int[][] grid) {
+        int N = grid.Length;
         int[,] minDist = Precompute(grid, N);
         var maxHeap = new PriorityQueue<int[], int>(Comparer<int>.Create((a, b) => b - a));
         bool[,] visit = new bool[N, N];
@@ -318,7 +318,7 @@ public class Solution {
         return 0;
     }
 
-    private int[,] Precompute(IList<IList<int>> grid, int N) {
+    private int[,] Precompute(int[][] grid, int N) {
         int[,] minDist = new int[N, N];
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
@@ -357,6 +357,8 @@ public class Solution {
 ```
 
 ```go
+import "container/heap"
+
 func maximumSafenessFactor(grid [][]int) int {
     n := len(grid)
     directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
@@ -454,7 +456,7 @@ class Solution {
     private val directions = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0),
                                       intArrayOf(0, 1), intArrayOf(0, -1))
 
-    fun maximumSafenessFactor(grid: List<List<Int>>): Int {
+    fun maximumSafenessFactor(grid: Array<IntArray>): Int {
         val n = grid.size
         val minDist = precompute(grid, n)
         val maxHeap = PriorityQueue<IntArray>(compareByDescending { it[0] })
@@ -483,7 +485,7 @@ class Solution {
         return 0
     }
 
-    private fun precompute(grid: List<List<Int>>, n: Int): Array<IntArray> {
+    private fun precompute(grid: Array<IntArray>, n: Int): Array<IntArray> {
         val minDist = Array(n) { IntArray(n) { -1 } }
         val queue: Queue<IntArray> = LinkedList()
 
@@ -691,6 +693,82 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maximumSafenessFactor(grid: number[][]): number {
+        const N = grid.length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        const inBounds = (r: number, c: number): boolean => {
+            return r >= 0 && c >= 0 && r < N && c < N;
+        };
+
+        const precompute = (): number[][] => {
+            const q = new Queue();
+            const minDist: number[][] = Array.from({ length: N }, () => Array(N).fill(-1));
+
+            for (let r = 0; r < N; r++) {
+                for (let c = 0; c < N; c++) {
+                    if (grid[r][c] === 1) {
+                        q.push([r, c, 0]);
+                        minDist[r][c] = 0;
+                    }
+                }
+            }
+
+            while (!q.isEmpty()) {
+                let [r, c, dist]: number[] = q.pop();
+
+                for (let [dr, dc] of directions) {
+                    let r2 = r + dr,
+                        c2 = c + dc;
+                    if (inBounds(r2, c2) && minDist[r2][c2] === -1) {
+                        minDist[r2][c2] = dist + 1;
+                        q.push([r2, c2, dist + 1]);
+                    }
+                }
+            }
+            return minDist;
+        };
+
+        const minDist = precompute();
+        const maxHeap = new MaxPriorityQueue((x: number[]) => x[0]);
+        const visit: boolean[][] = Array.from({ length: N }, () => Array(N).fill(false));
+
+        maxHeap.enqueue([minDist[0][0], 0, 0]);
+        visit[0][0] = true;
+
+        while (!maxHeap.isEmpty()) {
+            let [dist, r, c]: number[] = maxHeap.dequeue();
+
+            if (r === N - 1 && c === N - 1) {
+                return dist;
+            }
+
+            for (let [dr, dc] of directions) {
+                let r2 = r + dr,
+                    c2 = c + dc;
+                if (inBounds(r2, c2) && !visit[r2][c2]) {
+                    visit[r2][c2] = true;
+                    let dist2 = Math.min(dist, minDist[r2][c2]);
+                    maxHeap.enqueue([dist2, r2, c2]);
+                }
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -772,15 +850,15 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maximumSafenessFactor(List<List<Integer>> grid) {
-        int N = grid.size();
+    public int maximumSafenessFactor(int[][] grid) {
+        int N = grid.length;
         int[][] minDist = new int[N][N];
         int[] directions = {0, 1, 0, -1, 0};
 
         Queue<Integer> q = new LinkedList<>();
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
-                if (grid.get(r).get(c) == 1) {
+                if (grid[r][c] == 1) {
                     q.offer(r * N + c);
                     minDist[r][c] = 0;
                 } else {
@@ -941,13 +1019,13 @@ class Solution {
             }
         }
 
-        let maxHeap = new MaxPriorityQueue({ priority: (x) => x[0] });
+        let maxHeap = new MaxPriorityQueue((x) => x[0]);
         let safeFactor = new Array(N * N).fill(0);
         safeFactor[0] = minDist[0][0];
         maxHeap.enqueue([safeFactor[0], 0]);
 
         while (!maxHeap.isEmpty()) {
-            let [dist, node] = maxHeap.dequeue().element;
+            let [dist, node] = maxHeap.dequeue();
             let r = Math.floor(node / N),
                 c = node % N;
             if (r === N - 1 && c === N - 1) {
@@ -977,8 +1055,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MaximumSafenessFactor(IList<IList<int>> grid) {
-        int N = grid.Count;
+    public int MaximumSafenessFactor(int[][] grid) {
+        int N = grid.Length;
         int[] directions = { 0, 1, 0, -1, 0 };
         int[,] minDist = new int[N, N];
 
@@ -1041,6 +1119,8 @@ public class Solution {
 ```
 
 ```go
+import "container/heap"
+
 func maximumSafenessFactor(grid [][]int) int {
     n := len(grid)
     directions := []int{0, 1, 0, -1, 0}
@@ -1127,7 +1207,7 @@ func min(a, b int) int {
 
 ```kotlin
 class Solution {
-    fun maximumSafenessFactor(grid: List<List<Int>>): Int {
+    fun maximumSafenessFactor(grid: Array<IntArray>): Int {
         val n = grid.size
         val directions = intArrayOf(0, 1, 0, -1, 0)
         val minDist = Array(n) { IntArray(n) }
@@ -1372,6 +1452,83 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maximumSafenessFactor(grid: number[][]): number {
+        const N = grid.length;
+        const directions = [0, 1, 0, -1, 0];
+        const minDist = grid;
+
+        const q = new Queue();
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    q.push(r * N + c);
+                    minDist[r][c] = 0;
+                } else {
+                    minDist[r][c] = -1;
+                }
+            }
+        }
+
+        while (!q.isEmpty()) {
+            let node: number = q.pop();
+            let r = Math.floor(node / N),
+                c = node % N;
+            for (let i = 0; i < 4; i++) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1];
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    minDist[r2][c2] === -1
+                ) {
+                    minDist[r2][c2] = minDist[r][c] + 1;
+                    q.push(r2 * N + c2);
+                }
+            }
+        }
+
+        let maxHeap = new MaxPriorityQueue((x: number[]) => x[0]);
+        let safeFactor: number[] = new Array(N * N).fill(0);
+        safeFactor[0] = minDist[0][0];
+        maxHeap.enqueue([safeFactor[0], 0]);
+
+        while (!maxHeap.isEmpty()) {
+            let [dist, node]: number[] = maxHeap.dequeue();
+            let r = Math.floor(node / N),
+                c = node % N;
+            if (r === N - 1 && c === N - 1) {
+                return dist;
+            }
+            if (safeFactor[node] > dist) {
+                continue;
+            }
+
+            for (let i = 0; i < 4; i++) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1],
+                    node2 = r2 * N + c2;
+                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N) {
+                    let dist2 = Math.min(dist, minDist[r2][c2]);
+                    if (dist2 > safeFactor[node2]) {
+                        safeFactor[node2] = dist2;
+                        maxHeap.enqueue([dist2, node2]);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1461,14 +1618,14 @@ class Solution:
 public class Solution {
     private static int[] directions = {0, 1, 0, -1, 0};
 
-    public int maximumSafenessFactor(List<List<Integer>> grid) {
-        int N = grid.size();
+    public int maximumSafenessFactor(int[][] grid) {
+        int N = grid.length;
         int[][] minDist = new int[N][N];
 
         Queue<Integer> q = new LinkedList<>();
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
-                if (grid.get(r).get(c) == 1) {
+                if (grid[r][c] == 1) {
                     q.offer(r * N + c);
                     minDist[r][c] = 0;
                 } else {
@@ -1695,8 +1852,8 @@ class Solution {
 public class Solution {
     private static int[] directions = { 0, 1, 0, -1, 0 };
 
-    public int MaximumSafenessFactor(IList<IList<int>> grid) {
-        int N = grid.Count;
+    public int MaximumSafenessFactor(int[][] grid) {
+        int N = grid.Length;
         int[,] minDist = new int[N, N];
 
         Queue<int> q = new Queue<int>();
@@ -1844,7 +2001,7 @@ func min(a, b int) int {
 class Solution {
     private val directions = intArrayOf(0, 1, 0, -1, 0)
 
-    fun maximumSafenessFactor(grid: List<List<Int>>): Int {
+    fun maximumSafenessFactor(grid: Array<IntArray>): Int {
         val n = grid.size
         val minDist = Array(n) { IntArray(n) }
 
@@ -2063,6 +2220,95 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maximumSafenessFactor(grid: number[][]): number {
+        const N = grid.length;
+        const minDist = grid;
+        const directions = [0, 1, 0, -1, 0];
+
+        let q = new Queue();
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    q.push(r * N + c);
+                    minDist[r][c] = 0;
+                } else {
+                    minDist[r][c] = -1;
+                }
+            }
+        }
+
+        while (!q.isEmpty()) {
+            let node: number = q.pop();
+            let r = Math.floor(node / N),
+                c = node % N;
+            for (let i = 0; i < 4; i++) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1];
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    minDist[r2][c2] === -1
+                ) {
+                    minDist[r2][c2] = minDist[r][c] + 1;
+                    q.push(r2 * N + c2);
+                }
+            }
+        }
+
+        const canReach = (threshold: number): boolean => {
+            q = new Queue([0]);
+            let visited: boolean[] = new Array(N * N).fill(false);
+            visited[0] = true;
+
+            while (!q.isEmpty()) {
+                let node: number = q.pop();
+                let r = Math.floor(node / N),
+                    c = node % N;
+                if (r === N - 1 && c === N - 1) return true;
+
+                for (let i = 0; i < 4; i++) {
+                    let r2 = r + directions[i],
+                        c2 = c + directions[i + 1],
+                        node2 = r2 * N + c2;
+                    if (
+                        r2 >= 0 &&
+                        c2 >= 0 &&
+                        r2 < N &&
+                        c2 < N &&
+                        !visited[node2] &&
+                        minDist[r2][c2] >= threshold
+                    ) {
+                        visited[node2] = true;
+                        q.push(node2);
+                    }
+                }
+            }
+            return false;
+        };
+
+        let l = 0,
+            r = Math.min(minDist[0][0], minDist[N - 1][N - 1]);
+        while (l <= r) {
+            let mid = Math.floor((l + r) / 2);
+            if (canReach(mid)) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return l - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2146,14 +2392,14 @@ class Solution:
 public class Solution {
     private static final int[] directions = {0, 1, 0, -1, 0};
 
-    public int maximumSafenessFactor(List<List<Integer>> grid) {
-        int N = grid.size();
+    public int maximumSafenessFactor(int[][] grid) {
+        int N = grid.length;
         int[][] minDist = new int[N][N];
 
         Deque<Integer> q = new ArrayDeque<>();
         for (int r = 0; r < N; r++) {
             for (int c = 0; c < N; c++) {
-                if (grid.get(r).get(c) == 1) {
+                if (grid[r][c] == 1) {
                     q.offerLast(r * N + c);
                     minDist[r][c] = 0;
                 } else {
@@ -2359,8 +2605,8 @@ class Solution {
 public class Solution {
     private static readonly int[] directions = { 0, 1, 0, -1, 0 };
 
-    public int MaximumSafenessFactor(IList<IList<int>> grid) {
-        int N = grid.Count;
+    public int MaximumSafenessFactor(int[][] grid) {
+        int N = grid.Length;
         int[,] minDist = new int[N, N];
 
         LinkedList<int> q = new LinkedList<int>();
@@ -2498,7 +2744,7 @@ func min(a, b int) int {
 class Solution {
     private val directions = intArrayOf(0, 1, 0, -1, 0)
 
-    fun maximumSafenessFactor(grid: List<List<Int>>): Int {
+    fun maximumSafenessFactor(grid: Array<IntArray>): Int {
         val n = grid.size
         val minDist = Array(n) { IntArray(n) }
 
@@ -2704,6 +2950,94 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maximumSafenessFactor(grid: number[][]): number {
+        const N = grid.length;
+        const minDist = grid;
+        const directions = [0, 1, 0, -1, 0];
+
+        const q = new Deque();
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    q.pushBack(r * N + c);
+                    minDist[r][c] = 0;
+                } else {
+                    minDist[r][c] = -1;
+                }
+            }
+        }
+
+        while (!q.isEmpty()) {
+            let node: number = q.popFront();
+            let r = Math.floor(node / N),
+                c = node % N;
+            for (let i = 0; i < 4; i++) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1];
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    minDist[r2][c2] === -1
+                ) {
+                    minDist[r2][c2] = minDist[r][c] + 1;
+                    q.pushBack(r2 * N + c2);
+                }
+            }
+        }
+
+        let safeFactor: number[] = new Array(N * N).fill(-1);
+        let res = (safeFactor[0] = Math.min(
+            minDist[N - 1][N - 1],
+            minDist[0][0],
+        ));
+        q.pushBack(0);
+
+        while (!q.isEmpty()) {
+            let node: number = q.popFront();
+            let r = Math.floor(node / N),
+                c = node % N;
+            res = Math.min(res, safeFactor[node]);
+            if (r === N - 1 && c === N - 1) {
+                break;
+            }
+
+            for (let i = 0; i < 4; i++) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1],
+                    node2 = r2 * N + c2;
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    safeFactor[node2] === -1
+                ) {
+                    safeFactor[node2] = Math.min(
+                        safeFactor[node],
+                        minDist[r2][c2],
+                    );
+                    if (safeFactor[node2] < res) {
+                        q.pushBack(node2);
+                    } else {
+                        q.pushFront(node2);
+                    }
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

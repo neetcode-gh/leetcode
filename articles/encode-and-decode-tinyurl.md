@@ -27,7 +27,7 @@ The simplest way to create a URL shortener is to assign each long URL a unique i
 ::tabs-start
 
 ```python
-class Codec:
+class Solution:
 
     def __init__(self):
         self.urls = []
@@ -41,10 +41,10 @@ class Codec:
 ```
 
 ```java
-public class Codec {
+public class Solution {
     private List<String> urls;
 
-    public Codec() {
+    public Solution() {
         urls = new ArrayList<>();
     }
 
@@ -78,7 +78,7 @@ public:
 ```
 
 ```javascript
-class Codec {
+class Solution {
     constructor() {
         this.urls = [];
     }
@@ -108,15 +108,15 @@ class Codec {
 ```
 
 ```csharp
-public class Codec {
+public class Solution {
     private List<string> urls = new List<string>();
 
-    public string encode(string longUrl) {
+    public string Encode(string longUrl) {
         urls.Add(longUrl);
         return "http://tinyurl.com/" + (urls.Count - 1);
     }
 
-    public string decode(string shortUrl) {
+    public string Decode(string shortUrl) {
         int index = int.Parse(shortUrl.Substring(shortUrl.LastIndexOf('/') + 1));
         return urls[index];
     }
@@ -124,20 +124,20 @@ public class Codec {
 ```
 
 ```go
-type Codec struct {
+type Solution struct {
     urls []string
 }
 
-func Constructor() Codec {
-    return Codec{urls: []string{}}
+func Constructor() Solution {
+    return Solution{urls: []string{}}
 }
 
-func (this *Codec) encode(longUrl string) string {
+func (this *Solution) Encode(longUrl string) string {
     this.urls = append(this.urls, longUrl)
     return "http://tinyurl.com/" + strconv.Itoa(len(this.urls)-1)
 }
 
-func (this *Codec) decode(shortUrl string) string {
+func (this *Solution) Decode(shortUrl string) string {
     parts := strings.Split(shortUrl, "/")
     index, _ := strconv.Atoi(parts[len(parts)-1])
     return this.urls[index]
@@ -145,7 +145,7 @@ func (this *Codec) decode(shortUrl string) string {
 ```
 
 ```kotlin
-class Codec {
+class Solution {
     private val urls = mutableListOf<String>()
 
     fun encode(longUrl: String): String {
@@ -161,7 +161,7 @@ class Codec {
 ```
 
 ```swift
-class Codec {
+class Solution {
     private var urls = [String]()
 
     func encode(_ longUrl: String) -> String {
@@ -177,13 +177,13 @@ class Codec {
 ```
 
 ```rust
-struct Codec {
+struct Solution {
     urls: Vec<String>,
 }
 
-impl Codec {
+impl Solution {
     fn new() -> Self {
-        Codec { urls: Vec::new() }
+        Solution { urls: Vec::new() }
     }
 
     fn encode(&mut self, long_url: String) -> String {
@@ -194,6 +194,38 @@ impl Codec {
     fn decode(&self, short_url: String) -> String {
         let index: usize = short_url.rsplit('/').next().unwrap().parse().unwrap();
         self.urls[index].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    private urls: string[];
+
+    constructor() {
+        this.urls = [];
+    }
+
+    /**
+     * Encodes a URL to a shortened URL.
+     *
+     * @param {string} longUrl
+     * @return {string}
+     */
+    encode(longUrl: string): string {
+        this.urls.push(longUrl);
+        return 'http://tinyurl.com/' + (this.urls.length - 1);
+    }
+
+    /**
+     * Decodes a shortened URL to its original URL.
+     *
+     * @param {string} shortUrl
+     * @return {string}
+     */
+    decode(shortUrl: string): string {
+        const index = parseInt(shortUrl.split('/').pop()!);
+        return this.urls[index];
     }
 }
 ```
@@ -229,7 +261,7 @@ Instead of using a list with implicit indices, we use a hash map with an explici
 ::tabs-start
 
 ```python
-class Codec:
+class Solution:
 
     def __init__(self):
         self.url_map = {}
@@ -247,11 +279,11 @@ class Codec:
 ```
 
 ```java
-public class Codec {
+public class Solution {
     private HashMap<Integer, String> urlMap;
     private int id;
 
-    public Codec() {
+    public Solution() {
         urlMap = new HashMap<>();
         id = 0;
     }
@@ -289,7 +321,7 @@ public:
 ```
 
 ```javascript
-class Codec {
+class Solution {
     constructor() {
         this.urlMap = {};
         this.id = 0;
@@ -320,16 +352,16 @@ class Codec {
 ```
 
 ```csharp
-public class Codec {
+public class Solution {
     private Dictionary<int, string> urlMap = new Dictionary<int, string>();
     private int id = 0;
 
-    public string encode(string longUrl) {
+    public string Encode(string longUrl) {
         urlMap[id] = longUrl;
         return "http://tinyurl.com/" + id++;
     }
 
-    public string decode(string shortUrl) {
+    public string Decode(string shortUrl) {
         int urlId = int.Parse(shortUrl.Substring(shortUrl.LastIndexOf('/') + 1));
         return urlMap[urlId];
     }
@@ -337,22 +369,22 @@ public class Codec {
 ```
 
 ```go
-type Codec struct {
+type Solution struct {
     urlMap map[int]string
     id     int
 }
 
-func Constructor() Codec {
-    return Codec{urlMap: make(map[int]string), id: 0}
+func Constructor() Solution {
+    return Solution{urlMap: make(map[int]string), id: 0}
 }
 
-func (this *Codec) encode(longUrl string) string {
+func (this *Solution) Encode(longUrl string) string {
     this.urlMap[this.id] = longUrl
     this.id++
     return "http://tinyurl.com/" + strconv.Itoa(this.id-1)
 }
 
-func (this *Codec) decode(shortUrl string) string {
+func (this *Solution) Decode(shortUrl string) string {
     parts := strings.Split(shortUrl, "/")
     urlId, _ := strconv.Atoi(parts[len(parts)-1])
     return this.urlMap[urlId]
@@ -360,7 +392,7 @@ func (this *Codec) decode(shortUrl string) string {
 ```
 
 ```kotlin
-class Codec {
+class Solution {
     private val urlMap = mutableMapOf<Int, String>()
     private var id = 0
 
@@ -377,7 +409,7 @@ class Codec {
 ```
 
 ```swift
-class Codec {
+class Solution {
     private var urlMap = [Int: String]()
     private var id = 0
 
@@ -396,14 +428,14 @@ class Codec {
 ```
 
 ```rust
-struct Codec {
+struct Solution {
     url_map: HashMap<i32, String>,
     id: i32,
 }
 
-impl Codec {
+impl Solution {
     fn new() -> Self {
-        Codec {
+        Solution {
             url_map: HashMap::new(),
             id: 0,
         }
@@ -419,6 +451,40 @@ impl Codec {
     fn decode(&self, short_url: String) -> String {
         let url_id: i32 = short_url.rsplit('/').next().unwrap().parse().unwrap();
         self.url_map[&url_id].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    private urlMap: { [key: number]: string };
+    private id: number;
+
+    constructor() {
+        this.urlMap = {};
+        this.id = 0;
+    }
+
+    /**
+     * Encodes a URL to a shortened URL.
+     *
+     * @param {string} longUrl
+     * @return {string}
+     */
+    encode(longUrl: string): string {
+        this.urlMap[this.id] = longUrl;
+        return `http://tinyurl.com/${this.id++}`;
+    }
+
+    /**
+     * Decodes a shortened URL to its original URL.
+     *
+     * @param {string} shortUrl
+     * @return {string}
+     */
+    decode(shortUrl: string): string {
+        const urlId = parseInt(shortUrl.split('/').pop()!, 10);
+        return this.urlMap[urlId];
     }
 }
 ```
@@ -453,7 +519,7 @@ This approach uses two hash maps to create a bidirectional mapping. One maps lon
 ::tabs-start
 
 ```python
-class Codec:
+class Solution:
 
     def __init__(self):
         self.encodeMap = {}
@@ -472,7 +538,7 @@ class Codec:
 ```
 
 ```java
-public class Codec {
+public class Solution {
     private HashMap<String, String> encodeMap = new HashMap<>();
     private HashMap<String, String> decodeMap = new HashMap<>();
     private String base = "http://tinyurl.com/";
@@ -516,7 +582,7 @@ public:
 ```
 
 ```javascript
-class Codec {
+class Solution {
     constructor() {
         this.encodeMap = new Map();
         this.decodeMap = new Map();
@@ -551,12 +617,12 @@ class Codec {
 ```
 
 ```csharp
-public class Codec {
+public class Solution {
     private Dictionary<string, string> encodeMap = new Dictionary<string, string>();
     private Dictionary<string, string> decodeMap = new Dictionary<string, string>();
     private string baseUrl = "http://tinyurl.com/";
 
-    public string encode(string longUrl) {
+    public string Encode(string longUrl) {
         if (!encodeMap.ContainsKey(longUrl)) {
             string shortUrl = baseUrl + (encodeMap.Count + 1);
             encodeMap[longUrl] = shortUrl;
@@ -565,28 +631,28 @@ public class Codec {
         return encodeMap[longUrl];
     }
 
-    public string decode(string shortUrl) {
+    public string Decode(string shortUrl) {
         return decodeMap[shortUrl];
     }
 }
 ```
 
 ```go
-type Codec struct {
+type Solution struct {
     encodeMap map[string]string
     decodeMap map[string]string
     base      string
 }
 
-func Constructor() Codec {
-    return Codec{
+func Constructor() Solution {
+    return Solution{
         encodeMap: make(map[string]string),
         decodeMap: make(map[string]string),
         base:      "http://tinyurl.com/",
     }
 }
 
-func (this *Codec) encode(longUrl string) string {
+func (this *Solution) Encode(longUrl string) string {
     if _, exists := this.encodeMap[longUrl]; !exists {
         shortUrl := this.base + strconv.Itoa(len(this.encodeMap)+1)
         this.encodeMap[longUrl] = shortUrl
@@ -595,13 +661,13 @@ func (this *Codec) encode(longUrl string) string {
     return this.encodeMap[longUrl]
 }
 
-func (this *Codec) decode(shortUrl string) string {
+func (this *Solution) Decode(shortUrl string) string {
     return this.decodeMap[shortUrl]
 }
 ```
 
 ```kotlin
-class Codec {
+class Solution {
     private val encodeMap = mutableMapOf<String, String>()
     private val decodeMap = mutableMapOf<String, String>()
     private val base = "http://tinyurl.com/"
@@ -622,7 +688,7 @@ class Codec {
 ```
 
 ```swift
-class Codec {
+class Solution {
     private var encodeMap = [String: String]()
     private var decodeMap = [String: String]()
     private let base = "http://tinyurl.com/"
@@ -643,15 +709,15 @@ class Codec {
 ```
 
 ```rust
-struct Codec {
+struct Solution {
     encode_map: HashMap<String, String>,
     decode_map: HashMap<String, String>,
     base: String,
 }
 
-impl Codec {
+impl Solution {
     fn new() -> Self {
-        Codec {
+        Solution {
             encode_map: HashMap::new(),
             decode_map: HashMap::new(),
             base: "http://tinyurl.com/".to_string(),
@@ -662,13 +728,52 @@ impl Codec {
         if !self.encode_map.contains_key(&long_url) {
             let short_url = format!("{}{}", self.base, self.encode_map.len() + 1);
             self.encode_map.insert(long_url.clone(), short_url.clone());
-            self.decode_map.insert(short_url, long_url);
+            self.decode_map.insert(short_url, long_url.clone());
         }
         self.encode_map[&long_url].clone()
     }
 
     fn decode(&self, short_url: String) -> String {
         self.decode_map[&short_url].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    private encodeMap: Map<string, string>;
+    private decodeMap: Map<string, string>;
+    private base: string;
+
+    constructor() {
+        this.encodeMap = new Map();
+        this.decodeMap = new Map();
+        this.base = 'http://tinyurl.com/';
+    }
+
+    /**
+     * Encodes a URL to a shortened URL.
+     *
+     * @param {string} longUrl
+     * @return {string}
+     */
+    encode(longUrl: string): string {
+        if (!this.encodeMap.has(longUrl)) {
+            const shortUrl = this.base + (this.encodeMap.size + 1);
+            this.encodeMap.set(longUrl, shortUrl);
+            this.decodeMap.set(shortUrl, longUrl);
+        }
+        return this.encodeMap.get(longUrl)!;
+    }
+
+    /**
+     * Decodes a shortened URL to its original URL.
+     *
+     * @param {string} shortUrl
+     * @return {string}
+     */
+    decode(shortUrl: string): string {
+        return this.decodeMap.get(shortUrl)!;
     }
 }
 ```

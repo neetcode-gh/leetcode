@@ -229,6 +229,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxScore(s: string): number {
+        const n = s.length;
+        let res = 0;
+        for (let i = 1; i < n; i++) {
+            let leftZero = 0,
+                rightOne = 0;
+            for (let j = 0; j < i; j++) {
+                if (s[j] === '0') {
+                    leftZero++;
+                }
+            }
+            for (let j = i; j < n; j++) {
+                if (s[j] === '1') {
+                    rightOne++;
+                }
+            }
+            res = Math.max(res, leftZero + rightOne);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +580,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxScore(s: string): number {
+        const n = s.length;
+        let leftZero: number[] = new Array(n).fill(0);
+        let rightOne: number[] = new Array(n).fill(0);
+
+        if (s[0] === '0') {
+            leftZero[0] = 1;
+        }
+        for (let i = 1; i < n; i++) {
+            leftZero[i] = leftZero[i - 1];
+            if (s[i] === '0') {
+                leftZero[i]++;
+            }
+        }
+
+        if (s[n - 1] === '1') {
+            rightOne[n - 1] = 1;
+        }
+        for (let i = n - 2; i >= 0; i--) {
+            rightOne[i] = rightOne[i + 1];
+            if (s[i] === '1') {
+                rightOne[i]++;
+            }
+        }
+
+        let res = 0;
+        for (let i = 1; i < n; i++) {
+            res = Math.max(res, leftZero[i - 1] + rightOne[i]);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -779,6 +848,37 @@ impl Solution {
             res = res.max(zero + one);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxScore(s: string): number {
+        let zero = 0,
+            one = 0,
+            res = 0;
+
+        for (const c of s) {
+            if (c === '1') {
+                one++;
+            }
+        }
+
+        for (let i = 0; i < s.length - 1; i++) {
+            if (s[i] === '0') {
+                zero++;
+            } else {
+                one--;
+            }
+            res = Math.max(res, zero + one);
+        }
+
+        return res;
     }
 }
 ```
@@ -1035,6 +1135,41 @@ impl Solution {
         }
 
         res + ones
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxScore(s: string): number {
+        // res = Max of all (leftZeros + rightOnes)
+        // res = Max of all (leftZeros + (totalOnes - leftOnes))
+        // res = totalOnes (constant) + Max of all (leftZeros - leftOnes)
+
+        let zeros = 0,
+            ones = 0,
+            res = -Infinity;
+
+        if (s[0] === '0') {
+            zeros++;
+        } else {
+            ones++;
+        }
+
+        for (let i = 1; i < s.length; i++) {
+            res = Math.max(res, zeros - ones);
+            if (s[i] === '0') {
+                zeros++;
+            } else {
+                ones++;
+            }
+        }
+
+        return res + ones;
     }
 }
 ```

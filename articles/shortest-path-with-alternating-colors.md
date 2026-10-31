@@ -426,6 +426,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} redEdges
+     * @param {number[][]} blueEdges
+     * @return {number[]}
+     */
+    shortestAlternatingPaths(
+        n: number,
+        redEdges: number[][],
+        blueEdges: number[][],
+    ): number[] {
+        const red: number[][] = Array.from({ length: n }, () => []);
+        const blue: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [src, dst] of redEdges) red[src].push(dst);
+        for (const [src, dst] of blueEdges) blue[src].push(dst);
+
+        const answer: number[] = new Array(n).fill(-1);
+        const q = new Queue([[0, 0, null]]);
+        const visit = new Set<string>(['0,null']);
+
+        while (!q.isEmpty()) {
+            const [node, length, edgeColor]: [number, number, string | null] =
+                q.pop();
+            if (answer[node] === -1) answer[node] = length;
+
+            if (edgeColor !== 'RED') {
+                for (const nei of red[node]) {
+                    if (!visit.has(`${nei},RED`)) {
+                        visit.add(`${nei},RED`);
+                        q.push([nei, length + 1, 'RED']);
+                    }
+                }
+            }
+            if (edgeColor !== 'BLUE') {
+                for (const nei of blue[node]) {
+                    if (!visit.has(`${nei},BLUE`)) {
+                        visit.add(`${nei},BLUE`);
+                        q.push([nei, length + 1, 'BLUE']);
+                    }
+                }
+            }
+        }
+        return answer;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -855,6 +905,61 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} redEdges
+     * @param {number[][]} blueEdges
+     * @return {number[]}
+     */
+    shortestAlternatingPaths(
+        n: number,
+        redEdges: number[][],
+        blueEdges: number[][],
+    ): number[] {
+        const red = this.buildGraph(n, redEdges);
+        const blue = this.buildGraph(n, blueEdges);
+        const adj = [red, blue];
+        const INF = 1e6;
+        const dist: number[][] = Array.from({ length: n }, () => [INF, INF]);
+        dist[0][0] = dist[0][1] = 0;
+
+        const q = new Queue([
+            [0, 0],
+            [0, 1],
+        ]);
+        while (!q.isEmpty()) {
+            const [node, color]: number[] = q.pop();
+            for (const nei of adj[color][node]) {
+                if (dist[nei][color ^ 1] > dist[node][color] + 1) {
+                    dist[nei][color ^ 1] = dist[node][color] + 1;
+                    q.push([nei, color ^ 1]);
+                }
+            }
+        }
+
+        return Array.from({ length: n }, (_, i) => {
+            let minDist = Math.min(dist[i][0], dist[i][1]);
+            return minDist === INF ? -1 : minDist;
+        });
+    }
+
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[][]}
+     */
+    buildGraph(n: number, edges: number[][]): number[][] {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+        }
+        return adj;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1257,6 +1362,51 @@ impl Solution {
                 if d == inf { -1 } else { d }
             })
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} redEdges
+     * @param {number[][]} blueEdges
+     * @return {number[]}
+     */
+    shortestAlternatingPaths(
+        n: number,
+        redEdges: number[][],
+        blueEdges: number[][],
+    ): number[] {
+        const INF = Number.MAX_SAFE_INTEGER;
+        const adj: number[][][] = [
+            Array.from({ length: n }, () => []),
+            Array.from({ length: n }, () => []),
+        ];
+
+        redEdges.forEach(([u, v]) => adj[0][u].push(v));
+        blueEdges.forEach(([u, v]) => adj[1][u].push(v));
+
+        const dist: number[][] = Array.from({ length: n }, () => [INF, INF]);
+        dist[0][0] = dist[0][1] = 0;
+
+        const dfs = (node: number, color: number): void => {
+            adj[color][node].forEach((nei) => {
+                if (dist[nei][color ^ 1] > dist[node][color] + 1) {
+                    dist[nei][color ^ 1] = dist[node][color] + 1;
+                    dfs(nei, color ^ 1);
+                }
+            });
+        };
+
+        dfs(0, 0);
+        dfs(0, 1);
+
+        return dist.map(([red, blue]) => {
+            let res = Math.min(red, blue);
+            return res === INF ? -1 : res;
+        });
     }
 }
 ```

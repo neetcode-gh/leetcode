@@ -214,6 +214,21 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    deleteDuplicates(head: ListNode | null): ListNode | null {
+        if (!head || !head.next) return head;
+
+        head.next = this.deleteDuplicates(head.next);
+        return head.val !== head.next!.val ? head : head.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -450,6 +465,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    deleteDuplicates(head: ListNode | null): ListNode | null {
+        let cur = head;
+        while (cur) {
+            while (cur.next && cur.next.val === cur.val) {
+                cur.next = cur.next.next;
+            }
+            cur = cur.next;
+        }
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -677,15 +711,34 @@ class Solution {
 impl Solution {
     pub fn delete_duplicates(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         let mut head = head;
-        let mut cur = &mut head;
+        let mut cur = head.as_mut();
         while let Some(node) = cur {
-            if node.next.is_some() && node.val == node.next.as_ref().unwrap().val {
+            while node.next.is_some() && node.val == node.next.as_ref().unwrap().val {
                 node.next = node.next.as_mut().unwrap().next.take();
-            } else {
-                cur = &mut node.next;
             }
+            cur = node.next.as_mut();
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    deleteDuplicates(head: ListNode | null): ListNode | null {
+        let cur = head;
+        while (cur && cur.next) {
+            if (cur.next.val === cur.val) {
+                cur.next = cur.next.next;
+            } else {
+                cur = cur.next;
+            }
+        }
+        return head;
     }
 }
 ```

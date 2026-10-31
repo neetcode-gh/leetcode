@@ -284,6 +284,7 @@ class Solution {
         if k > 26 { return 0 }
         var answer = 0
         let n = s.count
+        if k > n { return 0 }
         let chars = Array(s)
         let aAscii = Character("a").asciiValue!
 
@@ -322,6 +323,7 @@ impl Solution {
         if k > 26 { return 0; }
         let bytes = s.as_bytes();
         let n = bytes.len();
+        if k > n { return 0; }
         let mut answer = 0;
 
         for i in 0..=n - k {
@@ -343,6 +345,49 @@ impl Solution {
         }
 
         answer
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    numKLenSubstrNoRepeats(s: string, k: number): number {
+        if (k > 26) {
+            return 0;
+        }
+
+        let answer = 0;
+        const n = s.length;
+
+        for (let i = 0; i < n - k + 1; i++) {
+            // Initializing an empty frequency array
+            const freq: number[] = new Array(26).fill(0);
+            let hasRepeats = false;
+
+            for (let j = i; j < i + k; j++) {
+                const currChar = s[j].charCodeAt(0) - 'a'.charCodeAt(0);
+                // Incrementing the frequency of current character
+                freq[currChar]++;
+                // If a repeated character is found, we stop the loop
+                if (freq[currChar] > 1) {
+                    hasRepeats = true;
+                    break;
+                }
+            }
+
+            // If the substring does not have any repeated characters,
+            // we increment the answer
+            if (!hasRepeats) {
+                answer++;
+            }
+        }
+
+        return answer;
     }
 }
 ```
@@ -792,6 +837,63 @@ impl Solution {
         }
 
         answer
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    numKLenSubstrNoRepeats(s: string, k: number): number {
+        // We can reuse the condition from the first approach
+        // as for k > 26, there can be no substrings with only unique characters
+        if (k > 26) {
+            return 0;
+        }
+
+        let answer = 0;
+        const n = s.length;
+        // Initializing the left and right pointers
+        let left = 0,
+            right = 0;
+        // Initializing an empty frequency array
+        const freq: number[] = new Array(26).fill(0);
+
+        // Function to obtain the index of a character according to the alphabet
+        const getVal = (ch: string): number => {
+            return ch.charCodeAt(0) - 'a'.charCodeAt(0);
+        };
+
+        while (right < n) {
+            // Add the current character in the frequency array
+            freq[getVal(s[right])]++;
+
+            // If the current character appears more than once in the frequency array
+            // keep contracting the window and removing characters from the
+            // frequency array till the frequency of the current character becomes 1.
+            while (freq[getVal(s[right])] > 1) {
+                freq[getVal(s[left])]--;
+                left++;
+            }
+
+            // Check if the length of the current unique substring is equal to k
+            if (right - left + 1 === k) {
+                answer++;
+                // Contract the window and remove the leftmost character from the
+                // frequency array
+                freq[getVal(s[left])]--;
+                left++;
+            }
+
+            // Expand the window
+            right++;
+        }
+
+        return answer;
     }
 }
 ```

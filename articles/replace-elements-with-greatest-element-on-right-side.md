@@ -177,6 +177,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number[]}
+     */
+    replaceElements(arr: number[]): number[] {
+        let n = arr.length;
+        let ans: number[] = new Array(n);
+        for (let i = 0; i < n; i++) {
+            let rightMax = -1;
+            for (let j = i + 1; j < n; j++) {
+                rightMax = Math.max(rightMax, arr[j]);
+            }
+            ans[i] = rightMax;
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -338,6 +359,25 @@ impl Solution {
             right_max = right_max.max(arr[i]);
         }
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number[]}
+     */
+    replaceElements(arr: number[]): number[] {
+        let n = arr.length;
+        let ans: number[] = new Array(n);
+        let rightMax = -1;
+        for (let i = n - 1; i >= 0; i--) {
+            ans[i] = rightMax;
+            rightMax = Math.max(rightMax, arr[i]);
+        }
+        return ans;
     }
 }
 ```

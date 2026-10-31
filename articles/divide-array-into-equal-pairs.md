@@ -247,6 +247,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    divideArray(nums: number[]): boolean {
+        const N = nums.length;
+        nums.sort((a, b) => a - b);
+
+        let i = 0;
+        while (i < N) {
+            let j = i;
+            while (j < N && nums[i] === nums[j]) {
+                j++;
+            }
+
+            if ((j - i) % 2 !== 0) {
+                return false;
+            }
+
+            i = j;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,6 +472,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    divideArray(nums: number[]): boolean {
+        const count: { [key: number]: number } = {};
+        for (let num of nums) {
+            if (!(num in count)) {
+                count[num] = 0;
+            }
+            count[num]++;
+        }
+
+        for (let key in count) {
+            if (count[key] % 2 === 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -623,6 +678,28 @@ impl Solution {
         }
 
         odd_set.is_empty()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    divideArray(nums: number[]): boolean {
+        const oddSet = new Set<number>();
+
+        for (let num of nums) {
+            if (oddSet.has(num)) {
+                oddSet.delete(num);
+            } else {
+                oddSet.add(num);
+            }
+        }
+
+        return oddSet.size === 0;
     }
 }
 ```

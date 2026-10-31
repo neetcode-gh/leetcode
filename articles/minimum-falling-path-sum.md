@@ -144,6 +144,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(matrix [][]int) int {
     n := len(matrix)
 
@@ -240,6 +242,33 @@ impl Solution {
             res = res.min(dfs(&matrix, 0, c as i32, n));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    minFallingPathSum(matrix: number[][]): number {
+        const N = matrix.length;
+
+        const dfs = (r: number, c: number): number => {
+            if (r === N) return 0;
+            if (c < 0 || c >= N) return Infinity;
+            return (
+                matrix[r][c] +
+                Math.min(dfs(r + 1, c - 1), dfs(r + 1, c), dfs(r + 1, c + 1))
+            );
+        };
+
+        let res = Infinity;
+        for (let c = 0; c < N; c++) {
+            res = Math.min(res, dfs(0, c));
+        }
+        return res;
     }
 }
 ```
@@ -425,6 +454,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(matrix [][]int) int {
     n := len(matrix)
     cache := make([][]int, n)
@@ -552,6 +583,38 @@ impl Solution {
             res = res.min(dfs(&matrix, &mut cache, 0, c as i32, n));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    minFallingPathSum(matrix: number[][]): number {
+        const N = matrix.length;
+        const cache: (number | null)[][] = Array.from({ length: N }, () =>
+            Array(N).fill(null),
+        );
+
+        const dfs = (r: number, c: number): number => {
+            if (r === N) return 0;
+            if (c < 0 || c >= N) return Infinity;
+            if (cache[r][c] !== null) return cache[r][c]!;
+
+            cache[r][c] =
+                matrix[r][c] +
+                Math.min(dfs(r + 1, c - 1), dfs(r + 1, c), dfs(r + 1, c + 1));
+            return cache[r][c]!;
+        };
+
+        let res = Infinity;
+        for (let c = 0; c < N; c++) {
+            res = Math.min(res, dfs(0, c));
+        }
+        return res;
     }
 }
 ```
@@ -714,6 +777,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(matrix [][]int) int {
     n := len(matrix)
     dp := make([]int, n)
@@ -799,6 +864,31 @@ impl Solution {
         }
 
         *dp.iter().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    minFallingPathSum(matrix: number[][]): number {
+        const N = matrix.length;
+        const dp = matrix[0].slice();
+
+        for (let r = 1; r < N; r++) {
+            let leftUp = Infinity;
+            for (let c = 0; c < N; c++) {
+                const midUp = dp[c];
+                const rightUp = c < N - 1 ? dp[c + 1] : Infinity;
+                dp[c] = matrix[r][c] + Math.min(midUp, leftUp, rightUp);
+                leftUp = midUp;
+            }
+        }
+
+        return Math.min(...dp);
     }
 }
 ```
@@ -933,6 +1023,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minFallingPathSum(matrix [][]int) int {
     n := len(matrix)
 
@@ -1013,6 +1105,29 @@ impl Solution {
         }
 
         *matrix[n - 1].iter().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    minFallingPathSum(matrix: number[][]): number {
+        const N = matrix.length;
+
+        for (let r = 1; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                const mid = matrix[r - 1][c];
+                const left = c > 0 ? matrix[r - 1][c - 1] : Infinity;
+                const right = c < N - 1 ? matrix[r - 1][c + 1] : Infinity;
+                matrix[r][c] = matrix[r][c] + Math.min(mid, left, right);
+            }
+        }
+
+        return Math.min(...matrix[N - 1]);
     }
 }
 ```

@@ -241,6 +241,40 @@ impl SeatManager {
 }
 ```
 
+```typescript
+class SeatManager {
+    private seats: boolean[];
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.seats = new Array(n).fill(false);
+    }
+
+    /**
+     * @return {number}
+     */
+    reserve(): number {
+        for (let i = 0; i < this.seats.length; i++) {
+            if (!this.seats[i]) {
+                this.seats[i] = true;
+                return i + 1;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @param {number} seatNumber
+     * @return {void}
+     */
+    unreserve(seatNumber: number): void {
+        this.seats[seatNumber - 1] = false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -378,8 +412,6 @@ public class SeatManager {
 ```
 
 ```go
-import "container/heap"
-
 type MinHeap []int
 
 func (h MinHeap) Len() int           { return len(h) }
@@ -417,8 +449,6 @@ func (this *SeatManager) Unreserve(seatNumber int) {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class SeatManager(n: Int) {
     private val unres = PriorityQueue<Int>()
 
@@ -479,6 +509,37 @@ impl SeatManager {
 
     fn unreserve(&mut self, seat_number: i32) {
         self.unres.push(Reverse(seat_number));
+    }
+}
+```
+
+```typescript
+class SeatManager {
+    private unres: any;
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.unres = new MinPriorityQueue();
+        for (let i = 1; i <= n; i++) {
+            this.unres.enqueue(i);
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    reserve(): number {
+        return this.unres.dequeue();
+    }
+
+    /**
+     * @param {number} seatNumber
+     * @return {void}
+     */
+    unreserve(seatNumber: number): void {
+        this.unres.enqueue(seatNumber);
     }
 }
 ```
@@ -633,8 +694,6 @@ public class SeatManager {
 ```
 
 ```go
-import "container/heap"
-
 type MinHeap []int
 
 func (h MinHeap) Len() int           { return len(h) }
@@ -675,8 +734,6 @@ func (this *SeatManager) Unreserve(seatNumber int) {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class SeatManager(n: Int) {
     private val minHeap = PriorityQueue<Int>()
     private var nextSeat = 1
@@ -749,6 +806,39 @@ impl SeatManager {
 }
 ```
 
+```typescript
+class SeatManager {
+    private minHeap: any;
+    private nextSeat: number;
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.minHeap = new MinPriorityQueue();
+        this.nextSeat = 1;
+    }
+
+    /**
+     * @return {number}
+     */
+    reserve(): number {
+        if (!this.minHeap.isEmpty()) {
+            return this.minHeap.dequeue();
+        }
+        return this.nextSeat++;
+    }
+
+    /**
+     * @param {number} seatNumber
+     * @return {void}
+     */
+    unreserve(seatNumber: number): void {
+        this.minHeap.enqueue(seatNumber);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -779,6 +869,9 @@ An ordered set (like TreeSet or SortedSet) keeps elements sorted and allows effi
 ::tabs-start
 
 ```python
+from sortedcontainers import SortedSet
+
+
 class SeatManager:
     def __init__(self, n: int):
         self.available = SortedSet()
@@ -845,6 +938,45 @@ public:
 };
 ```
 
+```javascript
+class SeatManager {
+    /**
+     * @param {number} n
+     */
+    constructor(n) {
+        // JavaScript has no built-in ordered set, so the set is modeled
+        // with an ascending array that is binary searched on insert.
+        this.available = [];
+        this.nextSeat = 1;
+    }
+
+    /**
+     * @return {number}
+     */
+    reserve() {
+        if (this.available.length > 0) {
+            return this.available.shift();
+        }
+        return this.nextSeat++;
+    }
+
+    /**
+     * @param {number} seatNumber
+     * @return {void}
+     */
+    unreserve(seatNumber) {
+        let l = 0,
+            r = this.available.length;
+        while (l < r) {
+            const m = (l + r) >> 1;
+            if (this.available[m] < seatNumber) l = m + 1;
+            else r = m;
+        }
+        this.available.splice(l, 0, seatNumber);
+    }
+}
+```
+
 ```csharp
 public class SeatManager {
     private SortedSet<int> available;
@@ -903,8 +1035,6 @@ func (this *SeatManager) Unreserve(seatNumber int) {
 ```
 
 ```kotlin
-import java.util.TreeSet
-
 class SeatManager(n: Int) {
     private val available = TreeSet<Int>()
     private var nextSeat = 1
@@ -976,6 +1106,48 @@ impl SeatManager {
 
     fn unreserve(&mut self, seat_number: i32) {
         self.available.insert(seat_number);
+    }
+}
+```
+
+```typescript
+class SeatManager {
+    private available: number[];
+    private nextSeat: number;
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        // TypeScript has no built-in ordered set, so the set is modeled
+        // with an ascending array that is binary searched on insert.
+        this.available = [];
+        this.nextSeat = 1;
+    }
+
+    /**
+     * @return {number}
+     */
+    reserve(): number {
+        if (this.available.length > 0) {
+            return this.available.shift()!;
+        }
+        return this.nextSeat++;
+    }
+
+    /**
+     * @param {number} seatNumber
+     * @return {void}
+     */
+    unreserve(seatNumber: number): void {
+        let l = 0,
+            r = this.available.length;
+        while (l < r) {
+            const m = (l + r) >> 1;
+            if (this.available[m] < seatNumber) l = m + 1;
+            else r = m;
+        }
+        this.available.splice(l, 0, seatNumber);
     }
 }
 ```

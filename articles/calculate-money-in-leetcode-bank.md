@@ -208,6 +208,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    totalMoney(n: number): number {
+        let day = 0,
+            deposit = 1,
+            res = 0;
+
+        while (day < n) {
+            res += deposit;
+            deposit++;
+            day++;
+
+            if (day % 7 === 0) {
+                deposit = 1 + Math.floor(day / 7);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -394,6 +420,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    totalMoney(n: number): number {
+        const weeks = Math.floor(n / 7);
+        const low = 28;
+        const high = 28 + 7 * (weeks - 1);
+        let res = (weeks * (low + high)) / 2;
+
+        const monday = weeks + 1;
+        for (let i = 0; i < n % 7; i++) {
+            res += i + monday;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,6 +588,23 @@ impl Solution {
         let mut res = sum(weeks - 1) * 7 + weeks * sum(7);
         res += sum(n % 7) + weeks * (n % 7);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    totalMoney(n: number): number {
+        const SUM = (x: number): number => (x * (x + 1)) / 2;
+
+        const weeks = Math.floor(n / 7);
+        let res = SUM(weeks - 1) * 7 + weeks * SUM(7);
+        res += SUM(n % 7) + weeks * (n % 7);
+        return res;
     }
 }
 ```

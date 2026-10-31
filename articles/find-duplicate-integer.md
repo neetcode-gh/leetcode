@@ -136,7 +136,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(mut nums: Vec<i32>) -> i32 {
@@ -147,6 +146,24 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+        for (let i = 0; i < nums.length - 1; i++) {
+            if (nums[i] === nums[i + 1]) {
+                return nums[i];
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -301,7 +318,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(nums: Vec<i32>) -> i32 {
@@ -313,6 +329,25 @@ impl Solution {
             seen.insert(num);
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        let seen = new Set<number>();
+        for (let num of nums) {
+            if (seen.has(num)) {
+                return num;
+            }
+            seen.add(num);
+        }
+        return -1;
     }
 }
 ```
@@ -467,7 +502,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(nums: Vec<i32>) -> i32 {
@@ -479,6 +513,25 @@ impl Solution {
             seen[(num - 1) as usize] = 1;
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        let seen: number[] = new Array(nums.length).fill(0);
+        for (let num of nums) {
+            if (seen[num - 1]) {
+                return num;
+            }
+            seen[num - 1] = 1;
+        }
+        return -1;
     }
 }
 ```
@@ -643,7 +696,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(mut nums: Vec<i32>) -> i32 {
@@ -655,6 +707,25 @@ impl Solution {
             nums[idx] *= -1;
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        for (let num of nums) {
+            let idx = Math.abs(num) - 1;
+            if (nums[idx] < 0) {
+                return Math.abs(num);
+            }
+            nums[idx] *= -1;
+        }
+        return -1;
     }
 }
 ```
@@ -904,7 +975,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(nums: Vec<i32>) -> i32 {
@@ -920,6 +990,39 @@ impl Solution {
             }
         }
         low
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        let n = nums.length;
+        let low = 1,
+            high = n - 1;
+
+        while (low < high) {
+            let mid = Math.floor(low + (high - low) / 2);
+            let lessOrEqual = 0;
+
+            for (let i = 0; i < n; i++) {
+                if (nums[i] <= mid) {
+                    lessOrEqual++;
+                }
+            }
+
+            if (lessOrEqual <= mid) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+
+        return low;
     }
 }
 ```
@@ -1070,8 +1173,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int FindDuplicate(IList<int> nums) {
-        int n = nums.Count;
+    public int FindDuplicate(int[] nums) {
+        int n = nums.Length;
         int res = 0;
         for (int b = 0; b < 32; b++) {
             int x = 0, y = 0;
@@ -1189,7 +1292,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(nums: Vec<i32>) -> i32 {
@@ -1214,6 +1316,38 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        let n = nums.length;
+        let res = 0;
+        for (let b = 0; b < 32; b++) {
+            let x = 0,
+                y = 0;
+            let mask = 1 << b;
+            for (let num of nums) {
+                if (num & mask) {
+                    x++;
+                }
+            }
+            for (let num = 1; num < n; num++) {
+                if (num & mask) {
+                    y++;
+                }
+            }
+            if (x > y) {
+                res |= mask;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1459,7 +1593,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_duplicate(nums: Vec<i32>) -> i32 {
@@ -1479,6 +1612,35 @@ impl Solution {
             slow2 = nums[slow2] as usize;
             if slow == slow2 {
                 return slow as i32;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findDuplicate(nums: number[]): number {
+        let slow = 0;
+        let fast = 0;
+        while (true) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if (slow === fast) {
+                break;
+            }
+        }
+
+        let slow2 = 0;
+        while (true) {
+            slow = nums[slow];
+            slow2 = nums[slow2];
+            if (slow === slow2) {
+                return slow;
             }
         }
     }

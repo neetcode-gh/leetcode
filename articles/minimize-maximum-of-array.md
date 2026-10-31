@@ -304,6 +304,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minimizeArrayValue(nums: number[]): number {
+        const isValid = (maxVal: number): boolean => {
+            let prefixSum = 0;
+            for (let i = 0; i < nums.length; i++) {
+                prefixSum += nums[i];
+                if (prefixSum > maxVal * (i + 1)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        let left = 0,
+            right = Math.max(...nums);
+        while (left < right) {
+            let mid = left + Math.floor((right - left) / 2);
+            if (isValid(mid)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return left;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -478,6 +512,26 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minimizeArrayValue(nums: number[]): number {
+        let res = nums[0];
+        let total = nums[0];
+
+        for (let i = 1; i < nums.length; i++) {
+            total += nums[i];
+            res = Math.max(res, Math.ceil(total / (i + 1)));
+        }
+
+        return res;
     }
 }
 ```

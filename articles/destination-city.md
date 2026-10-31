@@ -199,6 +199,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} paths
+     * @return {string}
+     */
+    destCity(paths: string[][]): string {
+        for (let i = 0; i < paths.length; i++) {
+            let flag = true;
+            for (let j = 0; j < paths.length; j++) {
+                if (paths[i][1] === paths[j][0]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                return paths[i][1];
+            }
+        }
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,6 +403,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} paths
+     * @return {string}
+     */
+    destCity(paths: string[][]): string {
+        const s = new Set<string>();
+        for (const p of paths) {
+            s.add(p[0]);
+        }
+
+        for (const p of paths) {
+            if (!s.has(p[1])) {
+                return p[1];
+            }
+        }
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -553,6 +599,27 @@ impl Solution {
             start = next;
         }
         start.to_string()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} paths
+     * @return {string}
+     */
+    destCity(paths: string[][]): string {
+        const mp = new Map<string, string>();
+        for (const p of paths) {
+            mp.set(p[0], p[1]);
+        }
+
+        let start = paths[0][0];
+        while (mp.has(start)) {
+            start = mp.get(start)!;
+        }
+        return start;
     }
 }
 ```

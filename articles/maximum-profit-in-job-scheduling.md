@@ -345,6 +345,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} startTime
+     * @param {number[]} endTime
+     * @param {number[]} profit
+     * @return {number}
+     */
+    jobScheduling(startTime: number[], endTime: number[], profit: number[]): number {
+        let n = startTime.length;
+        let intervals: number[][] = new Array(n)
+            .fill(null)
+            .map((_, i) => [startTime[i], endTime[i], profit[i]]);
+        intervals.sort((a, b) => a[0] - b[0]);
+
+        let cache: number[] = new Array(n).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (cache[i] !== -1) {
+                return cache[i];
+            }
+
+            // Don't include
+            let res = dfs(i + 1);
+
+            // Include
+            let j = i + 1;
+            while (j < n && intervals[i][1] > intervals[j][0]) {
+                j++;
+            }
+
+            return (cache[i] = Math.max(res, intervals[i][2] + dfs(j)));
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -371,6 +413,9 @@ The linear scan to find the next non-overlapping job can be optimized using bina
 ::tabs-start
 
 ```python
+import bisect
+
+
 class Solution:
     def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
         intervals = sorted(zip(startTime, endTime, profit))
@@ -732,6 +777,54 @@ impl Solution {
         }
 
         dfs(0, &intervals, &mut cache)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} startTime
+     * @param {number[]} endTime
+     * @param {number[]} profit
+     * @return {number}
+     */
+    jobScheduling(startTime: number[], endTime: number[], profit: number[]): number {
+        let n = startTime.length;
+        let intervals: number[][] = new Array(n)
+            .fill(null)
+            .map((_, i) => [startTime[i], endTime[i], profit[i]]);
+        intervals.sort((a, b) => a[0] - b[0]);
+
+        let cache: number[] = new Array(n).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (cache[i] !== -1) {
+                return cache[i];
+            }
+
+            let res = dfs(i + 1);
+
+            let left = i + 1,
+                right = n,
+                j = n;
+            while (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                if (intervals[mid][0] >= intervals[i][1]) {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+
+            return (cache[i] = Math.max(res, intervals[i][2] + dfs(j)));
+        };
+
+        return dfs(0);
     }
 }
 ```
@@ -1145,6 +1238,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} startTime
+     * @param {number[]} endTime
+     * @param {number[]} profit
+     * @return {number}
+     */
+    jobScheduling(startTime: number[], endTime: number[], profit: number[]): number {
+        let n = startTime.length;
+        let index = Array.from({ length: n }, (_, i) => i);
+        index.sort((a, b) => startTime[a] - startTime[b]);
+
+        let cache: number[] = new Array(n).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (cache[i] !== -1) {
+                return cache[i];
+            }
+
+            let res = dfs(i + 1);
+
+            let left = i + 1,
+                right = n,
+                j = n;
+            while (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                if (startTime[index[mid]] >= endTime[index[i]]) {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+
+            return (cache[i] = Math.max(res, profit[index[i]] + dfs(j)));
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1434,6 +1573,42 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} startTime
+     * @param {number[]} endTime
+     * @param {number[]} profit
+     * @return {number}
+     */
+    jobScheduling(startTime: number[], endTime: number[], profit: number[]): number {
+        let n = startTime.length;
+        let index = Array.from({ length: n }, (_, i) => i);
+        index.sort((a, b) => startTime[a] - startTime[b]);
+
+        let dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            let left = i + 1,
+                right = n,
+                j = n;
+            while (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                if (startTime[index[mid]] >= endTime[index[i]]) {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            dp[i] = Math.max(dp[i + 1], profit[index[i]] + dp[j]);
+        }
+
+        return dp[0];
     }
 }
 ```

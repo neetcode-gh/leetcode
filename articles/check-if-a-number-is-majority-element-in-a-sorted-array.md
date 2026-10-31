@@ -144,6 +144,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {boolean}
+     */
+    isMajorityElement(nums: number[], target: number): boolean {
+        let count = 0;
+        for (let num of nums) {
+            count = num === target ? count + 1 : count;
+        }
+
+        return count > Math.floor(nums.length / 2);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -610,6 +628,71 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * Returns the index of the first element equal to or greater than the target.
+     * If there is no instance of the target in the list, it returns the length of the list.
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    lowerBound(nums: number[], target: number): number {
+        let start = 0;
+        let end = nums.length - 1;
+        let index = nums.length;
+
+        while (start <= end) {
+            let mid = Math.floor((start + end) / 2);
+            if (nums[mid] >= target) {
+                end = mid - 1;
+                index = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return index;
+    }
+
+    /**
+     * Returns the index of the first element greater than the target.
+     * If there is no instance of the target in the list, it returns the length of the list.
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    upperBound(nums: number[], target: number): number {
+        let start = 0;
+        let end = nums.length - 1;
+        let index = nums.length;
+
+        while (start <= end) {
+            let mid = Math.floor((start + end) / 2);
+            if (nums[mid] > target) {
+                end = mid - 1;
+                index = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return index;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {boolean}
+     */
+    isMajorityElement(nums: number[], target: number): boolean {
+        const firstIndex = this.lowerBound(nums, target);
+        const nextToLastIndex = this.upperBound(nums, target);
+        return nextToLastIndex - firstIndex > Math.floor(nums.length / 2);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -894,6 +977,48 @@ impl Solution {
 
         let first_index = lower_bound(target);
         first_index + n / 2 < n && nums[first_index + n / 2] == target
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * Returns the index of the first element that is equal to or greater than the target.
+     * If there is no instance of the target in the list, it returns the length of the list.
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    lowerBound(nums: number[], target: number): number {
+        let start = 0;
+        let end = nums.length - 1;
+        let index = nums.length;
+
+        while (start <= end) {
+            let mid = Math.floor((start + end) / 2);
+            if (nums[mid] >= target) {
+                end = mid - 1;
+                index = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return index;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {boolean}
+     */
+    isMajorityElement(nums: number[], target: number): boolean {
+        const firstIndex = this.lowerBound(nums, target);
+        return (
+            firstIndex + Math.floor(nums.length / 2) < nums.length &&
+            nums[firstIndex + Math.floor(nums.length / 2)] === target
+        );
     }
 }
 ```

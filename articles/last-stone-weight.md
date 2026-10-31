@@ -134,17 +134,17 @@ public class Solution {
 ```go
 func lastStoneWeight(stones []int) int {
     for len(stones) > 1 {
-		sort.Ints(stones)
-		cur := stones[len(stones)-1] - stones[len(stones)-2]
-		stones = stones[:len(stones)-2]
-		if cur > 0 {
-			stones = append(stones, cur)
-		}
-	}
-	if len(stones) == 0 {
-		return 0
-	}
-	return stones[0]
+        sort.Ints(stones)
+        cur := stones[len(stones)-1] - stones[len(stones)-2]
+        stones = stones[:len(stones)-2]
+        if cur > 0 {
+            stones = append(stones, cur)
+        }
+    }
+    if len(stones) == 0 {
+        return 0
+    }
+    return stones[0]
 }
 ```
 
@@ -199,6 +199,25 @@ impl Solution {
         }
 
         if stone_list.is_empty() { 0 } else { stone_list[0] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeight(stones: number[]): number {
+        while (stones.length > 1) {
+            stones.sort((a, b) => a - b);
+            let cur = stones.pop()! - stones.pop()!;
+            if (cur) {
+                stones.push(cur);
+            }
+        }
+        return stones.length ? stones[0] : 0;
     }
 }
 ```
@@ -549,6 +568,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeight(stones: number[]): number {
+        stones.sort((a, b) => a - b);
+        let n = stones.length;
+
+        while (n > 1) {
+            let cur = stones.pop()! - stones.pop()!;
+            n -= 2;
+            if (cur > 0) {
+                let l = 0,
+                    r = n;
+                while (l < r) {
+                    let mid = Math.floor((l + r) / 2);
+                    if (stones[mid] < cur) {
+                        l = mid + 1;
+                    } else {
+                        r = mid;
+                    }
+                }
+                let pos = l;
+                n++;
+                stones.push(0);
+                for (let i = n - 1; i > pos; i--) {
+                    stones[i] = stones[i - 1];
+                }
+                stones[pos] = cur;
+            }
+        }
+        return n > 0 ? stones[0] : 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -798,6 +855,33 @@ impl Solution {
         }
 
         heap.pop().unwrap_or(0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeight(stones: number[]): number {
+        const maxPQ = new MaxPriorityQueue();
+
+        for (const stone of stones) {
+            maxPQ.enqueue(stone);
+        }
+
+        while (maxPQ.size() > 1) {
+            const stone1: number = maxPQ.dequeue();
+            const stone2: number = maxPQ.dequeue();
+
+            if (stone1 !== stone2) {
+                maxPQ.enqueue(stone1 - stone2);
+            }
+        }
+
+        return maxPQ.size() === 1 ? maxPQ.dequeue() : 0;
     }
 }
 ```
@@ -1191,7 +1275,7 @@ impl Solution {
                 continue;
             }
 
-            let mut j = first.min(second).saturating_sub(1);
+            let mut j = (first - 1).min(second);
             while j > 0 && bucket[j] == 0 {
                 j -= 1;
             }
@@ -1208,6 +1292,52 @@ impl Solution {
         }
 
         first as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stones
+     * @return {number}
+     */
+    lastStoneWeight(stones: number[]): number {
+        let maxStone = 0;
+        for (let stone of stones) {
+            maxStone = Math.max(maxStone, stone);
+        }
+
+        let bucket: number[] = Array(maxStone + 1).fill(0);
+        for (let stone of stones) {
+            bucket[stone]++;
+        }
+
+        let first = maxStone,
+            second = maxStone;
+        while (first > 0) {
+            if (bucket[first] % 2 === 0) {
+                first--;
+                continue;
+            }
+
+            let j = Math.min(first - 1, second);
+            while (j > 0 && bucket[j] === 0) {
+                j--;
+            }
+
+            if (j === 0) {
+                return first;
+            }
+
+            second = j;
+            bucket[first]--;
+            bucket[second]--;
+            bucket[first - second]++;
+            first = Math.max(first - second, second);
+        }
+
+        return first;
     }
 }
 ```

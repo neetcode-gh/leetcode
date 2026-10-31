@@ -204,6 +204,55 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ClosestMeetingNode(int[] edges, int node1, int node2) {
+        int n = edges.Length;
+        List<int>[] adj = new List<int>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+        for (int i = 0; i < n; i++) {
+            if (edges[i] != -1) adj[i].Add(edges[i]);
+        }
+
+        int[] node1Dist = Bfs(node1, n, adj);
+        int[] node2Dist = Bfs(node2, n, adj);
+
+        int res = -1, resDist = int.MaxValue;
+        for (int i = 0; i < n; i++) {
+            if (node1Dist[i] != -1 && node2Dist[i] != -1) {
+                int dist = Math.Max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
+    }
+
+    private int[] Bfs(int src, int n, List<int>[] adj) {
+        int[] distMap = new int[n];
+        Array.Fill(distMap, -1);
+        Queue<int[]> q = new Queue<int[]>();
+        q.Enqueue(new int[] { src, 0 });
+        distMap[src] = 0;
+
+        while (q.Count > 0) {
+            int[] cur = q.Dequeue();
+            int node = cur[0], dist = cur[1];
+
+            foreach (int nei in adj[node]) {
+                if (distMap[nei] == -1) {
+                    q.Enqueue(new int[] { nei, dist + 1 });
+                    distMap[nei] = dist + 1;
+                }
+            }
+        }
+        return distMap;
+    }
+}
+```
+
 ```go
 func closestMeetingNode(edges []int, node1 int, node2 int) int {
     n := len(edges)
@@ -353,7 +402,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
@@ -396,6 +444,57 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} edges
+     * @param {number} node1
+     * @param {number} node2
+     * @return {number}
+     */
+    closestMeetingNode(edges: number[], node1: number, node2: number): number {
+        const n = edges.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (let i = 0; i < n; i++) {
+            if (edges[i] !== -1) adj[i].push(edges[i]);
+        }
+
+        const bfs = (src: number): number[] => {
+            const distMap: number[] = Array(n).fill(-1);
+            const q = new Queue([[src, 0]]);
+            distMap[src] = 0;
+
+            while (!q.isEmpty()) {
+                const [node, dist]: number[] = q.pop();
+                for (const nei of adj[node]) {
+                    if (distMap[nei] === -1) {
+                        q.push([nei, dist + 1]);
+                        distMap[nei] = dist + 1;
+                    }
+                }
+            }
+            return distMap;
+        };
+
+        const node1Dist = bfs(node1);
+        const node2Dist = bfs(node2);
+
+        let res = -1,
+            resDist = Infinity;
+        for (let i = 0; i < n; i++) {
+            if (node1Dist[i] !== -1 && node2Dist[i] !== -1) {
+                let dist = Math.max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -590,6 +689,49 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ClosestMeetingNode(int[] edges, int node1, int node2) {
+        int n = edges.Length;
+        int[] node1Dist = Bfs(node1, edges, n);
+        int[] node2Dist = Bfs(node2, edges, n);
+
+        int res = -1, resDist = int.MaxValue;
+        for (int i = 0; i < n; i++) {
+            if (node1Dist[i] != -1 && node2Dist[i] != -1) {
+                int dist = Math.Max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private int[] Bfs(int src, int[] edges, int n) {
+        int[] dist = new int[n];
+        Array.Fill(dist, -1);
+        Queue<int> q = new Queue<int>();
+        q.Enqueue(src);
+        dist[src] = 0;
+
+        while (q.Count > 0) {
+            int node = q.Dequeue();
+            int nei = edges[node];
+            if (nei == -1 || dist[nei] != -1) {
+                continue;
+            }
+
+            q.Enqueue(nei);
+            dist[nei] = dist[node] + 1;
+        }
+        return dist;
+    }
+}
+```
+
 ```go
 func closestMeetingNode(edges []int, node1 int, node2 int) int {
     n := len(edges)
@@ -722,7 +864,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
@@ -759,6 +900,54 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} edges
+     * @param {number} node1
+     * @param {number} node2
+     * @return {number}
+     */
+    closestMeetingNode(edges: number[], node1: number, node2: number): number {
+        const n = edges.length;
+
+        const bfs = (src: number): number[] => {
+            const dist: number[] = Array(n).fill(-1);
+            const q = new Queue([src]);
+            dist[src] = 0;
+
+            while (!q.isEmpty()) {
+                const node: number = q.pop();
+                const nei = edges[node];
+                if (nei === -1 || dist[nei] !== -1) {
+                    continue;
+                }
+
+                q.push(nei);
+                dist[nei] = dist[node] + 1;
+            }
+            return dist;
+        };
+
+        const node1Dist = bfs(node1);
+        const node2Dist = bfs(node2);
+
+        let res = -1,
+            resDist = Infinity;
+        for (let i = 0; i < n; i++) {
+            if (node1Dist[i] !== -1 && node2Dist[i] !== -1) {
+                let dist = Math.max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -932,6 +1121,43 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ClosestMeetingNode(int[] edges, int node1, int node2) {
+        int n = edges.Length;
+        int[] node1Dist = new int[n];
+        int[] node2Dist = new int[n];
+        Array.Fill(node1Dist, -1);
+        Array.Fill(node2Dist, -1);
+        node1Dist[node1] = 0;
+        node2Dist[node2] = 0;
+
+        Dfs(node1, edges, node1Dist);
+        Dfs(node2, edges, node2Dist);
+
+        int res = -1, resDist = int.MaxValue;
+        for (int i = 0; i < n; i++) {
+            if (Math.Min(node1Dist[i], node2Dist[i]) != -1) {
+                int dist = Math.Max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
+    }
+
+    private void Dfs(int node, int[] edges, int[] dist) {
+        int nei = edges[node];
+        if (nei != -1 && dist[nei] == -1) {
+            dist[nei] = dist[node] + 1;
+            Dfs(nei, edges, dist);
+        }
+    }
+}
+```
+
 ```go
 func closestMeetingNode(edges []int, node1 int, node2 int) int {
     n := len(edges)
@@ -1059,7 +1285,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
@@ -1093,6 +1318,49 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} edges
+     * @param {number} node1
+     * @param {number} node2
+     * @return {number}
+     */
+    closestMeetingNode(edges: number[], node1: number, node2: number): number {
+        const n = edges.length;
+
+        const dfs = (node: number, dist: number[]): void => {
+            const nei = edges[node];
+            if (nei !== -1 && dist[nei] === -1) {
+                dist[nei] = dist[node] + 1;
+                dfs(nei, dist);
+            }
+        };
+
+        const node1Dist: number[] = Array(n).fill(-1);
+        const node2Dist: number[] = Array(n).fill(-1);
+        node1Dist[node1] = 0;
+        node2Dist[node2] = 0;
+
+        dfs(node1, node1Dist);
+        dfs(node2, node2Dist);
+
+        let res = -1,
+            resDist = Infinity;
+        for (let i = 0; i < n; i++) {
+            if (Math.min(node1Dist[i], node2Dist[i]) !== -1) {
+                const dist = Math.max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1258,6 +1526,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ClosestMeetingNode(int[] edges, int node1, int node2) {
+        int n = edges.Length;
+        int[] node1Dist = Dfs(node1, edges, n);
+        int[] node2Dist = Dfs(node2, edges, n);
+
+        int res = -1, resDist = int.MaxValue;
+        for (int i = 0; i < n; i++) {
+            if (Math.Min(node1Dist[i], node2Dist[i]) != -1) {
+                int dist = Math.Max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
+    }
+
+    private int[] Dfs(int node, int[] edges, int n) {
+        int[] dist = new int[n];
+        Array.Fill(dist, -1);
+        dist[node] = 0;
+        while (edges[node] != -1 && dist[edges[node]] == -1) {
+            int nei = edges[node];
+            dist[nei] = dist[node] + 1;
+            node = nei;
+        }
+        return dist;
+    }
+}
+```
+
 ```go
 func closestMeetingNode(edges []int, node1 int, node2 int) int {
     n := len(edges)
@@ -1379,7 +1681,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
@@ -1412,6 +1713,47 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} edges
+     * @param {number} node1
+     * @param {number} node2
+     * @return {number}
+     */
+    closestMeetingNode(edges: number[], node1: number, node2: number): number {
+        const n = edges.length;
+
+        const dfs = (node: number): number[] => {
+            const dist: number[] = Array(n).fill(-1);
+            dist[node] = 0;
+            while (edges[node] !== -1 && dist[edges[node]] === -1) {
+                const nei = edges[node];
+                dist[nei] = dist[node] + 1;
+                node = nei;
+            }
+            return dist;
+        };
+
+        const node1Dist = dfs(node1);
+        const node2Dist = dfs(node2);
+
+        let res = -1,
+            resDist = Infinity;
+        for (let i = 0; i < n; i++) {
+            if (Math.min(node1Dist[i], node2Dist[i]) !== -1) {
+                const dist = Math.max(node1Dist[i], node2Dist[i]);
+                if (dist < resDist) {
+                    resDist = dist;
+                    res = i;
+                }
+            }
+        }
+        return res;
     }
 }
 ```

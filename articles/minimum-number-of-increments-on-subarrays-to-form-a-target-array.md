@@ -210,7 +210,7 @@ class Solution {
             if l > r { return 0 }
 
             var minIdx = l
-            for i in (l + 1)...r {
+            for i in stride(from: l + 1, through: r, by: 1) {
                 if target[i] < target[minIdx] {
                     minIdx = i
                 }
@@ -246,6 +246,35 @@ impl Solution {
         }
 
         rec(&target, 0, target.len() as i32 - 1, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} target
+     * @return {number}
+     */
+    minNumberOperations(target: number[]): number {
+        const rec = (l: number, r: number, h: number): number => {
+            if (l > r) return 0;
+
+            let minIdx = l;
+            for (let i = l + 1; i <= r; i++) {
+                if (target[i] < target[minIdx]) {
+                    minIdx = i;
+                }
+            }
+
+            let res = target[minIdx] - h;
+            res += rec(l, minIdx - 1, target[minIdx]);
+            res += rec(minIdx + 1, r, target[minIdx]);
+
+            return res;
+        };
+
+        return rec(0, target.length - 1, 0);
     }
 }
 ```
@@ -893,6 +922,90 @@ impl Solution {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private A: number[];
+    private n: number;
+    private INF: number;
+    private tree: number[];
+
+    constructor(A: number[]) {
+        this.A = [...A];
+        this.n = A.length;
+        this.INF = Number.POSITIVE_INFINITY;
+
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.A.push(this.INF);
+            this.n++;
+        }
+
+        this.tree = Array(2 * this.n).fill(0);
+        this.build();
+    }
+
+    build(): void {
+        for (let i = 0; i < this.n; i++) {
+            this.tree[this.n + i] = i;
+        }
+        for (let j = this.n - 1; j >= 1; j--) {
+            let a = this.tree[j << 1];
+            let b = this.tree[(j << 1) | 1];
+            this.tree[j] = this.A[a] <= this.A[b] ? a : b;
+        }
+    }
+
+    update(i: number, val: number): void {
+        this.A[i] = val;
+        let j = (this.n + i) >> 1;
+        while (j >= 1) {
+            let a = this.tree[j << 1];
+            let b = this.tree[(j << 1) | 1];
+            this.tree[j] = this.A[a] <= this.A[b] ? a : b;
+            j >>= 1;
+        }
+    }
+
+    query(ql: number, qh: number): number {
+        return this._query(1, 0, this.n - 1, ql, qh);
+    }
+
+    _query(node: number, l: number, h: number, ql: number, qh: number): number {
+        if (ql > h || qh < l) return -1;
+        if (l >= ql && h <= qh) return this.tree[node];
+
+        let mid = (l + h) >> 1;
+        let a = this._query(node << 1, l, mid, ql, qh);
+        let b = this._query((node << 1) | 1, mid + 1, h, ql, qh);
+
+        if (a === -1) return b;
+        if (b === -1) return a;
+        return this.A[a] <= this.A[b] ? a : b;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} target
+     * @return {number}
+     */
+    minNumberOperations(target: number[]): number {
+        const seg = new SegmentTree(target);
+
+        const rec = (l: number, r: number, h: number): number => {
+            if (l > r) return 0;
+
+            const minIdx = seg.query(l, r);
+            let res = target[minIdx] - h;
+            res += rec(l, minIdx - 1, target[minIdx]);
+            res += rec(minIdx + 1, r, target[minIdx]);
+            return res;
+        };
+
+        return rec(0, target.length - 1, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1026,6 +1139,22 @@ impl Solution {
             res += (target[i] - target[i - 1]).max(0);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} target
+     * @return {number}
+     */
+    minNumberOperations(target: number[]): number {
+        let res = target[0];
+        for (let i = 1; i < target.length; i++) {
+            res += Math.max(target[i] - target[i - 1], 0);
+        }
+        return res;
     }
 }
 ```

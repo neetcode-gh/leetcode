@@ -461,11 +461,10 @@ class Solution {
 
 ```swift
 class Solution {
-    func shortestBridge(_ grid: [[Int]]) -> Int {
+    func shortestBridge(_ grid: inout [[Int]]) -> Int {
         let N = grid.count
         let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         var visit = Set<[Int]>()
-        var grid = grid
 
         func invalid(_ r: Int, _ c: Int) -> Bool {
             return r < 0 || c < 0 || r == N || c == N
@@ -584,6 +583,84 @@ impl Solution {
             res += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestBridge(grid: number[][]): number {
+        const N = grid.length;
+        const direct: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        const visited: boolean[][] = Array.from({ length: N }, () =>
+            Array(N).fill(false),
+        );
+        const q = new Queue();
+
+        const dfs = (r: number, c: number): void => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= N ||
+                c >= N ||
+                grid[r][c] === 0 ||
+                visited[r][c]
+            )
+                return;
+            visited[r][c] = true;
+            q.push([r, c]);
+
+            for (const [dr, dc] of direct) {
+                dfs(r + dr, c + dc);
+            }
+        };
+
+        const bfs = (): number => {
+            let res = 0;
+            while (!q.isEmpty()) {
+                for (let i = q.size(); i > 0; i--) {
+                    const [r, c]: number[] = q.pop();
+                    for (const [dr, dc] of direct) {
+                        const curR = r + dr,
+                            curC = c + dc;
+
+                        if (
+                            curR < 0 ||
+                            curC < 0 ||
+                            curR >= N ||
+                            curC >= N ||
+                            visited[curR][curC]
+                        )
+                            continue;
+                        if (grid[curR][curC] === 1) return res;
+
+                        q.push([curR, curC]);
+                        visited[curR][curC] = true;
+                    }
+                }
+                res++;
+            }
+            return -1;
+        };
+
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    dfs(r, c);
+                    return bfs();
+                }
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -984,8 +1061,7 @@ class Solution {
 
 ```swift
 class Solution {
-    func shortestBridge(_ grid: [[Int]]) -> Int {
-        var grid = grid
+    func shortestBridge(_ grid: inout [[Int]]) -> Int {
         let N = grid.count
         let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         var q = [[Int]]()
@@ -1085,6 +1161,65 @@ impl Solution {
             res += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestBridge(grid: number[][]): number {
+        const N = grid.length;
+        const direct: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        const q = new Queue();
+
+        const dfs = (r: number, c: number): void => {
+            if (r < 0 || c < 0 || r >= N || c >= N || grid[r][c] !== 1) return;
+            grid[r][c] = 2;
+            q.push([r, c]);
+            for (const [dr, dc] of direct) {
+                dfs(r + dr, c + dc);
+            }
+        };
+
+        let found = false;
+        for (let r = 0; r < N; r++) {
+            if (found) break;
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    dfs(r, c);
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        let res = 0;
+        while (!q.isEmpty()) {
+            for (let i = q.size(); i > 0; i--) {
+                const [r, c]: number[] = q.pop();
+                for (const [dr, dc] of direct) {
+                    let nr = r + dr,
+                        nc = c + dc;
+                    if (nr < 0 || nc < 0 || nr >= N || nc >= N) continue;
+                    if (grid[nr][nc] === 1) return res;
+                    if (grid[nr][nc] === 0) {
+                        grid[nr][nc] = 2;
+                        q.push([nr, nc]);
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
     }
 }
 ```
@@ -1530,8 +1665,7 @@ class Solution {
 
 ```swift
 class Solution {
-    func shortestBridge(_ grid: [[Int]]) -> Int {
-        var grid = grid
+    func shortestBridge(_ grid: inout [[Int]]) -> Int {
         let N = grid.count
         let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         var q2 = [[Int]]()
@@ -1638,6 +1772,79 @@ impl Solution {
             res += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestBridge(grid: number[][]): number {
+        const N = grid.length;
+        const direct: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        const q2 = new Queue();
+
+        let found = false;
+        for (let r = 0; r < N; r++) {
+            if (found) break;
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    const q1 = new Queue([[r, c]]);
+                    grid[r][c] = 2;
+
+                    while (!q1.isEmpty()) {
+                        let [x, y]: number[] = q1.pop();
+                        q2.push([x, y]);
+
+                        for (let [dx, dy] of direct) {
+                            let nx = x + dx,
+                                ny = y + dy;
+                            if (
+                                nx >= 0 &&
+                                ny >= 0 &&
+                                nx < N &&
+                                ny < N &&
+                                grid[nx][ny] === 1
+                            ) {
+                                grid[nx][ny] = 2;
+                                q1.push([nx, ny]);
+                            }
+                        }
+                    }
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        let res = 0;
+        while (!q2.isEmpty()) {
+            for (let i = q2.size(); i > 0; i--) {
+                const [x, y]: number[] = q2.pop();
+
+                for (let [dx, dy] of direct) {
+                    let nx = x + dx,
+                        ny = y + dy;
+                    if (nx >= 0 && ny >= 0 && nx < N && ny < N) {
+                        if (grid[nx][ny] === 1) return res;
+                        if (grid[nx][ny] === 0) {
+                            grid[nx][ny] = 2;
+                            q2.push([nx, ny]);
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
     }
 }
 ```
@@ -2335,8 +2542,7 @@ class DSU {
 }
 
 class Solution {
-    func shortestBridge(_ grid: [[Int]]) -> Int {
-        var grid = grid
+    func shortestBridge(_ grid: inout [[Int]]) -> Int {
         let n = grid.count
         let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         let dsu = DSU(n * n + 1)
@@ -2497,6 +2703,129 @@ impl Solution {
             res += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class DSU {
+    private parent: number[];
+    private rank: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n }, (_, i) => i);
+        this.rank = Array(n).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+
+        if (this.rank[pv] > this.rank[pu]) [pu, pv] = [pv, pu];
+        this.parent[pv] = pu;
+        this.rank[pu] += this.rank[pv];
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestBridge(grid: number[][]): number {
+        const N = grid.length;
+        const direct: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        const dsu = new DSU(N * N + 1);
+        const q = new Queue();
+
+        const idx = (r: number, c: number): number => r * N + c + 1;
+
+        let firstIsland = -1;
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    firstIsland = dsu.find(idx(r, c));
+                    if (c + 1 < N && grid[r][c + 1] === 1)
+                        dsu.union(idx(r, c), idx(r, c + 1));
+                    if (r + 1 < N && grid[r + 1][c] === 1)
+                        dsu.union(idx(r, c), idx(r + 1, c));
+                }
+            }
+        }
+
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1 && dsu.find(idx(r, c)) === firstIsland) {
+                    for (const [dx, dy] of direct) {
+                        let nr = r + dx,
+                            nc = c + dy;
+                        if (
+                            nr >= 0 &&
+                            nc >= 0 &&
+                            nr < N &&
+                            nc < N &&
+                            grid[nr][nc] === 0
+                        ) {
+                            q.push([r, c]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        let res = 0;
+        while (!q.isEmpty()) {
+            for (let i = q.size(); i > 0; i--) {
+                const [r, c]: number[] = q.pop();
+                for (let [dx, dy] of direct) {
+                    let nr = r + dx,
+                        nc = c + dy;
+                    if (nr >= 0 && nc >= 0 && nr < N && nc < N) {
+                        if (
+                            grid[nr][nc] === 1 &&
+                            dsu.union(idx(r, c), idx(nr, nc))
+                        ) {
+                            return res;
+                        }
+                        if (grid[nr][nc] === 0) {
+                            grid[nr][nc] = 1;
+                            dsu.union(idx(r, c), idx(nr, nc));
+                            q.push([nr, nc]);
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return res;
     }
 }
 ```

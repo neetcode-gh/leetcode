@@ -403,6 +403,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} people
+     * @return {number[][]}
+     */
+    reconstructQueue(people: number[][]): number[][] {
+        const n = people.length;
+        const mp = new Map<number, number[]>();
+
+        for (const [h, k] of people) {
+            if (!mp.has(k)) mp.set(k, []);
+            mp.get(k)!.push(h);
+        }
+        for (const [k, heights] of mp) {
+            heights.sort((a, b) => b - a);
+        }
+
+        const res: number[][] = [];
+        for (let i = 0; i < n; i++) {
+            let mini = -1;
+            for (const [k, heights] of mp) {
+                if (k > i) continue;
+
+                let cnt = 0;
+                for (let j = res.length - 1; j >= 0; j--) {
+                    if (res[j][0] >= heights[heights.length - 1]) cnt++;
+                }
+
+                if (
+                    cnt === k &&
+                    (mini === -1 ||
+                        heights[heights.length - 1] <
+                            mp.get(mini)![mp.get(mini)!.length - 1])
+                ) {
+                    mini = k;
+                }
+            }
+
+            res.push([mp.get(mini)!.pop()!, mini]);
+            if (mp.get(mini)!.length === 0) {
+                mp.delete(mini);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -558,6 +608,23 @@ impl Solution {
             res.insert(k, p);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} people
+     * @return {number[][]}
+     */
+    reconstructQueue(people: number[][]): number[][] {
+        people.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : b[0] - a[0]));
+        const res: number[][] = [];
+        for (const [h, k] of people) {
+            res.splice(k, 0, [h, k]);
+        }
+        return res;
     }
 }
 ```
@@ -817,6 +884,35 @@ impl Solution {
         }
 
         res.into_iter().map(|x| x.unwrap()).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} people
+     * @return {number[][]}
+     */
+    reconstructQueue(people: number[][]): number[][] {
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
+        const res: (number[] | null)[] = Array(people.length).fill(null);
+
+        for (const p of people) {
+            let cnt = 0,
+                i = 0;
+
+            while (i < people.length) {
+                if (res[i] === null) {
+                    if (cnt === p[1]) break;
+                    cnt++;
+                }
+                i++;
+            }
+            res[i] = p;
+        }
+
+        return res as number[][];
     }
 }
 ```
@@ -1506,6 +1602,106 @@ impl Solution {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: Int32Array;
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = new Int32Array(0);
+        this.build(N);
+    }
+
+    /**
+     * @param {number} N
+     * @return {void}
+     */
+    build(N: number): void {
+        this.tree = new Int32Array(2 * this.n);
+        for (let i = 0; i < N; i++) {
+            this.tree[this.n + i] = 1;
+        }
+        for (let i = this.n - 1; i > 0; i--) {
+            this.tree[i] = this.tree[i << 1] + this.tree[(i << 1) | 1];
+        }
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     * @return {void}
+     */
+    update(i: number, val: number): void {
+        this.tree[this.n + i] = val;
+        for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
+            this.tree[j] = this.tree[j << 1] + this.tree[(j << 1) | 1];
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        let res = 0;
+        l += this.n;
+        r += this.n + 1;
+
+        while (l < r) {
+            if (l & 1) res += this.tree[l++];
+            if (r & 1) res += this.tree[--r];
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} people
+     * @return {number[][]}
+     */
+    reconstructQueue(people: number[][]): number[][] {
+        const n = people.length;
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
+        const res: (number[] | null)[] = Array(n).fill(null);
+
+        const segTree = new SegmentTree(n);
+        for (const p of people) {
+            let l = 0,
+                r = n - 1,
+                idx = 0;
+            while (l <= r) {
+                let mid = (l + r) >> 1;
+                let cnt = segTree.query(0, mid);
+                if (cnt > p[1]) {
+                    idx = mid;
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+
+            res[idx] = p;
+            segTree.update(idx, 0);
+        }
+
+        return res as number[][];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2128,6 +2324,94 @@ impl Solution {
 }
 ```
 
+```typescript
+class BIT {
+    private n: number;
+    private tree: Int32Array;
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N + 1;
+        this.tree = new Int32Array(this.n);
+        for (let i = 0; i < this.n - 1; i++) {
+            this.update(i, 1);
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        index++;
+        while (index < this.n) {
+            this.tree[index] += val;
+            index += index & -index;
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    prefixSum(index: number): number {
+        let totalSum = 0;
+        while (index > 0) {
+            totalSum += this.tree[index];
+            index -= index & -index;
+        }
+        return totalSum;
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    query(left: number, right: number): number {
+        return this.prefixSum(right + 1) - this.prefixSum(left);
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} people
+     * @return {number[][]}
+     */
+    reconstructQueue(people: number[][]): number[][] {
+        const n = people.length;
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
+        const res: (number[] | null)[] = Array(n).fill(null);
+
+        const bit = new BIT(n);
+        for (const p of people) {
+            let l = 0,
+                r = n - 1,
+                idx = 0;
+            while (l <= r) {
+                let mid = (l + r) >> 1;
+                let cnt = bit.query(0, mid);
+                if (cnt > p[1]) {
+                    idx = mid;
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+
+            res[idx] = p;
+            bit.update(idx, -1);
+        }
+
+        return res as number[][];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2652,6 +2936,78 @@ impl Solution {
         }
 
         res.into_iter().map(|x| x.unwrap()).collect()
+    }
+}
+```
+
+```typescript
+class BIT {
+    private n: number;
+    private tree: Int32Array;
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N + 1;
+        this.tree = new Int32Array(this.n);
+        for (let i = 0; i < this.n - 1; i++) {
+            this.update(i, 1);
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    update(index: number, val: number): void {
+        index++;
+        while (index < this.n) {
+            this.tree[index] += val;
+            index += index & -index;
+        }
+    }
+
+    /**
+     * @param {number} cnt
+     * @param {number} MSB
+     * @return {number}
+     */
+    getIdx(cnt: number, MSB: number): number {
+        let idx = 0;
+        while (MSB != 0) {
+            let nxtIdx = idx + MSB;
+            if (nxtIdx < this.n && cnt >= this.tree[nxtIdx]) {
+                idx = nxtIdx;
+                cnt -= this.tree[nxtIdx];
+            }
+            MSB >>= 1;
+        }
+        return idx;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} people
+     * @return {number[][]}
+     */
+    reconstructQueue(people: number[][]): number[][] {
+        const n = people.length;
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
+        const res: (number[] | null)[] = Array(n).fill(null);
+
+        const bit = new BIT(n);
+        const MSB = 1 << Math.floor(Math.log2(n));
+        for (const p of people) {
+            let idx = bit.getIdx(p[1], MSB);
+            res[idx] = p;
+            bit.update(idx, -1);
+        }
+
+        return res as number[][];
     }
 }
 ```

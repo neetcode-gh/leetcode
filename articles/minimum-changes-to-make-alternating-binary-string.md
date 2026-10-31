@@ -257,6 +257,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minOperations(s: string): number {
+        let cur = 0,
+            cnt1 = 0;
+        for (let c of s) {
+            if (parseInt(c) !== cur) {
+                cnt1++;
+            }
+            cur ^= 1;
+        }
+
+        cur = 1;
+        let cnt2 = 0;
+        for (let c of s) {
+            if (parseInt(c) !== cur) {
+                cnt2++;
+            }
+            cur ^= 1;
+        }
+
+        return Math.min(cnt1, cnt2);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -474,6 +504,32 @@ impl Solution {
         }
 
         count.min(bytes.len() as i32 - count)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minOperations(s: string): number {
+        let count = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            if (i % 2 === 0) {
+                if (s[i] === '0') {
+                    count++;
+                }
+            } else {
+                if (s[i] === '1') {
+                    count++;
+                }
+            }
+        }
+
+        return Math.min(count, s.length - count);
     }
 }
 ```

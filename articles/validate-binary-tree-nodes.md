@@ -325,6 +325,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} leftChild
+     * @param {number[]} rightChild
+     * @return {boolean}
+     */
+    validateBinaryTreeNodes(
+        n: number,
+        leftChild: number[],
+        rightChild: number[],
+    ): boolean {
+        let hasParent = new Set<number>(
+            [...leftChild, ...rightChild].filter((c) => c !== -1),
+        );
+        if (hasParent.size === n) return false;
+
+        let root = 0;
+        for (let i = 0; i < n; i++) {
+            if (!hasParent.has(i)) {
+                root = i;
+                break;
+            }
+        }
+
+        const visit = new Set<number>();
+        const dfs = (i: number): boolean => {
+            if (i === -1) return true;
+            if (visit.has(i)) return false;
+            visit.add(i);
+            return dfs(leftChild[i]) && dfs(rightChild[i]);
+        };
+
+        return dfs(root) && visit.size === n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -713,6 +752,53 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} leftChild
+     * @param {number[]} rightChild
+     * @return {boolean}
+     */
+    validateBinaryTreeNodes(
+        n: number,
+        leftChild: number[],
+        rightChild: number[],
+    ): boolean {
+        let indegree: number[] = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+            if (leftChild[i] !== -1) {
+                if (++indegree[leftChild[i]] > 1) return false;
+            }
+            if (rightChild[i] !== -1) {
+                if (++indegree[rightChild[i]] > 1) return false;
+            }
+        }
+
+        let root = -1;
+        for (let i = 0; i < n; i++) {
+            if (indegree[i] === 0) {
+                if (root !== -1) return false;
+                root = i;
+            }
+        }
+
+        if (root === -1) return false;
+
+        let count = 0;
+        let q = new Queue([root]);
+
+        while (!q.isEmpty()) {
+            let i: number = q.pop();
+            count++;
+            if (leftChild[i] !== -1) q.push(leftChild[i]);
+            if (rightChild[i] !== -1) q.push(rightChild[i]);
+        }
+        return count === n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1086,6 +1172,53 @@ impl Solution {
             if right_child[node] != -1 { stack.push(right_child[node]); }
         }
         count == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} leftChild
+     * @param {number[]} rightChild
+     * @return {boolean}
+     */
+    validateBinaryTreeNodes(
+        n: number,
+        leftChild: number[],
+        rightChild: number[],
+    ): boolean {
+        let indegree: number[] = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+            if (leftChild[i] !== -1) {
+                if (++indegree[leftChild[i]] > 1) return false;
+            }
+            if (rightChild[i] !== -1) {
+                if (++indegree[rightChild[i]] > 1) return false;
+            }
+        }
+
+        let root = -1;
+        for (let i = 0; i < n; i++) {
+            if (indegree[i] === 0) {
+                if (root !== -1) return false;
+                root = i;
+            }
+        }
+
+        if (root === -1) return false;
+
+        let count = 0;
+        let stack: number[] = [root];
+
+        while (stack.length) {
+            let node = stack.pop()!;
+            count++;
+            if (leftChild[node] !== -1) stack.push(leftChild[node]);
+            if (rightChild[node] !== -1) stack.push(rightChild[node]);
+        }
+        return count === n;
     }
 }
 ```
@@ -1545,6 +1678,75 @@ impl Solution {
         }
 
         dsu.components == 1
+    }
+}
+```
+
+```typescript
+class DSU {
+    Parent: number[];
+    Components: number;
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n }, (_, i) => i);
+        this.Components = n;
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} parent
+     * @param {number} child
+     * @return {boolean}
+     */
+    union(parent: number, child: number): boolean {
+        let parentRoot = this.find(parent);
+        let childRoot = this.find(child);
+        if (childRoot !== child || parentRoot === childRoot) {
+            return false;
+        }
+
+        this.Components--;
+        this.Parent[childRoot] = parentRoot;
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} leftChild
+     * @param {number[]} rightChild
+     * @return {boolean}
+     */
+    validateBinaryTreeNodes(
+        n: number,
+        leftChild: number[],
+        rightChild: number[],
+    ): boolean {
+        let dsu = new DSU(n);
+
+        for (let parent = 0; parent < n; parent++) {
+            for (let child of [leftChild[parent], rightChild[parent]]) {
+                if (child === -1) continue;
+                if (!dsu.union(parent, child)) return false;
+            }
+        }
+
+        return dsu.Components === 1;
     }
 }
 ```

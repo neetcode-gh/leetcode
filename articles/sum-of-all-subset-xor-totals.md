@@ -249,6 +249,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    subsetXORSum(nums: number[]): number {
+        let res = 0;
+
+        const backtrack = (i: number, subset: number[]): void => {
+            let xorr = 0;
+            for (let num of subset) xorr ^= num;
+            res += xorr;
+
+            for (let j = i; j < nums.length; j++) {
+                subset.push(nums[j]);
+                backtrack(j + 1, subset);
+                subset.pop();
+            }
+        };
+
+        backtrack(0, []);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -407,6 +434,25 @@ impl Solution {
             return total;
         }
         Self::dfs(nums, i + 1, total ^ nums[i]) + Self::dfs(nums, i + 1, total)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    subsetXORSum(nums: number[]): number {
+        const dfs = (i: number, total: number): number => {
+            if (i === nums.length) {
+                return total;
+            }
+            return dfs(i + 1, total ^ nums[i]) + dfs(i + 1, total);
+        };
+
+        return dfs(0, 0);
     }
 }
 ```
@@ -625,6 +671,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    subsetXORSum(nums: number[]): number {
+        const n = nums.length;
+        let res = 0;
+
+        for (let mask = 0; mask < 1 << n; mask++) {
+            let xorr = 0;
+            for (let i = 0; i < n; i++) {
+                if ((mask & (1 << i)) !== 0) {
+                    xorr ^= nums[i];
+                }
+            }
+            res += xorr;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -752,6 +823,22 @@ impl Solution {
             res |= num;
         }
         res << (nums.len() - 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    subsetXORSum(nums: number[]): number {
+        let res = 0;
+        for (let num of nums) {
+            res |= num;
+        }
+        return res << (nums.length - 1);
     }
 }
 ```

@@ -311,6 +311,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isHappy(n: number): boolean {
+        const visit = new Set<number>();
+
+        while (!visit.has(n)) {
+            visit.add(n);
+            n = this.sumOfSquares(n);
+            if (n === 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    sumOfSquares(n: number): number {
+        let output = 0;
+
+        while (n > 0) {
+            let digit = n % 10;
+            digit = digit * digit;
+            output += digit;
+            n = Math.floor(n / 10);
+        }
+        return output;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -611,6 +648,40 @@ impl Solution {
             n /= 10;
         }
         output
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isHappy(n: number): boolean {
+        let slow = n;
+        let fast = this.sumOfSquares(n);
+
+        while (slow !== fast) {
+            fast = this.sumOfSquares(fast);
+            fast = this.sumOfSquares(fast);
+            slow = this.sumOfSquares(slow);
+        }
+
+        return fast === 1;
+    }
+
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    sumOfSquares(n: number): number {
+        let output = 0;
+        while (n !== 0) {
+            output += (n % 10) ** 2;
+            n = Math.floor(n / 10);
+        }
+        return output;
     }
 }
 ```
@@ -974,6 +1045,46 @@ impl Solution {
             n /= 10;
         }
         output
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isHappy(n: number): boolean {
+        let slow = n;
+        let fast = this.sumOfSquares(n);
+        let power = 1,
+            lam = 1;
+
+        while (slow !== fast) {
+            if (power === lam) {
+                slow = fast;
+                power *= 2;
+                lam = 0;
+            }
+            lam++;
+            fast = this.sumOfSquares(fast);
+        }
+
+        return fast === 1;
+    }
+
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    sumOfSquares(n: number): number {
+        let output = 0;
+        while (n !== 0) {
+            output += (n % 10) ** 2;
+            n = Math.floor(n / 10);
+        }
+        return output;
     }
 }
 ```

@@ -581,6 +581,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} p
+     * @return {number}
+     */
+    minSubarray(nums: number[], p: number): number {
+        let total = nums.reduce((a, b) => a + b, 0);
+        let remain = total % p;
+        if (remain === 0) return 0;
+
+        let res = nums.length;
+        let curSum = 0;
+        const map = new Map<number, number>();
+        map.set(0, -1);
+
+        for (let i = 0; i < nums.length; i++) {
+            curSum = (curSum + nums[i]) % p;
+            let prefix = (curSum - remain + p) % p;
+            if (map.has(prefix)) {
+                res = Math.min(res, i - map.get(prefix)!);
+            }
+            map.set(curSum, i);
+        }
+
+        return res === nums.length ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

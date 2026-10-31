@@ -251,6 +251,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} order
+     * @return {boolean}
+     */
+    isAlienSorted(words: string[], order: string): boolean {
+        let orderIndex: number[] = new Array(26).fill(0);
+        for (let i = 0; i < order.length; i++) {
+            orderIndex[order.charCodeAt(i) - 97] = i;
+        }
+
+        const compare = (w1: string, w2: string): number => {
+            for (let i = 0; i < Math.min(w1.length, w2.length); i++) {
+                if (w1[i] !== w2[i]) {
+                    return (
+                        orderIndex[w1.charCodeAt(i) - 97] -
+                        orderIndex[w2.charCodeAt(i) - 97]
+                    );
+                }
+            }
+            return w1.length - w2.length;
+        };
+
+        let sortedWords = [...words].sort(compare);
+        return words.join() === sortedWords.join();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -537,6 +568,41 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} order
+     * @return {boolean}
+     */
+    isAlienSorted(words: string[], order: string): boolean {
+        let orderIndex: number[] = new Array(26).fill(0);
+        for (let i = 0; i < order.length; i++) {
+            orderIndex[order.charCodeAt(i) - 97] = i;
+        }
+
+        for (let i = 0; i < words.length - 1; i++) {
+            let w1 = words[i],
+                w2 = words[i + 1];
+
+            for (let j = 0; j < w1.length; j++) {
+                if (j === w2.length) return false;
+
+                if (w1[j] !== w2[j]) {
+                    if (
+                        orderIndex[w1.charCodeAt(j) - 97] >
+                        orderIndex[w2.charCodeAt(j) - 97]
+                    )
+                        return false;
+                    break;
+                }
+            }
+        }
+        return true;
     }
 }
 ```

@@ -560,6 +560,56 @@ impl Codec {
 }
 ```
 
+```typescript
+class Codec {
+    /**
+     * Encodes a tree to a single string.
+     *
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    serialize(root: TreeNode | null): string {
+        const res: string[] = [];
+        this.dfsSerialize(root, res);
+        return res.join(',');
+    }
+
+    dfsSerialize(node: TreeNode | null, res: string[]): void {
+        if (node === null) {
+            res.push('N');
+            return;
+        }
+        res.push(node.val.toString());
+        this.dfsSerialize(node.left, res);
+        this.dfsSerialize(node.right, res);
+    }
+
+    /**
+     * Decodes your encoded data to tree.
+     *
+     * @param {string} data
+     * @return {TreeNode}
+     */
+    deserialize(data: string): TreeNode | null {
+        const vals = data.split(',');
+        const i = { val: 0 };
+        return this.dfsDeserialize(vals, i);
+    }
+
+    dfsDeserialize(vals: string[], i: { val: number }): TreeNode | null {
+        if (vals[i.val] === 'N') {
+            i.val++;
+            return null;
+        }
+        const node = new TreeNode(parseInt(vals[i.val]));
+        i.val++;
+        node.left = this.dfsDeserialize(vals, i);
+        node.right = this.dfsDeserialize(vals, i);
+        return node;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1208,6 +1258,64 @@ impl Codec {
             index += 1;
         }
         Some(root)
+    }
+}
+```
+
+```typescript
+class Codec {
+    /**
+     * Encodes a tree to a single string.
+     *
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    serialize(root: TreeNode | null): string {
+        if (!root) return 'N';
+        const res: (number | string)[] = [];
+        const queue = new Queue();
+        queue.push(root);
+
+        while (!queue.isEmpty()) {
+            const node: TreeNode | null = queue.pop();
+            if (!node) {
+                res.push('N');
+            } else {
+                res.push(node.val);
+                queue.push(node.left);
+                queue.push(node.right);
+            }
+        }
+        return res.join(',');
+    }
+
+    /**
+     * Decodes your encoded data to tree.
+     *
+     * @param {string} data
+     * @return {TreeNode}
+     */
+    deserialize(data: string): TreeNode | null {
+        const vals = data.split(',');
+        if (vals[0] === 'N') return null;
+        const root = new TreeNode(parseInt(vals[0]));
+        const queue = new Queue([root]);
+        let index = 1;
+
+        while (!queue.isEmpty()) {
+            const node: TreeNode = queue.pop();
+            if (vals[index] !== 'N') {
+                node.left = new TreeNode(parseInt(vals[index]));
+                queue.push(node.left);
+            }
+            index++;
+            if (vals[index] !== 'N') {
+                node.right = new TreeNode(parseInt(vals[index]));
+                queue.push(node.right);
+            }
+            index++;
+        }
+        return root;
     }
 }
 ```

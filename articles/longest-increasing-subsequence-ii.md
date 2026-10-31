@@ -278,6 +278,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[], k: number): number {
+        const dfs = (i: number): number => {
+            let res = 1;
+
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[j] <= nums[i]) continue;
+                if (nums[j] - nums[i] <= k) {
+                    res = Math.max(res, 1 + dfs(j));
+                }
+            }
+
+            return res;
+        };
+
+        let res = 0;
+        for (let i = 0; i < nums.length; i++) {
+            res = Math.max(res, dfs(i));
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -520,6 +551,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[], k: number): number {
+        const n = nums.length;
+        let res = 0;
+        const dp: number[] = new Array(n).fill(1);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < i; j++) {
+                if (nums[j] >= nums[i]) continue;
+                if (nums[i] - nums[j] <= k) {
+                    dp[i] = Math.max(dp[i], 1 + dp[j]);
+                }
+            }
+            res = Math.max(res, dp[i]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1224,6 +1282,90 @@ impl Solution {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = Array(2 * this.n).fill(0);
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     * @return {void}
+     */
+    update(i: number, val: number): void {
+        if (val <= this.tree[this.n + i]) return;
+        this.tree[this.n + i] = val;
+        for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
+            this.tree[j] = Math.max(this.tree[j << 1], this.tree[(j << 1) + 1]);
+        }
+    }
+
+    /**
+     * @param {number} ql
+     * @param {number} qh
+     * @return {number}
+     */
+    query(ql: number, qh: number): number {
+        let l = ql + this.n,
+            r = qh + this.n + 1,
+            res = 0;
+        while (l < r) {
+            if (l & 1) res = Math.max(res, this.tree[l++]);
+            if (r & 1) res = Math.max(res, this.tree[--r]);
+            l >>= 1;
+            r >>= 1;
+        }
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[], k: number): number {
+        const n = nums.length;
+        const tmp = new Set<number>([0]);
+        for (const num of nums) {
+            if (num - k > 0) tmp.add(num - k);
+            if (num - 1 > 0) tmp.add(num - 1);
+            tmp.add(num);
+        }
+
+        const mp = new Map<number, number>();
+        let index = 0;
+        Array.from(tmp)
+            .sort((a, b) => a - b)
+            .forEach((val) => mp.set(val, index++));
+
+        const ST = new SegmentTree(index);
+        let ans = 0;
+        for (const num of nums) {
+            const l = mp.has(num - k) ? mp.get(num - k)! : 0;
+            const r = mp.has(num - 1) ? mp.get(num - 1)! : 0;
+            const curr = ST.query(l, r) + 1;
+            ans = Math.max(ans, curr);
+            ST.update(mp.get(num)!, curr);
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1805,6 +1947,77 @@ impl Solution {
             st.update(num as usize, curr);
         }
         res
+    }
+}
+```
+
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = Array(2 * this.n).fill(0);
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     * @return {void}
+     */
+    update(i: number, val: number): void {
+        if (val <= this.tree[this.n + i]) return;
+        this.tree[this.n + i] = val;
+        for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
+            this.tree[j] = Math.max(this.tree[j << 1], this.tree[(j << 1) + 1]);
+        }
+    }
+
+    /**
+     * @param {number} ql
+     * @param {number} qh
+     * @return {number}
+     */
+    query(ql: number, qh: number): number {
+        let l = ql + this.n,
+            r = qh + this.n + 1,
+            res = 0;
+        while (l < r) {
+            if (l & 1) res = Math.max(res, this.tree[l++]);
+            if (r & 1) res = Math.max(res, this.tree[--r]);
+            l >>= 1;
+            r >>= 1;
+        }
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[], k: number): number {
+        const maxVal = Math.max(...nums);
+        const ST = new SegmentTree(maxVal + 1);
+        let res = 0;
+        for (const num of nums) {
+            const l = Math.max(0, num - k);
+            const r = Math.max(0, num - 1);
+            const curr = ST.query(l, r) + 1;
+            res = Math.max(res, curr);
+            ST.update(num, curr);
+        }
+        return res;
     }
 }
 ```

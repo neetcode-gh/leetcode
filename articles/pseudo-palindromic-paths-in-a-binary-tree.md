@@ -398,6 +398,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    pseudoPalindromicPaths(root: TreeNode | null): number {
+        const count = new Map<number, number>();
+        let odd = 0;
+
+        const dfs = (cur: TreeNode | null): number => {
+            if (!cur) return 0;
+
+            count.set(cur.val, (count.get(cur.val) || 0) + 1);
+            let odd_change = count.get(cur.val)! % 2 === 1 ? 1 : -1;
+            odd += odd_change;
+
+            let res: number;
+            if (!cur.left && !cur.right) {
+                res = odd <= 1 ? 1 : 0;
+            } else {
+                res = dfs(cur.left) + dfs(cur.right);
+            }
+
+            odd -= odd_change;
+            count.set(cur.val, count.get(cur.val)! - 1);
+            return res;
+        };
+
+        return dfs(root);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -772,6 +806,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    pseudoPalindromicPaths(root: TreeNode | null): number {
+        const count: number[] = new Array(10).fill(0);
+
+        const dfs = (cur: TreeNode | null, odd: number): number => {
+            if (!cur) return 0;
+
+            count[cur.val] ^= 1;
+            odd += count[cur.val] === 1 ? 1 : -1;
+
+            let res =
+                !cur.left && !cur.right && odd <= 1
+                    ? 1
+                    : dfs(cur.left, odd) + dfs(cur.right, odd);
+
+            odd += count[cur.val] === 1 ? 1 : -1;
+            count[cur.val] ^= 1;
+
+            return res;
+        };
+
+        return dfs(root, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1064,6 +1129,29 @@ impl Solution {
         }
 
         dfs(&root, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    pseudoPalindromicPaths(root: TreeNode | null): number {
+        const dfs = (node: TreeNode | null, path: number): number => {
+            if (!node) return 0;
+
+            path ^= 1 << node.val;
+            if (!node.left && !node.right) {
+                return (path & (path - 1)) === 0 ? 1 : 0;
+            }
+
+            return dfs(node.left, path) + dfs(node.right, path);
+        };
+
+        return dfs(root, 0);
     }
 }
 ```
@@ -1448,6 +1536,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    pseudoPalindromicPaths(root: TreeNode | null): number {
+        let res = 0;
+        const q = new Queue([[root, 0]]);
+
+        while (!q.isEmpty()) {
+            const [node, path]: [TreeNode, number] = q.pop();
+            const newPath = path ^ (1 << node.val);
+
+            if (!node.left && !node.right) {
+                if ((newPath & (newPath - 1)) === 0) res++;
+                continue;
+            }
+
+            if (node.left) q.push([node.left, newPath]);
+            if (node.right) q.push([node.right, newPath]);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1815,6 +1931,33 @@ impl Solution {
         }
 
         count
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    pseudoPalindromicPaths(root: TreeNode | null): number {
+        let count = 0;
+        const stack: [TreeNode, number][] = [[root!, 0]];
+
+        while (stack.length) {
+            const [node, path] = stack.pop()!;
+            const newPath = path ^ (1 << node.val);
+
+            if (!node.left && !node.right) {
+                if ((newPath & (newPath - 1)) === 0) count++;
+            } else {
+                if (node.right) stack.push([node.right, newPath]);
+                if (node.left) stack.push([node.left, newPath]);
+            }
+        }
+
+        return count;
     }
 }
 ```

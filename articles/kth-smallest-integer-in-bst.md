@@ -313,6 +313,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallest(root: TreeNode | null, k: number): number {
+        const arr: number[] = [];
+        this.dfs(root, arr);
+        arr.sort((a, b) => a - b);
+        return arr[k - 1];
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number[]} arr
+     */
+    dfs(node: TreeNode | null, arr: number[]): void {
+        if (!node) return;
+        arr.push(node.val);
+        this.dfs(node.left, arr);
+        this.dfs(node.right, arr);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,6 +643,32 @@ impl Solution {
             arr.push(n.val);
             Self::dfs(&n.right, arr);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallest(root: TreeNode | null, k: number): number {
+        const arr: number[] = [];
+        this.dfs(root, arr);
+        return arr[k - 1];
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number[]} arr
+     */
+    dfs(node: TreeNode | null, arr: number[]): void {
+        if (!node) return;
+        this.dfs(node.left, arr);
+        arr.push(node.val);
+        this.dfs(node.right, arr);
     }
 }
 ```
@@ -1002,6 +1055,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallest(root: TreeNode | null, k: number): number {
+        const tmp = new Int32Array(2);
+        tmp[0] = k;
+        this.dfs(root, tmp);
+        return tmp[1];
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number[]} tmp
+     */
+    dfs(node: TreeNode | null, tmp: Int32Array): void {
+        if (!node) return;
+
+        this.dfs(node.left, tmp);
+        if (tmp[0] === 0) return;
+
+        tmp[0]--;
+        if (tmp[0] === 0) {
+            tmp[1] = node.val;
+            return;
+        }
+
+        this.dfs(node.right, tmp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1349,6 +1437,34 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallest(root: TreeNode | null, k: number): number {
+        let stack: TreeNode[] = [];
+        let curr = root;
+
+        while (stack.length > 0 || curr !== null) {
+            while (curr !== null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+            curr = stack.pop()!;
+            k--;
+            if (k === 0) {
+                return curr.val;
+            }
+            curr = curr.right;
+        }
+        return -1;
     }
 }
 ```
@@ -1806,6 +1922,41 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} k
+     * @return {number}
+     */
+    kthSmallest(root: TreeNode | null, k: number): number {
+        let curr = root;
+
+        while (curr) {
+            if (!curr.left) {
+                k--;
+                if (k === 0) return curr.val;
+                curr = curr.right;
+            } else {
+                let pred = curr.left;
+                while (pred.right && pred.right !== curr) pred = pred.right;
+
+                if (!pred.right) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else {
+                    pred.right = null;
+                    k--;
+                    if (k === 0) return curr.val;
+                    curr = curr.right;
+                }
+            }
+        }
+        return -1;
     }
 }
 ```

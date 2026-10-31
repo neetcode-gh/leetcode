@@ -288,24 +288,47 @@ class Solution {
 // #[derive(Debug)]
 // pub struct Node {
 //     pub val: i32,
-//     pub children: Vec<Option<Rc<RefCell<Node>>>>,
+//     pub children: Vec<Rc<RefCell<Node>>>,
 // }
 
 impl Solution {
     pub fn postorder(root: Option<Rc<RefCell<Node>>>) -> Vec<i32> {
         let mut res = Vec::new();
-        Self::dfs(&root, &mut res);
+        if let Some(node) = &root {
+            Self::dfs(node, &mut res);
+        }
         res
     }
 
-    fn dfs(node: &Option<Rc<RefCell<Node>>>, res: &mut Vec<i32>) {
-        if let Some(n) = node {
-            let n = n.borrow();
-            for child in &n.children {
-                Self::dfs(child, res);
-            }
-            res.push(n.val);
+    fn dfs(node: &Rc<RefCell<Node>>, res: &mut Vec<i32>) {
+        let n = node.borrow();
+        for child in &n.children {
+            Self::dfs(child, res);
         }
+        res.push(n.val);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node|null} root
+     * @return {number[]}
+     */
+    postorder(root: Node | null): number[] {
+        const res: number[] = [];
+
+        const dfs = (node: Node | null): void => {
+            if (!node) return;
+            for (let child of node.children) {
+                dfs(child);
+            }
+            res.push(node.val);
+        };
+
+        dfs(root);
+        return res;
     }
 }
 ```
@@ -663,7 +686,7 @@ class Solution {
 // #[derive(Debug)]
 // pub struct Node {
 //     pub val: i32,
-//     pub children: Vec<Option<Rc<RefCell<Node>>>>,
+//     pub children: Vec<Rc<RefCell<Node>>>,
 // }
 
 impl Solution {
@@ -682,7 +705,7 @@ impl Solution {
             } else {
                 let children: Vec<Rc<RefCell<Node>>> = node.borrow().children
                     .iter()
-                    .filter_map(|c| c.clone())
+                    .cloned()
                     .collect();
                 stack.push((Rc::clone(&node), true));
                 for child in children.into_iter().rev() {
@@ -692,6 +715,36 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node|null} root
+     * @return {number[]}
+     */
+    postorder(root: Node | null): number[] {
+        const res: number[] = [];
+        if (!root) return res;
+
+        const stack: [Node, boolean][] = [[root, false]];
+
+        while (stack.length) {
+            const [node, visited] = stack.pop()!;
+
+            if (visited) {
+                res.push(node.val);
+            } else {
+                stack.push([node, true]);
+                for (let i = node.children.length - 1; i >= 0; i--) {
+                    stack.push([node.children[i], false]);
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

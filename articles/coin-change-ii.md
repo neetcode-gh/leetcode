@@ -274,6 +274,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} amount
+     * @param {number[]} coins
+     * @return {number}
+     */
+    change(amount: number, coins: number[]): number {
+        coins.sort((a, b) => a - b);
+
+        const dfs = (i: number, a: number): number => {
+            if (a === 0) return 1;
+            if (i >= coins.length) return 0;
+
+            let res = 0;
+            if (a >= coins[i]) {
+                res = dfs(i + 1, a);
+                res += dfs(i, a - coins[i]);
+            }
+            return res;
+        };
+
+        return dfs(0, amount);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -595,6 +622,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} amount
+     * @param {number[]} coins
+     * @return {number}
+     */
+    change(amount: number, coins: number[]): number {
+        coins.sort((a, b) => a - b);
+        let memo: number[][] = Array.from({ length: coins.length + 1 }, () =>
+            Array(amount + 1).fill(-1),
+        );
+
+        const dfs = (i: number, a: number): number => {
+            if (a === 0) return 1;
+            if (i >= coins.length) return 0;
+            if (memo[i][a] !== -1) return memo[i][a];
+
+            let res = 0;
+            if (a >= coins[i]) {
+                res = dfs(i + 1, a);
+                res += dfs(i, a - coins[i]);
+            }
+            memo[i][a] = res;
+            return res;
+        };
+
+        return dfs(0, amount);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -882,6 +941,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} amount
+     * @param {number[]} coins
+     * @return {number}
+     */
+    change(amount: number, coins: number[]): number {
+        coins.sort((a, b) => a - b);
+        const n = coins.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(amount + 1).fill(0),
+        );
+
+        for (let i = 0; i <= n; i++) {
+            dp[i][0] = 1;
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let a = 0; a <= amount; a++) {
+                if (a >= coins[i]) {
+                    dp[i][a] = dp[i + 1][a];
+                    dp[i][a] += dp[i][a - coins[i]];
+                }
+            }
+        }
+
+        return dp[0][amount];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1137,6 +1228,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} amount
+     * @param {number[]} coins
+     * @return {number}
+     */
+    change(amount: number, coins: number[]): number {
+        let dp: number[] = new Array(amount + 1).fill(0);
+        dp[0] = 1;
+        for (let i = coins.length - 1; i >= 0; i--) {
+            const nextDP: number[] = new Array(amount + 1).fill(0);
+            nextDP[0] = 1;
+
+            for (let a = 1; a <= amount; a++) {
+                nextDP[a] = dp[a];
+                if (a - coins[i] >= 0) {
+                    nextDP[a] += nextDP[a - coins[i]];
+                }
+            }
+            dp = nextDP;
+        }
+        return dp[amount];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1331,6 +1449,26 @@ impl Solution {
         }
 
         dp[amount]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} amount
+     * @param {number[]} coins
+     * @return {number}
+     */
+    change(amount: number, coins: number[]): number {
+        const dp: number[] = new Array(amount + 1).fill(0);
+        dp[0] = 1;
+        for (let i = coins.length - 1; i >= 0; i--) {
+            for (let a = 1; a <= amount; a++) {
+                dp[a] += coins[i] <= a ? dp[a - coins[i]] : 0;
+            }
+        }
+        return dp[amount];
     }
 }
 ```

@@ -295,6 +295,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kInversePairs(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(k + 1).fill(-1));
+
+        const count = (n: number, k: number): number => {
+            if (n === 0) return k === 0 ? 1 : 0;
+            if (k < 0) return 0;
+            if (dp[n][k] !== -1) return dp[n][k];
+
+            let res = 0;
+            for (let i = 0; i < n; i++) {
+                res = (res + count(n - 1, k - i)) % MOD;
+            }
+
+            dp[n][k] = res;
+            return res;
+        };
+
+        return count(n, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -610,6 +640,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kInversePairs(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(k + 1).fill(-1));
+
+        const count = (n: number, k: number): number => {
+            if (k === 0) return 1;
+            if (n === 1) return 0;
+            if ((n * (n - 1)) / 2 < k) return 0;
+            if ((n * (n - 1)) / 2 === k) return 1;
+            if (dp[n][k] !== -1) return dp[n][k];
+
+            let res = count(n, k - 1);
+            if (k >= n) {
+                res -= count(n - 1, k - n);
+            }
+            res = (res + count(n - 1, k) + MOD) % MOD;
+
+            dp[n][k] = res;
+            return res;
+        };
+
+        return count(n, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -832,6 +895,33 @@ impl Solution {
             }
         }
         dp[n][k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kInversePairs(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(k + 1).fill(0));
+        dp[0][0] = 1;
+
+        for (let N = 1; N <= n; N++) {
+            for (let K = 0; K <= k; K++) {
+                for (let pairs = 0; pairs < N; pairs++) {
+                    if (K - pairs >= 0) {
+                        dp[N][K] = (dp[N][K] + dp[N - 1][K - pairs]) % MOD;
+                    }
+                }
+            }
+        }
+
+        return dp[n][k];
     }
 }
 ```
@@ -1077,6 +1167,35 @@ impl Solution {
             }
         }
         dp[n][k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kInversePairs(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(k + 1).fill(0));
+        dp[0][0] = 1;
+
+        for (let N = 1; N <= n; N++) {
+            for (let K = 0; K <= k; K++) {
+                dp[N][K] = dp[N - 1][K];
+                if (K > 0) {
+                    dp[N][K] = (dp[N][K] + dp[N][K - 1]) % MOD;
+                }
+                if (K >= N) {
+                    dp[N][K] = (dp[N][K] - dp[N - 1][K - N] + MOD) % MOD;
+                }
+            }
+        }
+
+        return dp[n][k];
     }
 }
 ```
@@ -1332,6 +1451,36 @@ impl Solution {
             prev = cur;
         }
         prev[k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kInversePairs(n: number, k: number): number {
+        const MOD = 1e9 + 7;
+        let prev: number[] = new Array(k + 1).fill(0);
+        prev[0] = 1;
+
+        for (let N = 1; N <= n; N++) {
+            const cur: number[] = new Array(k + 1).fill(0);
+            let total = 0;
+            for (let K = 0; K <= k; K++) {
+                total = (total + prev[K]) % MOD;
+                if (K >= N) {
+                    total = (total - prev[K - N] + MOD) % MOD;
+                }
+                cur[K] = total;
+            }
+            prev = cur;
+        }
+
+        return prev[k];
     }
 }
 ```

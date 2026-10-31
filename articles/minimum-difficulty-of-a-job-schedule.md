@@ -367,6 +367,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} jobDifficulty
+     * @param {number} d
+     * @return {number}
+     */
+    minDifficulty(jobDifficulty: number[], d: number): number {
+        const n = jobDifficulty.length;
+        if (n < d) return -1;
+        let m = 0;
+        for (let it of jobDifficulty) {
+            m = Math.max(m, it);
+        }
+
+        const dp: number[][][] = Array.from({ length: n }, () =>
+            Array.from({ length: d + 1 }, () => Array(m + 5).fill(-1)),
+        );
+
+        const dfs = (i: number, d: number, curMax: number): number => {
+            if (i === n) return d === 0 ? 0 : Infinity;
+            if (d === 0) return Infinity;
+            if (dp[i][d][curMax + 1] !== -1) return dp[i][d][curMax + 1];
+
+            const maxSoFar = Math.max(curMax, jobDifficulty[i]);
+            const res = Math.min(
+                dfs(i + 1, d, maxSoFar),
+                maxSoFar + dfs(i + 1, d - 1, -1),
+            );
+
+            dp[i][d][curMax + 1] = res;
+            return res;
+        };
+
+        return dfs(0, d, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -744,6 +783,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} jobDifficulty
+     * @param {number} d
+     * @return {number}
+     */
+    minDifficulty(jobDifficulty: number[], d: number): number {
+        const n = jobDifficulty.length;
+        if (n < d) return -1;
+
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(d + 1).fill(-1),
+        );
+
+        const dfs = (i: number, d: number): number => {
+            if (dp[i][d] !== -1) return dp[i][d];
+
+            let maxi = jobDifficulty[i];
+            if (d === 1) {
+                for (let j = i; j < n; j++) {
+                    maxi = Math.max(maxi, jobDifficulty[j]);
+                }
+                dp[i][d] = maxi;
+                return maxi;
+            }
+
+            let res = Infinity;
+            for (let j = i + 1; j < n; j++) {
+                res = Math.min(res, maxi + dfs(j, d - 1));
+                maxi = Math.max(maxi, jobDifficulty[j]);
+            }
+            dp[i][d] = res;
+            return res;
+        };
+
+        return dfs(0, d);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -977,7 +1057,7 @@ class Solution {
         for day in 1...d {
             for i in stride(from: n - 1, through: 0, by: -1) {
                 var maxi = 0
-                for j in i...(n - day) {
+                for j in stride(from: i, through: n - day, by: 1) {
                     maxi = max(maxi, jobDifficulty[j])
                     dp[i][day] = min(dp[i][day], maxi + dp[j + 1][day - 1])
                 }
@@ -1013,6 +1093,40 @@ impl Solution {
         }
 
         dp[0][d]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} jobDifficulty
+     * @param {number} d
+     * @return {number}
+     */
+    minDifficulty(jobDifficulty: number[], d: number): number {
+        const n = jobDifficulty.length;
+        if (n < d) return -1;
+
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(d + 1).fill(Infinity),
+        );
+        dp[n][0] = 0;
+
+        for (let day = 1; day <= d; day++) {
+            for (let i = n - 1; i >= 0; i--) {
+                let maxi = 0;
+                for (let j = i; j <= n - day; j++) {
+                    maxi = Math.max(maxi, jobDifficulty[j]);
+                    dp[i][day] = Math.min(
+                        dp[i][day],
+                        maxi + dp[j + 1][day - 1],
+                    );
+                }
+            }
+        }
+
+        return dp[0][d];
     }
 }
 ```
@@ -1292,6 +1406,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} jobDifficulty
+     * @param {number} d
+     * @return {number}
+     */
+    minDifficulty(jobDifficulty: number[], d: number): number {
+        const n = jobDifficulty.length;
+        if (n < d) return -1;
+
+        let dp: number[] = new Array(n + 1).fill(Infinity);
+        dp[n] = 0;
+
+        for (let day = 1; day <= d; day++) {
+            for (let i = 0; i <= n - day; i++) {
+                let maxi = 0;
+                dp[i] = Infinity;
+                for (let j = i; j <= n - day; j++) {
+                    maxi = Math.max(maxi, jobDifficulty[j]);
+                    dp[i] = Math.min(dp[i], maxi + dp[j + 1]);
+                }
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1550,12 +1694,12 @@ class Solution {
 
             for (i in day - 1 until n) {
                 nextDp[i] = (if (i > 0) dp[i - 1] else 0) + jobDifficulty[i]
-                while (stack.isNotEmpty() && jobDifficulty[stack.last()] <= jobDifficulty[i]) {
+                while (stack.isNotEmpty() && jobDifficulty[stack.peekLast()] <= jobDifficulty[i]) {
                     val j = stack.removeLast()
                     nextDp[i] = minOf(nextDp[i], nextDp[j] - jobDifficulty[j] + jobDifficulty[i])
                 }
                 if (stack.isNotEmpty()) {
-                    nextDp[i] = minOf(nextDp[i], nextDp[stack.last()])
+                    nextDp[i] = minOf(nextDp[i], nextDp[stack.peekLast()])
                 }
                 stack.addLast(i)
             }
@@ -1634,6 +1778,50 @@ impl Solution {
         }
 
         dp[n - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} jobDifficulty
+     * @param {number} d
+     * @return {number}
+     */
+    minDifficulty(jobDifficulty: number[], d: number): number {
+        const n = jobDifficulty.length;
+        if (n < d) return -1;
+
+        let dp: number[] = Array(n).fill(Infinity);
+
+        for (let day = 1; day <= d; day++) {
+            const nextDp: number[] = Array(n).fill(Infinity);
+            const stack: number[] = [];
+            for (let i = day - 1; i < n; i++) {
+                nextDp[i] = (i > 0 ? dp[i - 1] : 0) + jobDifficulty[i];
+                while (
+                    stack.length > 0 &&
+                    jobDifficulty[stack[stack.length - 1]] <= jobDifficulty[i]
+                ) {
+                    const j = stack.pop()!;
+                    nextDp[i] = Math.min(
+                        nextDp[i],
+                        nextDp[j] - jobDifficulty[j] + jobDifficulty[i],
+                    );
+                }
+                if (stack.length > 0) {
+                    nextDp[i] = Math.min(
+                        nextDp[i],
+                        nextDp[stack[stack.length - 1]],
+                    );
+                }
+                stack.push(i);
+            }
+            dp = nextDp;
+        }
+
+        return dp[n - 1];
     }
 }
 ```

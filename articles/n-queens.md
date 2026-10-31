@@ -473,6 +473,57 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {string[][]}
+     */
+    solveNQueens(n: number): string[][] {
+        let res: string[][] = [];
+        let board: string[][] = Array.from({ length: n }, () =>
+            Array(n).fill('.'),
+        );
+
+        const backtrack = (r: number): void => {
+            if (r === n) {
+                res.push(board.map((row) => row.join('')));
+                return;
+            }
+            for (let c = 0; c < n; c++) {
+                if (this.isSafe(r, c, board)) {
+                    board[r][c] = 'Q';
+                    backtrack(r + 1);
+                    board[r][c] = '.';
+                }
+            }
+        };
+
+        backtrack(0);
+        return res;
+    }
+
+    /**
+     * @param {number} r
+     * @param {number} c
+     * @param {string[][]} board
+     * @return {boolean}
+     */
+    isSafe(r: number, c: number, board: string[][]): boolean {
+        for (let i = r - 1; i >= 0; i--) {
+            if (board[i][c] === 'Q') return false;
+        }
+        for (let i = r - 1, j = c - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] === 'Q') return false;
+        }
+        for (let i = r - 1, j = c + 1; i >= 0 && j < board.length; i--, j++) {
+            if (board[i][j] === 'Q') return false;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -931,6 +982,57 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {string[][]}
+     */
+    solveNQueens(n: number): string[][] {
+        const col = new Set<number>();
+        const posDiag = new Set<number>();
+        const negDiag = new Set<number>();
+
+        const res: string[][] = [];
+        const board: string[][] = Array.from({ length: n }, () =>
+            Array(n).fill('.'),
+        );
+
+        /**
+         * @param {number} r
+         * @return {void}
+         */
+        function backtrack(r: number): void {
+            if (r === n) {
+                res.push(board.map((row) => row.join('')));
+                return;
+            }
+
+            for (let c = 0; c < n; c++) {
+                if (col.has(c) || posDiag.has(r + c) || negDiag.has(r - c)) {
+                    continue;
+                }
+
+                col.add(c);
+                posDiag.add(r + c);
+                negDiag.add(r - c);
+                board[r][c] = 'Q';
+
+                backtrack(r + 1);
+
+                col.delete(c);
+                posDiag.delete(r + c);
+                negDiag.delete(r - c);
+                board[r][c] = '.';
+            }
+        }
+
+        backtrack(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1381,6 +1483,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {string[][]}
+     */
+    solveNQueens(n: number): string[][] {
+        const col: boolean[] = Array(n).fill(false);
+        const posDiag: boolean[] = Array(2 * n).fill(false);
+        const negDiag: boolean[] = Array(2 * n).fill(false);
+        const res: string[][] = [];
+        const board: string[][] = Array.from({ length: n }, () =>
+            Array(n).fill('.'),
+        );
+
+        /**
+         * @param {number} r
+         * @return {void}
+         */
+        function backtrack(r: number): void {
+            if (r === n) {
+                res.push(board.map((row) => row.join('')));
+                return;
+            }
+            for (let c = 0; c < n; c++) {
+                if (col[c] || posDiag[r + c] || negDiag[r - c + n]) {
+                    continue;
+                }
+                col[c] = true;
+                posDiag[r + c] = true;
+                negDiag[r - c + n] = true;
+                board[r][c] = 'Q';
+
+                backtrack(r + 1);
+
+                col[c] = false;
+                posDiag[r + c] = false;
+                negDiag[r - c + n] = false;
+                board[r][c] = '.';
+            }
+        }
+
+        backtrack(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1823,6 +1973,58 @@ impl Solution {
             );
             board[r][c] = '.';
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {string[][]}
+     */
+    solveNQueens(n: number): string[][] {
+        let col = 0,
+            posDiag = 0,
+            negDiag = 0;
+        const res: string[][] = [];
+        const board: string[][] = Array.from({ length: n }, () =>
+            Array(n).fill('.'),
+        );
+
+        /**
+         * @param {number} r
+         * @return {void}
+         */
+        function backtrack(r: number): void {
+            if (r === n) {
+                res.push(board.map((row) => row.join('')));
+                return;
+            }
+            for (let c = 0; c < n; c++) {
+                if (
+                    (col & (1 << c)) > 0 ||
+                    (posDiag & (1 << (r + c))) > 0 ||
+                    (negDiag & (1 << (r - c + n))) > 0
+                ) {
+                    continue;
+                }
+                col ^= 1 << c;
+                posDiag ^= 1 << (r + c);
+                negDiag ^= 1 << (r - c + n);
+                board[r][c] = 'Q';
+
+                backtrack(r + 1);
+
+                col ^= 1 << c;
+                posDiag ^= 1 << (r + c);
+                negDiag ^= 1 << (r - c + n);
+                board[r][c] = '.';
+            }
+        }
+
+        backtrack(0);
+        return res;
     }
 }
 ```

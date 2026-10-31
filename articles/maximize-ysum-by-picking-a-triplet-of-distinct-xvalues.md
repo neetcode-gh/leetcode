@@ -196,6 +196,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} x
+     * @param {number[]} y
+     * @return {number}
+     */
+    maxSumDistinctTriplet(x: number[], y: number[]): number {
+        const mp = new Map<number, number>();
+        for (let i = 0; i < x.length; i++) {
+            const key = x[i],
+                val = y[i];
+            mp.set(key, Math.max(mp.get(key) || 0, val));
+        }
+        if (mp.size < 3) return -1;
+        const vals = Array.from(mp.values()).sort((a, b) => a - b);
+        const n = vals.length;
+        return vals[n - 1] + vals[n - 2] + vals[n - 3];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +491,33 @@ impl Solution {
             return -1;
         }
         heap.into_iter().map(|Reverse(v)| v).sum()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} x
+     * @param {number[]} y
+     * @return {number}
+     */
+    maxSumDistinctTriplet(x: number[], y: number[]): number {
+        const mp = new Map<number, number>();
+        for (let i = 0; i < x.length; i++) {
+            mp.set(x[i], Math.max(mp.get(x[i]) || 0, y[i]));
+        }
+        const heap = new MinPriorityQueue();
+        for (const val of mp.values()) {
+            heap.enqueue(val);
+            if (heap.size() > 3) {
+                heap.dequeue();
+            }
+        }
+        if (heap.size() < 3) {
+            return -1;
+        }
+        return heap.dequeue() + heap.dequeue() + heap.dequeue();
     }
 }
 ```
@@ -830,6 +879,49 @@ impl Solution {
         } else {
             best[0].1 + best[1].1 + best[2].1
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} x
+     * @param {number[]} y
+     * @return {number}
+     */
+    maxSumDistinctTriplet(x: number[], y: number[]): number {
+        let best: [number | null, number][] = [
+            [null, -Infinity],
+            [null, -Infinity],
+            [null, -Infinity],
+        ];
+        for (let i = 0; i < x.length; i++) {
+            const xi = x[i],
+                yi = y[i];
+            let updated = false;
+            for (let j = 0; j < 3; j++) {
+                if (best[j][0] === xi) {
+                    if (yi > best[j][1]) {
+                        best[j][1] = yi;
+                        best.sort((a, b) => b[1] - a[1]);
+                    }
+                    updated = true;
+                    break;
+                }
+            }
+            if (updated) continue;
+            if (yi > best[0][1]) {
+                best = [[xi, yi], best[0], best[1]];
+            } else if (yi > best[1][1]) {
+                best = [best[0], [xi, yi], best[1]];
+            } else if (yi > best[2][1]) {
+                best[2] = [xi, yi];
+            }
+        }
+        return best[2][1] === -Infinity
+            ? -1
+            : best[0][1] + best[1][1] + best[2][1];
     }
 }
 ```

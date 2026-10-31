@@ -254,6 +254,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} numRows
+     * @return {string}
+     */
+    convert(s: string, numRows: number): string {
+        if (numRows === 1) {
+            return s;
+        }
+
+        let res: string[] = [];
+        const len = s.length;
+
+        for (let r = 0; r < numRows; r++) {
+            const increment = 2 * (numRows - 1);
+            for (let i = r; i < len; i += increment) {
+                res.push(s[i]);
+                if (r > 0 && r < numRows - 1 && i + increment - 2 * r < len) {
+                    res.push(s[i + increment - 2 * r]);
+                }
+            }
+        }
+
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -516,6 +546,35 @@ impl Solution {
         }
 
         rows.concat()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} numRows
+     * @return {string}
+     */
+    convert(s: string, numRows: number): string {
+        if (numRows === 1 || numRows >= s.length) {
+            return s;
+        }
+
+        const res: string[][] = Array.from({ length: numRows }, () => []);
+        let row = 0,
+            dir = 1;
+
+        for (const c of s) {
+            res[row].push(c);
+            row += dir;
+            if (row === 0 || row === numRows - 1) {
+                dir *= -1;
+            }
+        }
+
+        return res.map((row) => row.join('')).join('');
     }
 }
 ```

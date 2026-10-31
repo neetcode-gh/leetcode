@@ -326,6 +326,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const dfs = (cur: number): number => {
+            if (cur < 0) {
+                return Infinity;
+            }
+            if (cur === 0) {
+                return 0;
+            }
+
+            const ops = Math.min(dfs(cur - 2), dfs(cur - 3));
+            return isFinite(ops) ? 1 + ops : ops;
+        };
+
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        let res = 0;
+        for (const cnt of count.values()) {
+            const op = dfs(cnt);
+            if (op === Infinity) {
+                return -1;
+            }
+            res += op;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -704,6 +742,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const cache = new Map<number, number>();
+        const dfs = (cur: number): number => {
+            if (cur < 0) {
+                return Infinity;
+            }
+            if (cur === 2 || cur === 3) {
+                return 1;
+            }
+            if (cache.has(cur)) {
+                return cache.get(cur)!;
+            }
+
+            const res = Math.min(dfs(cur - 2), dfs(cur - 3));
+            cache.set(cur, isFinite(res) ? 1 + res : res);
+            return cache.get(cur)!;
+        };
+
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        let res = 0;
+        for (const cnt of count.values()) {
+            const op = dfs(cnt);
+            if (!isFinite(op)) {
+                return -1;
+            }
+            res += op;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1060,6 +1141,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        const maxf = Math.max(...count.values());
+        const minOps: number[] = Array(maxf + 1).fill(0);
+        minOps[1] = Infinity;
+
+        for (let i = 2; i <= maxf; i++) {
+            minOps[i] = minOps[i - 2];
+            if (i - 3 >= 0) {
+                minOps[i] = Math.min(minOps[i], minOps[i - 3]);
+            }
+            if (minOps[i] !== Infinity) {
+                minOps[i] += 1;
+            }
+        }
+
+        let res = 0;
+        for (const cnt of count.values()) {
+            const op = minOps[cnt];
+            if (op === Infinity) {
+                return -1;
+            }
+            res += op;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1267,6 +1388,31 @@ impl Solution {
             res += (cnt + 2) / 3;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        let res = 0;
+        for (const cnt of count.values()) {
+            if (cnt === 1) {
+                return -1;
+            }
+            res += Math.ceil(cnt / 3);
+        }
+
+        return res;
     }
 }
 ```

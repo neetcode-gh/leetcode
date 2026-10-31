@@ -196,6 +196,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubarraySumCircular(nums: number[]): number {
+        const n = nums.length;
+        let res = nums[0];
+
+        for (let i = 0; i < n; i++) {
+            let curSum = 0;
+            for (let j = i; j < i + n; j++) {
+                curSum += nums[j % n];
+                res = Math.max(res, curSum);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,6 +531,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubarraySumCircular(nums: number[]): number {
+        const n = nums.length;
+        const rightMax: number[] = new Array(n).fill(0);
+        rightMax[n - 1] = nums[n - 1];
+        let suffixSum = nums[n - 1];
+
+        for (let i = n - 2; i >= 0; i--) {
+            suffixSum += nums[i];
+            rightMax[i] = Math.max(rightMax[i + 1], suffixSum);
+        }
+
+        let maxSum = nums[0];
+        let curMax = 0;
+        let prefixSum = 0;
+
+        for (let i = 0; i < n; i++) {
+            curMax = Math.max(curMax, 0) + nums[i];
+            maxSum = Math.max(maxSum, curMax);
+            prefixSum += nums[i];
+            if (i + 1 < n) {
+                maxSum = Math.max(maxSum, prefixSum + rightMax[i + 1]);
+            }
+        }
+
+        return maxSum;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -737,6 +795,32 @@ impl Solution {
         } else {
             glob_max
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubarraySumCircular(nums: number[]): number {
+        let globMax = nums[0],
+            globMin = nums[0];
+        let curMax = 0,
+            curMin = 0,
+            total = 0;
+
+        for (const num of nums) {
+            curMax = Math.max(curMax + num, num);
+            curMin = Math.min(curMin + num, num);
+            total += num;
+            globMax = Math.max(globMax, curMax);
+            globMin = Math.min(globMin, curMin);
+        }
+
+        return globMax > 0 ? Math.max(globMax, total - globMin) : globMax;
     }
 }
 ```

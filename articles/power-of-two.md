@@ -89,7 +89,7 @@ public class Solution {
             return false;
         }
 
-        int x = 1;
+        long x = 1;
         while (x < n) {
             x *= 2;
         }
@@ -153,6 +153,24 @@ impl Solution {
             x *= 2;
         }
         x == n as i64
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfTwo(n: number): boolean {
+        if (n <= 0) return false;
+
+        let x = 1;
+        while (x < n) {
+            x *= 2;
+        }
+        return x === n;
     }
 }
 ```
@@ -307,6 +325,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfTwo(n: number): boolean {
+        if (n === 1) {
+            return true;
+        }
+        if (n <= 0 || n % 2 === 1) {
+            return false;
+        }
+        return this.isPowerOfTwo(Math.floor(n / 2));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,7 +411,7 @@ class Solution {
      * @return {boolean}
      */
     isPowerOfTwo(n) {
-        if (n <= 0) return 0;
+        if (n <= 0) return false;
 
         while (n % 2 === 0) {
             n >>= 1;
@@ -453,6 +489,23 @@ impl Solution {
             n >>= 1;
         }
         n == 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfTwo(n: number): boolean {
+        if (n <= 0) return false;
+
+        while (n % 2 === 0) {
+            n >>= 1;
+        }
+        return n === 1;
     }
 }
 ```
@@ -549,6 +602,18 @@ class Solution {
 impl Solution {
     pub fn is_power_of_two(n: i32) -> bool {
         n > 0 && (n & (-n)) == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfTwo(n: number): boolean {
+        return n > 0 && (n & -n) === n;
     }
 }
 ```
@@ -651,6 +716,18 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfTwo(n: number): boolean {
+        return n > 0 && (n & (n - 1)) === 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -745,6 +822,18 @@ class Solution {
 impl Solution {
     pub fn is_power_of_two(n: i32) -> bool {
         n > 0 && (1 << 30) % n == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfTwo(n: number): boolean {
+        return n > 0 && (1 << 30) % n === 0;
     }
 }
 ```

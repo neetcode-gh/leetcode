@@ -221,6 +221,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    findLucky(arr: number[]): number {
+        let res = -1;
+
+        for (let num of arr) {
+            let cnt = 0;
+            for (let a of arr) {
+                if (num === a) {
+                    cnt++;
+                }
+            }
+            if (cnt === num) {
+                res = Math.max(res, num);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -425,6 +451,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    findLucky(arr: number[]): number {
+        arr.sort((a, b) => a - b);
+        let streak = 0;
+
+        for (let i = arr.length - 1; i >= 0; i--) {
+            streak++;
+            if (i === 0 || arr[i] !== arr[i - 1]) {
+                if (arr[i] === streak) {
+                    return arr[i];
+                }
+                streak = 0;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -619,6 +669,29 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    findLucky(arr: number[]): number {
+        const count = new Map<number, number>();
+        for (const num of arr) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        let res = -1;
+        for (const [num, freq] of count.entries()) {
+            if (num === freq) {
+                res = Math.max(res, num);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -873,6 +946,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    findLucky(arr: number[]): number {
+        const n = arr.length;
+        for (let i = 0; i < n; i++) {
+            let prev = i,
+                num = arr[i];
+            while (0 < num && num <= n) {
+                let nxt = arr[num - 1];
+                arr[num - 1] = Math.min(0, arr[num - 1]) - 1;
+                if (num - 1 <= i || num - 1 === prev) break;
+                prev = num - 1;
+                num = nxt;
+            }
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            if (-arr[i] === i + 1) return i + 1;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1072,6 +1173,29 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    findLucky(arr: number[]): number {
+        for (let num of arr) {
+            const idx = num & ((1 << 10) - 1);
+            if (idx <= arr.length) {
+                arr[idx - 1] += 1 << 10;
+            }
+        }
+
+        for (let i = arr.length - 1; i >= 0; i--) {
+            const cnt = arr[i] >> 10;
+            if (cnt === i + 1) return i + 1;
+        }
+        return -1;
     }
 }
 ```

@@ -213,6 +213,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numSquares(n: number): number {
+        const dfs = (target: number): number => {
+            if (target === 0) return 0;
+
+            let res = target;
+            for (let i = 1; i * i <= target; i++) {
+                res = Math.min(res, 1 + dfs(target - i * i));
+            }
+            return res;
+        };
+
+        return dfs(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -471,6 +493,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numSquares(n: number): number {
+        const memo = new Map<number, number>();
+
+        const dfs = (target: number): number => {
+            if (target === 0) return 0;
+            if (memo.has(target)) {
+                return memo.get(target)!;
+            }
+
+            let res = target;
+            for (let i = 1; i * i <= target; i++) {
+                res = Math.min(res, 1 + dfs(target - i * i));
+            }
+            memo.set(target, res);
+            return res;
+        };
+
+        return dfs(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -664,6 +714,27 @@ impl Solution {
             }
         }
         dp[n]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numSquares(n: number): number {
+        const dp: number[] = Array(n + 1).fill(n);
+        dp[0] = 0;
+
+        for (let target = 1; target <= n; target++) {
+            for (let s = 1; s * s <= target; s++) {
+                dp[target] = Math.min(dp[target], 1 + dp[target - s * s]);
+            }
+        }
+
+        return dp[n];
     }
 }
 ```
@@ -957,6 +1028,37 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numSquares(n: number): number {
+        const q = new Queue();
+        const seen = new Set<number>();
+
+        let res = 0;
+        q.push(0);
+        while (!q.isEmpty()) {
+            res++;
+            for (let i = q.size(); i > 0; i--) {
+                const cur: number = q.pop();
+                for (let s = 1; s * s + cur <= n; s++) {
+                    const next = cur + s * s;
+                    if (next === n) return res;
+                    if (!seen.has(next)) {
+                        q.push(next);
+                        seen.add(next);
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1262,6 +1364,41 @@ impl Solution {
             i += 1;
         }
         3
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    numSquares(n: number): number {
+        while (n % 4 === 0) {
+            n = Math.floor(n / 4);
+        }
+
+        if (n % 8 === 7) {
+            return 4;
+        }
+
+        const isSquareNum = (num: number): boolean => {
+            const s = Math.floor(Math.sqrt(num));
+            return s * s === num;
+        };
+
+        if (isSquareNum(n)) {
+            return 1;
+        }
+
+        for (let i = 1; i * i <= n; i++) {
+            if (isSquareNum(n - i * i)) {
+                return 2;
+            }
+        }
+
+        return 3;
     }
 }
 ```

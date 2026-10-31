@@ -25,7 +25,7 @@ class StringIterator:
     def __init__(self, compressedString: str):
         self.res = []
         self.ptr = 0
-        
+
         i = 0
         while i < len(compressedString):
             ch = compressedString[i]
@@ -34,14 +34,14 @@ class StringIterator:
             while i < len(compressedString) and compressedString[i].isdigit():
                 num = num * 10 + int(compressedString[i])
                 i += 1
-            
+
             for j in range(num):
                 self.res.append(ch)
 
     def next(self) -> str:
         if not self.hasNext():
             return ' '
-        
+
         char = self.res[self.ptr]
         self.ptr += 1
         return char
@@ -89,11 +89,11 @@ class StringIterator {
 public:
     string res;
     int ptr;
-    
+
     StringIterator(string compressedString) {
         res = "";
         ptr = 0;
-        
+
         int i = 0;
         while (i < compressedString.length()) {
             char ch = compressedString[i++];
@@ -102,19 +102,19 @@ public:
                 num = num * 10 + compressedString[i] - '0';
                 i++;
             }
-            
+
             for (int j = 0; j < num; j++)
                 res += ch;
         }
     }
-    
+
     char next() {
         if (!hasNext())
             return ' ';
-        
+
         return res[ptr++];
     }
-    
+
     bool hasNext() {
         return ptr != res.length();
     }
@@ -129,7 +129,7 @@ class StringIterator {
     constructor(compressedString) {
         this.res = [];
         this.ptr = 0;
-        
+
         let i = 0;
         while (i < compressedString.length) {
             const ch = compressedString[i++];
@@ -138,22 +138,22 @@ class StringIterator {
                 num = num * 10 + parseInt(compressedString[i]);
                 i++;
             }
-            
+
             for (let j = 0; j < num; j++)
                 this.res.push(ch);
         }
     }
-    
+
     /**
      * @return {character}
      */
     next() {
         if (!this.hasNext())
             return ' ';
-        
+
         return this.res[this.ptr++];
     }
-    
+
     /**
      * @return {boolean}
      */
@@ -305,7 +305,6 @@ class StringIterator {
 }
 ```
 
-
 ```rust
 struct StringIterator {
     res: Vec<u8>,
@@ -343,6 +342,51 @@ impl StringIterator {
 
     fn has_next(&self) -> bool {
         self.ptr != self.res.len()
+    }
+}
+```
+
+```typescript
+class StringIterator {
+    private res: string[];
+    private ptr: number;
+
+    /**
+     * @param {string} compressedString
+     */
+    constructor(compressedString: string) {
+        this.res = [];
+        this.ptr = 0;
+
+        let i = 0;
+        while (i < compressedString.length) {
+            const ch = compressedString[i++];
+            let num = 0;
+            while (i < compressedString.length && !isNaN(Number(compressedString[i]))) {
+                num = num * 10 + parseInt(compressedString[i]);
+                i++;
+            }
+
+            for (let j = 0; j < num; j++)
+                this.res.push(ch);
+        }
+    }
+
+    /**
+     * @return {character}
+     */
+    next(): string {
+        if (!this.hasNext())
+            return ' ';
+
+        return this.res[this.ptr++];
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.ptr !== this.res.length;
     }
 }
 ```
@@ -391,13 +435,13 @@ class StringIterator:
     def next(self) -> str:
         if not self.hasNext():
             return ' '
-        
+
         self.nums[self.ptr] -= 1
         res = self.chars[self.ptr]
-        
+
         if self.nums[self.ptr] == 0:
             self.ptr += 1
-        
+
         return res
 
     def hasNext(self) -> bool:
@@ -438,7 +482,7 @@ public:
     int ptr = 0;
     vector<char> chars;
     vector<int> nums;
-    
+
     StringIterator(string compressedString) {
         for (int i = 0; i < compressedString.length(); i++) {
             if (isalpha(compressedString[i])) {
@@ -454,20 +498,20 @@ public:
             }
         }
     }
-    
+
     char next() {
         if (!hasNext())
             return ' ';
-        
+
         nums[ptr]--;
         char res = chars[ptr];
-        
+
         if (nums[ptr] == 0)
             ptr++;
-        
+
         return res;
     }
-    
+
     bool hasNext() {
         return ptr != chars.size();
     }
@@ -491,13 +535,13 @@ class StringIterator {
     next() {
         if (!this.hasNext())
             return ' ';
-        
+
         this.nums[this.ptr]--;
         let res = this.chars[this.ptr];
-        
+
         if (this.nums[this.ptr] === 0)
             this.ptr++;
-        
+
         return res;
     }
 
@@ -511,20 +555,18 @@ class StringIterator {
 ```
 
 ```csharp
-using System.Text.RegularExpressions;
-
 public class StringIterator {
     private int ptr = 0;
     private char[] chars;
     private int[] nums;
 
     public StringIterator(string compressedString) {
-        chars = Regex.Matches(compressedString, @"[a-zA-Z]")
-            .Cast<Match>()
+        chars = System.Text.RegularExpressions.Regex.Matches(compressedString, @"[a-zA-Z]")
+            .Cast<System.Text.RegularExpressions.Match>()
             .Select(m => m.Value[0])
             .ToArray();
-        nums = Regex.Matches(compressedString, @"\d+")
-            .Cast<Match>()
+        nums = System.Text.RegularExpressions.Regex.Matches(compressedString, @"\d+")
+            .Cast<System.Text.RegularExpressions.Match>()
             .Select(m => int.Parse(m.Value))
             .ToArray();
     }
@@ -664,7 +706,6 @@ class StringIterator {
 }
 ```
 
-
 ```rust
 struct StringIterator {
     ptr: usize,
@@ -711,6 +752,46 @@ impl StringIterator {
 }
 ```
 
+```typescript
+class StringIterator {
+    private ptr: number;
+    private nums: number[];
+    private chars: string[];
+
+    /**
+     * @param {string} compressedString
+     */
+    constructor(compressedString: string) {
+        this.ptr = 0;
+        this.nums = compressedString.match(/\d+/g)!.map(Number);
+        this.chars = compressedString.match(/[a-zA-Z]/g)!;
+    }
+
+    /**
+     * @return {character}
+     */
+    next(): string {
+        if (!this.hasNext())
+            return ' ';
+
+        this.nums[this.ptr]--;
+        let res = this.chars[this.ptr];
+
+        if (this.nums[this.ptr] === 0)
+            this.ptr++;
+
+        return res;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.ptr !== this.chars.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -741,17 +822,17 @@ The most space-efficient approach avoids any preprocessing. We store the origina
 
 ```python
 class StringIterator:
-    
+
     def __init__(self, compressedString: str):
         self.res = compressedString
         self.ptr = 0
         self.num = 0
         self.ch = ' '
-    
+
     def next(self) -> str:
         if not self.hasNext():
             return ' '
-        
+
         if self.num == 0:
             self.ch = self.res[self.ptr]
             self.ptr += 1
@@ -761,7 +842,7 @@ class StringIterator:
 
         self.num -= 1
         return self.ch
-    
+
     def hasNext(self) -> bool:
         return self.ptr != len(self.res) or self.num != 0
 ```
@@ -787,7 +868,7 @@ class StringIterator {
                 num = num * 10 + res.charAt(ptr++) - '0';
             }
         }
-        
+
         num--;
         return ch;
     }
@@ -804,11 +885,11 @@ public:
     string res;
     int ptr = 0, num = 0;
     char ch = ' ';
-    
+
     StringIterator(string compressedString) {
         res = compressedString;
     }
-    
+
     char next() {
         if (!hasNext())
             return ' ';
@@ -819,11 +900,11 @@ public:
                 num = num * 10 + (res[ptr++] - '0');
             }
         }
-        
+
         num--;
         return ch;
     }
-    
+
     bool hasNext() {
         return ptr != res.length() || num != 0;
     }
@@ -832,7 +913,7 @@ public:
 
 ```javascript
 class StringIterator {
-    
+
     /**
      * @param {string} compressedString
      */
@@ -842,7 +923,7 @@ class StringIterator {
         this.num = 0;
         this.ch = ' ';
     }
-    
+
     /**
      * @return {character}
      */
@@ -860,7 +941,7 @@ class StringIterator {
         this.num--;
         return this.ch;
     }
-    
+
     /**
      * @return {boolean}
      */
@@ -998,7 +1079,6 @@ class StringIterator {
 }
 ```
 
-
 ```rust
 struct StringIterator {
     res: Vec<u8>,
@@ -1035,6 +1115,50 @@ impl StringIterator {
 
     fn has_next(&self) -> bool {
         self.ptr != self.res.len() || self.num != 0
+    }
+}
+```
+
+```typescript
+class StringIterator {
+    private res: string;
+    private ptr: number;
+    private num: number;
+    private ch: string;
+
+    /**
+     * @param {string} compressedString
+     */
+    constructor(compressedString: string) {
+        this.res = compressedString;
+        this.ptr = 0;
+        this.num = 0;
+        this.ch = ' ';
+    }
+
+    /**
+     * @return {character}
+     */
+    next(): string {
+        if (!this.hasNext())
+            return ' ';
+
+        if (this.num === 0) {
+            this.ch = this.res[this.ptr++];
+            while (this.ptr < this.res.length && !isNaN(Number(this.res[this.ptr]))) {
+                this.num = this.num * 10 + parseInt(this.res[this.ptr++]);
+            }
+        }
+
+        this.num--;
+        return this.ch;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    hasNext(): boolean {
+        return this.ptr !== this.res.length || this.num !== 0;
     }
 }
 ```

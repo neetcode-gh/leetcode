@@ -176,6 +176,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} rectangles
+     * @return {number}
+     */
+    interchangeableRectangles(rectangles: number[][]): number {
+        let res = 0;
+        for (let i = 1; i < rectangles.length; i++) {
+            for (let j = 0; j < i; j++) {
+                if (
+                    rectangles[i][0] / rectangles[i][1] ===
+                    rectangles[j][0] / rectangles[j][1]
+                ) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,6 +402,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} rectangles
+     * @return {number}
+     */
+    interchangeableRectangles(rectangles: number[][]): number {
+        const count = new Map<number, number>();
+        for (const [w, h] of rectangles) {
+            const ratio = w / h;
+            count.set(ratio, (count.get(ratio) || 0) + 1);
+        }
+
+        let res = 0;
+        for (const c of count.values()) {
+            if (c > 1) {
+                res += (c * (c - 1)) / 2;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -542,6 +589,25 @@ impl Solution {
             *entry += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} rectangles
+     * @return {number}
+     */
+    interchangeableRectangles(rectangles: number[][]): number {
+        const count = new Map<number, number>();
+        let res = 0;
+        for (const [w, h] of rectangles) {
+            const ratio = w / h;
+            res += count.get(ratio) || 0;
+            count.set(ratio, (count.get(ratio) || 0) + 1);
+        }
+        return res;
     }
 }
 ```
@@ -842,6 +908,47 @@ impl Solution {
             *entry += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @return {string}
+     */
+    hash(a: number, b: number): string {
+        return `${a},${b}`;
+    }
+
+    /**
+     * @param {number[][]} rectangles
+     * @return {number}
+     */
+    interchangeableRectangles(rectangles: number[][]): number {
+        let res = 0;
+        const count = new Map<string, number>();
+
+        const gcd = (a: number, b: number): number => {
+            while (b !== 0) {
+                a %= b;
+                [a, b] = [b, a];
+            }
+            return a;
+        };
+
+        for (const rect of rectangles) {
+            const g = gcd(rect[0], rect[1]);
+            const key = this.hash(
+                Math.floor(rect[0] / g),
+                Math.floor(rect[1] / g),
+            );
+            res += count.get(key) || 0;
+            count.set(key, (count.get(key) || 0) + 1);
+        }
+        return res;
     }
 }
 ```

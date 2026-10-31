@@ -246,7 +246,7 @@ class Solution {
         if (root == null) {
             return null
         }
-        val queue: ArrayDeque<TreeNode?> = ArrayDeque()
+        val queue: LinkedList<TreeNode?> = LinkedList()
         queue.add(root)
 
         while (queue.isNotEmpty()) {
@@ -309,6 +309,26 @@ impl Solution {
             }
         }
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    invertTree(root: TreeNode | null): TreeNode | null {
+        if (root == null) return null;
+        const queue = new Queue([root]);
+        while (!queue.isEmpty()) {
+            let node: TreeNode = queue.pop();
+            [node.left, node.right] = [node.right, node.left];
+            if (node.left != null) queue.push(node.left);
+            if (node.right != null) queue.push(node.right);
+        }
+        return root;
     }
 }
 ```
@@ -585,6 +605,24 @@ impl Solution {
             Self::invert_tree(node_ref.right.clone());
         }
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    invertTree(root: TreeNode | null): TreeNode | null {
+        if (!root) return null;
+
+        [root.left, root.right] = [root.right, root.left];
+        this.invertTree(root.left);
+        this.invertTree(root.right);
+
+        return root;
     }
 }
 ```
@@ -897,6 +935,26 @@ impl Solution {
             }
         }
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    invertTree(root: TreeNode | null): TreeNode | null {
+        if (!root) return null;
+        const stack: TreeNode[] = [root];
+        while (stack.length) {
+            const node = stack.pop()!;
+            [node.left, node.right] = [node.right, node.left];
+            if (node.left) stack.push(node.left);
+            if (node.right) stack.push(node.right);
+        }
+        return root;
     }
 }
 ```

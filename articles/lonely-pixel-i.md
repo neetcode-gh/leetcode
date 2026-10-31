@@ -328,6 +328,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} picture
+     * @return {number}
+     */
+    findLonelyPixel(picture: string[][]): number {
+        let n = picture.length;
+        let m = picture[0].length;
+
+        // Arrays to store the count of black cells in rows and columns.
+        let rowCount: number[] = new Array(n).fill(0);
+        let columnCount: number[] = new Array(m).fill(0);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < m; j++) {
+                if (picture[i][j] === 'B') {
+                    rowCount[i]++;
+                    columnCount[j]++;
+                }
+            }
+        }
+
+        let answer = 0;
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < m; j++) {
+                // Its a lonely cell, if the current cell is black and,
+                // the count of black cells in its row and column is 1.
+                if (
+                    picture[i][j] === 'B' &&
+                    rowCount[i] === 1 &&
+                    columnCount[j] === 1
+                ) {
+                    answer++;
+                }
+            }
+        }
+
+        return answer;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -982,6 +1024,80 @@ impl Solution {
         }
 
         answer
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} picture
+     * @return {number}
+     */
+    findLonelyPixel(picture: string[][]): number {
+        // Returns true if the cell at (x, y) is lonely.
+        // There should not be any other black cell
+        // In the first row and column except (x, y) itself.
+        const check = (x: number, y: number): boolean => {
+            let n = picture.length;
+            let m = picture[0].length;
+
+            let cnt = 0;
+            for (let i = 0; i < n; i++) {
+                cnt += picture[i][y] === 'B' ? 1 : 0;
+            }
+
+            for (let j = 0; j < m; j++) {
+                // avoid double count (x, y)
+                if (j !== y) cnt += picture[x][j] === 'B' ? 1 : 0;
+            }
+            return picture[x][y] === 'B' && cnt === 1;
+        };
+
+        let n = picture.length;
+        let m = picture[0].length;
+
+        let answer = 0;
+        for (let j = 0; j < m; j++) {
+            answer += check(0, j) ? 1 : 0;
+        }
+        for (let i = 1; i < n; i++) {
+            answer += check(i, 0) ? 1 : 0;
+        }
+        // Convert cell 'B' to '1' and 'W' to '0'
+        for (let j = 0; j < m; j++) {
+            picture[0][j] = picture[0][j] === 'B' ? '1' : '0';
+        }
+
+        for (let i = 0; i < n; i++) {
+            picture[i][0] = picture[i][0] === 'B' ? '1' : '0';
+        }
+
+        // If the cell is black increment the count of corresponding row and column by 1
+        for (let i = 1; i < n; i++) {
+            for (let j = 1; j < m; j++) {
+                if (picture[i][j] === 'B') {
+                    picture[i][0] = String.fromCharCode(
+                        picture[i][0].charCodeAt(0) + 1,
+                    );
+                    picture[0][j] = String.fromCharCode(
+                        picture[0][j].charCodeAt(0) + 1,
+                    );
+                }
+            }
+        }
+
+        for (let i = 1; i < n; i++) {
+            for (let j = 1; j < m; j++) {
+                if (picture[i][j] === 'B') {
+                    if (picture[0][j] === '1' && picture[i][0] === '1') {
+                        answer++;
+                    }
+                }
+            }
+        }
+
+        return answer;
     }
 }
 ```

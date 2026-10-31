@@ -197,6 +197,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    mySqrt(x: number): number {
+        if (x === 0) {
+            return 0;
+        }
+
+        let res = 1;
+        for (let i = 1; i <= x; i++) {
+            if (i * i > x) {
+                return res;
+            }
+            res = i;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,6 +315,18 @@ class Solution {
 impl Solution {
     pub fn my_sqrt(x: i32) -> i32 {
         (x as f64).sqrt() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    mySqrt(x: number): number {
+        return Math.floor(Math.sqrt(x));
     }
 }
 ```
@@ -536,6 +572,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    mySqrt(x: number): number {
+        let l = 0,
+            r = x;
+        let res = 0;
+
+        while (l <= r) {
+            const m = Math.floor(l + (r - l) / 2);
+            if (m * m > x) {
+                r = m - 1;
+            } else if (m * m < x) {
+                l = m + 1;
+                res = m;
+            } else {
+                return m;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,6 +756,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    mySqrt(x: number): number {
+        if (x < 2) {
+            return x;
+        }
+
+        const l = this.mySqrt(x >> 2) << 1;
+        const r = l + 1;
+        return r * r > x ? l : r;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -820,6 +902,22 @@ impl Solution {
             r = (r + x as i64 / r) >> 1;
         }
         r as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    mySqrt(x: number): number {
+        let r = x;
+        while (r * r > x) {
+            r = (r + Math.floor(x / r)) >>> 1;
+        }
+        return r;
     }
 }
 ```

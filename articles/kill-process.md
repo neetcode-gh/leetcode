@@ -186,6 +186,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} pid
+     * @param {number[]} ppid
+     * @param {number} kill
+     * @return {number[]}
+     */
+    killProcess(pid: number[], ppid: number[], kill: number): number[] {
+        if (kill === 0) return [];
+
+        const result: number[] = [kill];
+        for (let i = 0; i < ppid.length; i++) {
+            if (ppid[i] === kill) {
+                result.push(...this.killProcess(pid, ppid, pid[i]));
+            }
+        }
+
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -507,6 +530,45 @@ impl Solution {
 }
 ```
 
+```typescript
+interface ProcessNode {
+    val: number;
+    children: ProcessNode[];
+}
+
+class Solution {
+    /**
+     * @param {number[]} pid
+     * @param {number[]} ppid
+     * @param {number} kill
+     * @return {number[]}
+     */
+    killProcess(pid: number[], ppid: number[], kill: number): number[] {
+        const mp = new Map<number, ProcessNode>();
+        for (const id of pid) {
+            mp.set(id, { val: id, children: [] });
+        }
+
+        for (let i = 0; i < ppid.length; i++) {
+            if (ppid[i] > 0) {
+                mp.get(ppid[i])!.children.push(mp.get(pid[i])!);
+            }
+        }
+
+        const result: number[] = [kill];
+        this.getAllChildren(mp.get(kill)!, result);
+        return result;
+    }
+
+    getAllChildren(node: ProcessNode, result: number[]): void {
+        for (const child of node.children) {
+            result.push(child.val);
+            this.getAllChildren(child, result);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -783,6 +845,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} pid
+     * @param {number[]} ppid
+     * @param {number} kill
+     * @return {number[]}
+     */
+    killProcess(pid: number[], ppid: number[], kill: number): number[] {
+        const map = new Map<number, number[]>();
+        for (let i = 0; i < ppid.length; i++) {
+            if (ppid[i] > 0) {
+                if (!map.has(ppid[i])) {
+                    map.set(ppid[i], []);
+                }
+                map.get(ppid[i])!.push(pid[i]);
+            }
+        }
+
+        const result: number[] = [kill];
+        this.getAllChildren(map, result, kill);
+        return result;
+    }
+
+    /**
+     * @param {Map<number, number[]>} map
+     * @param {number[]} result
+     * @param {number} kill
+     * @return {void}
+     */
+    getAllChildren(map: Map<number, number[]>, result: number[], kill: number): void {
+        if (map.has(kill)) {
+            for (const childId of map.get(kill)!) {
+                result.push(childId);
+                this.getAllChildren(map, result, childId);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -911,10 +1014,10 @@ class Solution {
             }
         }
 
-        const queue = [kill];
+        const queue = new Queue([kill]);
         const result = [];
-        while (queue.length > 0) {
-            const r = queue.shift();
+        while (!queue.isEmpty()) {
+            const r = queue.pop();
             result.push(r);
             if (map.has(r)) {
                 for (const childId of map.get(r)) {
@@ -1057,6 +1160,42 @@ impl Solution {
         }
 
         result
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} pid
+     * @param {number[]} ppid
+     * @param {number} kill
+     * @return {number[]}
+     */
+    killProcess(pid: number[], ppid: number[], kill: number): number[] {
+        const map = new Map<number, number[]>();
+        for (let i = 0; i < ppid.length; i++) {
+            if (ppid[i] > 0) {
+                if (!map.has(ppid[i])) {
+                    map.set(ppid[i], []);
+                }
+                map.get(ppid[i])!.push(pid[i]);
+            }
+        }
+
+        const queue = new Queue([kill]);
+        const result: number[] = [];
+        while (!queue.isEmpty()) {
+            const r: number = queue.pop();
+            result.push(r);
+            if (map.has(r)) {
+                for (const childId of map.get(r)!) {
+                    queue.push(childId);
+                }
+            }
+        }
+
+        return result;
     }
 }
 ```

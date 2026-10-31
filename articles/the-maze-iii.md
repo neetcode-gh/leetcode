@@ -369,6 +369,110 @@ class Solution {
 }
 ```
 
+```csharp
+public class State {
+    public int row;
+    public int col;
+    public int dist;
+    public string path;
+
+    public State(int row, int col, int dist, string path) {
+        this.row = row;
+        this.col = col;
+        this.dist = dist;
+        this.path = path;
+    }
+}
+
+public class Solution {
+    private int[][] directions = { new[] { 0, -1 }, new[] { -1, 0 }, new[] { 0, 1 }, new[] { 1, 0 } };
+    private string[] textDirections = { "l", "u", "r", "d" };
+    private int m;
+    private int n;
+
+    public string FindShortestWay(int[][] maze, int[] ball, int[] hole) {
+        m = maze.Length;
+        n = maze[0].Length;
+
+        PriorityQueue<State, State> heap = new PriorityQueue<State, State>(
+            Comparer<State>.Create((a, b) => {
+                if (a.dist == b.dist) {
+                    return string.CompareOrdinal(a.path, b.path);
+                }
+                return a.dist - b.dist;
+            })
+        );
+
+        bool[,] seen = new bool[m, n];
+        State startState = new State(ball[0], ball[1], 0, "");
+        heap.Enqueue(startState, startState);
+
+        while (heap.Count > 0) {
+            State curr = heap.Dequeue();
+            int row = curr.row;
+            int col = curr.col;
+
+            if (seen[row, col]) {
+                continue;
+            }
+
+            if (row == hole[0] && col == hole[1]) {
+                return curr.path;
+            }
+
+            seen[row, col] = true;
+
+            foreach (State nextState in GetNeighbors(row, col, maze, hole)) {
+                State next = new State(
+                    nextState.row,
+                    nextState.col,
+                    curr.dist + nextState.dist,
+                    curr.path + nextState.path
+                );
+                heap.Enqueue(next, next);
+            }
+        }
+
+        return "impossible";
+    }
+
+    private bool Valid(int row, int col, int[][] maze) {
+        if (row < 0 || row >= m || col < 0 || col >= n) {
+            return false;
+        }
+
+        return maze[row][col] == 0;
+    }
+
+    private List<State> GetNeighbors(int row, int col, int[][] maze, int[] hole) {
+        List<State> neighbors = new List<State>();
+
+        for (int i = 0; i < 4; i++) {
+            int dy = directions[i][0];
+            int dx = directions[i][1];
+            string direction = textDirections[i];
+
+            int currRow = row;
+            int currCol = col;
+            int dist = 0;
+
+            while (Valid(currRow + dy, currCol + dx, maze)) {
+                currRow += dy;
+                currCol += dx;
+                dist++;
+                if (currRow == hole[0] && currCol == hole[1]) {
+                    break;
+                }
+            }
+
+            neighbors.Add(new State(currRow, currCol, dist, direction));
+        }
+
+        return neighbors;
+    }
+}
+```
+
 ```go
 func findShortestWay(maze [][]int, ball []int, hole []int) string {
     m, n := len(maze), len(maze[0])
@@ -677,6 +781,106 @@ impl Solution {
         }
 
         "impossible".to_string()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} ball
+     * @param {number[]} hole
+     * @return {string}
+     */
+    findShortestWay(maze: number[][], ball: number[], hole: number[]): string {
+        const m = maze.length;
+        const n = maze[0].length;
+
+        const valid = (row: number, col: number): boolean => {
+            return (
+                row >= 0 &&
+                row < m &&
+                col >= 0 &&
+                col < n &&
+                maze[row][col] === 0
+            );
+        };
+
+        const getNeighbors = (
+            row: number,
+            col: number,
+        ): [number, number, number, string][] => {
+            const directions: [number, number, string][] = [
+                [0, -1, 'l'],
+                [-1, 0, 'u'],
+                [0, 1, 'r'],
+                [1, 0, 'd'],
+            ];
+            const neighbors: [number, number, number, string][] = [];
+
+            for (const [dy, dx, direction] of directions) {
+                let currRow = row;
+                let currCol = col;
+                let dist = 0;
+
+                while (valid(currRow + dy, currCol + dx)) {
+                    currRow += dy;
+                    currCol += dx;
+                    dist++;
+
+                    if (currRow === hole[0] && currCol === hole[1]) {
+                        break;
+                    }
+                }
+
+                neighbors.push([currRow, currCol, dist, direction]);
+            }
+
+            return neighbors;
+        };
+
+        type State = { dist: number; path: string; row: number; col: number };
+
+        const pq = new PriorityQueue((a: State, b: State) => {
+            if (a.dist !== b.dist) {
+                return a.dist - b.dist;
+            }
+            return a.path.localeCompare(b.path);
+        });
+
+        pq.enqueue({ dist: 0, path: '', row: ball[0], col: ball[1] });
+
+        const seen = new Set<string>();
+
+        while (!pq.isEmpty()) {
+            const { dist: currDist, path, row, col }: State = pq.dequeue();
+
+            const key = `${row},${col}`;
+            if (seen.has(key)) {
+                continue;
+            }
+
+            if (row === hole[0] && col === hole[1]) {
+                return path;
+            }
+
+            seen.add(key);
+
+            for (const [nextRow, nextCol, dist, direction] of getNeighbors(
+                row,
+                col,
+            )) {
+                pq.enqueue({
+                    dist: currDist + dist,
+                    path: path + direction,
+                    row: nextRow,
+                    col: nextCol,
+                });
+            }
+        }
+
+        return 'impossible';
     }
 }
 ```

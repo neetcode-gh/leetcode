@@ -180,7 +180,7 @@ class Solution {
 class Solution {
     func kthGrammar(_ n: Int, _ k: Int) -> Int {
         var prev: [Character] = ["0"]
-        for _ in 2...n {
+        for _ in stride(from: 2, through: n, by: 1) {
             var cur: [Character] = []
             for c in prev {
                 if c == "0" {
@@ -216,6 +216,33 @@ impl Solution {
             prev = cur;
         }
         prev[k as usize - 1] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kthGrammar(n: number, k: number): number {
+        let prev: string[] = ['0'];
+        for (let i = 2; i <= n; i++) {
+            let cur: string[] = [];
+            for (let c of prev) {
+                if (c === '0') {
+                    cur.push('0');
+                    cur.push('1');
+                } else {
+                    cur.push('1');
+                    cur.push('0');
+                }
+            }
+            prev = cur;
+        }
+        return parseInt(prev[k - 1]);
     }
 }
 ```
@@ -419,6 +446,30 @@ impl Solution {
             }
         }
         dfs(n, k, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kthGrammar(n: number, k: number): number {
+        const dfs = (n: number, k: number, root: number): number => {
+            if (n === 1) return root;
+
+            const total = 1 << (n - 1);
+            if (k > total / 2) {
+                return dfs(n - 1, k - total / 2, root ^ 1);
+            } else {
+                return dfs(n - 1, k, root);
+            }
+        };
+
+        return dfs(n, k, 0);
     }
 }
 ```
@@ -644,6 +695,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kthGrammar(n: number, k: number): number {
+        let cur = 0;
+        let left = 1,
+            right = 1 << (n - 1);
+
+        for (let i = 0; i < n - 1; i++) {
+            let mid = Math.floor((left + right) / 2);
+            if (k <= mid) {
+                right = mid;
+            } else {
+                left = mid + 1;
+                cur = cur === 0 ? 1 : 0;
+            }
+        }
+
+        return cur;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -788,6 +866,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kthGrammar(n: number, k: number): number {
+        if (n === 1) {
+            return 0;
+        }
+        if (k % 2 === 1) {
+            return this.kthGrammar(n - 1, Math.floor((k + 1) / 2));
+        }
+        return this.kthGrammar(n - 1, Math.floor(k / 2)) ^ 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -850,7 +947,12 @@ class Solution {
 ```csharp
 public class Solution {
     public int KthGrammar(int n, int k) {
-        return BitOperations.PopCount((uint)(k - 1)) & 1;
+        int x = k - 1, bits = 0;
+        while (x > 0) {
+            bits += x & 1;
+            x >>= 1;
+        }
+        return bits & 1;
     }
 }
 ```
@@ -881,6 +983,19 @@ class Solution {
 impl Solution {
     pub fn kth_grammar(_n: i32, k: i32) -> i32 {
         (k - 1).count_ones() as i32 & 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    kthGrammar(n: number, k: number): number {
+        return ((k - 1).toString(2).split('1').length - 1) & 1;
     }
 }
 ```

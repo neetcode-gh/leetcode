@@ -149,6 +149,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfFour(n: number): boolean {
+        if (n === 1) {
+            return true;
+        }
+        if (n <= 0 || n % 4 !== 0) {
+            return false;
+        }
+        return this.isPowerOfFour(Math.floor(n / 4));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,6 +342,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfFour(n: number): boolean {
+        if (n < 0) return false;
+
+        while (n > 1) {
+            if (n % 4 !== 0) return false;
+            n = Math.floor(n / 4);
+        }
+
+        return n === 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -352,7 +389,7 @@ We check if the logarithm yields a whole number by verifying the remainder when 
 ```python
 class Solution:
     def isPowerOfFour(self, n: int) -> bool:
-        return n > 0 and log(n, 4) % 1 == 0
+        return n > 0 and math.log(n, 4) % 1 == 0
 ```
 
 ```java
@@ -413,7 +450,7 @@ class Solution {
 ```swift
 class Solution {
     func isPowerOfFour(_ n: Int) -> Bool {
-        return n > 0 && log(Double(n)) / log(4.0).truncatingRemainder(dividingBy: 1) == 0
+        return n > 0 && (log(Double(n)) / log(4.0)).truncatingRemainder(dividingBy: 1) == 0
     }
 }
 ```
@@ -422,6 +459,18 @@ class Solution {
 impl Solution {
     pub fn is_power_of_four(n: i32) -> bool {
         n > 0 && (n as f64).ln() / 4.0_f64.ln() % 1.0 == 0.0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfFour(n: number): boolean {
+        return n > 0 && (Math.log(n) / Math.log(4)) % 1 === 0;
     }
 }
 ```
@@ -600,6 +649,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfFour(n: number): boolean {
+        if (n < 0) return false;
+
+        for (let i = 0; i < 32; i += 2) {
+            if (n === 1 << i) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -699,6 +768,18 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfFour(n: number): boolean {
+        return n > 0 && (n & (n - 1)) === 0 && (n & 0x55555555) === n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -794,6 +875,18 @@ class Solution {
 impl Solution {
     pub fn is_power_of_four(n: i32) -> bool {
         n > 0 && (n & (n - 1)) == 0 && n % 3 == 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    isPowerOfFour(n: number): boolean {
+        return n > 0 && (n & (n - 1)) === 0 && n % 3 == 1;
     }
 }
 ```

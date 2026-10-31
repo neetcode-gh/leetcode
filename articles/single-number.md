@@ -211,6 +211,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNumber(nums: number[]): number {
+        for (let i = 0; i < nums.length; i++) {
+            let flag = true;
+            for (let j = 0; j < nums.length; j++) {
+                if (i !== j && nums[i] === nums[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                return nums[i];
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -338,18 +362,18 @@ public class Solution {
 
 ```go
 func singleNumber(nums []int) int {
-	seen := make(map[int]bool)
-	for _, num := range nums {
-		if seen[num] {
-			delete(seen, num)
-		} else {
-			seen[num] = true
-		}
-	}
-	for num := range seen {
-		return num
-	}
-	return -1
+    seen := make(map[int]bool)
+    for _, num := range nums {
+        if seen[num] {
+            delete(seen, num)
+        } else {
+            seen[num] = true
+        }
+    }
+    for num := range seen {
+        return num
+    }
+    return -1
 }
 ```
 
@@ -397,6 +421,26 @@ impl Solution {
             }
         }
         *seen.iter().next().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNumber(nums: number[]): number {
+        const seen = new Set<number>();
+        for (const num of nums) {
+            if (seen.has(num)) {
+                seen.delete(num);
+            } else {
+                seen.add(num);
+            }
+        }
+        return Array.from(seen)[0];
     }
 }
 ```
@@ -530,16 +574,16 @@ public class Solution {
 
 ```go
 func singleNumber(nums []int) int {
-	sort.Ints(nums)
-	i := 0
-	for i < len(nums)-1 {
-		if nums[i] == nums[i+1] {
-			i += 2
-		} else {
-			return nums[i]
-		}
-	}
-	return nums[i]
+    sort.Ints(nums)
+    i := 0
+    for i < len(nums)-1 {
+        if nums[i] == nums[i+1] {
+            i += 2
+        } else {
+            return nums[i]
+        }
+    }
+    return nums[i]
 }
 ```
 
@@ -593,6 +637,27 @@ impl Solution {
             }
         }
         nums[i]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNumber(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+        let i = 0;
+        while (i < nums.length - 1) {
+            if (nums[i] === nums[i + 1]) {
+                i += 2;
+            } else {
+                return nums[i];
+            }
+        }
+        return nums[i];
     }
 }
 ```
@@ -700,11 +765,11 @@ public class Solution {
 
 ```go
 func singleNumber(nums []int) int {
-	res := 0
-	for _, num := range nums {
-		res ^= num
-	}
-	return res
+    res := 0
+    for _, num := range nums {
+        res ^= num
+    }
+    return res
 }
 ```
 
@@ -740,6 +805,22 @@ impl Solution {
             res ^= num;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNumber(nums: number[]): number {
+        let res = 0;
+        for (const num of nums) {
+            res ^= num;
+        }
+        return res;
     }
 }
 ```

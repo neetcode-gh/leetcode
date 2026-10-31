@@ -215,6 +215,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number[][]} shift
+     * @return {string}
+     */
+    stringShift(s: string, shift: number[][]): string {
+        const len = s.length;
+
+        for (const move of shift) {
+            const direction = move[0];
+            const amount = move[1] % len;
+
+            if (direction === 0) {
+                // Move necessary amount of characters from front to end
+                s = s.substring(amount) + s.substring(0, amount);
+            } else {
+                // Move necessary amount of characters from end to front
+                s = s.substring(len - amount) + s.substring(0, len - amount);
+            }
+        }
+
+        return s;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +458,32 @@ impl Solution {
         let mut bytes = s.into_bytes();
         bytes.rotate_left(left_shifts as usize);
         String::from_utf8(bytes).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number[][]} shift
+     * @return {string}
+     */
+    stringShift(s: string, shift: number[][]): string {
+        // Count the number of left shifts. A right shift is a negative left shift.
+        let leftShifts = 0;
+
+        for (let move of shift) {
+            if (move[0] === 1) {
+                move[1] = -move[1];
+            }
+            leftShifts += move[1];
+        }
+
+        // Convert back to a positive, do left shifts, and return.
+        leftShifts = ((leftShifts % s.length) + s.length) % s.length;
+        s = s.substring(leftShifts) + s.substring(0, leftShifts);
+        return s;
     }
 }
 ```
