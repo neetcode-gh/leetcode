@@ -327,6 +327,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @param {number[]} inorder
+     * @return {TreeNode}
+     */
+    buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+        if (!preorder.length || !inorder.length) {
+            return null;
+        }
+
+        let root = new TreeNode(preorder[0]);
+        let mid = inorder.indexOf(preorder[0]);
+        root.left = this.buildTree(
+            preorder.slice(1, mid + 1),
+            inorder.slice(0, mid),
+        );
+        root.right = this.buildTree(
+            preorder.slice(mid + 1),
+            inorder.slice(mid + 1),
+        );
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -693,6 +720,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @param {number[]} inorder
+     * @return {TreeNode}
+     */
+    buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+        let pre_idx = 0;
+        let indices = new Map<number, number>();
+
+        inorder.forEach((val, i) => indices.set(val, i));
+
+        function dfs(l: number, r: number): TreeNode | null {
+            if (l > r) return null;
+            let root_val = preorder[pre_idx++];
+            let root = new TreeNode(root_val);
+            let mid = indices.get(root_val)!;
+            root.left = dfs(l, mid - 1);
+            root.right = dfs(mid + 1, r);
+            return root;
+        }
+
+        return dfs(0, inorder.length - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1048,6 +1103,35 @@ impl Solution {
         root.left = Self::dfs(preorder, inorder, pre_idx, in_idx, root_val);
         root.right = Self::dfs(preorder, inorder, pre_idx, in_idx, limit);
         Some(Rc::new(RefCell::new(root)))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @param {number[]} inorder
+     * @return {TreeNode}
+     */
+    buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+        let preIdx = 0,
+            inIdx = 0;
+
+        function dfs(limit: number): TreeNode | null {
+            if (preIdx >= preorder.length) return null;
+            if (inorder[inIdx] === limit) {
+                inIdx++;
+                return null;
+            }
+
+            let root = new TreeNode(preorder[preIdx++]);
+            root.left = dfs(root.val);
+            root.right = dfs(limit);
+            return root;
+        }
+
+        return dfs(Infinity);
     }
 }
 ```
@@ -1446,6 +1530,42 @@ impl Solution {
         }
 
         head.borrow().right.clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @param {number[]} inorder
+     * @return {TreeNode}
+     */
+    buildTree(preorder: number[], inorder: number[]): TreeNode | null {
+        let head = new TreeNode(null);
+        let curr = head;
+        let i = 0,
+            j = 0,
+            n = preorder.length;
+
+        while (i < n && j < n) {
+            curr.right = new TreeNode(preorder[i], null, curr.right);
+            curr = curr.right;
+            i++;
+            while (i < n && curr.val !== inorder[j]) {
+                curr.left = new TreeNode(preorder[i], null, curr);
+                curr = curr.left;
+                i++;
+            }
+            j++;
+            while (curr.right && j < n && curr.right.val === inorder[j]) {
+                let prev = curr.right;
+                curr.right = null;
+                curr = prev;
+                j++;
+            }
+        }
+        return head.right;
     }
 }
 ```

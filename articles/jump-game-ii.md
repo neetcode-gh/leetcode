@@ -256,6 +256,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    jump(nums: number[]): number {
+        const dfs = (i: number): number => {
+            if (i === nums.length - 1) {
+                return 0;
+            }
+            if (nums[i] === 0) return 1000000;
+            let res = 1000000;
+            const end = Math.min(nums.length - 1, i + nums[i]);
+            for (let j = i + 1; j <= end; j++) {
+                res = Math.min(res, 1 + dfs(j));
+            }
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +596,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    jump(nums: number[]): number {
+        const memo = new Map<number, number>();
+        const dfs = (i: number): number => {
+            if (memo.has(i)) {
+                return memo.get(i)!;
+            }
+            if (i == nums.length - 1) {
+                return 0;
+            }
+            if (nums[i] === 0) {
+                return 1000000;
+            }
+            let res = 1000000;
+            const end = Math.min(nums.length - 1, i + nums[i]);
+            for (let j = i + 1; j <= end; j++) {
+                res = Math.min(res, 1 + dfs(j));
+            }
+            memo.set(i, res);
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -784,6 +841,28 @@ impl Solution {
             }
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    jump(nums: number[]): number {
+        const n = nums.length;
+        const dp: number[] = new Array(n).fill(1000000);
+        dp[n - 1] = 0;
+
+        for (let i = n - 2; i >= 0; i--) {
+            const end = Math.min(nums.length, i + nums[i] + 1);
+            for (let j = i + 1; j < end; j++) {
+                dp[i] = Math.min(dp[i], 1 + dp[j]);
+            }
+        }
+        return dp[0];
     }
 }
 ```
@@ -1017,6 +1096,31 @@ impl Solution {
             res += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    jump(nums: number[]): number {
+        let res = 0,
+            l = 0,
+            r = 0;
+
+        while (r < nums.length - 1) {
+            let farthest = 0;
+            for (let i = l; i <= r; i++) {
+                farthest = Math.max(farthest, i + nums[i]);
+            }
+            l = r + 1;
+            r = farthest;
+            res++;
+        }
+        return res;
     }
 }
 ```

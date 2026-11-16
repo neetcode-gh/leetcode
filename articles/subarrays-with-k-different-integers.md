@@ -239,6 +239,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    subarraysWithKDistinct(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let seen = new Set<number>();
+            for (let j = i; j < n; j++) {
+                seen.add(nums[j]);
+                if (seen.size > k) {
+                    break;
+                }
+                if (seen.size === k) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,6 +598,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    subarraysWithKDistinct(nums: number[], k: number): number {
+        const atMostK = (k: number): number => {
+            const count = new Map<number, number>();
+            let res = 0,
+                l = 0;
+
+            for (let r = 0; r < nums.length; r++) {
+                count.set(nums[r], (count.get(nums[r]) || 0) + 1);
+                if (count.get(nums[r]) === 1) {
+                    k--;
+                }
+
+                while (k < 0) {
+                    count.set(nums[l], count.get(nums[l])! - 1);
+                    if (count.get(nums[l]) === 0) {
+                        k++;
+                    }
+                    l++;
+                }
+
+                res += r - l + 1;
+            }
+
+            return res;
+        };
+
+        return atMostK(k) - atMostK(k - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -713,6 +780,7 @@ class Solution {
                     count.delete(nums[l_near]);
                 }
                 l_near++;
+                l_far = l_near;
             }
 
             while (count.get(nums[l_near]) > 1) {
@@ -900,6 +968,46 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    subarraysWithKDistinct(nums: number[], k: number): number {
+        const count = new Map<number, number>();
+        let res = 0,
+            l_far = 0,
+            l_near = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            count.set(nums[r], (count.get(nums[r]) || 0) + 1);
+
+            while (count.size > k) {
+                count.set(nums[l_near], count.get(nums[l_near])! - 1);
+                if (count.get(nums[l_near]) === 0) {
+                    count.delete(nums[l_near]);
+                }
+                l_near++;
+                l_far = l_near;
+            }
+
+            while (count.get(nums[l_near])! > 1) {
+                count.set(nums[l_near], count.get(nums[l_near])! - 1);
+                l_near++;
+            }
+
+            if (count.size === k) {
+                res += l_near - l_far + 1;
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1255,6 +1363,49 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    subarraysWithKDistinct(nums: number[], k: number): number {
+        const n = nums.length;
+        const count: number[] = new Array(n + 1).fill(0);
+        let res = 0,
+            l = 0,
+            cnt = 0;
+
+        for (let r = 0; r < n; r++) {
+            count[nums[r]]++;
+            if (count[nums[r]] === 1) {
+                k--;
+            }
+
+            if (k < 0) {
+                count[nums[l]]--;
+                l++;
+                k++;
+                cnt = 0;
+            }
+
+            if (k === 0) {
+                while (count[nums[l]] > 1) {
+                    count[nums[l]]--;
+                    l++;
+                    cnt++;
+                }
+
+                res += cnt + 1;
+            }
+        }
+
+        return res;
     }
 }
 ```

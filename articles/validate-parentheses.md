@@ -111,12 +111,12 @@ public class Solution {
 
 ```go
 func isValid(s string) bool {
-	for strings.Contains(s, "()") || strings.Contains(s, "{}") || strings.Contains(s, "[]") {
-		s = strings.ReplaceAll(s, "()", "")
-		s = strings.ReplaceAll(s, "{}", "")
-		s = strings.ReplaceAll(s, "[]", "")
-	}
-	return s == ""
+    for strings.Contains(s, "()") || strings.Contains(s, "{}") || strings.Contains(s, "[]") {
+        s = strings.ReplaceAll(s, "()", "")
+        s = strings.ReplaceAll(s, "{}", "")
+        s = strings.ReplaceAll(s, "[]", "")
+    }
+    return s == ""
 }
 ```
 
@@ -162,6 +162,23 @@ impl Solution {
             }
         }
         s.is_empty()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    isValid(s: string): boolean {
+        while (s.includes('()') || s.includes('{}') || s.includes('[]')) {
+            s = s.replace('()', '');
+            s = s.replace('{}', '');
+            s = s.replace('[]', '');
+        }
+        return s === '';
     }
 }
 ```
@@ -423,6 +440,39 @@ impl Solution {
             }
         }
         stack.is_empty()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    isValid(s: string): boolean {
+        const stack: string[] = [];
+        const closeToOpen: { [key: string]: string } = {
+            ')': '(',
+            ']': '[',
+            '}': '{',
+        };
+
+        for (let c of s) {
+            if (closeToOpen[c]) {
+                if (
+                    stack.length > 0 &&
+                    stack[stack.length - 1] === closeToOpen[c]
+                ) {
+                    stack.pop();
+                } else {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.length === 0;
     }
 }
 ```

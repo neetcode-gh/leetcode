@@ -171,6 +171,7 @@ class Solution {
 ```swift
 class Solution {
     func countPrimes(_ n: Int) -> Int {
+        if n < 2 { return 0 }
         var res = 0
         for num in 2..<n {
             var isPrime = true
@@ -210,6 +211,29 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countPrimes(n: number): number {
+        let res = 0;
+        for (let num = 2; num < n; num++) {
+            let isPrime = true;
+            for (let i = 2; i * i <= num; i++) {
+                if (num % i === 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+            if (isPrime) res++;
+        }
+        return res;
     }
 }
 ```
@@ -331,6 +355,67 @@ public class Solution {
 }
 ```
 
+```go
+func countPrimes(n int) int {
+    if n < 2 {
+        return 0
+    }
+    sieve := make([]bool, n)
+    res := 0
+    for num := 2; num < n; num++ {
+        if !sieve[num] {
+            res++
+            for i := num * num; i < n; i += num {
+                sieve[i] = true
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPrimes(n: Int): Int {
+        if (n < 2) return 0
+        val sieve = BooleanArray(n)
+        var res = 0
+        for (num in 2 until n) {
+            if (!sieve[num]) {
+                res++
+                var i = num.toLong() * num
+                while (i < n) {
+                    sieve[i.toInt()] = true
+                    i += num
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPrimes(_ n: Int) -> Int {
+        if n < 2 { return 0 }
+        var sieve = [Bool](repeating: false, count: n)
+        var res = 0
+        for num in 2..<n {
+            if !sieve[num] {
+                res += 1
+                var i = num * num
+                while i < n {
+                    sieve[i] = true
+                    i += num
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn count_primes(n: i32) -> i32 {
@@ -348,6 +433,256 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countPrimes(n: number): number {
+        const sieve: boolean[] = new Array(n).fill(false);
+        let res = 0;
+        for (let num = 2; num < n; num++) {
+            if (!sieve[num]) {
+                res++;
+                for (let i = num * num; i < n; i += num) {
+                    sieve[i] = true;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+- Time complexity: $O(n \log (\log n))$
+- Space complexity: $O(n)$
+
+---
+
+## 3. Sieve of Eratosthenes (Optimal)
+
+### Intuition
+
+We can optimize the sieve by observing that `2` is the only even prime. Instead of processing all numbers, we start by assuming half the numbers (all odd numbers plus `2`) are prime, then only sieve odd numbers starting from `3`. When marking multiples, we skip even multiples since they are already excluded. This cuts the work roughly in half.
+
+### Algorithm
+
+1. If `n < 3`, return `0` (no primes less than `2`).
+2. Initialize count to `n/2` (assuming `2` and all odd numbers are prime).
+3. Create a boolean array `isPrime` of size `n`.
+4. For each odd number `i` from `3` up to `sqrt(n)`:
+   - If `i` is not marked as composite:
+     - Mark all odd multiples of `i` starting from `i*i` as composite.
+     - Decrement count for each newly marked composite.
+5. Return the final count.
+
+::tabs-start
+
+```python
+class Solution:
+    def countPrimes(self, n: int) -> int:
+        if n < 3:
+            return 0
+
+        isPrime = [False] * n
+        count = n // 2
+
+        for i in range(3, int(n ** 0.5) + 1, 2):
+            if not isPrime[i]:
+                for j in range(i * i, n, 2 * i):
+                    if not isPrime[j]:
+                        isPrime[j] = True
+                        count -= 1
+
+        return count
+```
+
+```java
+public class Solution {
+    public int countPrimes(int n) {
+        if (n < 3) return 0;
+
+        boolean[] isPrime = new boolean[n];
+        int count = n / 2;
+
+        for (int i = 3; i * i < n; i += 2) {
+            if (!isPrime[i]) {
+                for (int j = i * i; j < n; j += 2 * i) {
+                    if (!isPrime[j]) {
+                        isPrime[j] = true;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int countPrimes(int n) {
+        if (n < 3) return 0;
+
+        vector<bool> isPrime(n, false);
+        int count = n / 2;
+
+        for (int i = 3; i * i < n; i += 2) {
+            if (!isPrime[i]) {
+                for (int j = i * i; j < n; j += 2 * i) {
+                    if (!isPrime[j]) {
+                        isPrime[j] = true;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countPrimes(n) {
+        if (n < 3) return 0;
+
+        const isPrime = new Array(n).fill(false);
+        let count = Math.floor(n / 2);
+
+        for (let i = 3; i * i < n; i += 2) {
+            if (!isPrime[i]) {
+                for (let j = i * i; j < n; j += 2 * i) {
+                    if (!isPrime[j]) {
+                        isPrime[j] = true;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPrimes(int n) {
+        if (n < 3) return 0;
+
+        bool[] isPrime = new bool[n];
+        int count = n / 2;
+
+        for (int i = 3; i * i < n; i += 2) {
+            if (!isPrime[i]) {
+                for (int j = i * i; j < n; j += 2 * i) {
+                    if (!isPrime[j]) {
+                        isPrime[j] = true;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+}
+```
+
+```go
+func countPrimes(n int) int {
+    if n < 3 {
+        return 0
+    }
+
+    isPrime := make([]bool, n)
+    count := n / 2
+
+    for i := 3; i*i < n; i += 2 {
+        if !isPrime[i] {
+            for j := i * i; j < n; j += 2 * i {
+                if !isPrime[j] {
+                    isPrime[j] = true
+                    count--
+                }
+            }
+        }
+    }
+
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    fun countPrimes(n: Int): Int {
+        if (n < 3) return 0
+
+        val isPrime = BooleanArray(n)
+        var count = n / 2
+
+        var i = 3
+        while (i * i < n) {
+            if (!isPrime[i]) {
+                var j = i * i
+                while (j < n) {
+                    if (!isPrime[j]) {
+                        isPrime[j] = true
+                        count--
+                    }
+                    j += 2 * i
+                }
+            }
+            i += 2
+        }
+
+        return count
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPrimes(_ n: Int) -> Int {
+        if n < 3 { return 0 }
+
+        var isPrime = [Bool](repeating: false, count: n)
+        var count = n / 2
+
+        var i = 3
+        while i * i < n {
+            if !isPrime[i] {
+                var j = i * i
+                while j < n {
+                    if !isPrime[j] {
+                        isPrime[j] = true
+                        count -= 1
+                    }
+                    j += 2 * i
+                }
+            }
+            i += 2
+        }
+
+        return count
     }
 }
 ```
@@ -382,12 +717,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countPrimes(n: number): number {
+        if (n < 3) return 0;
+
+        const isPrime: boolean[] = new Array(n).fill(false);
+        let count = Math.floor(n / 2);
+
+        for (let i = 3; i * i < n; i += 2) {
+            if (!isPrime[i]) {
+                for (let j = i * i; j < n; j += 2 * i) {
+                    if (!isPrime[j]) {
+                        isPrime[j] = true;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n \log (\log n))$
-- Space complexity: $O(n)$
+* Time complexity: $O(n \log (\log n))$
+* Space complexity: $O(n)$
 
 ---
 

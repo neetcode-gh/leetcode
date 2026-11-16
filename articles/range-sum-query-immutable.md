@@ -184,6 +184,32 @@ impl NumArray {
 }
 ```
 
+```typescript
+class NumArray {
+    private nums: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.nums = nums;
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        let res = 0;
+        for (let i = left; i <= right; i++) {
+            res += this.nums[i];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -408,6 +434,35 @@ impl NumArray {
 }
 ```
 
+```typescript
+class NumArray {
+    private prefix: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.prefix = [];
+        let cur = 0;
+        for (let num of nums) {
+            cur += num;
+            this.prefix.push(cur);
+        }
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        const rightSum = this.prefix[right];
+        const leftSum = left > 0 ? this.prefix[left - 1] : 0;
+        return rightSum - leftSum;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -589,6 +644,31 @@ impl NumArray {
 
     fn sum_range(&self, left: i32, right: i32) -> i32 {
         self.prefix[right as usize + 1] - self.prefix[left as usize]
+    }
+}
+```
+
+```typescript
+class NumArray {
+    private prefix: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.prefix = new Array(nums.length + 1).fill(0);
+        for (let i = 0; i < nums.length; i++) {
+            this.prefix[i + 1] = this.prefix[i] + nums[i];
+        }
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.prefix[right + 1] - this.prefix[left];
     }
 }
 ```
@@ -1029,6 +1109,65 @@ impl NumArray {
 
     fn sum_range(&self, left: i32, right: i32) -> i32 {
         self.seg_tree.query(left as usize, right as usize)
+    }
+}
+```
+
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.n = nums.length;
+        this.tree = Array(this.n * 2).fill(0);
+        for (let i = 0; i < this.n; i++) {
+            this.tree[this.n + i] = nums[i];
+        }
+        for (let i = this.n - 1; i > 0; i--) {
+            this.tree[i] = this.tree[2 * i] + this.tree[2 * i + 1];
+        }
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    query(left: number, right: number): number {
+        let sum = 0;
+        left += this.n;
+        right += this.n + 1;
+        while (left < right) {
+            if (left % 2 === 1) sum += this.tree[left++];
+            if (right % 2 === 1) sum += this.tree[--right];
+            left = Math.floor(left / 2);
+            right = Math.floor(right / 2);
+        }
+        return sum;
+    }
+}
+
+class NumArray {
+    private segTree: SegmentTree;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.segTree = new SegmentTree(nums);
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number}
+     */
+    sumRange(left: number, right: number): number {
+        return this.segTree.query(left, right);
     }
 }
 ```

@@ -329,6 +329,53 @@ impl MyStack {
 }
 ```
 
+```typescript
+class MyStack {
+    private q1: any;
+    private q2: any;
+
+    constructor() {
+        this.q1 = new Queue();
+        this.q2 = new Queue();
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x: number): void {
+        this.q2.push(x);
+
+        while (!this.q1.isEmpty()) {
+            this.q2.push(this.q1.pop());
+        }
+
+        [this.q1, this.q2] = [this.q2, this.q1];
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        return this.q1.pop();
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        return this.q1.front();
+    }
+
+    /**
+     * @return {boolean}
+     */
+    empty(): boolean {
+        return this.q1.isEmpty();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -626,6 +673,49 @@ impl MyStack {
 
     fn empty(&self) -> bool {
         self.q.is_empty()
+    }
+}
+```
+
+```typescript
+class MyStack {
+    private q: any;
+
+    constructor() {
+        this.q = new Queue();
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x: number): void {
+        this.q.push(x);
+
+        for (let i = this.q.size() - 1; i > 0; i--) {
+            this.q.push(this.q.pop());
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        return this.q.pop();
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        return this.q.front();
+    }
+
+    /**
+     * @return {boolean}
+     */
+    empty(): boolean {
+        return this.q.isEmpty();
     }
 }
 ```

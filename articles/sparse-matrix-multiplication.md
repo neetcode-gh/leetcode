@@ -257,6 +257,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat1
+     * @param {number[][]} mat2
+     * @return {number[][]}
+     */
+    multiply(mat1: number[][], mat2: number[][]): number[][] {
+        // Product matrix.
+        let ans: number[][] = Array(mat1.length)
+            .fill(0)
+            .map((x) => Array(mat2[0].length).fill(0));
+
+        mat1.forEach((rowElements, rowIndex) => {
+            rowElements.forEach((rowElement, elementIndex) => {
+                // If current element of mat1 is non-zero then iterate over all columns of mat2.
+                if (rowElement) {
+                    mat2[elementIndex].forEach((colElement, colIndex) => {
+                        ans[rowIndex][colIndex] += rowElement * colElement;
+                    });
+                }
+            });
+        });
+
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -694,6 +723,60 @@ impl Solution {
         }
 
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat1
+     * @param {number[][]} mat2
+     * @return {number[][]}
+     */
+    multiply(mat1: number[][], mat2: number[][]): number[][] {
+        let compressMatrix = (matrix: number[][]): number[][][] => {
+            let rows = matrix.length;
+            let cols = matrix[0].length;
+            let compressedMatrix: number[][][] = [];
+            matrix.forEach((rowElements, row) => {
+                let currRow: number[][] = [];
+                rowElements.forEach((element, col) => {
+                    if (element) {
+                        currRow.push([element, col]);
+                    }
+                });
+                compressedMatrix.push(currRow);
+            });
+            return compressedMatrix;
+        };
+
+        let m = mat1.length;
+        let k = mat1[0].length;
+        let n = mat2[0].length;
+
+        // Store the non-zero values of each matrix.
+        let A = compressMatrix(mat1);
+        let B = compressMatrix(mat2);
+
+        let ans: number[][] = Array(m)
+            .fill(0)
+            .map((x) => Array(n).fill(0));
+
+        for (let mat1Row = 0; mat1Row < m; ++mat1Row) {
+            // Iterate on all current 'row' non-zero elements of mat1.
+            for (let mat1Element of A[mat1Row]) {
+                let [element1, mat1Col] = mat1Element;
+
+                // Multiply and add all non-zero elements of mat2
+                // where the row is equal to col of current element of mat1.
+                for (let mat2Element of B[mat1Col]) {
+                    let [element2, mat2Col] = mat2Element;
+                    ans[mat1Row][mat2Col] += element1 * element2;
+                }
+            }
+        }
+        return ans;
     }
 }
 ```
@@ -1485,6 +1568,118 @@ impl Solution {
         }
 
         ans
+    }
+}
+```
+
+```typescript
+class SparseMatrix {
+    values: number[];
+    rowIndex: number[];
+    colIndex: number[];
+
+    constructor(matrix: number[][], colWise: boolean) {
+        [this.values, this.rowIndex, this.colIndex] = this.compressMatrix(
+            matrix,
+            colWise,
+        );
+    }
+
+    compressMatrix(matrix: number[][], colWise: boolean): number[][] {
+        return colWise
+            ? this.compressColWise(matrix)
+            : this.compressRowWise(matrix);
+    }
+
+    // Compressed Sparse Row
+    compressRowWise(matrix: number[][]): number[][] {
+        let values: number[] = [];
+        let rowIndex = [0];
+        let colIndex: number[] = [];
+
+        for (let row = 0; row < matrix.length; ++row) {
+            for (let col = 0; col < matrix[0].length; ++col) {
+                if (matrix[row][col]) {
+                    values.push(matrix[row][col]);
+                    colIndex.push(col);
+                }
+            }
+            rowIndex.push(values.length);
+        }
+
+        return [values, rowIndex, colIndex];
+    }
+
+    // Compressed Sparse Col
+    compressColWise(matrix: number[][]): number[][] {
+        let values: number[] = [];
+        let rowIndex: number[] = [];
+        let colIndex = [0];
+
+        for (let col = 0; col < matrix[0].length; ++col) {
+            for (let row = 0; row < matrix.length; ++row) {
+                if (matrix[row][col]) {
+                    values.push(matrix[row][col]);
+                    rowIndex.push(row);
+                }
+            }
+            colIndex.push(values.length);
+        }
+
+        return [values, rowIndex, colIndex];
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} mat1
+     * @param {number[][]} mat2
+     * @return {number[][]}
+     */
+    multiply(mat1: number[][], mat2: number[][]): number[][] {
+        let A = new SparseMatrix(mat1, false);
+        let B = new SparseMatrix(mat2, true);
+
+        let ans: number[][] = Array(mat1.length)
+            .fill(0)
+            .map((x) => Array(mat2[0].length).fill(0));
+
+        ans.forEach((_, row) => {
+            ans[row].forEach((_, col) => {
+                // Row element range indices
+                let matrixOneRowStart = A.rowIndex[row];
+                let matrixOneRowEnd = A.rowIndex[row + 1];
+                // Column element range indices
+                let matrixTwoColStart = B.colIndex[col];
+                let matrixTwoColEnd = B.colIndex[col + 1];
+                // Iterate over both row and column.
+                while (
+                    matrixOneRowStart < matrixOneRowEnd &&
+                    matrixTwoColStart < matrixTwoColEnd
+                ) {
+                    if (
+                        A.colIndex[matrixOneRowStart] <
+                        B.rowIndex[matrixTwoColStart]
+                    ) {
+                        matrixOneRowStart++;
+                    } else if (
+                        A.colIndex[matrixOneRowStart] >
+                        B.rowIndex[matrixTwoColStart]
+                    ) {
+                        matrixTwoColStart++;
+                    } else {
+                        // Row index and col index are same so we can multiply these elements.
+                        ans[row][col] +=
+                            A.values[matrixOneRowStart] *
+                            B.values[matrixTwoColStart];
+                        matrixOneRowStart++;
+                        matrixTwoColStart++;
+                    }
+                }
+            });
+        });
+
+        return ans;
     }
 }
 ```

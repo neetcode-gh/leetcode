@@ -372,6 +372,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} senate
+     * @return {string}
+     */
+    predictPartyVictory(senate: string): string {
+        const s = senate.split('');
+
+        while (true) {
+            let i = 0;
+            while (i < s.length) {
+                if (!s.includes('R')) {
+                    return 'Dire';
+                }
+                if (!s.includes('D')) {
+                    return 'Radiant';
+                }
+                if (s[i] === 'R') {
+                    let j = (i + 1) % s.length;
+                    while (s[j] === 'R') {
+                        j = (j + 1) % s.length;
+                    }
+                    s.splice(j, 1);
+                    if (j < i) {
+                        i--;
+                    }
+                } else {
+                    let j = (i + 1) % s.length;
+                    while (s[j] === 'D') {
+                        j = (j + 1) % s.length;
+                    }
+                    s.splice(j, 1);
+                    if (j < i) {
+                        i--;
+                    }
+                }
+                i++;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -683,6 +727,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} senate
+     * @return {string}
+     */
+    predictPartyVictory(senate: string): string {
+        const R = new Queue();
+        const D = new Queue();
+        const n = senate.length;
+
+        for (let i = 0; i < n; i++) {
+            if (senate[i] === 'R') {
+                R.push(i);
+            } else {
+                D.push(i);
+            }
+        }
+
+        while (!R.isEmpty() && !D.isEmpty()) {
+            const rTurn: number = R.pop();
+            const dTurn: number = D.pop();
+
+            if (rTurn < dTurn) {
+                R.push(rTurn + n);
+            } else {
+                D.push(dTurn + n);
+            }
+        }
+
+        return !R.isEmpty() ? 'Radiant' : 'Dire';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,6 +925,90 @@ public class Solution {
 }
 ```
 
+```go
+func predictPartyVictory(senate string) string {
+    sb := []byte(senate)
+    cnt, i := 0, 0
+
+    for i < len(sb) {
+        c := sb[i]
+        if c == 'R' {
+            if cnt < 0 {
+                sb = append(sb, 'D')
+            }
+            cnt++
+        } else {
+            if cnt > 0 {
+                sb = append(sb, 'R')
+            }
+            cnt--
+        }
+        i++
+    }
+
+    if cnt > 0 {
+        return "Radiant"
+    }
+    return "Dire"
+}
+```
+
+```kotlin
+class Solution {
+    fun predictPartyVictory(senate: String): String {
+        val sb = StringBuilder(senate)
+        var cnt = 0
+        var i = 0
+
+        while (i < sb.length) {
+            val c = sb[i]
+            if (c == 'R') {
+                if (cnt < 0) {
+                    sb.append('D')
+                }
+                cnt++
+            } else {
+                if (cnt > 0) {
+                    sb.append('R')
+                }
+                cnt--
+            }
+            i++
+        }
+
+        return if (cnt > 0) "Radiant" else "Dire"
+    }
+}
+```
+
+```swift
+class Solution {
+    func predictPartyVictory(_ senate: String) -> String {
+        var sb = Array(senate)
+        var cnt = 0
+        var i = 0
+
+        while i < sb.count {
+            let c = sb[i]
+            if c == "R" {
+                if cnt < 0 {
+                    sb.append("D")
+                }
+                cnt += 1
+            } else {
+                if cnt > 0 {
+                    sb.append("R")
+                }
+                cnt -= 1
+            }
+            i += 1
+        }
+
+        return cnt > 0 ? "Radiant" : "Dire"
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn predict_party_victory(senate: String) -> String {
@@ -874,6 +1037,38 @@ impl Solution {
         } else {
             "Dire".to_string()
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} senate
+     * @return {string}
+     */
+    predictPartyVictory(senate: string): string {
+        let s = senate.split('');
+        let cnt = 0,
+            i = 0;
+
+        while (i < s.length) {
+            const c = s[i];
+            if (c === 'R') {
+                if (cnt < 0) {
+                    s.push('D');
+                }
+                cnt++;
+            } else {
+                if (cnt > 0) {
+                    s.push('R');
+                }
+                cnt--;
+            }
+            i++;
+        }
+
+        return cnt > 0 ? 'Radiant' : 'Dire';
     }
 }
 ```

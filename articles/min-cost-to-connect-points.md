@@ -323,65 +323,65 @@ public class Solution {
 
 ```go
 type DSU struct {
-	Parent []int
-	Size   []int
+    Parent []int
+    Size   []int
 }
 
 func NewDSU(n int) *DSU {
-	parent := make([]int, n)
-	size := make([]int, n)
-	for i := range parent {
-		parent[i] = i
-		size[i] = 1
-	}
-	return &DSU{Parent: parent, Size: size}
+    parent := make([]int, n)
+    size := make([]int, n)
+    for i := range parent {
+        parent[i] = i
+        size[i] = 1
+    }
+    return &DSU{Parent: parent, Size: size}
 }
 
 func (dsu *DSU) find(node int) int {
-	if dsu.Parent[node] != node {
-		dsu.Parent[node] = dsu.find(dsu.Parent[node])
-	}
-	return dsu.Parent[node]
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
 }
 
 func (dsu *DSU) union(u, v int) bool {
-	pu, pv := dsu.find(u), dsu.find(v)
-	if pu == pv {
-		return false
-	}
-	if dsu.Size[pu] < dsu.Size[pv] {
-		pu, pv = pv, pu
-	}
-	dsu.Size[pu] += dsu.Size[pv]
-	dsu.Parent[pv] = pu
-	return true
+    pu, pv := dsu.find(u), dsu.find(v)
+    if pu == pv {
+        return false
+    }
+    if dsu.Size[pu] < dsu.Size[pv] {
+        pu, pv = pv, pu
+    }
+    dsu.Size[pu] += dsu.Size[pv]
+    dsu.Parent[pv] = pu
+    return true
 }
 
 func minCostConnectPoints(points [][]int) int {
-	n := len(points)
-	dsu := NewDSU(n)
-	var edges [][]int
-	for i := 0; i < n; i++ {
-		x1, y1 := points[i][0], points[i][1]
-		for j := i + 1; j < n; j++ {
-			x2, y2 := points[j][0], points[j][1]
-			dist := int(math.Abs(float64(x1-x2)) + math.Abs(float64(y1-y2)))
-			edges = append(edges, []int{dist, i, j})
-		}
-	}
+    n := len(points)
+    dsu := NewDSU(n)
+    var edges [][]int
+    for i := 0; i < n; i++ {
+        x1, y1 := points[i][0], points[i][1]
+        for j := i + 1; j < n; j++ {
+            x2, y2 := points[j][0], points[j][1]
+            dist := int(math.Abs(float64(x1-x2)) + math.Abs(float64(y1-y2)))
+            edges = append(edges, []int{dist, i, j})
+        }
+    }
 
-	sort.Slice(edges, func(a, b int) bool {
-		return edges[a][0] < edges[b][0]
-	})
+    sort.Slice(edges, func(a, b int) bool {
+        return edges[a][0] < edges[b][0]
+    })
 
-	res := 0
-	for _, edge := range edges {
-		dist, u, v := edge[0], edge[1], edge[2]
-		if dsu.union(u, v) {
-			res += dist
-		}
-	}
-	return res
+    res := 0
+    for _, edge := range edges {
+        dist, u, v := edge[0], edge[1], edge[2]
+        if dsu.union(u, v) {
+            res += dist
+        }
+    }
+    return res
 }
 ```
 
@@ -560,6 +560,75 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    minCostConnectPoints(points: number[][]): number {
+        const n = points.length;
+        const dsu = new DSU(n);
+        const edges: number[][] = [];
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                const dist =
+                    Math.abs(points[i][0] - points[j][0]) +
+                    Math.abs(points[i][1] - points[j][1]);
+                edges.push([dist, i, j]);
+            }
+        }
+
+        edges.sort((a, b) => a[0] - b[0]);
+        let res = 0;
+
+        for (const [dist, u, v] of edges) {
+            if (dsu.union(u, v)) {
+                res += dist;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -829,52 +898,52 @@ func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
 func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
 func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([]int)) }
 func (h *MinHeap) Pop() interface{} {
-	old := *h
-	n := len(old)
-	x := old[n-1]
-	*h = old[:n-1]
-	return x
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
 }
 
 func minCostConnectPoints(points [][]int) int {
-	n := len(points)
-	adj := make(map[int][][]int)
-	for i := 0; i < n; i++ {
-		x1, y1 := points[i][0], points[i][1]
-		for j := i + 1; j < n; j++ {
-			x2, y2 := points[j][0], points[j][1]
-			dist := int(math.Abs(float64(x1-x2)) + math.Abs(float64(y1-y2)))
-			adj[i] = append(adj[i], []int{dist, j})
-			adj[j] = append(adj[j], []int{dist, i})
-		}
-	}
+    n := len(points)
+    adj := make(map[int][][]int)
+    for i := 0; i < n; i++ {
+        x1, y1 := points[i][0], points[i][1]
+        for j := i + 1; j < n; j++ {
+            x2, y2 := points[j][0], points[j][1]
+            dist := int(math.Abs(float64(x1-x2)) + math.Abs(float64(y1-y2)))
+            adj[i] = append(adj[i], []int{dist, j})
+            adj[j] = append(adj[j], []int{dist, i})
+        }
+    }
 
-	res := 0
-	visit := make(map[int]bool)
-	pq := &MinHeap{}
-	heap.Init(pq)
-	heap.Push(pq, []int{0, 0})
+    res := 0
+    visit := make(map[int]bool)
+    pq := &MinHeap{}
+    heap.Init(pq)
+    heap.Push(pq, []int{0, 0})
 
-	for len(visit) < n {
-		if pq.Len() == 0 {
-			break
-		}
-		item := heap.Pop(pq).([]int)
-		cost, point := item[0], item[1]
-		if visit[point] {
-			continue
-		}
-		res += cost
-		visit[point] = true
+    for len(visit) < n {
+        if pq.Len() == 0 {
+            break
+        }
+        item := heap.Pop(pq).([]int)
+        cost, point := item[0], item[1]
+        if visit[point] {
+            continue
+        }
+        res += cost
+        visit[point] = true
 
-		for _, edge := range adj[point] {
-			neiCost, neiPoint := edge[0], edge[1]
-			if !visit[neiPoint] {
-				heap.Push(pq, []int{neiCost, neiPoint})
-			}
-		}
-	}
-	return res
+        for _, edge := range adj[point] {
+            neiCost, neiPoint := edge[0], edge[1]
+            if !visit[neiPoint] {
+                heap.Push(pq, []int{neiCost, neiPoint})
+            }
+        }
+    }
+    return res
 }
 ```
 
@@ -1010,6 +1079,50 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    minCostConnectPoints(points: number[][]): number {
+        const N = points.length;
+        const adj = new Map<number, number[][]>();
+        for (let i = 0; i < N; i++) {
+            adj.set(i, []);
+        }
+
+        for (let i = 0; i < N; i++) {
+            const [x1, y1] = points[i];
+            for (let j = i + 1; j < N; j++) {
+                const [x2, y2] = points[j];
+                const dist = Math.abs(x1 - x2) + Math.abs(y1 - y2);
+                adj.get(i)!.push([dist, j]);
+                adj.get(j)!.push([dist, i]);
+            }
+        }
+
+        let res = 0;
+        const visit = new Set<number>();
+        const minHeap = new MinPriorityQueue((entry: number[]) => entry[0]);
+        minHeap.push([0, 0]);
+
+        while (visit.size < N) {
+            const [cost, i]: number[] = minHeap.pop();
+            if (visit.has(i)) continue;
+            res += cost;
+            visit.add(i);
+            for (const [neiCost, nei] of adj.get(i)!) {
+                if (!visit.has(nei)) {
+                    minHeap.push([neiCost, nei]);
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1219,36 +1332,36 @@ public class Solution {
 
 ```go
 func minCostConnectPoints(points [][]int) int {
-	n := len(points)
-	node := 0
-	dist := make([]int, n)
-	for i := range dist {
-		dist[i] = 100000000
-	}
-	visit := make([]bool, n)
-	edges, res := 0, 0
+    n := len(points)
+    node := 0
+    dist := make([]int, n)
+    for i := range dist {
+        dist[i] = 100000000
+    }
+    visit := make([]bool, n)
+    edges, res := 0, 0
 
-	for edges < n-1 {
-		visit[node] = true
-		nextNode := -1
-		for i := 0; i < n; i++ {
-			if visit[i] {
-				continue
-			}
-			curDist := int(math.Abs(float64(points[i][0]-points[node][0])) +
-				math.Abs(float64(points[i][1]-points[node][1])))
-			if curDist < dist[i] {
-				dist[i] = curDist
-			}
-			if nextNode == -1 || dist[i] < dist[nextNode] {
-				nextNode = i
-			}
-		}
-		res += dist[nextNode]
-		node = nextNode
-		edges++
-	}
-	return res
+    for edges < n-1 {
+        visit[node] = true
+        nextNode := -1
+        for i := 0; i < n; i++ {
+            if visit[i] {
+                continue
+            }
+            curDist := int(math.Abs(float64(points[i][0]-points[node][0])) +
+                math.Abs(float64(points[i][1]-points[node][1])))
+            if curDist < dist[i] {
+                dist[i] = curDist
+            }
+            if nextNode == -1 || dist[i] < dist[nextNode] {
+                nextNode = i
+            }
+        }
+        res += dist[nextNode]
+        node = nextNode
+        edges++
+    }
+    return res
 }
 ```
 
@@ -1348,6 +1461,42 @@ impl Solution {
             edges += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    minCostConnectPoints(points: number[][]): number {
+        const n = points.length;
+        let node = 0;
+        const dist: number[] = new Array(n).fill(100000000);
+        const visit: boolean[] = new Array(n).fill(false);
+        let edges = 0,
+            res = 0;
+
+        while (edges < n - 1) {
+            visit[node] = true;
+            let nextNode = -1;
+            for (let i = 0; i < n; i++) {
+                if (visit[i]) continue;
+                const curDist =
+                    Math.abs(points[i][0] - points[node][0]) +
+                    Math.abs(points[i][1] - points[node][1]);
+                dist[i] = Math.min(dist[i], curDist);
+                if (nextNode === -1 || dist[i] < dist[nextNode]) {
+                    nextNode = i;
+                }
+            }
+            res += dist[nextNode];
+            node = nextNode;
+            edges++;
+        }
+        return res;
     }
 }
 ```

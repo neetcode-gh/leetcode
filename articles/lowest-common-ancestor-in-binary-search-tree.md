@@ -314,6 +314,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {TreeNode}
+     */
+    lowestCommonAncestor(
+        root: TreeNode | null,
+        p: TreeNode | null,
+        q: TreeNode | null,
+    ): TreeNode | null {
+        if (!root || !p || !q) {
+            return null;
+        }
+        if (Math.max(p.val, q.val) < root.val) {
+            return this.lowestCommonAncestor(root.left, p, q);
+        } else if (Math.min(p.val, q.val) > root.val) {
+            return this.lowestCommonAncestor(root.right, p, q);
+        } else {
+            return root;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -630,6 +657,35 @@ impl Solution {
             }
         }
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {TreeNode}
+     */
+    lowestCommonAncestor(
+        root: TreeNode | null,
+        p: TreeNode,
+        q: TreeNode,
+    ): TreeNode | null {
+        let cur = root;
+
+        while (cur) {
+            if (p.val > cur.val && q.val > cur.val) {
+                cur = cur.right;
+            } else if (p.val < cur.val && q.val < cur.val) {
+                cur = cur.left;
+            } else {
+                return cur;
+            }
+        }
+        return null;
     }
 }
 ```

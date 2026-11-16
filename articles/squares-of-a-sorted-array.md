@@ -131,6 +131,22 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortedSquares(nums: number[]): number[] {
+        for (let i = 0; i < nums.length; i++) {
+            nums[i] *= nums[i];
+        }
+        nums.sort((a, b) => a - b);
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -357,6 +373,32 @@ impl Solution {
 
         res.reverse();
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortedSquares(nums: number[]): number[] {
+        let l = 0,
+            r = nums.length - 1;
+        const res: number[] = [];
+
+        while (l <= r) {
+            if (nums[l] * nums[l] > nums[r] * nums[r]) {
+                res.push(nums[l] * nums[l]);
+                l++;
+            } else {
+                res.push(nums[r] * nums[r]);
+                r--;
+            }
+        }
+
+        return res.reverse();
     }
 }
 ```
@@ -609,6 +651,35 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    sortedSquares(nums: number[]): number[] {
+        const n = nums.length;
+        const res: number[] = new Array(n);
+        let l = 0,
+            r = n - 1,
+            resIndex = n - 1;
+
+        while (l <= r) {
+            if (Math.abs(nums[l]) > Math.abs(nums[r])) {
+                res[resIndex] = nums[l] * nums[l];
+                l++;
+            } else {
+                res[resIndex] = nums[r] * nums[r];
+                r--;
+            }
+            resIndex--;
+        }
+
+        return res;
     }
 }
 ```

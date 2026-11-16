@@ -244,6 +244,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    findLeastNumOfUniqueInts(arr: number[], k: number): number {
+        let freqMap = new Map<number, number>();
+        for (let num of arr) {
+            freqMap.set(num, (freqMap.get(num) || 0) + 1);
+        }
+
+        let freq = Array.from(freqMap.values()).sort((a, b) => a - b);
+
+        let n = freq.length;
+        for (let i = 0; i < n; i++) {
+            if (k >= freq[i]) {
+                k -= freq[i];
+            } else {
+                return n - i;
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -351,7 +379,10 @@ class Solution {
             freqMap.set(num, (freqMap.get(num) || 0) + 1);
         }
 
-        const minHeap = MinPriorityQueue.fromArray([...freqMap.values()]);
+        const minHeap = new MinPriorityQueue();
+        for (const f of freqMap.values()) {
+            minHeap.enqueue(f);
+        }
 
         let res = minHeap.size();
         while (k > 0 && !minHeap.isEmpty()) {
@@ -509,6 +540,37 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    findLeastNumOfUniqueInts(arr: number[], k: number): number {
+        let freqMap = new Map<number, number>();
+        for (let num of arr) {
+            freqMap.set(num, (freqMap.get(num) || 0) + 1);
+        }
+
+        const minHeap = new MinPriorityQueue();
+        for (const f of freqMap.values()) {
+            minHeap.enqueue(f);
+        }
+
+        let res: number = minHeap.size();
+        while (k > 0 && !minHeap.isEmpty()) {
+            let f: number = minHeap.pop();
+            if (k >= f) {
+                k -= f;
+                res--;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -807,6 +869,41 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    findLeastNumOfUniqueInts(arr: number[], k: number): number {
+        let freqMap = new Map<number, number>();
+        for (let num of arr) {
+            freqMap.set(num, (freqMap.get(num) || 0) + 1);
+        }
+
+        let freqList: number[] = new Array(arr.length + 1).fill(0);
+        for (let f of freqMap.values()) {
+            freqList[f]++;
+        }
+
+        let res = freqMap.size;
+        for (let f = 1; f < freqList.length; f++) {
+            let remove = freqList[f];
+            if (k >= f * remove) {
+                k -= f * remove;
+                res -= remove;
+            } else {
+                remove = Math.floor(k / f);
+                res -= remove;
+                break;
+            }
+        }
+        return res;
     }
 }
 ```

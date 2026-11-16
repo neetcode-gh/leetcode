@@ -219,6 +219,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        nums.sort((a, b) => a - b);
+        let res = 1;
+
+        for (let i = 0; i < nums.length; i++) {
+            let j = i - 1;
+            let tmpK = k;
+
+            while (j >= 0 && tmpK - (nums[i] - nums[j]) >= 0) {
+                tmpK -= nums[i] - nums[j];
+                j--;
+            }
+            res = Math.max(res, i - j);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,16 +532,50 @@ impl Solution {
                 let cur_sum = prefix_sum[i + 1] - prefix_sum[mid];
                 let need = (i - mid + 1) as i64 * nums[i] as i64 - cur_sum;
                 if need <= k as i64 {
-                    if right == 0 { break; }
-                    right = mid.wrapping_sub(1);
-                    if right > i { break; }
                     res = res.max((i - mid + 1) as i32);
+                    if mid == 0 { break; }
+                    right = mid - 1;
                 } else {
                     left = mid + 1;
                 }
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        nums.sort((a, b) => a - b);
+        const prefixSum: number[] = new Array(nums.length + 1).fill(0);
+        for (let i = 0; i < nums.length; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        let res = 1;
+        for (let i = 0; i < nums.length; i++) {
+            let left = 0,
+                right = i;
+            while (left <= right) {
+                const mid = Math.floor((left + right) / 2);
+                const curSum = prefixSum[i + 1] - prefixSum[mid];
+                const need = (i - mid + 1) * nums[i] - curSum;
+                if (need <= k) {
+                    right = mid - 1;
+                    res = Math.max(res, i - mid + 1);
+                } else {
+                    left = mid + 1;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -747,6 +807,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        nums.sort((a, b) => a - b);
+        let total = 0,
+            res = 0,
+            l = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            total += nums[r];
+            while (nums[r] * (r - l + 1) > total + k) {
+                total -= nums[l];
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -955,6 +1042,31 @@ impl Solution {
         }
 
         (nums.len() - l) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        nums.sort((a, b) => a - b);
+        let total = 0,
+            l = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            total += nums[r];
+            if (nums[r] * (r - l + 1) > total + k) {
+                total -= nums[l];
+                l++;
+            }
+        }
+
+        return nums.length - l;
     }
 }
 ```

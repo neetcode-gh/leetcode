@@ -272,6 +272,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    gcdOfStrings(str1: string, str2: string): string {
+        const len1 = str1.length,
+            len2 = str2.length;
+
+        const isDivisor = (l: number): boolean => {
+            if (len1 % l !== 0 || len2 % l !== 0) {
+                return false;
+            }
+            const sub = str1.slice(0, l);
+            const f1 = len1 / l,
+                f2 = len2 / l;
+            return sub.repeat(f1) === str1 && sub.repeat(f2) === str2;
+        };
+
+        for (let l = Math.min(len1, len2); l > 0; l--) {
+            if (isDivisor(l)) {
+                return str1.slice(0, l);
+            }
+        }
+
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -652,6 +684,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    gcdOfStrings(str1: string, str2: string): string {
+        let m = str1.length,
+            n = str2.length;
+        if (m < n) {
+            [m, n] = [n, m];
+            [str1, str2] = [str2, str1];
+        }
+
+        for (let l = n; l > 0; l--) {
+            if (m % l !== 0 || n % l !== 0) {
+                continue;
+            }
+
+            let valid = true;
+            for (let i = 0; i < m; i++) {
+                if (str1[i] !== str2[i % l]) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid) continue;
+
+            for (let i = l; i < n; i++) {
+                if (str2[i] !== str2[i % l]) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) {
+                return str2.slice(0, l);
+            }
+        }
+
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -683,7 +760,7 @@ class Solution:
         if str1 + str2 != str2 + str1:
             return ""
 
-        g = gcd(len(str1), len(str2))
+        g = math.gcd(len(str1), len(str2))
         return str1[:g]
 ```
 
@@ -816,6 +893,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    gcdOfStrings(str1: string, str2: string): string {
+        if (str1 + str2 !== str2 + str1) {
+            return '';
+        }
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+        const g = gcd(str1.length, str2.length);
+        return str1.slice(0, g);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,7 +941,7 @@ We can avoid the concatenation check (which requires O(m+n) space) by directly v
 ```python
 class Solution:
     def gcdOfStrings(self, str1: str, str2: str) -> str:
-        g = gcd(len(str1), len(str2))
+        g = math.gcd(len(str1), len(str2))
 
         if all(str1[i] == str1[i % g] for i in range(len(str1))) and \
            all(str2[i] == str1[i % g] for i in range(len(str2))):
@@ -1063,6 +1158,34 @@ impl Solution {
         }
 
         str1[..g].to_string()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    gcdOfStrings(str1: string, str2: string): string {
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+        const g = gcd(str1.length, str2.length);
+
+        for (let i = 0; i < str1.length; i++) {
+            if (str1[i] !== str1[i % g]) {
+                return '';
+            }
+        }
+
+        for (let i = 0; i < str2.length; i++) {
+            if (str2[i] !== str1[i % g]) {
+                return '';
+            }
+        }
+
+        return str1.slice(0, g);
     }
 }
 ```

@@ -286,6 +286,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} boxGrid
+     * @return {character[][]}
+     */
+    rotateTheBox(boxGrid: string[][]): string[][] {
+        const ROWS = boxGrid.length,
+            COLS = boxGrid[0].length;
+        const res: string[][] = Array.from({ length: COLS }, () =>
+            Array(ROWS).fill('.'),
+        );
+        for (let r = 0; r < ROWS; r++) {
+            let i = COLS - 1;
+            for (let c = COLS - 1; c >= 0; c--) {
+                if (boxGrid[r][c] === '#') {
+                    res[i][ROWS - r - 1] = '#';
+                    i--;
+                } else if (boxGrid[r][c] === '*') {
+                    res[c][ROWS - r - 1] = '*';
+                    i = c - 1;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,6 +601,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} boxGrid
+     * @return {character[][]}
+     */
+    rotateTheBox(boxGrid: string[][]): string[][] {
+        const ROWS = boxGrid.length,
+            COLS = boxGrid[0].length;
+        for (let r = 0; r < ROWS; r++) {
+            let i = COLS - 1;
+            for (let c = COLS - 1; c >= 0; c--) {
+                if (boxGrid[r][c] === '#') {
+                    [boxGrid[r][c], boxGrid[r][i]] = [
+                        boxGrid[r][i],
+                        boxGrid[r][c],
+                    ];
+                    i--;
+                } else if (boxGrid[r][c] === '*') {
+                    i = c - 1;
+                }
+            }
+        }
+        const res: string[][] = [];
+        for (let c = 0; c < COLS; c++) {
+            const row: string[] = [];
+            for (let r = ROWS - 1; r >= 0; r--) {
+                row.push(boxGrid[r][c]);
+            }
+            res.push(row);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -825,6 +890,35 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} boxGrid
+     * @return {character[][]}
+     */
+    rotateTheBox(boxGrid: string[][]): string[][] {
+        const ROWS = boxGrid.length,
+            COLS = boxGrid[0].length;
+        const res: string[][] = Array.from({ length: COLS }, () =>
+            Array(ROWS).fill('.'),
+        );
+        for (let r = 0; r < ROWS; r++) {
+            let i = COLS - 1;
+            for (let c = COLS - 1; c >= 0; c--) {
+                if (boxGrid[r][c] === '#') {
+                    res[i][ROWS - r - 1] = '#';
+                    i--;
+                } else if (boxGrid[r][c] === '*') {
+                    res[c][ROWS - r - 1] = '*';
+                    i = c - 1;
+                }
+            }
+        }
+        return res;
     }
 }
 ```

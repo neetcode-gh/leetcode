@@ -195,6 +195,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @param {number} zero
+     * @param {number} one
+     * @return {number}
+     */
+    countGoodStrings(low: number, high: number, zero: number, one: number): number {
+        const mod = 1e9 + 7;
+
+        const dfs = (length: number): number => {
+            if (length > high) return 0;
+            let res = length >= low ? 1 : 0;
+            res = (res + dfs(length + zero)) % mod;
+            res = (res + dfs(length + one)) % mod;
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +458,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @param {number} zero
+     * @param {number} one
+     * @return {number}
+     */
+    countGoodStrings(low: number, high: number, zero: number, one: number): number {
+        const mod = 1e9 + 7;
+        const dp: number[] = new Array(high + 1).fill(-1);
+
+        const dfs = (length: number): number => {
+            if (length > high) return 0;
+            if (dp[length] !== -1) return dp[length];
+            dp[length] = length >= low ? 1 : 0;
+            dp[length] = (dp[length] + dfs(length + zero)) % mod;
+            dp[length] = (dp[length] + dfs(length + one)) % mod;
+            return dp[length];
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -622,6 +674,31 @@ impl Solution {
             if i >= low { res = (res + dp[i]) % MOD; }
         }
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @param {number} zero
+     * @param {number} one
+     * @return {number}
+     */
+    countGoodStrings(low: number, high: number, zero: number, one: number): number {
+        const mod = 1e9 + 7;
+        const dp = new Int32Array(high + 1);
+        let res = 0;
+        dp[0] = 1;
+
+        for (let i = 1; i <= high; i++) {
+            if (i >= zero) dp[i] = (dp[i] + dp[i - zero]) % mod;
+            if (i >= one) dp[i] = (dp[i] + dp[i - one]) % mod;
+            if (i >= low) res = (res + dp[i]) % mod;
+        }
+        return res;
     }
 }
 ```

@@ -182,6 +182,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} num
+     * @return {boolean}
+     */
+    isPerfectSquare(num: number): boolean {
+        for (let i = 1; i <= num; i++) {
+            let sq = i * i;
+            if (sq > num) {
+                return false;
+            }
+            if (sq === num) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -208,7 +229,7 @@ Most programming languages provide a built-in square root function. We can use i
 ```python
 class Solution:
     def isPerfectSquare(self, num: int) -> bool:
-        sqRoot = int(sqrt(num))
+        sqRoot = int(math.sqrt(num))
         return sqRoot * sqRoot == num
 ```
 
@@ -283,6 +304,19 @@ impl Solution {
     pub fn is_perfect_square(num: i32) -> bool {
         let sq_root = (num as f64).sqrt() as i32;
         sq_root * sq_root == num
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} num
+     * @return {boolean}
+     */
+    isPerfectSquare(num: number): boolean {
+        let sqRoot = Math.floor(Math.sqrt(num));
+        return sqRoot * sqRoot === num;
     }
 }
 ```
@@ -516,6 +550,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} num
+     * @return {boolean}
+     */
+    isPerfectSquare(num: number): boolean {
+        let l = 1,
+            r = num;
+
+        while (l <= r) {
+            let m = Math.floor(l + (r - l) / 2);
+            let sq = m * m;
+            if (sq > num) {
+                r = m - 1;
+            } else if (sq < num) {
+                l = m + 1;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -662,6 +723,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} num
+     * @return {boolean}
+     */
+    isPerfectSquare(num: number): boolean {
+        let i = 1;
+        while (num > 0) {
+            num -= i;
+            i += 2;
+        }
+        return num === 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -792,6 +870,22 @@ impl Solution {
             r = (r + num / r) / 2;
         }
         r * r == num
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} num
+     * @return {boolean}
+     */
+    isPerfectSquare(num: number): boolean {
+        let r = num;
+        while (r * r > num) {
+            r = Math.floor((r + Math.floor(num / r)) / 2);
+        }
+        return r * r === num;
     }
 }
 ```
@@ -984,6 +1078,29 @@ impl Solution {
         }
 
         r * r == num
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} num
+     * @return {boolean}
+     */
+    isPerfectSquare(num: number): boolean {
+        let r = 0,
+            mask = 1 << 15;
+
+        while (mask > 0) {
+            r |= mask;
+            if (r > Math.floor(num / r)) {
+                r ^= mask;
+            }
+            mask >>= 1;
+        }
+
+        return r * r === num;
     }
 }
 ```

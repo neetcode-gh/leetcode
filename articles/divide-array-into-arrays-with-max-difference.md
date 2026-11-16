@@ -189,6 +189,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[][]}
+     */
+    divideArray(nums: number[], k: number): number[][] {
+        nums.sort((a, b) => a - b);
+        const res: number[][] = [];
+
+        for (let i = 0; i < nums.length; i += 3) {
+            if (nums[i + 2] - nums[i] > k) {
+                return [];
+            }
+            res.push([nums[i], nums[i + 1], nums[i + 2]]);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -521,6 +544,44 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[][]}
+     */
+    divideArray(nums: number[], k: number): number[][] {
+        const max = Math.max(...nums);
+        const count: number[] = new Array(max + 1).fill(0);
+
+        for (const num of nums) {
+            count[num]++;
+        }
+
+        const res: number[][] = [];
+        let group: number[] = [];
+
+        for (let num = 0; num <= max; num++) {
+            while (count[num] > 0) {
+                group.push(num);
+                count[num]--;
+
+                if (group.length === 3) {
+                    if (group[2] - group[0] > k) {
+                        return [];
+                    }
+                    res.push(group);
+                    group = [];
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

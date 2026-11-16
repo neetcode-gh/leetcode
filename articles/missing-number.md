@@ -167,6 +167,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    missingNumber(nums: number[]): number {
+        let n = nums.length;
+        nums.sort((a, b) => a - b);
+        for (let i = 0; i < n; i++) {
+            if (nums[i] !== i) {
+                return i;
+            }
+        }
+        return n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -342,6 +361,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    missingNumber(nums: number[]): number {
+        const numSet = new Set<number>(nums);
+        const n = nums.length;
+        for (let i = 0; i <= n; i++) {
+            if (!numSet.has(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -503,6 +541,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    missingNumber(nums: number[]): number {
+        let n = nums.length;
+        let xorr = n;
+        for (let i = 0; i < n; i++) {
+            xorr ^= i ^ nums[i];
+        }
+        return xorr;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -650,6 +705,23 @@ impl Solution {
             res += i as i32 - nums[i];
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    missingNumber(nums: number[]): number {
+        let res = nums.length;
+
+        for (let i = 0; i < nums.length; i++) {
+            res += i - nums[i];
+        }
+        return res;
     }
 }
 ```

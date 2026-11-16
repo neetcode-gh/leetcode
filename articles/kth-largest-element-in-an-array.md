@@ -116,6 +116,20 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findKthLargest(nums: number[], k: number): number {
+        nums.sort((a, b) => a - b);
+        return nums[nums.length - k];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,6 +318,26 @@ impl Solution {
             }
         }
         min_heap.peek().unwrap().0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findKthLargest(nums: number[], k: number): number {
+        const minHeap = new MinPriorityQueue();
+        for (let num of nums) {
+            minHeap.push(num);
+            if (minHeap.size() > k) {
+                minHeap.pop();
+            }
+        }
+        return minHeap.front();
     }
 }
 ```
@@ -635,6 +669,42 @@ impl Solution {
 
         let r = nums.len() - 1;
         quick_select(&mut nums, 0, r, k)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findKthLargest(nums: number[], k: number): number {
+        k = nums.length - k;
+
+        const quickSelect = (left: number, right: number): number => {
+            let pivot = nums[right];
+            let p = left;
+
+            for (let i = left; i < right; i++) {
+                if (nums[i] <= pivot) {
+                    [nums[p], nums[i]] = [nums[i], nums[p]];
+                    p++;
+                }
+            }
+            [nums[p], nums[right]] = [nums[right], nums[p]];
+
+            if (p > k) {
+                return quickSelect(left, p - 1);
+            } else if (p < k) {
+                return quickSelect(p + 1, right);
+            } else {
+                return nums[p];
+            }
+        };
+
+        return quickSelect(0, nums.length - 1);
     }
 }
 ```
@@ -1194,6 +1264,64 @@ impl Solution {
             if j >= k { right = j.wrapping_sub(1); }
             if j <= k { left = j + 1; }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findKthLargest(nums: number[], k: number): number {
+        function partition(left: number, right: number): number {
+            const mid = (left + right) >> 1;
+            [nums[mid], nums[left + 1]] = [nums[left + 1], nums[mid]];
+
+            if (nums[left] < nums[right])
+                [nums[left], nums[right]] = [nums[right], nums[left]];
+            if (nums[left + 1] < nums[right])
+                [nums[left + 1], nums[right]] = [nums[right], nums[left + 1]];
+            if (nums[left] < nums[left + 1])
+                [nums[left], nums[left + 1]] = [nums[left + 1], nums[left]];
+
+            const pivot = nums[left + 1];
+            let i = left + 1;
+            let j = right;
+
+            while (true) {
+                while (nums[++i] > pivot);
+                while (nums[--j] < pivot);
+                if (i > j) break;
+                [nums[i], nums[j]] = [nums[j], nums[i]];
+            }
+
+            nums[left + 1] = nums[j];
+            nums[j] = pivot;
+            return j;
+        }
+
+        function quickSelect(k: number): number {
+            let left = 0;
+            let right = nums.length - 1;
+
+            while (true) {
+                if (right <= left + 1) {
+                    if (right == left + 1 && nums[right] > nums[left])
+                        [nums[left], nums[right]] = [nums[right], nums[left]];
+                    return nums[k];
+                }
+
+                const j = partition(left, right);
+
+                if (j >= k) right = j - 1;
+                if (j <= k) left = j + 1;
+            }
+        }
+
+        return quickSelect(k - 1);
     }
 }
 ```

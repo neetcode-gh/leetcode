@@ -270,7 +270,7 @@ class Solution {
             }
 
             dp[i] = false
-            for j in (i + minJump)...min(n - 1, i + maxJump) {
+            for j in stride(from: i + minJump, through: min(n - 1, i + maxJump), by: 1) {
                 if sArr[j] == "0" && dfs(j) {
                     dp[i] = true
                     break
@@ -317,6 +317,42 @@ impl Solution {
             return false;
         }
         dfs(s, &mut dp, 0, min_jump as usize, max_jump as usize, n)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} minJump
+     * @param {number} maxJump
+     * @return {boolean}
+     */
+    canReach(s: string, minJump: number, maxJump: number): boolean {
+        const n = s.length;
+        const dp: (boolean | null)[] = new Array(n).fill(null);
+        dp[n - 1] = true;
+
+        const dfs = (i: number): boolean => {
+            if (dp[i] !== null) {
+                return dp[i]!;
+            }
+
+            dp[i] = false;
+            for (let j = i + minJump; j <= Math.min(n - 1, i + maxJump); j++) {
+                if (s[j] === '0' && dfs(j)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+            return dp[i]!;
+        };
+
+        if (s[n - 1] === '1') {
+            return false;
+        }
+        return dfs(0);
     }
 }
 ```
@@ -561,7 +597,7 @@ class Solution {
         while !q.isEmpty {
             let i = q.removeFirst()
             let start = max(i + minJump, farthest + 1)
-            for j in start..<min(i + maxJump + 1, n) {
+            for j in stride(from: start, to: min(i + maxJump + 1, n), by: 1) {
                 if sArr[j] == "0" {
                     if j == n - 1 { return true }
                     q.append(j)
@@ -601,6 +637,39 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} minJump
+     * @param {number} maxJump
+     * @return {boolean}
+     */
+    canReach(s: string, minJump: number, maxJump: number): boolean {
+        const q = new Queue();
+        q.push(0);
+        let farthest = 0;
+
+        while (!q.isEmpty()) {
+            const i: number = q.pop();
+            const start = Math.max(i + minJump, farthest + 1);
+
+            for (let j = start; j < Math.min(i + maxJump + 1, s.length); j++) {
+                if (s[j] === '0') {
+                    q.push(j);
+                    if (j === s.length - 1) {
+                        return true;
+                    }
+                }
+            }
+            farthest = i + maxJump;
+        }
+
+        return false;
     }
 }
 ```
@@ -891,6 +960,41 @@ impl Solution {
         }
 
         dp[n - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} minJump
+     * @param {number} maxJump
+     * @return {boolean}
+     */
+    canReach(s: string, minJump: number, maxJump: number): boolean {
+        const n = s.length;
+        if (s[n - 1] === '1') {
+            return false;
+        }
+
+        const dp: boolean[] = new Array(n).fill(false);
+        dp[0] = true;
+        let cnt = 0;
+
+        for (let i = 1; i < n; i++) {
+            if (i >= minJump && dp[i - minJump]) {
+                cnt++;
+            }
+            if (i > maxJump && dp[i - maxJump - 1]) {
+                cnt--;
+            }
+            if (cnt > 0 && s[i] === '0') {
+                dp[i] = true;
+            }
+        }
+
+        return dp[n - 1];
     }
 }
 ```
@@ -1200,6 +1304,42 @@ impl Solution {
         }
 
         dp[n - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} minJump
+     * @param {number} maxJump
+     * @return {boolean}
+     */
+    canReach(s: string, minJump: number, maxJump: number): boolean {
+        const n = s.length;
+        if (s[n - 1] === '1') {
+            return false;
+        }
+
+        const dp: boolean[] = new Array(n).fill(false);
+        dp[0] = true;
+        let j = 0;
+
+        for (let i = 0; i < n; i++) {
+            if (!dp[i]) {
+                continue;
+            }
+            j = Math.max(j, i + minJump);
+            while (j < Math.min(i + maxJump + 1, n)) {
+                if (s[j] === '0') {
+                    dp[j] = true;
+                }
+                j++;
+            }
+        }
+
+        return dp[n - 1];
     }
 }
 ```

@@ -289,6 +289,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} gas
+     * @param {number[]} cost
+     * @return {number}
+     */
+    canCompleteCircuit(gas: number[], cost: number[]): number {
+        const n = gas.length;
+
+        for (let i = 0; i < n; i++) {
+            let tank = gas[i] - cost[i];
+            if (tank < 0) continue;
+
+            let j = (i + 1) % n;
+            while (j !== i) {
+                tank += gas[j] - cost[j];
+                if (tank < 0) break;
+                j = (j + 1) % n;
+            }
+
+            if (j === i) return i;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -533,6 +561,32 @@ impl Solution {
         }
 
         if tank >= 0 { start as i32 } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} gas
+     * @param {number[]} cost
+     * @return {number}
+     */
+    canCompleteCircuit(gas: number[], cost: number[]): number {
+        const n = gas.length;
+        let start = n - 1,
+            end = 0;
+        let tank = gas[start] - cost[start];
+        while (start > end) {
+            if (tank < 0) {
+                start--;
+                tank += gas[start] - cost[start];
+            } else {
+                tank += gas[end] - cost[end];
+                end++;
+            }
+        }
+        return tank >= 0 ? start : -1;
     }
 }
 ```
@@ -796,6 +850,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} gas
+     * @param {number[]} cost
+     * @return {number}
+     */
+    canCompleteCircuit(gas: number[], cost: number[]): number {
+        if (
+            gas.reduce((acc, val) => acc + val, 0) <
+            cost.reduce((acc, val) => acc + val, 0)
+        ) {
+            return -1;
+        }
+
+        let total = 0;
+        let res = 0;
+        for (let i = 0; i < gas.length; i++) {
+            total += gas[i] - cost[i];
+
+            if (total < 0) {
+                total = 0;
+                res = i + 1;
+            }
+        }
+
+        return res;
     }
 }
 ```

@@ -318,6 +318,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    constrainedSubsetSum(nums: number[], k: number): number {
+        const memo: (number | null)[] = new Array(nums.length).fill(null);
+
+        const dfs = (i: number): number => {
+            if (memo[i] !== null) {
+                return memo[i]!;
+            }
+
+            let res = nums[i];
+            for (let j = i + 1; j < nums.length && j - i <= k; j++) {
+                res = Math.max(res, nums[i] + dfs(j));
+            }
+
+            memo[i] = res;
+            return res;
+        };
+
+        let ans = -Infinity;
+        for (let i = 0; i < nums.length; i++) {
+            ans = Math.max(ans, dfs(i));
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -513,6 +546,28 @@ impl Solution {
         }
 
         *dp.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    constrainedSubsetSum(nums: number[], k: number): number {
+        const n = nums.length;
+        const dp = [...nums];
+
+        for (let i = 1; i < n; i++) {
+            for (let j = Math.max(0, i - k); j < i; j++) {
+                dp[i] = Math.max(dp[i], nums[i] + dp[j]);
+            }
+        }
+
+        return Math.max(...dp);
     }
 }
 ```
@@ -1106,6 +1161,85 @@ impl Solution {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = new Array(2 * this.n).fill(-Infinity);
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     * @return {void}
+     */
+    update(i: number, val: number): void {
+        i += this.n;
+        this.tree[i] = val;
+        while (i > 1) {
+            i >>= 1;
+            this.tree[i] = Math.max(this.tree[i << 1], this.tree[(i << 1) | 1]);
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        let res = -Infinity;
+        l += this.n;
+        r += this.n + 1;
+        while (l < r) {
+            if (l & 1) {
+                res = Math.max(res, this.tree[l]);
+                l++;
+            }
+            if (r & 1) {
+                r--;
+                res = Math.max(res, this.tree[r]);
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+        return Math.max(0, res);
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    constrainedSubsetSum(nums: number[], k: number): number {
+        const n = nums.length;
+        const maxSegTree = new SegmentTree(n);
+        maxSegTree.update(0, nums[0]);
+        let res = nums[0];
+
+        for (let i = 1; i < n; i++) {
+            let cur = nums[i] + maxSegTree.query(Math.max(0, i - k), i - 1);
+            maxSegTree.update(i, cur);
+            res = Math.max(res, cur);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1249,8 +1383,6 @@ public class Solution {
 ```
 
 ```go
-import "container/heap"
-
 type MaxHeap [][]int
 
 func (h MaxHeap) Len() int           { return len(h) }
@@ -1419,6 +1551,35 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    constrainedSubsetSum(nums: number[], k: number): number {
+        let res = nums[0];
+        const maxHeap = new PriorityQueue(
+            (a: number[], b: number[]) => b[0] - a[0], // max_sum, index
+        );
+        maxHeap.enqueue([nums[0], 0]);
+
+        for (let i = 1; i < nums.length; i++) {
+            while (i - maxHeap.front()[1] > k) {
+                maxHeap.dequeue();
+            }
+
+            let curMax = Math.max(nums[i], nums[i] + maxHeap.front()[0]);
+            res = Math.max(res, curMax);
+            maxHeap.enqueue([curMax, i]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1629,7 +1790,7 @@ class Solution {
             }
 
             val cur = maxOf(0, dq.first()[1]) + nums[i]
-            while (dq.isNotEmpty() && cur > dq.last()[1]) {
+            while (dq.isNotEmpty() && cur > dq.peekLast()[1]) {
                 dq.removeLast()
             }
 
@@ -1692,6 +1853,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    constrainedSubsetSum(nums: number[], k: number): number {
+        const n = nums.length;
+        const dq = new Deque([[0, nums[0]]]);
+        let res = nums[0];
+
+        for (let i = 1; i < n; i++) {
+            if (!dq.isEmpty() && dq.front()[0] < i - k) {
+                dq.popFront();
+            }
+
+            let cur = Math.max(0, dq.front()[1]) + nums[i];
+            while (!dq.isEmpty() && cur > dq.back()[1]) {
+                dq.popBack();
+            }
+
+            dq.pushBack([i, cur]);
+            res = Math.max(res, cur);
+        }
+
+        return res;
     }
 }
 ```

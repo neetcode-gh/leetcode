@@ -191,6 +191,7 @@ class Solution {
 class Solution {
     func find132pattern(_ nums: [Int]) -> Bool {
         let n = nums.count
+        if n < 3 { return false }
 
         for k in 2..<n {
             for j in stride(from: k - 1, through: 1, by: -1) {
@@ -210,7 +211,6 @@ class Solution {
     }
 }
 ```
-
 
 ```rust
 impl Solution {
@@ -235,6 +235,35 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    find132pattern(nums: number[]): boolean {
+        let n = nums.length;
+
+        for (let k = 2; k < n; k++) {
+            for (let j = k - 1; j > 0; j--) {
+                if (nums[j] <= nums[k]) {
+                    continue;
+                }
+
+                for (let i = j - 1; i >= 0; i--) {
+                    if (nums[i] < nums[k]) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -407,10 +436,10 @@ class Solution {
         var curMin = nums[0]
 
         for (i in 1 until nums.size) {
-            while (stack.isNotEmpty() && nums[i] >= stack.last()[0]) {
+            while (stack.isNotEmpty() && nums[i] >= stack.peekLast()[0]) {
                 stack.removeLast()
             }
-            if (stack.isNotEmpty() && nums[i] > stack.last()[1]) {
+            if (stack.isNotEmpty() && nums[i] > stack.peekLast()[1]) {
                 return true
             }
 
@@ -446,7 +475,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find132pattern(nums: Vec<i32>) -> bool {
@@ -469,6 +497,34 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    find132pattern(nums: number[]): boolean {
+        const stack: number[][] = []; // pair [num, minLeft]
+        let curMin = nums[0];
+
+        for (let i = 1; i < nums.length; i++) {
+            while (stack.length > 0 && nums[i] >= stack[stack.length - 1][0]) {
+                stack.pop();
+            }
+            if (stack.length > 0 && nums[i] > stack[stack.length - 1][1]) {
+                return true;
+            }
+
+            stack.push([nums[i], curMin]);
+            curMin = Math.min(curMin, nums[i]);
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -638,7 +694,7 @@ class Solution {
                 return true
             }
 
-            while (stack.isNotEmpty() && stack.last() < nums[i]) {
+            while (stack.isNotEmpty() && stack.peekLast() < nums[i]) {
                 k = stack.removeLast()
             }
             stack.addLast(nums[i])
@@ -671,7 +727,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find132pattern(nums: Vec<i32>) -> bool {
@@ -693,6 +748,33 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    find132pattern(nums: number[]): boolean {
+        const stack: number[] = [];
+        let k = -Infinity;
+
+        for (let i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] < k) {
+                return true;
+            }
+
+            while (stack.length > 0 && stack[stack.length - 1] < nums[i]) {
+                k = stack.pop()!;
+            }
+            stack.push(nums[i]);
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -891,7 +973,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func find132pattern(_ nums: inout [Int]) -> Bool {
+    func find132pattern(_ nums: [Int]) -> Bool {
+        var nums = nums
         let n = nums.count
         var stkTop = n
         var k = Int.min
@@ -914,7 +997,6 @@ class Solution {
     }
 }
 ```
-
 
 ```rust
 impl Solution {
@@ -942,6 +1024,35 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    find132pattern(nums: number[]): boolean {
+        const n = nums.length;
+        let stkTop = n;
+        let k = -Infinity;
+
+        for (let i = n - 1; i >= 0; i--) {
+            if (nums[i] < k) {
+                return true;
+            }
+
+            while (stkTop < n && nums[i] > nums[stkTop]) {
+                k = nums[stkTop++];
+            }
+
+            nums[--stkTop] = nums[i];
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -254,6 +254,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} target
+     * @return {number}
+     */
+    numRollsToTarget(n: number, k: number, target: number): number {
+        const MOD = 1e9 + 7;
+
+        const count = (n: number, target: number): number => {
+            if (n === 0) {
+                return target === 0 ? 1 : 0;
+            }
+            if (target < 0) {
+                return 0;
+            }
+
+            let res = 0;
+            for (let val = 1; val <= k; val++) {
+                res = (res + count(n - 1, target - val)) % MOD;
+            }
+            return res;
+        };
+
+        return count(n, target);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -589,6 +620,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} target
+     * @return {number}
+     */
+    numRollsToTarget(n: number, k: number, target: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(target + 1).fill(-1),
+        );
+
+        const count = (n: number, target: number): number => {
+            if (n === 0) {
+                return target === 0 ? 1 : 0;
+            }
+            if (dp[n][target] !== -1) {
+                return dp[n][target];
+            }
+
+            let res = 0;
+            for (let val = 1; val <= k; val++) {
+                if (target - val >= 0) {
+                    res = (res + count(n - 1, target - val)) % MOD;
+                }
+            }
+            dp[n][target] = res;
+            return res;
+        };
+
+        return count(n, target);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -772,7 +840,7 @@ class Solution {
 
         for i in 1...n {
             for val in 1...k {
-                for t in val...target {
+                for t in stride(from: val, through: target, by: 1) {
                     dp[i][t] = (dp[i][t] + dp[i - 1][t - val]) % MOD
                 }
             }
@@ -800,6 +868,34 @@ impl Solution {
         }
 
         dp[n][target]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} target
+     * @return {number}
+     */
+    numRollsToTarget(n: number, k: number, target: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(target + 1).fill(0),
+        );
+        dp[0][0] = 1;
+
+        for (let i = 1; i <= n; i++) {
+            for (let val = 1; val <= k; val++) {
+                for (let t = val; t <= target; t++) {
+                    dp[i][t] = (dp[i][t] + dp[i - 1][t - val]) % MOD;
+                }
+            }
+        }
+
+        return dp[n][target];
     }
 }
 ```
@@ -999,7 +1095,7 @@ class Solution {
         for _ in 0..<n {
             var nextDp = Array(repeating: 0, count: target + 1)
             for val in 1...k {
-                for total in val...target {
+                for total in stride(from: val, through: target, by: 1) {
                     nextDp[total] = (nextDp[total] + dp[total - val]) % MOD
                 }
             }
@@ -1031,6 +1127,34 @@ impl Solution {
         }
 
         dp[target]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} target
+     * @return {number}
+     */
+    numRollsToTarget(n: number, k: number, target: number): number {
+        const MOD = 1e9 + 7;
+        let dp: number[] = Array(target + 1).fill(0);
+        dp[0] = 1;
+
+        for (let dice = 0; dice < n; dice++) {
+            const nextDp: number[] = Array(target + 1).fill(0);
+            for (let val = 1; val <= k; val++) {
+                for (let total = val; total <= target; total++) {
+                    nextDp[total] = (nextDp[total] + dp[total - val]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp[target];
     }
 }
 ```
@@ -1244,7 +1368,7 @@ class Solution {
                 let ways = dp[t]
                 dp[t] = 0
                 if ways > 0 {
-                    for val in 1...min(k, target - t) {
+                    for val in stride(from: 1, through: min(k, target - t), by: 1) {
                         dp[t + val] = (dp[t + val] + ways) % MOD
                     }
                 }
@@ -1277,6 +1401,36 @@ impl Solution {
         }
 
         dp[target]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @param {number} target
+     * @return {number}
+     */
+    numRollsToTarget(n: number, k: number, target: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[] = Array(target + 1).fill(0);
+        dp[0] = 1;
+
+        for (let dice = 0; dice < n; dice++) {
+            for (let t = target; t >= 0; t--) {
+                const ways = dp[t];
+                dp[t] = 0;
+                if (ways > 0) {
+                    for (let val = 1; val <= Math.min(k, target - t); val++) {
+                        dp[t + val] = (dp[t + val] + ways) % MOD;
+                    }
+                }
+            }
+        }
+
+        return dp[target];
     }
 }
 ```

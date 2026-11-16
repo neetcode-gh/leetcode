@@ -212,34 +212,34 @@ public class WordDictionary {
 
 ```go
 type WordDictionary struct {
-	store []string
+    store []string
 }
 
 func Constructor() WordDictionary {
-	return WordDictionary{store: []string{}}
+    return WordDictionary{store: []string{}}
 }
 
 func (this *WordDictionary) AddWord(word string) {
-	this.store = append(this.store, word)
+    this.store = append(this.store, word)
 }
 
 func (this *WordDictionary) Search(word string) bool {
-	for _, w := range this.store {
-		if len(w) != len(word) {
-			continue
-		}
-		match := true
-		for i := 0; i < len(w); i++ {
-			if w[i] != word[i] && word[i] != '.' {
-				match = false
-				break
-			}
-		}
-		if match {
-			return true
-		}
-	}
-	return false
+    for _, w := range this.store {
+        if len(w) != len(word) {
+            continue
+        }
+        match := true
+        for i := 0; i < len(w); i++ {
+            if w[i] != word[i] && word[i] != '.' {
+                match = false
+                break
+            }
+        }
+        if match {
+            return true
+        }
+    }
+    return false
 }
 ```
 
@@ -339,6 +339,46 @@ impl WordDictionary {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class WordDictionary {
+    private store: string[];
+
+    constructor() {
+        this.store = [];
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        this.store.push(word);
+    }
+
+    /**
+     * @param {string} word
+     * @return {boolean}
+     */
+    search(word: string): boolean {
+        for (let w of this.store) {
+            if (w.length !== word.length) continue;
+            let i = 0;
+            while (i < w.length) {
+                if (w[i] === word[i] || word[i] === '.') {
+                    i++;
+                } else {
+                    break;
+                }
+            }
+            if (i === w.length) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ```
@@ -645,58 +685,58 @@ public class WordDictionary {
 
 ```go
 type TrieNode struct {
-	children [26]*TrieNode
-	word     bool
+    children [26]*TrieNode
+    word     bool
 }
 
 func NewTrieNode() *TrieNode {
-	return &TrieNode{}
+    return &TrieNode{}
 }
 
 type WordDictionary struct {
-	root *TrieNode
+    root *TrieNode
 }
 
 func Constructor() WordDictionary {
-	return WordDictionary{root: NewTrieNode()}
+    return WordDictionary{root: NewTrieNode()}
 }
 
 func (this *WordDictionary) AddWord(word string) {
-	cur := this.root
-	for _, c := range word {
-		index := c - 'a'
-		if cur.children[index] == nil {
-			cur.children[index] = NewTrieNode()
-		}
-		cur = cur.children[index]
-	}
-	cur.word = true
+    cur := this.root
+    for _, c := range word {
+        index := c - 'a'
+        if cur.children[index] == nil {
+            cur.children[index] = NewTrieNode()
+        }
+        cur = cur.children[index]
+    }
+    cur.word = true
 }
 
 func (this *WordDictionary) Search(word string) bool {
-	return this.dfs(word, 0, this.root)
+    return this.dfs(word, 0, this.root)
 }
 
 func (this *WordDictionary) dfs(word string, j int, root *TrieNode) bool {
-	cur := root
-	for i := j; i < len(word); i++ {
-		c := word[i]
-		if c == '.' {
-			for _, child := range cur.children {
-				if child != nil && this.dfs(word, i+1, child) {
-					return true
-				}
-			}
-			return false
-		} else {
-			index := c - 'a'
-			if cur.children[index] == nil {
-				return false
-			}
-			cur = cur.children[index]
-		}
-	}
-	return cur.word
+    cur := root
+    for i := j; i < len(word); i++ {
+        c := word[i]
+        if c == '.' {
+            for _, child := range cur.children {
+                if child != nil && this.dfs(word, i+1, child) {
+                    return true
+                }
+            }
+            return false
+        } else {
+            index := c - 'a'
+            if cur.children[index] == nil {
+                return false
+            }
+            cur = cur.children[index]
+        }
+    }
+    return cur.word
 }
 ```
 
@@ -869,6 +909,87 @@ impl WordDictionary {
             }
         }
         cur.word
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: (TrieNode | null)[];
+    word: boolean;
+
+    constructor() {
+        this.children = Array(26).fill(null);
+        this.word = false;
+    }
+}
+
+class WordDictionary {
+    private root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} c
+     * @return {number}
+     */
+    getIndex(c: string): number {
+        return c.charCodeAt(0) - 'a'.charCodeAt(0);
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    addWord(word: string): void {
+        let cur = this.root;
+        for (const c of word) {
+            const idx = this.getIndex(c);
+            if (cur.children[idx] === null) {
+                cur.children[idx] = new TrieNode();
+            }
+            cur = cur.children[idx]!;
+        }
+        cur.word = true;
+    }
+
+    /**
+     * @param {string} word
+     * @return {boolean}
+     */
+    search(word: string): boolean {
+        return this.dfs(word, 0, this.root);
+    }
+
+    /**
+     * @param {string} word
+     * @param {number} j
+     * @param {TrieNode} root
+     * @return {boolean}
+     */
+    dfs(word: string, j: number, root: TrieNode): boolean {
+        let cur = root;
+
+        for (let i = j; i < word.length; i++) {
+            const c = word[i];
+            if (c === '.') {
+                for (const child of cur.children) {
+                    if (child !== null && this.dfs(word, i + 1, child)) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                const idx = this.getIndex(c);
+                if (cur.children[idx] === null) {
+                    return false;
+                }
+                cur = cur.children[idx]!;
+            }
+        }
+        return cur.word;
     }
 }
 ```

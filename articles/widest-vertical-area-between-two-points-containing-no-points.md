@@ -322,6 +322,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxWidthOfVerticalArea(points: number[][]): number {
+        let n = points.length,
+            res = 0;
+
+        for (let i = 1; i < n; i++) {
+            let x1 = points[i][0];
+            for (let j = 0; j < i; j++) {
+                let x2 = points[j][0];
+                let hasPoints = false;
+
+                for (let k = 0; k < n; k++) {
+                    if (k === i || k === j) continue;
+
+                    let x3 = points[k][0];
+                    if (x3 > Math.min(x1, x2) && x3 < Math.max(x1, x2)) {
+                        hasPoints = true;
+                        break;
+                    }
+                }
+
+                if (!hasPoints) {
+                    res = Math.max(res, Math.abs(x1 - x2));
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -477,6 +514,25 @@ impl Solution {
             res = res.max(points[i + 1][0] - points[i][0]);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxWidthOfVerticalArea(points: number[][]): number {
+        points.sort((a, b) => a[0] - b[0]);
+        let res = 0;
+
+        for (let i = 0; i < points.length - 1; i++) {
+            res = Math.max(res, points[i + 1][0] - points[i][0]);
+        }
+
+        return res;
     }
 }
 ```

@@ -394,7 +394,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -440,6 +439,47 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} l1
+     * @param {ListNode} l2
+     * @return {ListNode}
+     */
+    addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+        const reverseList = (head: ListNode | null): ListNode | null => {
+            let prev: ListNode | null = null, curr = head;
+            while (curr) {
+                let temp = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = temp;
+            }
+            return prev;
+        }
+
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        let head: ListNode | null = null;
+        let carry = 0;
+
+        while (l1 || l2 || carry) {
+            let v1 = l1 ? l1.val : 0;
+            let v2 = l2 ? l2.val : 0;
+            let total = v1 + v2 + carry;
+            carry = Math.floor(total / 10);
+            let node = new ListNode(total % 10);
+            node.next = head;
+            head = node;
+            l1 = l1 ? l1.next : null;
+            l2 = l2 ? l2.next : null;
+        }
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -822,7 +862,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -867,6 +906,45 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} l1
+     * @param {ListNode} l2
+     * @return {ListNode}
+     */
+    addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+        const s1: number[] = [], s2: number[] = [];
+
+        while (l1) {
+            s1.push(l1.val);
+            l1 = l1.next;
+        }
+
+        while (l2) {
+            s2.push(l2.val);
+            l2 = l2.next;
+        }
+
+        let carry = 0;
+        let head: ListNode | null = null;
+
+        while (s1.length || s2.length || carry) {
+            const v1 = s1.length ? s1.pop()! : 0;
+            const v2 = s2.length ? s2.pop()! : 0;
+            const total = v1 + v2 + carry;
+            carry = Math.floor(total / 10);
+            const node = new ListNode(total % 10);
+            node.next = head;
+            head = node;
+        }
+
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

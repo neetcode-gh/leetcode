@@ -176,6 +176,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} val
+     * @return {number}
+     */
+    removeElement(nums: number[], val: number): number {
+        const tmp: number[] = [];
+        for (const num of nums) {
+            if (num !== val) {
+                tmp.push(num);
+            }
+        }
+        for (let i = 0; i < tmp.length; i++) {
+            nums[i] = tmp[i];
+        }
+        return tmp.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +351,25 @@ impl Solution {
             }
         }
         k as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} val
+     * @return {number}
+     */
+    removeElement(nums: number[], val: number): number {
+        let k = 0;
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] !== val) {
+                nums[k++] = nums[i];
+            }
+        }
+        return k;
     }
 }
 ```
@@ -511,6 +552,28 @@ impl Solution {
             }
         }
         n as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} val
+     * @return {number}
+     */
+    removeElement(nums: number[], val: number): number {
+        let i = 0,
+            n = nums.length;
+        while (i < n) {
+            if (nums[i] == val) {
+                nums[i] = nums[--n];
+            } else {
+                i++;
+            }
+        }
+        return n;
     }
 }
 ```

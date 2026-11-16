@@ -212,9 +212,9 @@ class Solution {
      */
     recoverTree(root) {
         const isBST = (node) => {
-            const q = [[node, -Infinity, Infinity]];
-            while (q.length) {
-                const [cur, left, right] = q.shift();
+            const q = new Queue([[node, -Infinity, Infinity]]);
+            while (!q.isEmpty()) {
+                const [cur, left, right] = q.pop();
                 if (!cur) continue;
                 if (!(left < cur.val && cur.val < right)) return false;
                 q.push([cur.left, left, cur.val]);
@@ -520,6 +520,44 @@ impl Solution {
                 }
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {void} Do not return anything, modify root in-place instead.
+     */
+    recoverTree(root: TreeNode | null): void {
+        const isBST = (node: TreeNode | null): boolean => {
+            const q = new Queue([[node, -Infinity, Infinity]]);
+            while (!q.isEmpty()) {
+                const [cur, left, right]: [TreeNode | null, number, number] = q.pop();
+                if (!cur) continue;
+                if (!(left < cur.val && cur.val < right)) return false;
+                q.push([cur.left, left, cur.val]);
+                q.push([cur.right, cur.val, right]);
+            }
+            return true;
+        };
+
+        const dfs1 = (node1: TreeNode, node2: TreeNode | null): boolean => {
+            if (!node2 || node1 === node2) return false;
+            [node1.val, node2.val] = [node2.val, node1.val];
+            if (isBST(root)) return true;
+            [node1.val, node2.val] = [node2.val, node1.val];
+            return dfs1(node1, node2.left) || dfs1(node1, node2.right);
+        };
+
+        const dfs = (node: TreeNode | null): boolean => {
+            if (!node) return false;
+            if (dfs1(node, root)) return true;
+            return dfs(node.left) || dfs(node.right);
+        };
+
+        dfs(root);
     }
 }
 ```
@@ -923,6 +961,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {void} Do not return anything, modify root in-place instead.
+     */
+    recoverTree(root: TreeNode | null): void {
+        const arr: TreeNode[] = [];
+
+        const inorder = (node: TreeNode | null): void => {
+            if (!node) return;
+            inorder(node.left);
+            arr.push(node);
+            inorder(node.right);
+        };
+
+        inorder(root);
+
+        let node1: TreeNode | null = null,
+            node2: TreeNode | null = null;
+        for (let i = 0; i < arr.length - 1; i++) {
+            if (arr[i].val > arr[i + 1].val) {
+                node2 = arr[i + 1];
+                if (node1 === null) node1 = arr[i];
+                else break;
+            }
+        }
+
+        [node1!.val, node2!.val] = [node2!.val, node1!.val];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1312,6 +1383,40 @@ impl Solution {
         let n1 = node1.unwrap();
         let n2 = node2.unwrap();
         std::mem::swap(&mut n1.borrow_mut().val, &mut n2.borrow_mut().val);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {void} Do not return anything, modify root in-place instead.
+     */
+    recoverTree(root: TreeNode | null): void {
+        let stack: TreeNode[] = [];
+        let node1: TreeNode | null = null,
+            node2: TreeNode | null = null,
+            prev: TreeNode | null = null,
+            curr: TreeNode | null = root;
+
+        while (stack.length > 0 || curr) {
+            while (curr) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            curr = stack.pop()!;
+            if (prev && prev.val > curr.val) {
+                node2 = curr;
+                if (!node1) node1 = prev;
+                else break;
+            }
+            prev = curr;
+            curr = curr.right;
+        }
+
+        [node1!.val, node2!.val] = [node2!.val, node1!.val];
     }
 }
 ```
@@ -1827,6 +1932,54 @@ impl Solution {
         let n1 = node1.unwrap();
         let n2 = node2.unwrap();
         std::mem::swap(&mut n1.borrow_mut().val, &mut n2.borrow_mut().val);
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {void} Do not return anything, modify root in-place instead.
+     */
+    recoverTree(root: TreeNode | null): void {
+        let node1: TreeNode | null = null,
+            node2: TreeNode | null = null,
+            prev: TreeNode | null = null,
+            curr: TreeNode | null = root;
+
+        while (curr !== null) {
+            if (curr.left === null) {
+                if (prev !== null && prev.val > curr.val) {
+                    node2 = curr;
+                    if (node1 === null) node1 = prev;
+                }
+                prev = curr;
+                curr = curr.right;
+            } else {
+                let pred: TreeNode = curr.left;
+                while (pred.right !== null && pred.right !== curr) {
+                    pred = pred.right;
+                }
+
+                if (pred.right === null) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else {
+                    pred.right = null;
+                    if (prev !== null && prev.val > curr.val) {
+                        node2 = curr;
+                        if (node1 === null) node1 = prev;
+                    }
+                    prev = curr;
+                    curr = curr.right;
+                }
+            }
+        }
+
+        let temp = node1!.val;
+        node1!.val = node2!.val;
+        node2!.val = temp;
     }
 }
 ```

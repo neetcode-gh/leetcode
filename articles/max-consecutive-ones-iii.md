@@ -218,6 +218,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    longestOnes(nums: number[], k: number): number {
+        let res = 0;
+        for (let l = 0; l < nums.length; l++) {
+            let cnt = 0,
+                r = l;
+            while (r < nums.length) {
+                if (nums[r] === 0) {
+                    if (cnt === k) break;
+                    cnt++;
+                }
+                r++;
+            }
+            res = Math.max(res, r - l);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -484,6 +510,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    longestOnes(nums: number[], k: number): number {
+        const prefix: number[] = [0];
+        for (let i = 0; i < nums.length; i++) {
+            prefix.push(prefix[prefix.length - 1] + (nums[i] === 0 ? 1 : 0));
+        }
+
+        let res = 0;
+        for (let l = 0; l < nums.length; l++) {
+            let low = l,
+                high = nums.length;
+            while (low < high) {
+                let mid = Math.floor((low + high) / 2);
+                if (prefix[mid + 1] - prefix[l] <= k) {
+                    low = mid + 1;
+                } else {
+                    high = mid;
+                }
+            }
+            res = Math.max(res, low - l);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -674,6 +732,29 @@ impl Solution {
             res = res.max(r - l + 1);
         }
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    longestOnes(nums: number[], k: number): number {
+        let l = 0,
+            res = 0;
+        for (let r = 0; r < nums.length; r++) {
+            k -= nums[r] === 0 ? 1 : 0;
+            while (k < 0) {
+                k += nums[l] === 0 ? 1 : 0;
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
     }
 }
 ```

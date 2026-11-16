@@ -131,6 +131,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int BeautifulSubsets(int[] nums, int k) {
+        return Helper(0, new Dictionary<int, int>(), nums, k) - 1;
+    }
+
+    private int Helper(int i, Dictionary<int, int> count, int[] nums, int k) {
+        if (i == nums.Length) {
+            return 1;
+        }
+
+        int res = Helper(i + 1, count, nums, k); // Skip nums[i]
+
+        if (!count.ContainsKey(nums[i] + k) && !count.ContainsKey(nums[i] - k)) {
+            count[nums[i]] = count.GetValueOrDefault(nums[i], 0) + 1;
+            res += Helper(i + 1, count, nums, k);
+            count[nums[i]]--;
+            if (count[nums[i]] == 0) {
+                count.Remove(nums[i]);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func beautifulSubsets(nums []int, k int) int {
     count := make(map[int]int)
@@ -239,6 +266,38 @@ impl Solution {
             res
         }
         helper(0, &mut HashMap::new(), &nums, k) - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    beautifulSubsets(nums: number[], k: number): number {
+        const helper = (i: number, count: Map<number, number>): number => {
+            if (i === nums.length) {
+                return 1;
+            }
+
+            let res = helper(i + 1, count); // Skip nums[i]
+
+            if (!count.has(nums[i] + k) && !count.has(nums[i] - k)) {
+                count.set(nums[i], (count.get(nums[i]) || 0) + 1);
+                res += helper(i + 1, count);
+                count.set(nums[i], count.get(nums[i])! - 1);
+                if (count.get(nums[i]) === 0) {
+                    count.delete(nums[i]);
+                }
+            }
+
+            return res;
+        };
+
+        return helper(0, new Map()) - 1;
     }
 }
 ```
@@ -484,6 +543,65 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> cache;
+    private Dictionary<int, int> cnt;
+    private HashSet<int> visit;
+
+    public int BeautifulSubsets(int[] nums, int k) {
+        List<Dictionary<int, int>> groups = new List<Dictionary<int, int>>();
+        cache = new Dictionary<int, int>();
+        cnt = new Dictionary<int, int>();
+        visit = new HashSet<int>();
+
+        foreach (int num in nums) {
+            cnt[num] = cnt.GetValueOrDefault(num, 0) + 1;
+        }
+
+        foreach (int key in cnt.Keys) {
+            int n = key;
+            if (visit.Contains(n)) {
+                continue;
+            }
+            Dictionary<int, int> g = new Dictionary<int, int>();
+            while (cnt.ContainsKey(n - k)) {
+                n -= k;
+            }
+            while (cnt.ContainsKey(n)) {
+                g[n] = cnt[n];
+                visit.Add(n);
+                n += k;
+            }
+            groups.Add(g);
+        }
+
+        int res = 1;
+        foreach (Dictionary<int, int> g in groups) {
+            int n = g.Keys.Min();
+            res *= Helper(n, g, k);
+        }
+
+        return res - 1;
+    }
+
+    private int Helper(int n, Dictionary<int, int> g, int k) {
+        if (!g.ContainsKey(n)) {
+            return 1;
+        }
+        if (cache.ContainsKey(n)) {
+            return cache[n];
+        }
+
+        int skip = Helper(n + k, g, k);
+        int include = ((1 << g[n]) - 1) * Helper(n + 2 * k, g, k);
+        int result = skip + include;
+        cache[n] = result;
+        return result;
+    }
+}
+```
+
 ```go
 func beautifulSubsets(nums []int, k int) int {
     cnt := make(map[int]int)
@@ -691,6 +809,64 @@ impl Solution {
         }
 
         res - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    beautifulSubsets(nums: number[], k: number): number {
+        let cnt = new Map<number, number>();
+        for (const num of nums) {
+            cnt.set(num, (cnt.get(num) || 0) + 1);
+        }
+
+        let groups: Map<number, number>[] = [];
+        let cache = new Map<number, number>();
+        let visit = new Set<number>();
+
+        for (let n of cnt.keys()) {
+            if (visit.has(n)) {
+                continue;
+            }
+            let g = new Map<number, number>();
+            while (cnt.has(n - k)) {
+                n -= k;
+            }
+            while (cnt.has(n)) {
+                g.set(n, cnt.get(n)!);
+                visit.add(n);
+                n += k;
+            }
+            groups.push(g);
+        }
+
+        const helper = (n: number, g: Map<number, number>): number => {
+            if (!g.has(n)) {
+                return 1;
+            }
+            if (cache.has(n)) {
+                return cache.get(n)!;
+            }
+
+            let skip = helper(n + k, g);
+            let include = (2 ** g.get(n)! - 1) * helper(n + 2 * k, g);
+            let result = skip + include;
+            cache.set(n, result);
+            return result;
+        };
+
+        let res = 1;
+        for (const g of groups) {
+            let n = Math.min(...g.keys());
+            res *= helper(n, g);
+        }
+        return res - 1;
     }
 }
 ```
@@ -933,6 +1109,61 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int BeautifulSubsets(int[] nums, int k) {
+        Dictionary<int, int> cnt = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            cnt[num] = cnt.GetValueOrDefault(num, 0) + 1;
+        }
+
+        List<Dictionary<int, int>> groups = new List<Dictionary<int, int>>();
+        HashSet<int> visit = new HashSet<int>();
+
+        foreach (int key in cnt.Keys) {
+            int n = key;
+            if (visit.Contains(n)) {
+                continue;
+            }
+            Dictionary<int, int> g = new Dictionary<int, int>();
+            while (cnt.ContainsKey(n - k)) {
+                n -= k;
+            }
+            while (cnt.ContainsKey(n)) {
+                g[n] = cnt[n];
+                visit.Add(n);
+                n += k;
+            }
+            groups.Add(g);
+        }
+
+        int res = 1;
+        foreach (Dictionary<int, int> g in groups) {
+            Dictionary<int, int> dp = new Dictionary<int, int>();
+            int? prev = null;
+
+            List<int> arr = new List<int>(g.Keys);
+            arr.Sort();
+            foreach (int num in arr) {
+                int count = g[num];
+                if (prev == null || prev + k != num) {
+                    int prevVal = prev.HasValue ? dp.GetValueOrDefault(prev.Value, 1) : 1;
+                    dp[num] = prevVal * (1 + (1 << count) - 1);
+                } else {
+                    dp[num] = dp[prev.Value] +
+                              ((1 << count) - 1) * dp.GetValueOrDefault(prev.Value - k, 1);
+                }
+                prev = num;
+            }
+
+            res *= dp[prev.Value];
+        }
+
+        return res - 1;
+    }
+}
+```
+
 ```go
 func beautifulSubsets(nums []int, k int) int {
     cnt := make(map[int]int)
@@ -1150,6 +1381,69 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    beautifulSubsets(nums: number[], k: number): number {
+        let cnt = new Map<number, number>();
+        for (const num of nums) {
+            cnt.set(num, (cnt.get(num) || 0) + 1);
+        }
+
+        let groups: Map<number, number>[] = [];
+        let visit = new Set<number>();
+
+        for (const n of cnt.keys()) {
+            if (visit.has(n)) {
+                continue;
+            }
+            let g = new Map<number, number>();
+            let num = n;
+            while (cnt.has(num - k)) {
+                num -= k;
+            }
+            while (cnt.has(num)) {
+                g.set(num, cnt.get(num)!);
+                visit.add(num);
+                num += k;
+            }
+            groups.push(g);
+        }
+
+        let res = 1;
+        for (const g of groups) {
+            let dp = new Map<number, number>();
+            let prev: number | null = null;
+
+            for (const num of g.keys()) {
+                let count = g.get(num)!;
+                if (prev === null || prev + k !== num) {
+                    dp.set(
+                        num,
+                        (dp.get(prev as number) || 1) * (1 + (2 ** count - 1)),
+                    );
+                } else {
+                    dp.set(
+                        num,
+                        dp.get(prev)! +
+                            (2 ** count - 1) * (dp.get(prev - k) || 1),
+                    );
+                }
+                prev = num;
+            }
+
+            res *= dp.get(prev as number)!;
+        }
+
+        return res - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1349,6 +1643,52 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int BeautifulSubsets(int[] nums, int k) {
+        Dictionary<int, Dictionary<int, int>> groups = new Dictionary<int, Dictionary<int, int>>();
+        Dictionary<int, int> cnt = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            cnt[num] = cnt.GetValueOrDefault(num, 0) + 1;
+        }
+
+        // Group numbers based on remainder with k
+        foreach (int num in nums) {
+            if (!groups.ContainsKey(num % k)) {
+                groups[num % k] = new Dictionary<int, int>();
+            }
+            groups[num % k][num] = cnt[num];
+        }
+
+        int res = 1;
+        foreach (Dictionary<int, int> g in groups.Values) {
+            int prev = 0, dp = 0, ndp = 1;
+            List<int> sortedKeys = new List<int>(g.Keys);
+            sortedKeys.Sort();
+
+            foreach (int num in sortedKeys) {
+                int count = g[num];
+                int have = (1 << count) - 1;
+                int tmp = ndp;
+                ndp += dp;
+
+                if (prev == 0 || prev + k != num) {
+                    dp = have * (tmp + dp);
+                } else {
+                    dp = tmp * have;
+                }
+
+                prev = num;
+            }
+
+            res *= (dp + ndp);
+        }
+
+        return res - 1;
+    }
+}
+```
+
 ```go
 func beautifulSubsets(nums []int, k int) int {
     groups := make(map[int]map[int]int)
@@ -1528,6 +1868,58 @@ impl Solution {
         }
 
         res - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    beautifulSubsets(nums: number[], k: number): number {
+        let groups = new Map<number, Map<number, number>>();
+        let cnt = new Map<number, number>();
+        for (const num of nums) {
+            cnt.set(num, (cnt.get(num) || 0) + 1);
+        }
+
+        // Group numbers based on remainder with k
+        for (const num of nums) {
+            if (!groups.has(num % k)) {
+                groups.set(num % k, new Map());
+            }
+            groups.get(num % k)!.set(num, cnt.get(num)!);
+        }
+
+        let res = 1;
+        for (const g of groups.values()) {
+            let prev = 0,
+                dp = 0,
+                ndp = 1;
+            let sortedKeys = Array.from(g.keys()).sort((a, b) => a - b);
+
+            for (const num of sortedKeys) {
+                let count = g.get(num)!;
+                let have = (1 << count) - 1;
+                let tmp = ndp;
+                ndp += dp;
+
+                if (prev === 0 || prev + k !== num) {
+                    dp = have * (tmp + dp);
+                } else {
+                    dp = tmp * have;
+                }
+
+                prev = num;
+            }
+
+            res *= dp + ndp;
+        }
+
+        return res - 1;
     }
 }
 ```

@@ -30,6 +30,31 @@ We can use DFS with distance tracking: maintain a distance matrix where each cel
 
 ::tabs-start
 
+```python
+class Solution:
+    def shortestDistance(self, maze: List[List[int]], start: List[int], destination: List[int]) -> int:
+        m, n = len(maze), len(maze[0])
+        distance = [[float('inf')] * n for _ in range(m)]
+        distance[start[0]][start[1]] = 0
+        dirs = [(0, 1), (0, -1), (-1, 0), (1, 0)]
+
+        def dfs(sr, sc):
+            for dr, dc in dirs:
+                x, y = sr + dr, sc + dc
+                count = 0
+                while 0 <= x < m and 0 <= y < n and maze[x][y] == 0:
+                    x += dr
+                    y += dc
+                    count += 1
+                if distance[sr][sc] + count < distance[x - dr][y - dc]:
+                    distance[x - dr][y - dc] = distance[sr][sc] + count
+                    dfs(x - dr, y - dc)
+
+        dfs(start[0], start[1])
+        res = distance[destination[0]][destination[1]]
+        return -1 if res == float('inf') else res
+```
+
 ```java
 class Solution {
     public int shortestDistance(int[][] maze, int[] start, int[] dest) {
@@ -55,6 +80,120 @@ class Solution {
             if (distance[start[0]][start[1]] + count < distance[x - dir[0]][y - dir[1]]) {
                 distance[x - dir[0]][y - dir[1]] = distance[start[0]][start[1]] + count;
                 dfs(maze, new int[]{x - dir[0],y - dir[1]}, distance);
+            }
+        }
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int shortestDistance(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
+        vector<vector<int>> distance(maze.size(), vector<int>(maze[0].size(), INT_MAX));
+        distance[start[0]][start[1]] = 0;
+        dfs(maze, start[0], start[1], distance);
+        return distance[destination[0]][destination[1]] == INT_MAX
+                   ? -1
+                   : distance[destination[0]][destination[1]];
+    }
+
+private:
+    int dirs[4][2] = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+
+    void dfs(vector<vector<int>>& maze, int sr, int sc, vector<vector<int>>& distance) {
+        int m = maze.size(), n = maze[0].size();
+        for (auto& dir : dirs) {
+            int x = sr + dir[0];
+            int y = sc + dir[1];
+            int count = 0;
+            while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0) {
+                x += dir[0];
+                y += dir[1];
+                count++;
+            }
+            if (distance[sr][sc] + count < distance[x - dir[0]][y - dir[1]]) {
+                distance[x - dir[0]][y - dir[1]] = distance[sr][sc] + count;
+                dfs(maze, x - dir[0], y - dir[1], distance);
+            }
+        }
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(maze, start, destination) {
+        const m = maze.length,
+            n = maze[0].length;
+        const distance = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        distance[start[0]][start[1]] = 0;
+        const dirs = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+
+        const dfs = (sr, sc) => {
+            for (const [dr, dc] of dirs) {
+                let x = sr + dr,
+                    y = sc + dc;
+                let count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dr;
+                    y += dc;
+                    count++;
+                }
+                if (distance[sr][sc] + count < distance[x - dr][y - dc]) {
+                    distance[x - dr][y - dc] = distance[sr][sc] + count;
+                    dfs(x - dr, y - dc);
+                }
+            }
+        };
+
+        dfs(start[0], start[1]);
+        const res = distance[destination[0]][destination[1]];
+        return res === Infinity ? -1 : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestDistance(int[][] maze, int[] start, int[] dest) {
+        int[][] distance = new int[maze.Length][];
+        for (int i = 0; i < maze.Length; i++) {
+            distance[i] = new int[maze[0].Length];
+            Array.Fill(distance[i], int.MaxValue);
+        }
+        distance[start[0]][start[1]] = 0;
+        Dfs(maze, start, distance);
+        return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
+    }
+
+    public void Dfs(int[][] maze, int[] start, int[][] distance) {
+        int[][] dirs = { new[] { 0, 1 }, new[] { 0, -1 }, new[] { -1, 0 }, new[] { 1, 0 } };
+        foreach (int[] dir in dirs) {
+            int x = start[0] + dir[0];
+            int y = start[1] + dir[1];
+            int count = 0;
+            while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0) {
+                x += dir[0];
+                y += dir[1];
+                count++;
+            }
+            if (distance[start[0]][start[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                distance[x - dir[0]][y - dir[1]] = distance[start[0]][start[1]] + count;
+                Dfs(maze, new int[] { x - dir[0], y - dir[1] }, distance);
             }
         }
     }
@@ -201,6 +340,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(
+        maze: number[][],
+        start: number[],
+        destination: number[],
+    ): number {
+        const m = maze.length,
+            n = maze[0].length;
+        const distance: number[][] = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        distance[start[0]][start[1]] = 0;
+        const dirs: number[][] = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+
+        const dfs = (sr: number, sc: number): void => {
+            for (const [dr, dc] of dirs) {
+                let x = sr + dr,
+                    y = sc + dc;
+                let count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dr;
+                    y += dc;
+                    count++;
+                }
+                if (distance[sr][sc] + count < distance[x - dr][y - dc]) {
+                    distance[x - dr][y - dc] = distance[sr][sc] + count;
+                    dfs(x - dr, y - dc);
+                }
+            }
+        };
+
+        dfs(start[0], start[1]);
+        const res = distance[destination[0]][destination[1]];
+        return res === Infinity ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -232,6 +421,33 @@ Instead, we use BFS with distance relaxation: whenever we find a shorter path to
 
 ::tabs-start
 
+```python
+class Solution:
+    def shortestDistance(self, maze: List[List[int]], start: List[int], destination: List[int]) -> int:
+        m, n = len(maze), len(maze[0])
+        distance = [[float('inf')] * n for _ in range(m)]
+        distance[start[0]][start[1]] = 0
+        dirs = [(0, 1), (0, -1), (-1, 0), (1, 0)]
+        queue = deque([(start[0], start[1])])
+
+        while queue:
+            sr, sc = queue.popleft()
+            for dr, dc in dirs:
+                x, y = sr + dr, sc + dc
+                count = 0
+                while 0 <= x < m and 0 <= y < n and maze[x][y] == 0:
+                    x += dr
+                    y += dc
+                    count += 1
+
+                if distance[sr][sc] + count < distance[x - dr][y - dc]:
+                    distance[x - dr][y - dc] = distance[sr][sc] + count
+                    queue.append((x - dr, y - dc))
+
+        res = distance[destination[0]][destination[1]]
+        return -1 if res == float('inf') else res
+```
+
 ```java
 class Solution {
     public int shortestDistance(int[][] maze, int[] start, int[] dest) {
@@ -262,6 +478,127 @@ class Solution {
             }
         }
         return distance[dest[0]][dest[1]] == Integer.MAX_VALUE ? -1 : distance[dest[0]][dest[1]];
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int shortestDistance(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
+        int m = maze.size(), n = maze[0].size();
+        vector<vector<int>> distance(m, vector<int>(n, INT_MAX));
+        distance[start[0]][start[1]] = 0;
+        int dirs[4][2] = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+
+        queue<pair<int, int>> q;
+        q.push({start[0], start[1]});
+        while (!q.empty()) {
+            auto [sr, sc] = q.front();
+            q.pop();
+            for (auto& dir : dirs) {
+                int x = sr + dir[0];
+                int y = sc + dir[1];
+                int count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    count++;
+                }
+
+                if (distance[sr][sc] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[sr][sc] + count;
+                    q.push({x - dir[0], y - dir[1]});
+                }
+            }
+        }
+        return distance[destination[0]][destination[1]] == INT_MAX
+                   ? -1
+                   : distance[destination[0]][destination[1]];
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(maze, start, destination) {
+        const m = maze.length,
+            n = maze[0].length;
+        const distance = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        distance[start[0]][start[1]] = 0;
+        const dirs = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+        const queue = new Queue([[start[0], start[1]]]);
+
+        while (!queue.isEmpty()) {
+            const [sr, sc] = queue.pop();
+            for (const [dr, dc] of dirs) {
+                let x = sr + dr,
+                    y = sc + dc;
+                let count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dr;
+                    y += dc;
+                    count++;
+                }
+
+                if (distance[sr][sc] + count < distance[x - dr][y - dc]) {
+                    distance[x - dr][y - dc] = distance[sr][sc] + count;
+                    queue.push([x - dr, y - dc]);
+                }
+            }
+        }
+
+        const res = distance[destination[0]][destination[1]];
+        return res === Infinity ? -1 : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestDistance(int[][] maze, int[] start, int[] dest) {
+        int[][] distance = new int[maze.Length][];
+        for (int i = 0; i < maze.Length; i++) {
+            distance[i] = new int[maze[0].Length];
+            Array.Fill(distance[i], int.MaxValue);
+        }
+
+        distance[start[0]][start[1]] = 0;
+        int[][] dirs = { new[] { 0, 1 }, new[] { 0, -1 }, new[] { -1, 0 }, new[] { 1, 0 } };
+        Queue<int[]> queue = new Queue<int[]>();
+        queue.Enqueue(start);
+        while (queue.Count > 0) {
+            int[] s = queue.Dequeue();
+            foreach (int[] dir in dirs) {
+                int x = s[0] + dir[0];
+                int y = s[1] + dir[1];
+                int count = 0;
+                while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    count++;
+                }
+
+                if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count;
+                    queue.Enqueue(new int[] { x - dir[0], y - dir[1] });
+                }
+            }
+        }
+        return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
     }
 }
 ```
@@ -414,6 +751,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(
+        maze: number[][],
+        start: number[],
+        destination: number[],
+    ): number {
+        const m = maze.length,
+            n = maze[0].length;
+        const distance: number[][] = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        distance[start[0]][start[1]] = 0;
+        const dirs: number[][] = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+        const queue = new Queue([[start[0], start[1]]]);
+
+        while (!queue.isEmpty()) {
+            const [sr, sc]: number[] = queue.pop();
+            for (const [dr, dc] of dirs) {
+                let x = sr + dr,
+                    y = sc + dc;
+                let count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dr;
+                    y += dc;
+                    count++;
+                }
+
+                if (distance[sr][sc] + count < distance[x - dr][y - dc]) {
+                    distance[x - dr][y - dc] = distance[sr][sc] + count;
+                    queue.push([x - dr, y - dc]);
+                }
+            }
+        }
+
+        const res = distance[destination[0]][destination[1]];
+        return res === Infinity ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +833,45 @@ This version uses a simple implementation where we scan the entire distance matr
 3. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
+
+```python
+class Solution:
+    def shortestDistance(self, maze: List[List[int]], start: List[int], destination: List[int]) -> int:
+        m, n = len(maze), len(maze[0])
+        distance = [[float('inf')] * n for _ in range(m)]
+        visited = [[False] * n for _ in range(m)]
+        distance[start[0]][start[1]] = 0
+        dirs = [(0, 1), (0, -1), (-1, 0), (1, 0)]
+
+        def min_distance():
+            min_cell = (-1, -1)
+            min_val = float('inf')
+            for i in range(m):
+                for j in range(n):
+                    if not visited[i][j] and distance[i][j] < min_val:
+                        min_cell = (i, j)
+                        min_val = distance[i][j]
+            return min_cell
+
+        while True:
+            sr, sc = min_distance()
+            if sr < 0:
+                break
+            visited[sr][sc] = True
+            for dr, dc in dirs:
+                x, y = sr + dr, sc + dc
+                count = 0
+                while 0 <= x < m and 0 <= y < n and maze[x][y] == 0:
+                    x += dr
+                    y += dc
+                    count += 1
+
+                if distance[sr][sc] + count < distance[x - dr][y - dc]:
+                    distance[x - dr][y - dc] = distance[sr][sc] + count
+
+        res = distance[destination[0]][destination[1]]
+        return -1 if res == float('inf') else res
+```
 
 ```java
 class Solution {
@@ -486,6 +914,190 @@ class Solution {
                 int y = s[1] + dir[1];
                 int count = 0;
                 while (x >= 0 && y >= 0 && x < maze.length && y < maze[0].length && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    count++;
+                }
+
+                if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count;
+                }
+            }
+        }
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int shortestDistance(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
+        int m = maze.size(), n = maze[0].size();
+        vector<vector<int>> distance(m, vector<int>(n, INT_MAX));
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        distance[start[0]][start[1]] = 0;
+        dijkstra(maze, distance, visited);
+        return distance[destination[0]][destination[1]] == INT_MAX
+                   ? -1
+                   : distance[destination[0]][destination[1]];
+    }
+
+private:
+    pair<int, int> minDistance(vector<vector<int>>& distance, vector<vector<bool>>& visited) {
+        pair<int, int> minCell = {-1, -1};
+        int minVal = INT_MAX;
+
+        for (int i = 0; i < distance.size(); i++) {
+            for (int j = 0; j < distance[0].size(); j++) {
+                if (!visited[i][j] && distance[i][j] < minVal) {
+                    minCell = {i, j};
+                    minVal = distance[i][j];
+                }
+            }
+        }
+
+        return minCell;
+    }
+
+    void dijkstra(vector<vector<int>>& maze, vector<vector<int>>& distance,
+                  vector<vector<bool>>& visited) {
+        int m = maze.size(), n = maze[0].size();
+        int dirs[4][2] = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+        while (true) {
+            auto [sr, sc] = minDistance(distance, visited);
+            if (sr < 0) {
+                break;
+            }
+            visited[sr][sc] = true;
+            for (auto& dir : dirs) {
+                int x = sr + dir[0];
+                int y = sc + dir[1];
+                int count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    count++;
+                }
+
+                if (distance[sr][sc] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[sr][sc] + count;
+                }
+            }
+        }
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(maze, start, destination) {
+        const m = maze.length,
+            n = maze[0].length;
+        const distance = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        const visited = Array.from({ length: m }, () => Array(n).fill(false));
+        distance[start[0]][start[1]] = 0;
+        const dirs = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+
+        const minDistance = () => {
+            let minCell = [-1, -1];
+            let minVal = Infinity;
+            for (let i = 0; i < m; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (!visited[i][j] && distance[i][j] < minVal) {
+                        minCell = [i, j];
+                        minVal = distance[i][j];
+                    }
+                }
+            }
+            return minCell;
+        };
+
+        while (true) {
+            const [sr, sc] = minDistance();
+            if (sr < 0) {
+                break;
+            }
+            visited[sr][sc] = true;
+            for (const [dr, dc] of dirs) {
+                let x = sr + dr,
+                    y = sc + dc;
+                let count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dr;
+                    y += dc;
+                    count++;
+                }
+
+                if (distance[sr][sc] + count < distance[x - dr][y - dc]) {
+                    distance[x - dr][y - dc] = distance[sr][sc] + count;
+                }
+            }
+        }
+
+        const res = distance[destination[0]][destination[1]];
+        return res === Infinity ? -1 : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestDistance(int[][] maze, int[] start, int[] dest) {
+        int[][] distance = new int[maze.Length][];
+        bool[][] visited = new bool[maze.Length][];
+        for (int i = 0; i < maze.Length; i++) {
+            distance[i] = new int[maze[0].Length];
+            visited[i] = new bool[maze[0].Length];
+            Array.Fill(distance[i], int.MaxValue);
+        }
+
+        distance[start[0]][start[1]] = 0;
+        Dijkstra(maze, distance, visited);
+        return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
+    }
+
+    public int[] MinDistance(int[][] distance, bool[][] visited) {
+        int[] min = { -1, -1 };
+        int minVal = int.MaxValue;
+
+        for (int i = 0; i < distance.Length; i++) {
+            for (int j = 0; j < distance[0].Length; j++) {
+                if (!visited[i][j] && distance[i][j] < minVal) {
+                    min = new int[] { i, j };
+                    minVal = distance[i][j];
+                }
+            }
+        }
+
+        return min;
+    }
+
+    public void Dijkstra(int[][] maze, int[][] distance, bool[][] visited) {
+        int[][] dirs = { new[] { 0, 1 }, new[] { 0, -1 }, new[] { -1, 0 }, new[] { 1, 0 } };
+        while (true) {
+            int[] s = MinDistance(distance, visited);
+            if (s[0] < 0) {
+                break;
+            }
+            visited[s[0]][s[1]] = true;
+            foreach (int[] dir in dirs) {
+                int x = s[0] + dir[0];
+                int y = s[1] + dir[1];
+                int count = 0;
+                while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0) {
                     x += dir[0];
                     y += dir[1];
                     count++;
@@ -699,6 +1311,77 @@ impl Solution {
 
         let (dr, dc) = (destination[0] as usize, destination[1] as usize);
         if distance[dr][dc] == i32::MAX { -1 } else { distance[dr][dc] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(
+        maze: number[][],
+        start: number[],
+        destination: number[],
+    ): number {
+        const m = maze.length,
+            n = maze[0].length;
+        const distance: number[][] = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        const visited: boolean[][] = Array.from({ length: m }, () =>
+            Array(n).fill(false),
+        );
+        distance[start[0]][start[1]] = 0;
+        const dirs: number[][] = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+
+        const minDistance = (): number[] => {
+            let minCell = [-1, -1];
+            let minVal = Infinity;
+            for (let i = 0; i < m; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (!visited[i][j] && distance[i][j] < minVal) {
+                        minCell = [i, j];
+                        minVal = distance[i][j];
+                    }
+                }
+            }
+            return minCell;
+        };
+
+        while (true) {
+            const [sr, sc] = minDistance();
+            if (sr < 0) {
+                break;
+            }
+            visited[sr][sc] = true;
+            for (const [dr, dc] of dirs) {
+                let x = sr + dr,
+                    y = sc + dc;
+                let count = 0;
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dr;
+                    y += dc;
+                    count++;
+                }
+
+                if (distance[sr][sc] + count < distance[x - dr][y - dc]) {
+                    distance[x - dr][y - dc] = distance[sr][sc] + count;
+                }
+            }
+        }
+
+        const res = distance[destination[0]][destination[1]];
+        return res === Infinity ? -1 : res;
     }
 }
 ```
@@ -933,6 +1616,52 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ShortestDistance(int[][] maze, int[] start, int[] dest) {
+        int[][] distance = new int[maze.Length][];
+        for (int i = 0; i < maze.Length; i++) {
+            distance[i] = new int[maze[0].Length];
+            Array.Fill(distance[i], int.MaxValue);
+        }
+
+        distance[start[0]][start[1]] = 0;
+        Dijkstra(maze, start, distance);
+        return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
+    }
+
+    public void Dijkstra(int[][] maze, int[] start, int[][] distance) {
+        int[][] dirs = { new[] { 0, 1 }, new[] { 0, -1 }, new[] { -1, 0 }, new[] { 1, 0 } };
+        PriorityQueue<int[], int> queue = new PriorityQueue<int[], int>();
+        queue.Enqueue(new int[] { start[0], start[1], 0 }, 0);
+
+        while (queue.Count > 0) {
+            int[] s = queue.Dequeue();
+            if (distance[s[0]][s[1]] < s[2]) {
+                continue;
+            }
+
+            foreach (int[] dir in dirs) {
+                int x = s[0] + dir[0];
+                int y = s[1] + dir[1];
+                int count = 0;
+                while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    count++;
+                }
+
+                if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count;
+                    int d = distance[x - dir[0]][y - dir[1]];
+                    queue.Enqueue(new int[] { x - dir[0], y - dir[1], d }, d);
+                }
+            }
+        }
+    }
+}
+```
+
 ```go
 func shortestDistance(maze [][]int, start []int, destination []int) int {
     m, n := len(maze), len(maze[0])
@@ -1152,6 +1881,87 @@ impl Solution {
 
         let (dr, dc) = (destination[0] as usize, destination[1] as usize);
         if distance[dr][dc] == i32::MAX { -1 } else { distance[dr][dc] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[]} destination
+     * @return {number}
+     */
+    shortestDistance(
+        maze: number[][],
+        start: number[],
+        destination: number[],
+    ): number {
+        const m = maze.length;
+        const n = maze[0].length;
+        const distance: number[][] = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
+        distance[start[0]][start[1]] = 0;
+        this.dijkstra(maze, start, distance);
+        return distance[destination[0]][destination[1]] === Infinity
+            ? -1
+            : distance[destination[0]][destination[1]];
+    }
+
+    /**
+     * @param {number[][]} maze
+     * @param {number[]} start
+     * @param {number[][]} distance
+     * @return {void}
+     */
+    dijkstra(maze: number[][], start: number[], distance: number[][]): void {
+        const m = maze.length;
+        const n = maze[0].length;
+        const dirs: number[][] = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
+
+        // @datastructures-js/priority-queue MinPriorityQueue implementation
+        const pq = new MinPriorityQueue(
+            (element: { dist: number; x: number; y: number }) => element.dist,
+        );
+        pq.enqueue({ dist: 0, x: start[0], y: start[1] });
+
+        while (!pq.isEmpty()) {
+            const {
+                dist,
+                x: sx,
+                y: sy,
+            }: { dist: number; x: number; y: number } = pq.dequeue();
+
+            if (distance[sx][sy] < dist) continue;
+
+            for (const [dx, dy] of dirs) {
+                let x = sx + dx;
+                let y = sy + dy;
+                let count = 0;
+
+                while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
+                    x += dx;
+                    y += dy;
+                    count++;
+                }
+
+                if (distance[sx][sy] + count < distance[x - dx][y - dy]) {
+                    distance[x - dx][y - dy] = distance[sx][sy] + count;
+                    pq.enqueue({
+                        dist: distance[x - dx][y - dy],
+                        x: x - dx,
+                        y: y - dy,
+                    });
+                }
+            }
+        }
     }
 }
 ```

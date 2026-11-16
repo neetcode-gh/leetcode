@@ -245,6 +245,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} operations
+     * @return {number}
+     */
+    calPoints(operations: string[]): number {
+        const stack: number[] = [];
+        for (const op of operations) {
+            if (op === '+') {
+                const top = stack.pop()!;
+                const newTop = top + stack[stack.length - 1];
+                stack.push(top);
+                stack.push(newTop);
+            } else if (op === 'D') {
+                stack.push(2 * stack[stack.length - 1]);
+            } else if (op === 'C') {
+                stack.pop();
+            } else {
+                stack.push(parseInt(op));
+            }
+        }
+        return stack.reduce((a, b) => a + b, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -528,6 +555,37 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} operations
+     * @return {number}
+     */
+    calPoints(operations: string[]): number {
+        const stack: number[] = [];
+        let res = 0;
+        for (const op of operations) {
+            if (op === '+') {
+                const top = stack.pop()!;
+                const newTop = top + stack[stack.length - 1];
+                stack.push(top);
+                stack.push(newTop);
+                res += newTop;
+            } else if (op === 'D') {
+                stack.push(2 * stack[stack.length - 1]);
+                res += stack[stack.length - 1];
+            } else if (op === 'C') {
+                res -= stack.pop()!;
+            } else {
+                stack.push(parseInt(op));
+                res += stack[stack.length - 1];
+            }
+        }
+        return res;
     }
 }
 ```

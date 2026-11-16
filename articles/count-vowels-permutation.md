@@ -314,6 +314,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countVowelPermutation(n: number): number {
+        const MOD = 1e9 + 7;
+
+        const follows: { [key: string]: string[] } = {
+            a: ['e'],
+            e: ['a', 'i'],
+            i: ['a', 'e', 'o', 'u'],
+            o: ['i', 'u'],
+            u: ['a'],
+        };
+
+        const dfs = (i: number, v: string): number => {
+            if (i === n) {
+                return 1;
+            }
+
+            let total = 0;
+            for (const next of follows[v]) {
+                total = (total + dfs(i + 1, next)) % MOD;
+            }
+            return total;
+        };
+
+        let res = 0;
+        for (const vowel of ['a', 'e', 'i', 'o', 'u']) {
+            res = (res + dfs(1, vowel)) % MOD;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -679,6 +718,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countVowelPermutation(n: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n }, () => Array(5).fill(-1));
+
+        const follows: { [key: number]: number[] } = {
+            0: [1], // 'a' -> 'e'
+            1: [0, 2], // 'e' -> 'a', 'i'
+            2: [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            3: [2, 4], // 'o' -> 'i', 'u'
+            4: [0], // 'u' -> 'a'
+        };
+
+        const dfs = (i: number, v: number): number => {
+            if (i === n) return 1;
+            if (dp[i][v] !== -1) return dp[i][v];
+
+            let total = 0;
+            for (const next of follows[v]) {
+                total = (total + dfs(i + 1, next)) % MOD;
+            }
+            dp[i][v] = total;
+            return total;
+        };
+
+        let res = 0;
+        for (let vowel = 0; vowel < 5; vowel++) {
+            res = (res + dfs(1, vowel)) % MOD;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -958,7 +1036,7 @@ class Solution {
             dp[1][v] = 1
         }
 
-        for i in 2...n {
+        for i in stride(from: 2, through: n, by: 1) {
             for v in 0..<5 {
                 for nextV in follows[v] {
                     dp[i][v] = (dp[i][v] + dp[i - 1][nextV]) % MOD
@@ -1006,6 +1084,40 @@ impl Solution {
             result = (result + dp[n][v]) % MOD;
         }
         result as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countVowelPermutation(n: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(5).fill(0));
+        const follows = [
+            [1], // 'a' -> 'e'
+            [0, 2], // 'e' -> 'a', 'i'
+            [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            [2, 4], // 'o' -> 'i', 'u'
+            [0], // 'u' -> 'a'
+        ];
+
+        for (let v = 0; v < 5; v++) {
+            dp[1][v] = 1;
+        }
+
+        for (let i = 2; i <= n; i++) {
+            for (let v = 0; v < 5; v++) {
+                for (const nextV of follows[v]) {
+                    dp[i][v] = (dp[i][v] + dp[i - 1][nextV]) % MOD;
+                }
+            }
+        }
+
+        return dp[n].reduce((sum, val) => (sum + val) % MOD, 0);
     }
 }
 ```
@@ -1275,7 +1387,7 @@ class Solution {
 
         var dp = [1, 1, 1, 1, 1]
 
-        for _ in 2...n {
+        for _ in stride(from: 2, through: n, by: 1) {
             var nextDp = [0, 0, 0, 0, 0]
             for v in 0..<5 {
                 for nextV in follows[v] {
@@ -1323,6 +1435,39 @@ impl Solution {
             result = (result + count) % MOD;
         }
         result as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countVowelPermutation(n: number): number {
+        const MOD = 1e9 + 7;
+        const follows = [
+            [1], // 'a' -> 'e'
+            [0, 2], // 'e' -> 'a', 'i'
+            [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            [2, 4], // 'o' -> 'i', 'u'
+            [0], // 'u' -> 'a'
+        ];
+
+        let dp = [1, 1, 1, 1, 1];
+
+        for (let i = 2; i <= n; i++) {
+            const nextDp = [0, 0, 0, 0, 0];
+            for (let v = 0; v < 5; v++) {
+                for (const nextV of follows[v]) {
+                    nextDp[v] = (nextDp[v] + dp[nextV]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp.reduce((sum, count) => (sum + count) % MOD, 0);
     }
 }
 ```
@@ -1946,6 +2091,89 @@ impl Solution {
             }
         }
         ans as i32
+    }
+}
+```
+
+```typescript
+class M {
+    MOD: number;
+    a: number[][];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.MOD = 1e9 + 7;
+        this.a = Array.from({ length: n }, () => Array(n).fill(0));
+    }
+
+    /**
+     * @param {M}
+     * @return {M}
+     */
+    multiply(other: M): M {
+        const n = this.a.length;
+        const product = new M(n);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                let sum = BigInt(0);
+                for (let k = 0; k < n; k++) {
+                    sum += BigInt(this.a[i][k]) * BigInt(other.a[k][j]);
+                }
+                product.a[i][j] = Number(sum % BigInt(this.MOD));
+            }
+        }
+        return product;
+    }
+}
+
+class Solution {
+    /**
+     * @param {M}
+     * @param {number} exp
+     * @return {M}
+     */
+    matrixExpo(base: M, exp: number): M {
+        const n = base.a.length;
+        let result = new M(n);
+        for (let i = 0; i < n; i++) {
+            result.a[i][i] = 1;
+        }
+        while (exp > 0) {
+            if (exp & 1) {
+                result = result.multiply(base);
+            }
+            base = base.multiply(base);
+            exp >>= 1;
+        }
+        return result;
+    }
+
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countVowelPermutation(n: number): number {
+        const MOD = 1e9 + 7;
+        const follows = [
+            [0, 1, 0, 0, 0], // 'a' -> 'e'
+            [1, 0, 1, 0, 0], // 'e' -> 'a', 'i'
+            [1, 1, 0, 1, 1], // 'i' -> 'a', 'e', 'o', 'u'
+            [0, 0, 1, 0, 1], // 'o' -> 'i', 'u'
+            [1, 0, 0, 0, 0], // 'u' -> 'a'
+        ];
+        const base = new M(5);
+        base.a = follows;
+        const result = this.matrixExpo(base, n - 1);
+        let ans = 0;
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                ans = (ans + result.a[i][j]) % MOD;
+            }
+        }
+        return ans;
     }
 }
 ```

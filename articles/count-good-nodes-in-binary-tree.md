@@ -330,6 +330,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    goodNodes(root: TreeNode | null): number {
+        return this.dfs(root, root!.val);
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number} maxVal
+     * @return {number}
+     */
+    dfs(node: TreeNode | null, maxVal: number): number {
+        if (!node) {
+            return 0;
+        }
+
+        let res = node.val >= maxVal ? 1 : 0;
+        maxVal = Math.max(maxVal, node.val);
+        res += this.dfs(node.left, maxVal);
+        res += this.dfs(node.right, maxVal);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -713,6 +742,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    goodNodes(root: TreeNode | null): number {
+        let res = 0;
+        let q = new Queue();
+        q.push([root, -Infinity]);
+
+        while (!q.isEmpty()) {
+            let [node, maxval]: [TreeNode, number] = q.pop();
+            if (node.val >= maxval) {
+                res++;
+            }
+            if (node.left) {
+                q.push([node.left, Math.max(maxval, node.val)]);
+            }
+            if (node.right) {
+                q.push([node.right, Math.max(maxval, node.val)]);
+            }
+        }
+        return res;
     }
 }
 ```

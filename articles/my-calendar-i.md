@@ -200,6 +200,31 @@ impl MyCalendar {
 }
 ```
 
+```typescript
+class MyCalendar {
+    private events: number[][];
+
+    constructor() {
+        this.events = [];
+    }
+
+    /**
+     * @param {number} startTime
+     * @param {number} endTime
+     * @return {boolean}
+     */
+    book(startTime: number, endTime: number): boolean {
+        for (const [start, end] of this.events) {
+            if (startTime < end && start < endTime) {
+                return false;
+            }
+        }
+        this.events.push([startTime, endTime]);
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -398,7 +423,7 @@ class MyCalendar {
      * @param {number} endTime
      * @return {boolean}
      */
-    book(startTime, endTIme) {
+    book(startTime, endTime) {
         if (!this.root) {
             this.root = new TreeNode(startTime, endTime);
             return true;
@@ -629,6 +654,71 @@ impl MyCalendar {
 }
 ```
 
+```typescript
+class TreeNode {
+    start: number;
+    end: number;
+    left: TreeNode | null;
+    right: TreeNode | null;
+
+    /**
+     * @constructor
+     * @param {number} start
+     * @param {number} end
+     */
+    constructor(start: number, end: number) {
+        this.start = start;
+        this.end = end;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class MyCalendar {
+    private root: TreeNode | null;
+
+    constructor() {
+        this.root = null;
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number} start
+     * @param {number} end
+     * @return {boolean}
+     */
+    insert(node: TreeNode, start: number, end: number): boolean {
+        if (end <= node.start) {
+            if (!node.left) {
+                node.left = new TreeNode(start, end);
+                return true;
+            }
+            return this.insert(node.left, start, end);
+        } else if (start >= node.end) {
+            if (!node.right) {
+                node.right = new TreeNode(start, end);
+                return true;
+            }
+            return this.insert(node.right, start, end);
+        }
+        return false;
+    }
+
+    /**
+     * @param {number} startTime
+     * @param {number} endTime
+     * @return {boolean}
+     */
+    book(startTime: number, endTime: number): boolean {
+        if (!this.root) {
+            this.root = new TreeNode(startTime, endTime);
+            return true;
+        }
+        return this.insert(this.root, startTime, endTime);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -656,6 +746,9 @@ By keeping events sorted by start time, we can use binary search to quickly find
 ::tabs-start
 
 ```python
+from sortedcontainers import SortedList
+
+
 class MyCalendar:
 
     def __init__(self):
@@ -734,7 +827,7 @@ class MyCalendar {
      * @param {number} endTime
      * @return {boolean}
      */
-    book(startTime, endTIme) {
+    book(startTime, endTime) {
         if (startTime >= endTime) {
             return false;
         }
@@ -914,6 +1007,52 @@ impl MyCalendar {
         }
         self.events.insert(idx, (start_time, end_time));
         true
+    }
+}
+```
+
+```typescript
+class MyCalendar {
+    private events: number[][];
+
+    constructor() {
+        this.events = [];
+    }
+
+    /**
+     * @param {number} startTime
+     * @param {number} endTime
+     * @return {boolean}
+     */
+    book(startTime: number, endTime: number): boolean {
+        if (startTime >= endTime) {
+            return false;
+        }
+
+        const binarySearch = (target: number): number => {
+            let left = 0,
+                right = this.events.length;
+
+            while (left < right) {
+                let mid = Math.floor((left + right) / 2);
+                if (this.events[mid][0] < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            return left;
+        };
+
+        const idx = binarySearch(startTime);
+        if (idx > 0 && this.events[idx - 1][1] > startTime) {
+            return false;
+        }
+        if (idx < this.events.length && this.events[idx][0] < endTime) {
+            return false;
+        }
+        this.events.splice(idx, 0, [startTime, endTime]);
+        return true;
     }
 }
 ```

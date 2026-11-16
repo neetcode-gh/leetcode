@@ -298,6 +298,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func minStickers(stickers []string, target string) int {
     stickCount := make([]map[byte]int, len(stickers))
     for i, s := range stickers {
@@ -546,6 +548,65 @@ impl Solution {
 
         let res = dfs(&target, &mut HashMap::new(), &stick_count, &mut dp);
         if res == i32::MAX { -1 } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} stickers
+     * @param {string} target
+     * @return {number}
+     */
+    minStickers(stickers: string[], target: string): number {
+        const stickCount: Map<string, number>[] = [];
+        const dp = new Map<string, number>();
+
+        for (const s of stickers) {
+            const countMap = new Map<string, number>();
+            for (const c of s) {
+                countMap.set(c, (countMap.get(c) || 0) + 1);
+            }
+            stickCount.push(countMap);
+        }
+
+        const dfs = (t: string, stick: Map<string, number>): number => {
+            if (t === '') return 0;
+            if (dp.has(t)) return dp.get(t)!;
+
+            let res = stick.size === 0 ? 0 : 1;
+            let remainT = '';
+
+            for (const c of t) {
+                if (stick.has(c) && stick.get(c)! > 0) {
+                    stick.set(c, stick.get(c)! - 1);
+                } else {
+                    remainT += c;
+                }
+            }
+
+            if (remainT.length > 0) {
+                let used = Infinity;
+                for (const s of stickCount) {
+                    if (!s.has(remainT[0])) continue;
+                    const newStick = new Map(s);
+                    const curr = dfs(remainT, newStick);
+                    used = Math.min(used, curr);
+                }
+                dp.set(remainT, used);
+                if (used !== Infinity && res !== Infinity) {
+                    res += used;
+                } else {
+                    res = Infinity;
+                }
+            }
+
+            return res;
+        };
+
+        const res = dfs(target, new Map());
+        return res === Infinity ? -1 : res;
     }
 }
 ```
@@ -841,6 +902,11 @@ public class Solution {
 ```
 
 ```go
+import (
+    "math"
+    "sort"
+)
+
 func minStickers(stickers []string, target string) int {
     dp := make(map[string]int)
     dp[""] = 0
@@ -1069,6 +1135,58 @@ impl Solution {
 
         let ans = dfs(&sorted_target, &stick_count, &mut dp);
         if ans == i32::MAX { -1 } else { ans }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} stickers
+     * @param {string} target
+     * @return {number}
+     */
+    minStickers(stickers: string[], target: string): number {
+        const dp: { [key: string]: number } = { '': 0 };
+        const stickCount = stickers.map((s) => {
+            const counter: { [key: string]: number } = {};
+            for (const c of s) {
+                counter[c] = (counter[c] || 0) + 1;
+            }
+            return counter;
+        });
+
+        const dfs = (t: string): number => {
+            if (dp[t] !== undefined) return dp[t];
+
+            const tarMp: { [key: string]: number } = {};
+            for (const c of t) {
+                tarMp[c] = (tarMp[c] || 0) + 1;
+            }
+
+            let res = Infinity;
+            for (const s of stickCount) {
+                if (!s[t[0]]) continue;
+
+                let remainT: string[] = [];
+                for (const [c, count] of Object.entries(tarMp)) {
+                    let need = count - (s[c] || 0);
+                    while (need > 0) {
+                        remainT.push(c);
+                        need--;
+                    }
+                }
+
+                const remainStr = remainT.sort().join('');
+                res = Math.min(res, 1 + dfs(remainStr));
+            }
+
+            dp[t] = res;
+            return res;
+        };
+
+        const ans = dfs(target.split('').sort().join(''));
+        return ans === Infinity ? -1 : ans;
     }
 }
 ```
@@ -1383,6 +1501,42 @@ impl Solution {
         }
 
         dp[big_n - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} stickers
+     * @param {string} target
+     * @return {number}
+     */
+    minStickers(stickers: string[], target: string): number {
+        const n = target.length;
+        const N = 1 << n;
+        const dp: number[] = Array(N).fill(-1);
+        dp[0] = 0;
+
+        for (let t = 0; t < N; t++) {
+            if (dp[t] === -1) continue;
+            for (let s of stickers) {
+                let nextT = t;
+                for (let c of s) {
+                    for (let i = 0; i < n; i++) {
+                        if (target[i] === c && ((nextT >> i) & 1) === 0) {
+                            nextT |= 1 << i;
+                            break;
+                        }
+                    }
+                }
+                if (dp[nextT] === -1 || dp[nextT] > dp[t] + 1) {
+                    dp[nextT] = dp[t] + 1;
+                }
+            }
+        }
+
+        return dp[N - 1];
     }
 }
 ```

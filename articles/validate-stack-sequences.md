@@ -138,7 +138,7 @@ class Solution {
         var i = 0
         for (n in pushed) {
             stack.addLast(n)
-            while (i < popped.size && stack.isNotEmpty() && popped[i] == stack.last()) {
+            while (i < popped.size && stack.isNotEmpty() && popped[i] == stack.peekLast()) {
                 stack.removeLast()
                 i++
             }

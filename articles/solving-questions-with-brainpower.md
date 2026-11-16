@@ -156,6 +156,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} questions
+     * @return {number}
+     */
+    mostPoints(questions: number[][]): number {
+        const dfs = (i: number): number => {
+            if (i >= questions.length) return 0;
+            return Math.max(
+                dfs(i + 1),
+                questions[i][0] + dfs(i + 1 + questions[i][1]),
+            );
+        };
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -360,6 +379,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} questions
+     * @return {number}
+     */
+    mostPoints(questions: number[][]): number {
+        const dp: number[] = new Array(questions.length).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i >= questions.length) return 0;
+            if (dp[i] !== -1) return dp[i];
+            dp[i] = Math.max(
+                dfs(i + 1),
+                questions[i][0] + dfs(i + 1 + questions[i][1]),
+            );
+            return dp[i];
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -543,6 +586,30 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} questions
+     * @return {number}
+     */
+    mostPoints(questions: number[][]): number {
+        const n = questions.length;
+        const dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i] = Math.max(
+                questions[i][0] +
+                    (i + 1 + questions[i][1] < n
+                        ? dp[i + 1 + questions[i][1]]
+                        : 0),
+                dp[i + 1],
+            );
+        }
+        return dp[0];
     }
 }
 ```

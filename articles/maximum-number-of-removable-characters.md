@@ -140,6 +140,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaximumRemovals(string s, string p, int[] removable) {
+        int n = s.Length, m = p.Length;
+        HashSet<int> marked = new HashSet<int>();
+        int res = 0;
+
+        foreach (int removeIdx in removable) {
+            marked.Add(removeIdx);
+
+            int sIdx = 0, pIdx = 0;
+            while (pIdx < m && sIdx < n) {
+                if (!marked.Contains(sIdx) && s[sIdx] == p[pIdx]) {
+                    pIdx++;
+                }
+                sIdx++;
+            }
+
+            if (pIdx != m) break;
+            res++;
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maximumRemovals(s string, p string, removable []int) int {
     n, m := len(s), len(p)
@@ -255,6 +282,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @param {number[]} removable
+     * @return {number}
+     */
+    maximumRemovals(s: string, p: string, removable: number[]): number {
+        let n = s.length,
+            m = p.length;
+        let marked = new Set<number>();
+        let res = 0;
+
+        for (let removeIdx of removable) {
+            marked.add(removeIdx);
+
+            let sIdx = 0,
+                pIdx = 0;
+            while (pIdx < m && sIdx < n) {
+                if (!marked.has(sIdx) && s[sIdx] === p[pIdx]) {
+                    pIdx++;
+                }
+                sIdx++;
+            }
+
+            if (pIdx !== m) break;
+            res++;
+        }
+
+        return res;
     }
 }
 ```
@@ -443,6 +505,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaximumRemovals(string s, string p, int[] removable) {
+        int res = 0, l = 0, r = removable.Length - 1;
+
+        while (l <= r) {
+            int m = (l + r) / 2;
+            HashSet<int> removed = new HashSet<int>();
+            for (int i = 0; i <= m; i++) {
+                removed.Add(removable[i]);
+            }
+
+            if (IsSubseq(s, p, removed)) {
+                res = Math.Max(res, m + 1);
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+
+        return res;
+    }
+
+    private bool IsSubseq(string s, string subseq, HashSet<int> removed) {
+        int i1 = 0, i2 = 0;
+        while (i1 < s.Length && i2 < subseq.Length) {
+            if (removed.Contains(i1) || s[i1] != subseq[i2]) {
+                i1++;
+                continue;
+            }
+            i1++;
+            i2++;
+        }
+        return i2 == subseq.Length;
+    }
+}
+```
+
 ```go
 func maximumRemovals(s string, p string, removable []int) int {
     res, l, r := 0, 0, len(removable)-1
@@ -598,6 +698,56 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @param {number[]} removable
+     * @return {number}
+     */
+    maximumRemovals(s: string, p: string, removable: number[]): number {
+        let res = 0,
+            l = 0,
+            r = removable.length - 1;
+
+        while (l <= r) {
+            let m = Math.floor((l + r) / 2);
+            let removed = new Set<number>(removable.slice(0, m + 1));
+
+            if (this.isSubseq(s, p, removed)) {
+                res = Math.max(res, m + 1);
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {string} s
+     * @param {string} subseq
+     * @param {Set<number>} removed
+     * @return {boolean}
+     */
+    isSubseq(s: string, subseq: string, removed: Set<number>): boolean {
+        let i1 = 0,
+            i2 = 0;
+        while (i1 < s.length && i2 < subseq.length) {
+            if (removed.has(i1) || s[i1] !== subseq[i2]) {
+                i1++;
+                continue;
+            }
+            i1++;
+            i2++;
+        }
+        return i2 === subseq.length;
     }
 }
 ```
@@ -787,6 +937,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaximumRemovals(string s, string p, int[] removable) {
+        int l = 0, r = removable.Length;
+        int n = s.Length, m = p.Length;
+
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            char[] tmpS = s.ToCharArray();
+
+            for (int i = 0; i <= mid; i++) {
+                tmpS[removable[i]] = '#';
+            }
+
+            if (IsSubseq(tmpS, p)) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        return l;
+    }
+
+    private bool IsSubseq(char[] s, string p) {
+        int i1 = 0, i2 = 0, n = s.Length, m = p.Length;
+
+        while (i1 < n && i2 < m) {
+            if (s[i1] == p[i2]) {
+                i2++;
+            }
+            i1++;
+        }
+        return i2 == m;
+    }
+}
+```
+
 ```go
 func maximumRemovals(s string, p string, removable []int) int {
     l, r := 0, len(removable)
@@ -940,6 +1128,52 @@ impl Solution {
         }
 
         l as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} p
+     * @param {number[]} removable
+     * @return {number}
+     */
+    maximumRemovals(s: string, p: string, removable: number[]): number {
+        let l = 0,
+            r = removable.length;
+        let n = s.length,
+            m = p.length;
+
+        const isSubseq = (tmpS: string[]): boolean => {
+            let i1 = 0,
+                i2 = 0;
+            while (i1 < n && i2 < m) {
+                if (tmpS[i1] === p[i2]) {
+                    i2++;
+                }
+                i1++;
+            }
+            return i2 === m;
+        };
+
+        while (l < r) {
+            let mid = Math.floor(l + (r - l) / 2);
+            let tmpS = s.split('');
+
+            for (let i = 0; i <= mid; i++) {
+                tmpS[removable[i]] = '#';
+            }
+
+            if (isSubseq(tmpS)) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        return l;
     }
 }
 ```

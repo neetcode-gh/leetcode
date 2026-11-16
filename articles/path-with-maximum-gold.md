@@ -401,6 +401,61 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    getMaximumGold(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        const dfs = (r: number, c: number, visit: boolean[][]): number => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                grid[r][c] === 0 ||
+                visit[r][c]
+            ) {
+                return 0;
+            }
+
+            visit[r][c] = true;
+            let res = grid[r][c];
+
+            for (const [dr, dc] of directions) {
+                res = Math.max(res, grid[r][c] + dfs(r + dr, c + dc, visit));
+            }
+
+            visit[r][c] = false;
+            return res;
+        };
+
+        let res = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] !== 0) {
+                    let visit: boolean[][] = Array.from({ length: ROWS }, () =>
+                        Array(COLS).fill(false),
+                    );
+                    res = Math.max(res, dfs(r, c, visit));
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -777,6 +832,52 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    getMaximumGold(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        const dfs = (r: number, c: number): number => {
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] === 0) {
+                return 0;
+            }
+
+            let gold = grid[r][c];
+            grid[r][c] = 0;
+            let res = 0;
+
+            for (const [dr, dc] of directions) {
+                res = Math.max(res, dfs(r + dr, c + dc));
+            }
+
+            grid[r][c] = gold;
+            return gold + res;
+        };
+
+        let res = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] !== 0) {
+                    res = Math.max(res, dfs(r, c));
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1240,6 +1341,68 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    getMaximumGold(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const index: number[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(0),
+        );
+        let idx = 0;
+        const directions = [1, 0, -1, 0, 1];
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] !== 0) {
+                    index[r][c] = idx++;
+                }
+            }
+        }
+
+        let res = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] > 0) {
+                    const q = new Queue([[r, c, grid[r][c], 1 << index[r][c]]]);
+
+                    while (!q.isEmpty()) {
+                        const [row, col, gold, mask]: number[] = q.pop();
+                        res = Math.max(res, gold);
+                        for (let i = 0; i < 4; i++) {
+                            const nr = row + directions[i],
+                                nc = col + directions[i + 1];
+                            if (
+                                nr >= 0 &&
+                                nr < ROWS &&
+                                nc >= 0 &&
+                                nc < COLS &&
+                                grid[nr][nc] > 0
+                            ) {
+                                const newIdx = index[nr][nc];
+                                if (!(mask & (1 << newIdx))) {
+                                    q.push([
+                                        nr,
+                                        nc,
+                                        gold + grid[nr][nc],
+                                        mask | (1 << newIdx),
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```

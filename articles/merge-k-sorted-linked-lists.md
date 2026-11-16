@@ -334,6 +334,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode[]} lists
+     * @return {ListNode}
+     */
+    mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+        let nodes: number[] = [];
+        for (let lst of lists) {
+            while (lst) {
+                nodes.push(lst.val);
+                lst = lst.next;
+            }
+        }
+        nodes.sort((a, b) => a - b);
+
+        let res = new ListNode(0);
+        let cur = res;
+        for (let node of nodes) {
+            cur.next = new ListNode(node);
+            cur = cur.next;
+        }
+        return res.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -702,6 +729,35 @@ impl Solution {
         }
 
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode[]} lists
+     * @return {ListNode}
+     */
+    mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+        let res = new ListNode(0);
+        let cur = res;
+
+        while (true) {
+            let minNode = -1;
+            for (let i = 0; i < lists.length; i++) {
+                if (!lists[i]) continue;
+                if (minNode === -1 || lists[minNode]!.val > lists[i]!.val) {
+                    minNode = i;
+                }
+            }
+
+            if (minNode === -1) break;
+            cur.next = lists[minNode];
+            lists[minNode] = lists[minNode]!.next;
+            cur = cur.next!;
+        }
+        return res.next;
     }
 }
 ```
@@ -1189,6 +1245,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode[]} lists
+     * @return {ListNode}
+     */
+    mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+        if (lists.length === 0) return null;
+
+        for (let i = 0; i < lists.length; i++) {
+            lists[i] = this.mergeList(lists[i], lists[i - 1]);
+        }
+        return lists[lists.length - 1];
+    }
+
+    /**
+     * @param {ListNode} l1
+     * @param  {ListNode} l2
+     * @return {ListNode}
+     */
+    mergeList(l1: ListNode | null, l2: ListNode | null | undefined): ListNode | null {
+        const dummy = new ListNode();
+        let tail = dummy;
+
+        while (l1 && l2) {
+            if (l1.val < l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        if (l1) {
+            tail.next = l1;
+        }
+        if (l2) {
+            tail.next = l2;
+        }
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1599,6 +1700,36 @@ impl Solution {
             cur = cur.next.as_mut().unwrap();
         }
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode[]} lists
+     * @return {ListNode}
+     */
+    mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+        if (lists.length === 0) return null;
+        const minHeap = new MinPriorityQueue((x: ListNode) => x.val);
+        for (let list of lists) {
+            if (list != null) minHeap.enqueue(list);
+        }
+
+        let res = new ListNode(0);
+        let cur = res;
+        while (minHeap.size() > 0) {
+            let node: ListNode | null = minHeap.dequeue();
+            cur.next = node;
+            cur = cur.next!;
+
+            node = node!.next;
+            if (node != null) {
+                minHeap.enqueue(node);
+            }
+        }
+        return res.next;
     }
 }
 ```
@@ -2174,6 +2305,66 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode[]} lists
+     * @return {ListNode}
+     */
+    mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+        if (!lists || lists.length === 0) {
+            return null;
+        }
+        return this.divide(lists, 0, lists.length - 1);
+    }
+
+    /**
+     * @param {ListNode[]} lists
+     * @param {number} l
+     * @param {number} r
+     * @return {ListNode}
+     */
+    divide(lists: Array<ListNode | null>, l: number, r: number): ListNode | null {
+        if (l > r) {
+            return null;
+        }
+        if (l === r) {
+            return lists[l];
+        }
+
+        const mid = Math.floor(l + (r - l) / 2);
+        const left = this.divide(lists, l, mid);
+        const right = this.divide(lists, mid + 1, r);
+
+        return this.conquer(left, right);
+    }
+
+    /**
+     * @param {ListNode} l1
+     * @param  {ListNode} l2
+     * @return {ListNode}
+     */
+    conquer(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+        const dummy = new ListNode(0);
+        let curr = dummy;
+
+        while (l1 && l2) {
+            if (l1.val <= l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+
+        curr.next = l1 ? l1 : l2;
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2709,6 +2900,55 @@ impl Solution {
 
         tail.next = if l1.is_some() { l1 } else { l2 };
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode[]} lists
+     * @return {ListNode}
+     */
+    mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+        if (!lists || lists.length === 0) {
+            return null;
+        }
+
+        while (lists.length > 1) {
+            const mergedLists: Array<ListNode | null> = [];
+            for (let i = 0; i < lists.length; i += 2) {
+                const l1 = lists[i];
+                const l2 = i + 1 < lists.length ? lists[i + 1] : null;
+                mergedLists.push(this.mergeList(l1, l2));
+            }
+            lists = mergedLists;
+        }
+        return lists[0];
+    }
+
+    /**
+     * @param {ListNode} l1
+     * @param  {ListNode} l2
+     * @return {ListNode}
+     */
+    mergeList(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+        const dummy = new ListNode(0);
+        let curr = dummy;
+
+        while (l1 && l2) {
+            if (l1.val <= l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+
+        curr.next = l1 ? l1 : l2;
+        return dummy.next;
     }
 }
 ```

@@ -150,6 +150,8 @@ public class Solution {
 ```
 
 ```go
+import "sort"
+
 func maximumNumberOfOnes(width int, height int, sideLength int, maxOnes int) int {
     count := []int{}
 
@@ -240,6 +242,44 @@ impl Solution {
         }
 
         answer
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} width
+     * @param {number} height
+     * @param {number} sideLength
+     * @param {number} maxOnes
+     * @return {number}
+     */
+    maximumNumberOfOnes(
+        width: number,
+        height: number,
+        sideLength: number,
+        maxOnes: number,
+    ): number {
+        const count: number[] = [];
+
+        for (let r = 0; r < sideLength; ++r) {
+            for (let c = 0; c < sideLength; ++c) {
+                count.push(
+                    (1 + Math.floor((width - 1 - c) / sideLength)) *
+                        (1 + Math.floor((height - 1 - r) / sideLength)),
+                );
+            }
+        }
+
+        count.sort((a, b) => b - a);
+
+        let answer = 0;
+        for (let i = 0; i < maxOnes; ++i) {
+            answer += count[i];
+        }
+
+        return answer;
     }
 }
 ```
@@ -600,6 +640,76 @@ impl Solution {
         }
 
         answer
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} width
+     * @param {number} height
+     * @param {number} sideLength
+     * @param {number} maxOnes
+     * @return {number}
+     */
+    maximumNumberOfOnes(
+        width: number,
+        height: number,
+        sideLength: number,
+        maxOnes: number,
+    ): number {
+        let answer =
+            maxOnes *
+            (Math.floor(height / sideLength) * Math.floor(width / sideLength));
+        let remain = maxOnes;
+
+        let cnt1 = Math.min(
+            (height % sideLength) * (width % sideLength),
+            remain,
+        );
+        answer +=
+            (Math.floor(height / sideLength) +
+                Math.floor(width / sideLength) +
+                1) *
+            cnt1;
+        remain -= cnt1;
+
+        if (Math.floor(height / sideLength) > Math.floor(width / sideLength)) {
+            let cnt2 = Math.min(
+                (width % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
+            answer += Math.floor(height / sideLength) * cnt2;
+            remain -= cnt2;
+
+            let cnt3 = Math.min(
+                (height % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
+            answer += Math.floor(width / sideLength) * cnt3;
+            remain -= cnt3;
+        } else {
+            let cnt2 = Math.min(
+                (height % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
+            answer += Math.floor(width / sideLength) * cnt2;
+            remain -= cnt2;
+
+            let cnt3 = Math.min(
+                (width % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
+            answer += Math.floor(height / sideLength) * cnt3;
+            remain -= cnt3;
+        }
+
+        return answer;
     }
 }
 ```

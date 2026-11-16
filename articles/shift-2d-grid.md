@@ -297,6 +297,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @param {number} k
+     * @return {number[][]}
+     */
+    shiftGrid(grid: number[][], k: number): number[][] {
+        const m = grid.length,
+            n = grid[0].length;
+
+        while (k > 0) {
+            const cur: number[][] = Array.from({ length: m }, () =>
+                Array(n).fill(0),
+            );
+
+            for (let r = 0; r < m; r++) {
+                for (let c = 0; c < n - 1; c++) {
+                    cur[r][c + 1] = grid[r][c];
+                }
+            }
+
+            for (let r = 0; r < m; r++) {
+                cur[(r + 1) % m][0] = grid[r][n - 1];
+            }
+
+            grid = cur;
+            k--;
+        }
+
+        return grid;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -529,6 +564,32 @@ impl Solution {
         }
 
         grid
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @param {number} k
+     * @return {number[][]}
+     */
+    shiftGrid(grid: number[][], k: number): number[][] {
+        const m = grid.length,
+            n = grid[0].length;
+
+        while (k > 0) {
+            let prev = grid[m - 1][n - 1];
+            for (let r = 0; r < m; r++) {
+                for (let c = 0; c < n; c++) {
+                    [prev, grid[r][c]] = [grid[r][c], prev];
+                }
+            }
+            k--;
+        }
+
+        return grid;
     }
 }
 ```
@@ -893,6 +954,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @param {number} k
+     * @return {number[][]}
+     */
+    shiftGrid(grid: number[][], k: number): number[][] {
+        const m = grid.length,
+            n = grid[0].length;
+        const N = m * n;
+        k %= N;
+
+        const arr: number[] = new Array(N);
+        for (let r = 0; r < m; r++) {
+            for (let c = 0; c < n; c++) {
+                arr[r * n + c] = grid[r][c];
+            }
+        }
+
+        const reverse = (l: number, r: number): void => {
+            while (l < r) {
+                [arr[l], arr[r]] = [arr[r], arr[l]];
+                l++;
+                r--;
+            }
+        };
+
+        reverse(0, N - 1);
+        reverse(0, k - 1);
+        reverse(k, N - 1);
+
+        for (let r = 0; r < m; r++) {
+            for (let c = 0; c < n; c++) {
+                grid[r][c] = arr[r * n + c];
+            }
+        }
+
+        return grid;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1128,6 +1232,36 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @param {number} k
+     * @return {number[][]}
+     */
+    shiftGrid(grid: number[][], k: number): number[][] {
+        const M = grid.length,
+            N = grid[0].length;
+
+        const posToVal = (r: number, c: number): number => r * N + c;
+        const valToPos = (v: number): number[] => [Math.floor(v / N), v % N];
+
+        const res: number[][] = Array.from({ length: M }, () =>
+            Array(N).fill(0),
+        );
+        for (let r = 0; r < M; r++) {
+            for (let c = 0; c < N; c++) {
+                const newVal = (posToVal(r, c) + k) % (M * N);
+                const [newR, newC] = valToPos(newVal);
+                res[newR][newC] = grid[r][c];
+            }
+        }
+
+        return res;
     }
 }
 ```

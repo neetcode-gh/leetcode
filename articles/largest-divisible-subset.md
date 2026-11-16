@@ -300,6 +300,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    largestDivisibleSubset(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const cache = new Map<string, number[]>();
+
+        const dfs = (i: number, prevIndex: number): number[] => {
+            if (i === nums.length) return [];
+
+            let key = `${i},${prevIndex}`;
+            if (cache.has(key)) return cache.get(key)!;
+
+            let res = dfs(i + 1, prevIndex);
+            if (prevIndex === -1 || nums[i] % nums[prevIndex] === 0) {
+                let tmp = [nums[i], ...dfs(i + 1, i)];
+                if (tmp.length > res.length) res = tmp;
+            }
+
+            cache.set(key, res);
+            return res;
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,6 +697,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    largestDivisibleSubset(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const n = nums.length;
+        const cache: (number[] | null)[] = new Array(n).fill(null);
+
+        const dfs = (i: number): number[] => {
+            if (cache[i] !== null) return cache[i]!;
+
+            let res = [nums[i]];
+            for (let j = i + 1; j < n; j++) {
+                if (nums[j] % nums[i] === 0) {
+                    let tmp = [nums[i], ...dfs(j)];
+                    if (tmp.length > res.length) {
+                        res = tmp;
+                    }
+                }
+            }
+            return (cache[i] = res);
+        };
+
+        let res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            let tmp = dfs(i);
+            if (tmp.length > res.length) {
+                res = tmp;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -937,6 +1006,39 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    largestDivisibleSubset(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const n = nums.length;
+        const dp: number[][] = new Array(n).fill(0).map(() => []);
+        let res: number[] = [];
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i] = [nums[i]];
+
+            for (let j = i + 1; j < n; j++) {
+                if (nums[j] % nums[i] === 0) {
+                    let tmp = [nums[i], ...dp[j]];
+
+                    if (tmp.length > dp[i].length) {
+                        dp[i] = tmp;
+                    }
+                }
+            }
+            if (dp[i].length > res.length) {
+                res = dp[i];
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1378,6 +1480,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    largestDivisibleSubset(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        let n = nums.length;
+        let dp: number[][] = Array.from({ length: n }, () => [-1, -1]); // dp[i] = [maxLen, prevIdx]
+
+        const dfs = (i: number): number => {
+            if (dp[i][0] !== -1) return dp[i][0];
+
+            dp[i][0] = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (nums[j] % nums[i] === 0) {
+                    let length = dfs(j) + 1;
+                    if (length > dp[i][0]) {
+                        dp[i][0] = length;
+                        dp[i][1] = j;
+                    }
+                }
+            }
+            return dp[i][0];
+        };
+
+        let maxLen = 1,
+            startIndex = 0;
+        for (let i = 0; i < n; i++) {
+            if (dfs(i) > maxLen) {
+                maxLen = dfs(i);
+                startIndex = i;
+            }
+        }
+
+        let subset: number[] = [];
+        while (startIndex !== -1) {
+            subset.push(nums[startIndex]);
+            startIndex = dp[startIndex][1];
+        }
+        return subset;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1712,6 +1860,43 @@ impl Solution {
         }
 
         subset
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    largestDivisibleSubset(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        let n = nums.length;
+        let dp: number[][] = Array.from({ length: n }, () => [1, -1]); // dp[i] = [maxLen, prevIdx]
+
+        let maxLen = 1,
+            startIndex = 0;
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < i; j++) {
+                if (nums[i] % nums[j] === 0 && dp[j][0] + 1 > dp[i][0]) {
+                    dp[i][0] = dp[j][0] + 1;
+                    dp[i][1] = j;
+                }
+            }
+
+            if (dp[i][0] > maxLen) {
+                maxLen = dp[i][0];
+                startIndex = i;
+            }
+        }
+
+        let subset: number[] = [];
+        while (startIndex !== -1) {
+            subset.push(nums[startIndex]);
+            startIndex = dp[startIndex][1];
+        }
+        return subset;
     }
 }
 ```

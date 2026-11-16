@@ -51,7 +51,7 @@ class Solution {
         if (currNode == null) {
             return;
         }
-        node_list.add(currNode.val);
+        nodeList.add(currNode.val);
         dfs(currNode.left, nodeList);
         dfs(currNode.right, nodeList);
     }
@@ -253,7 +253,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn two_sum_bs_ts(
+    pub fn two_sum_bsts(
         root1: Option<Rc<RefCell<TreeNode>>>,
         root2: Option<Rc<RefCell<TreeNode>>>,
         target: i32,
@@ -279,6 +279,45 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @param {number} target
+     * @return {boolean}
+     */
+    twoSumBSTs(
+        root1: TreeNode | null,
+        root2: TreeNode | null,
+        target: number,
+    ): boolean {
+        const dfs = (currNode: TreeNode | null, nodeList: number[]): void => {
+            if (!currNode) {
+                return;
+            }
+            nodeList.push(currNode.val);
+            dfs(currNode.left, nodeList);
+            dfs(currNode.right, nodeList);
+        };
+
+        const nodeList1: number[] = [],
+            nodeList2: number[] = [];
+        dfs(root1, nodeList1);
+        dfs(root2, nodeList2);
+
+        for (const a of nodeList1) {
+            for (const b of nodeList2) {
+                if (a + b === target) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 ```
@@ -559,7 +598,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn two_sum_bs_ts(
+    pub fn two_sum_bsts(
         root1: Option<Rc<RefCell<TreeNode>>>,
         root2: Option<Rc<RefCell<TreeNode>>>,
         target: i32,
@@ -598,6 +637,50 @@ impl Solution {
         }
 
         dfs(&root1, &root2, target)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @param {number} target
+     * @return {boolean}
+     */
+    twoSumBSTs(
+        root1: TreeNode | null,
+        root2: TreeNode | null,
+        target: number,
+    ): boolean {
+        const binarySearch = (
+            root2: TreeNode | null,
+            target2: number,
+        ): boolean => {
+            if (!root2) {
+                return false;
+            }
+            if (root2.val === target2) {
+                return true;
+            } else if (root2.val > target2) {
+                return binarySearch(root2.left, target2);
+            } else {
+                return binarySearch(root2.right, target2);
+            }
+        };
+
+        const dfs = (root1: TreeNode | null, target: number): boolean => {
+            if (!root1) {
+                return false;
+            }
+            if (binarySearch(root2, target - root1.val)) {
+                return true;
+            }
+            return dfs(root1.left, target) || dfs(root1.right, target);
+        };
+
+        return dfs(root1, target);
     }
 }
 ```
@@ -850,7 +933,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn two_sum_bs_ts(
+    pub fn two_sum_bsts(
         root1: Option<Rc<RefCell<TreeNode>>>,
         root2: Option<Rc<RefCell<TreeNode>>>,
         target: i32,
@@ -869,6 +952,44 @@ impl Solution {
         dfs(&root2, &mut set2);
 
         set1.iter().any(|&v| set2.contains(&(target - v)))
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @param {number} target
+     * @return {boolean}
+     */
+    twoSumBSTs(
+        root1: TreeNode | null,
+        root2: TreeNode | null,
+        target: number,
+    ): boolean {
+        const dfs = (currNode: TreeNode | null, nodeSet: Set<number>): void => {
+            if (!currNode) {
+                return;
+            }
+            dfs(currNode.left, nodeSet);
+            nodeSet.add(currNode.val);
+            dfs(currNode.right, nodeSet);
+        };
+
+        const nodeSet1 = new Set<number>(),
+            nodeSet2 = new Set<number>();
+        dfs(root1, nodeSet1);
+        dfs(root2, nodeSet2);
+
+        for (const value1 of nodeSet1) {
+            if (nodeSet2.has(target - value1)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ```
@@ -1164,7 +1285,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn two_sum_bs_ts(
+    pub fn two_sum_bsts(
         root1: Option<Rc<RefCell<TreeNode>>>,
         root2: Option<Rc<RefCell<TreeNode>>>,
         target: i32,
@@ -1194,6 +1315,50 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @param {number} target
+     * @return {boolean}
+     */
+    twoSumBSTs(
+        root1: TreeNode | null,
+        root2: TreeNode | null,
+        target: number,
+    ): boolean {
+        const dfs = (currNode: TreeNode | null, nodeList: number[]): void => {
+            if (!currNode) {
+                return;
+            }
+            dfs(currNode.left, nodeList);
+            nodeList.push(currNode.val);
+            dfs(currNode.right, nodeList);
+        };
+
+        const nodeList1: number[] = [],
+            nodeList2: number[] = [];
+        dfs(root1, nodeList1);
+        dfs(root2, nodeList2);
+
+        let pointer1 = 0,
+            pointer2 = nodeList2.length - 1;
+        while (pointer1 < nodeList1.length && pointer2 >= 0) {
+            if (nodeList1[pointer1] + nodeList2[pointer2] === target) {
+                return true;
+            } else if (nodeList1[pointer1] + nodeList2[pointer2] < target) {
+                pointer1++;
+            } else {
+                pointer2--;
+            }
+        }
+
+        return false;
     }
 }
 ```
@@ -1974,7 +2139,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn two_sum_bs_ts(
+    pub fn two_sum_bsts(
         root1: Option<Rc<RefCell<TreeNode>>>,
         root2: Option<Rc<RefCell<TreeNode>>>,
         target: i32,
@@ -2015,6 +2180,93 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @param {number} target
+     * @return {boolean}
+     */
+    twoSumBSTs(
+        root1: TreeNode | null,
+        root2: TreeNode | null,
+        target: number,
+    ): boolean {
+        function* morrisTraversal(root: TreeNode | null): Generator<number> {
+            let current = root;
+            while (current) {
+                if (!current.left) {
+                    yield current.val;
+                    current = current.right;
+                } else {
+                    let pre: TreeNode = current.left;
+                    while (pre.right && pre.right !== current) {
+                        pre = pre.right;
+                    }
+                    if (!pre.right) {
+                        pre.right = current;
+                        current = current.left;
+                    } else {
+                        pre.right = null;
+                        yield current.val;
+                        current = current.right;
+                    }
+                }
+            }
+        }
+
+        function* reversedMorrisTraversal(
+            root: TreeNode | null,
+        ): Generator<number> {
+            let current = root;
+            while (current) {
+                if (!current.right) {
+                    yield current.val;
+                    current = current.left;
+                } else {
+                    let pre: TreeNode = current.right;
+                    while (pre.left && pre.left !== current) {
+                        pre = pre.left;
+                    }
+                    if (!pre.left) {
+                        pre.left = current;
+                        current = current.right;
+                    } else {
+                        pre.left = null;
+                        yield current.val;
+                        current = current.left;
+                    }
+                }
+            }
+        }
+
+        const iterator1 = morrisTraversal(root1);
+        const iterator2 = reversedMorrisTraversal(root2);
+
+        let result1 = iterator1.next();
+        let result2 = iterator2.next();
+
+        let value1: number | null = result1.done ? null : result1.value;
+        let value2: number | null = result2.done ? null : result2.value;
+
+        while (value1 !== null && value2 !== null) {
+            if (value1 + value2 === target) {
+                return true;
+            } else if (value1 + value2 < target) {
+                result1 = iterator1.next();
+                value1 = result1.done ? null : result1.value;
+            } else {
+                result2 = iterator2.next();
+                value2 = result2.done ? null : result2.value;
+            }
+        }
+
+        return false;
     }
 }
 ```

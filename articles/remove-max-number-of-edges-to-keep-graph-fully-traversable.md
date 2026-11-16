@@ -645,6 +645,94 @@ impl Solution {
 }
 ```
 
+```typescript
+class DSU {
+    private n: number;
+    private parent: number[];
+    private size: number[];
+
+    /**
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.n = n;
+        this.parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
+        this.size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {number}
+     */
+    union(u: number, v: number): number {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) {
+            return 0;
+        }
+        if (this.size[pu] < this.size[pv]) {
+            [pu, pv] = [pv, pu];
+        }
+        this.size[pu] += this.size[pv];
+        this.parent[pv] = pu;
+        this.n--;
+        return 1;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConnected(): boolean {
+        return this.n === 1;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maxNumEdgesToRemove(n: number, edges: number[][]): number {
+        let alice = new DSU(n),
+            bob = new DSU(n);
+        let cnt = 0;
+
+        for (let [type, src, dst] of edges) {
+            if (type === 3) {
+                cnt += alice.union(src, dst) | bob.union(src, dst);
+            }
+        }
+
+        for (let [type, src, dst] of edges) {
+            if (type === 1) {
+                cnt += alice.union(src, dst);
+            } else if (type === 2) {
+                cnt += bob.union(src, dst);
+            }
+        }
+
+        return alice.isConnected() && bob.isConnected()
+            ? edges.length - cnt
+            : -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -609,6 +609,87 @@ impl LockingTree {
 }
 ```
 
+```typescript
+class LockingTree {
+    private parent: number[];
+    private child: number[][];
+    private locked: number[];
+
+    /**
+     * @constructor
+     * @param {number[]} parent
+     */
+    constructor(parent: number[]) {
+        this.parent = parent;
+        this.child = Array.from({ length: parent.length }, () => []);
+        this.locked = new Array(parent.length).fill(0);
+
+        for (let node = 1; node < parent.length; node++) {
+            this.child[parent[node]].push(node);
+        }
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    lock(num: number, user: number): boolean {
+        if (this.locked[num] !== 0) {
+            return false;
+        }
+        this.locked[num] = user;
+        return true;
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    unlock(num: number, user: number): boolean {
+        if (this.locked[num] !== user) {
+            return false;
+        }
+        this.locked[num] = 0;
+        return true;
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    upgrade(num: number, user: number): boolean {
+        let node = num;
+        while (node !== -1) {
+            if (this.locked[node] !== 0) {
+                return false;
+            }
+            node = this.parent[node];
+        }
+
+        const dfs = (node: number): number => {
+            let lockedCount = 0;
+            if (this.locked[node] !== 0) {
+                lockedCount++;
+                this.locked[node] = 0;
+            }
+            for (let nei of this.child[node]) {
+                lockedCount += dfs(nei);
+            }
+            return lockedCount;
+        };
+
+        if (dfs(num) > 0) {
+            this.locked[num] = user;
+            return true;
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1225,6 +1306,89 @@ impl LockingTree {
 }
 ```
 
+```typescript
+class LockingTree {
+    private parent: number[];
+    private child: number[][];
+    private locked: number[];
+
+    /**
+     * @constructor
+     * @param {number[]} parent
+     */
+    constructor(parent: number[]) {
+        this.parent = parent;
+        this.child = Array.from({ length: parent.length }, () => []);
+        this.locked = new Array(parent.length).fill(0);
+
+        for (let node = 1; node < parent.length; node++) {
+            this.child[parent[node]].push(node);
+        }
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    lock(num: number, user: number): boolean {
+        if (this.locked[num] !== 0) {
+            return false;
+        }
+        this.locked[num] = user;
+        return true;
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    unlock(num: number, user: number): boolean {
+        if (this.locked[num] !== user) {
+            return false;
+        }
+        this.locked[num] = 0;
+        return true;
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    upgrade(num: number, user: number): boolean {
+        let node = num;
+        while (node !== -1) {
+            if (this.locked[node] !== 0) {
+                return false;
+            }
+            node = this.parent[node];
+        }
+
+        let lockedCount = 0;
+        const q = new Queue([num]);
+
+        while (!q.isEmpty()) {
+            node = q.pop();
+            if (this.locked[node]) {
+                this.locked[node] = 0;
+                lockedCount++;
+            }
+            for (let nei of this.child[node]) {
+                q.push(nei);
+            }
+        }
+
+        if (lockedCount > 0) {
+            this.locked[num] = user;
+            return true;
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1837,6 +2001,87 @@ impl LockingTree {
             return true;
         }
         false
+    }
+}
+```
+
+```typescript
+class LockingTree {
+    private parent: number[];
+    private child: number[][];
+    private locked: number[];
+
+    /**
+     * @constructor
+     * @param {number[]} parent
+     */
+    constructor(parent: number[]) {
+        this.parent = parent;
+        this.child = Array.from({ length: parent.length }, () => []);
+        this.locked = new Array(parent.length).fill(0);
+
+        for (let node = 1; node < parent.length; node++) {
+            this.child[parent[node]].push(node);
+        }
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    lock(num: number, user: number): boolean {
+        if (this.locked[num] !== 0) {
+            return false;
+        }
+        this.locked[num] = user;
+        return true;
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    unlock(num: number, user: number): boolean {
+        if (this.locked[num] !== user) {
+            return false;
+        }
+        this.locked[num] = 0;
+        return true;
+    }
+
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
+     */
+    upgrade(num: number, user: number): boolean {
+        let node = num;
+        while (node !== -1) {
+            if (this.locked[node] !== 0) {
+                return false;
+            }
+            node = this.parent[node];
+        }
+
+        let lockedCount = 0;
+        let stack: number[] = [num];
+
+        while (stack.length) {
+            node = stack.pop()!;
+            if (this.locked[node]) {
+                this.locked[node] = 0;
+                lockedCount++;
+            }
+            stack.push(...this.child[node]);
+        }
+
+        if (lockedCount > 0) {
+            this.locked[num] = user;
+            return true;
+        }
+        return false;
     }
 }
 ```

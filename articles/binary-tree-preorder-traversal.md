@@ -300,6 +300,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    preorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+
+        const preorder = (node: TreeNode | null): void => {
+            if (!node) return;
+            res.push(node.val);
+            preorder(node.left);
+            preorder(node.right);
+        };
+
+        preorder(root);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,7 +577,7 @@ func preorderTraversal(root *TreeNode) []int {
 class Solution {
     fun preorderTraversal(root: TreeNode?): List<Int> {
         val res = mutableListOf<Int>()
-        val stack = ArrayDeque<TreeNode?>()
+        val stack = LinkedList<TreeNode?>()
         var cur = root
 
         while (cur != null || stack.isNotEmpty()) {
@@ -629,6 +651,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    preorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        const stack: (TreeNode | null)[] = [];
+        let cur = root;
+
+        while (cur || stack.length > 0) {
+            if (cur) {
+                res.push(cur.val);
+                stack.push(cur.right);
+                cur = cur.left;
+            } else {
+                cur = stack.pop()!;
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1047,6 +1095,42 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    preorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        let cur = root;
+
+        while (cur) {
+            if (!cur.left) {
+                res.push(cur.val);
+                cur = cur.right;
+            } else {
+                let prev = cur.left;
+                while (prev.right && prev.right !== cur) {
+                    prev = prev.right;
+                }
+
+                if (!prev.right) {
+                    res.push(cur.val);
+                    prev.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    cur = cur.right;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

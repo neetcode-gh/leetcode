@@ -280,6 +280,83 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsLeaf(TreeNode t) {
+        return t.left == null && t.right == null;
+    }
+
+    public void AddLeaves(List<int> res, TreeNode root) {
+        if (IsLeaf(root)) {
+            res.Add(root.val);
+        } else {
+            if (root.left != null) {
+                AddLeaves(res, root.left);
+            }
+            if (root.right != null) {
+                AddLeaves(res, root.right);
+            }
+        }
+    }
+
+    public IList<int> BoundaryOfBinaryTree(TreeNode root) {
+        List<int> res = new List<int>();
+
+        if (root == null) {
+            return res;
+        }
+
+        if (!IsLeaf(root)) {
+            res.Add(root.val);
+        }
+
+        TreeNode t = root.left;
+        while (t != null) {
+            if (!IsLeaf(t)) {
+                res.Add(t.val);
+            }
+            if (t.left != null) {
+                t = t.left;
+            } else {
+                t = t.right;
+            }
+        }
+
+        AddLeaves(res, root);
+
+        Stack<int> s = new Stack<int>();
+        t = root.right;
+        while (t != null) {
+            if (!IsLeaf(t)) {
+                s.Push(t.val);
+            }
+            if (t.right != null) {
+                t = t.right;
+            } else {
+                t = t.left;
+            }
+        }
+        while (s.Count > 0) {
+            res.Add(s.Pop());
+        }
+        return res;
+    }
+}
+```
+
 ```go
 func isLeaf(t *TreeNode) bool {
     return t.Left == nil && t.Right == nil
@@ -517,6 +594,75 @@ impl Solution {
                 Self::add_leaves(right, res);
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    isLeaf(t: TreeNode): boolean {
+        return t.left === null && t.right === null;
+    }
+
+    addLeaves(res: number[], root: TreeNode): void {
+        if (this.isLeaf(root)) {
+            res.push(root.val);
+        } else {
+            if (root.left !== null) {
+                this.addLeaves(res, root.left);
+            }
+            if (root.right !== null) {
+                this.addLeaves(res, root.right);
+            }
+        }
+    }
+
+    boundaryOfBinaryTree(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        if (root === null) {
+            return res;
+        }
+
+        if (!this.isLeaf(root)) {
+            res.push(root.val);
+        }
+
+        let t: TreeNode | null = root.left;
+        while (t !== null) {
+            if (!this.isLeaf(t)) {
+                res.push(t.val);
+            }
+            if (t.left !== null) {
+                t = t.left;
+            } else {
+                t = t.right;
+            }
+        }
+
+        this.addLeaves(res, root);
+
+        const stack: number[] = [];
+        t = root.right;
+        while (t !== null) {
+            if (!this.isLeaf(t)) {
+                stack.push(t.val);
+            }
+            if (t.right !== null) {
+                t = t.right;
+            } else {
+                t = t.left;
+            }
+        }
+
+        while (stack.length > 0) {
+            res.push(stack.pop()!);
+        }
+
+        return res;
     }
 }
 ```
@@ -813,6 +959,85 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<int> BoundaryOfBinaryTree(TreeNode root) {
+        List<int> leftBoundary = new List<int>();
+        List<int> rightBoundary = new List<int>();
+        List<int> leaves = new List<int>();
+        Preorder(root, leftBoundary, rightBoundary, leaves, 0);
+        leftBoundary.AddRange(leaves);
+        leftBoundary.AddRange(rightBoundary);
+        return leftBoundary;
+    }
+
+    public bool IsLeaf(TreeNode cur) {
+        return cur.left == null && cur.right == null;
+    }
+
+    public bool IsRightBoundary(int flag) {
+        return flag == 2;
+    }
+
+    public bool IsLeftBoundary(int flag) {
+        return flag == 1;
+    }
+
+    public bool IsRoot(int flag) {
+        return flag == 0;
+    }
+
+    public int LeftChildFlag(TreeNode cur, int flag) {
+        if (IsLeftBoundary(flag) || IsRoot(flag)) {
+            return 1;
+        } else if (IsRightBoundary(flag) && cur.right == null) {
+            return 2;
+        }
+        return 3;
+    }
+
+    public int RightChildFlag(TreeNode cur, int flag) {
+        if (IsRightBoundary(flag) || IsRoot(flag)) {
+            return 2;
+        } else if (IsLeftBoundary(flag) && cur.left == null) {
+            return 1;
+        }
+        return 3;
+    }
+
+    public void Preorder(TreeNode cur, List<int> leftBoundary, List<int> rightBoundary,
+                         List<int> leaves, int flag) {
+        if (cur == null) {
+            return;
+        }
+
+        if (IsRightBoundary(flag)) {
+            rightBoundary.Insert(0, cur.val);
+        } else if (IsLeftBoundary(flag) || IsRoot(flag)) {
+            leftBoundary.Add(cur.val);
+        } else if (IsLeaf(cur)) {
+            leaves.Add(cur.val);
+        }
+
+        Preorder(cur.left, leftBoundary, rightBoundary, leaves, LeftChildFlag(cur, flag));
+        Preorder(cur.right, leftBoundary, rightBoundary, leaves, RightChildFlag(cur, flag));
+    }
+}
+```
+
 ```go
 func boundaryOfBinaryTree(root *TreeNode) []int {
     leftBoundary := []int{}
@@ -1020,6 +1245,95 @@ impl Solution {
             Self::preorder(&left, lf, left_boundary, right_boundary, leaves);
             Self::preorder(&right, rf, left_boundary, right_boundary, leaves);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    boundaryOfBinaryTree(root: TreeNode | null): number[] {
+        const left_boundary: number[] = [],
+            right_boundary: number[] = [],
+            leaves: number[] = [];
+        this.preorder(root, left_boundary, right_boundary, leaves, 0);
+        left_boundary.push(...leaves);
+        left_boundary.push(...right_boundary);
+        return left_boundary;
+    }
+
+    isLeaf(cur: TreeNode): boolean {
+        return cur.left === null && cur.right === null;
+    }
+
+    isRightBoundary(flag: number): boolean {
+        return flag === 2;
+    }
+
+    isLeftBoundary(flag: number): boolean {
+        return flag === 1;
+    }
+
+    isRoot(flag: number): boolean {
+        return flag === 0;
+    }
+
+    leftChildFlag(cur: TreeNode, flag: number): number {
+        if (this.isLeftBoundary(flag) || this.isRoot(flag)) {
+            return 1;
+        } else if (this.isRightBoundary(flag) && cur.right === null) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    rightChildFlag(cur: TreeNode, flag: number): number {
+        if (this.isRightBoundary(flag) || this.isRoot(flag)) {
+            return 2;
+        } else if (this.isLeftBoundary(flag) && cur.left === null) {
+            return 1;
+        } else {
+            return 3;
+        }
+    }
+
+    preorder(
+        cur: TreeNode | null,
+        left_boundary: number[],
+        right_boundary: number[],
+        leaves: number[],
+        flag: number,
+    ): void {
+        if (cur === null) {
+            return;
+        }
+
+        if (this.isRightBoundary(flag)) {
+            right_boundary.unshift(cur.val);
+        } else if (this.isLeftBoundary(flag) || this.isRoot(flag)) {
+            left_boundary.push(cur.val);
+        } else if (this.isLeaf(cur)) {
+            leaves.push(cur.val);
+        }
+
+        this.preorder(
+            cur.left,
+            left_boundary,
+            right_boundary,
+            leaves,
+            this.leftChildFlag(cur, flag),
+        );
+        this.preorder(
+            cur.right,
+            left_boundary,
+            right_boundary,
+            leaves,
+            this.rightChildFlag(cur, flag),
+        );
     }
 }
 ```

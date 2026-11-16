@@ -232,6 +232,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        return this.dfs(nums, 0, -1);
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} i
+     * @param {number} j
+     * @return {number}
+     */
+    dfs(nums: number[], i: number, j: number): number {
+        if (i === nums.length) {
+            return 0;
+        }
+
+        let LIS = this.dfs(nums, i + 1, j); // not include
+
+        if (j === -1 || nums[j] < nums[i]) {
+            LIS = Math.max(LIS, 1 + this.dfs(nums, i + 1, i)); // include
+        }
+
+        return LIS;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,6 +564,44 @@ impl Solution {
         }
 
         dfs(&nums, &mut memo, 0, -1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        const n = nums.length;
+        const memo: number[][] = Array.from({ length: n }, () =>
+            Array(n + 2).fill(-1),
+        );
+
+        return this.dfs(nums, 0, -1, memo);
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} i
+     * @param {number} j
+     * @param {number[][]} memo
+     * @return {number}
+     */
+    dfs(nums: number[], i: number, j: number, memo: number[][]): number {
+        if (i === nums.length) return 0;
+        if (memo[i][j + 1] !== -1) return memo[i][j + 1];
+
+        let LIS = this.dfs(nums, i + 1, j, memo);
+
+        if (j === -1 || nums[j] < nums[i]) {
+            LIS = Math.max(LIS, 1 + this.dfs(nums, i + 1, i, memo));
+        }
+
+        memo[i][j + 1] = LIS;
+        return LIS;
     }
 }
 ```
@@ -845,6 +915,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        const n = nums.length;
+        const memo: number[] = new Array(n).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (memo[i] !== -1) {
+                return memo[i];
+            }
+
+            let LIS = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (nums[i] < nums[j]) {
+                    LIS = Math.max(LIS, 1 + dfs(j));
+                }
+            }
+
+            memo[i] = LIS;
+            return LIS;
+        };
+
+        return Math.max(...nums.map((_, i) => dfs(i)));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1087,6 +1188,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            new Array(n + 1).fill(0),
+        );
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let j = i - 1; j >= -1; j--) {
+                let LIS = dp[i + 1][j + 1]; // Not including nums[i]
+
+                if (j === -1 || nums[j] < nums[i]) {
+                    LIS = Math.max(LIS, 1 + dp[i + 1][i + 1]); // Including nums[i]
+                }
+
+                dp[i][j + 1] = LIS;
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1277,6 +1407,27 @@ impl Solution {
         }
 
         *lis.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        const LIS: number[] = new Array(nums.length).fill(1);
+
+        for (let i = nums.length - 1; i >= 0; i--) {
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[i] < nums[j]) {
+                    LIS[i] = Math.max(LIS[i], 1 + LIS[j]);
+                }
+            }
+        }
+        return Math.max(...LIS);
     }
 }
 ```
@@ -1650,79 +1801,79 @@ public class Solution {
 
 ```go
 type SegmentTree struct {
-	n    int
-	tree []int
+    n    int
+    tree []int
 }
 
 func NewSegmentTree(N int) *SegmentTree {
-	n := N
-	for (n & (n - 1)) != 0 {
-		n++
-	}
-	tree := make([]int, 2*n)
-	return &SegmentTree{n: n, tree: tree}
+    n := N
+    for (n & (n - 1)) != 0 {
+        n++
+    }
+    tree := make([]int, 2*n)
+    return &SegmentTree{n: n, tree: tree}
 }
 
 func (seg *SegmentTree) Update(i, val int) {
-	seg.tree[seg.n+i] = val
-	j := (seg.n + i) >> 1
-	for j >= 1 {
-		seg.tree[j] = max(seg.tree[j<<1], seg.tree[j<<1|1])
-		j >>= 1
-	}
+    seg.tree[seg.n+i] = val
+    j := (seg.n + i) >> 1
+    for j >= 1 {
+        seg.tree[j] = max(seg.tree[j<<1], seg.tree[j<<1|1])
+        j >>= 1
+    }
 }
 
 func (seg *SegmentTree) Query(l, r int) int {
-	if l > r {
-		return 0
-	}
-	res := -1 << 63
-	l += seg.n
-	r += seg.n + 1
-	for l < r {
-		if l&1 != 0 {
-			res = max(res, seg.tree[l])
-			l++
-		}
-		if r&1 != 0 {
-			r--
-			res = max(res, seg.tree[r])
-		}
-		l >>= 1
-		r >>= 1
-	}
-	return res
+    if l > r {
+        return 0
+    }
+    res := -1 << 63
+    l += seg.n
+    r += seg.n + 1
+    for l < r {
+        if l&1 != 0 {
+            res = max(res, seg.tree[l])
+            l++
+        }
+        if r&1 != 0 {
+            r--
+            res = max(res, seg.tree[r])
+        }
+        l >>= 1
+        r >>= 1
+    }
+    return res
 }
 
 func compress(arr []int) []int {
-	sortedArr := make([]int, len(arr))
-	copy(sortedArr, arr)
-	sort.Ints(sortedArr)
-	order := make([]int, len(arr))
-	for i, num := range arr {
-		order[i] = sort.SearchInts(sortedArr, num)
-	}
-	return order
+    sortedArr := make([]int, len(arr))
+    copy(sortedArr, arr)
+    sort.Ints(sortedArr)
+    order := make([]int, len(arr))
+    for i, num := range arr {
+        order[i] = sort.SearchInts(sortedArr, num)
+    }
+    return order
 }
 
 func lengthOfLIS(nums []int) int {
-	nums = compress(nums)
-	n := len(nums)
-	segTree := NewSegmentTree(n)
-	LIS := 0
-	for _, num := range nums {
-		curLIS := segTree.Query(0, num-1) + 1
-		segTree.Update(num, curLIS)
-		LIS = max(LIS, curLIS)
-	}
-	return LIS
+    nums = compress(nums)
+    n := len(nums)
+    segTree := NewSegmentTree(n)
+    LIS := 0
+    for _, num := range nums {
+        curLIS := segTree.Query(0, num-1) + 1
+        segTree.Update(num, curLIS)
+        LIS = max(LIS, curLIS)
+    }
+    return LIS
 }
 
 func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+    if a > b {
+        return a
+    }
+    return b
 }
 ```
 
@@ -1910,6 +2061,88 @@ impl Solution {
 }
 ```
 
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    constructor(N: number, a: number[]) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = new Array(2 * this.n).fill(0);
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     */
+    update(i: number, val: number): void {
+        this.tree[this.n + i] = val;
+        let j = (this.n + i) >> 1;
+        while (j >= 1) {
+            this.tree[j] = Math.max(this.tree[j << 1], this.tree[(j << 1) | 1]);
+            j >>= 1;
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        if (l > r) {
+            return 0;
+        }
+        let res = -Infinity;
+        l += this.n;
+        r += this.n + 1;
+        while (l < r) {
+            if (l & 1) {
+                res = Math.max(res, this.tree[l]);
+                l++;
+            }
+            if (r & 1) {
+                r--;
+                res = Math.max(res, this.tree[r]);
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        const sortedArr = Array.from(new Set(nums)).sort((a, b) => a - b);
+        const map = new Map<number, number>();
+
+        sortedArr.forEach((num, index) => {
+            map.set(num, index);
+        });
+
+        const order = nums.map((num) => map.get(num)!);
+        const n = sortedArr.length;
+        const segTree = new SegmentTree(n, order);
+
+        let LIS = 0;
+        for (const num of order) {
+            const curLIS = segTree.query(0, num - 1) + 1;
+            segTree.update(num, curLIS);
+            LIS = Math.max(LIS, curLIS);
+        }
+        return LIS;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2066,24 +2299,24 @@ public class Solution {
 
 ```go
 func lengthOfLIS(nums []int) int {
-	dp := []int{}
-	dp = append(dp, nums[0])
+    dp := []int{}
+    dp = append(dp, nums[0])
 
-	LIS := 1
-	for i := 1; i < len(nums); i++ {
-		if dp[len(dp)-1] < nums[i] {
-			dp = append(dp, nums[i])
-			LIS++
-			continue
-		}
+    LIS := 1
+    for i := 1; i < len(nums); i++ {
+        if dp[len(dp)-1] < nums[i] {
+            dp = append(dp, nums[i])
+            LIS++
+            continue
+        }
 
-		idx := sort.Search(len(dp), func(j int) bool {
-			return dp[j] >= nums[i]
-		})
-		dp[idx] = nums[i]
-	}
+        idx := sort.Search(len(dp), func(j int) bool {
+            return dp[j] >= nums[i]
+        })
+        dp[idx] = nums[i]
+    }
 
-	return LIS
+    return LIS
 }
 ```
 
@@ -2158,6 +2391,42 @@ impl Solution {
         }
 
         dp.len() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums: number[]): number {
+        const dp: number[] = [];
+        dp.push(nums[0]);
+
+        let LIS = 1;
+        for (let i = 1; i < nums.length; i++) {
+            if (dp[dp.length - 1] < nums[i]) {
+                dp.push(nums[i]);
+                LIS++;
+                continue;
+            }
+
+            let left = 0,
+                right = dp.length - 1;
+            while (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                if (dp[mid] < nums[i]) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            dp[left] = nums[i];
+        }
+
+        return LIS;
     }
 }
 ```

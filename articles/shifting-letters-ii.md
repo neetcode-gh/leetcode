@@ -217,6 +217,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number[][]} shifts
+     * @return {string}
+     */
+    shiftingLetters(s: string, shifts: number[][]): string {
+        let arr = Array.from(s).map((c) => c.charCodeAt(0) - 97);
+
+        for (const [l, r, d] of shifts) {
+            for (let i = l; i <= r; i++) {
+                arr[i] = (arr[i] + (d === 1 ? 1 : -1) + 26) % 26;
+            }
+        }
+
+        return arr.map((c) => String.fromCharCode(c + 97)).join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -515,6 +536,40 @@ impl Solution {
         }
 
         res.iter().map(|&c| (c as u8 + b'a') as char).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number[][]} shifts
+     * @return {string}
+     */
+    shiftingLetters(s: string, shifts: number[][]): string {
+        const n = s.length;
+        const prefix_diff: number[] = Array(n + 1).fill(0);
+
+        for (const [left, right, d] of shifts) {
+            const val = d === 1 ? 1 : -1;
+            prefix_diff[left] += val;
+            prefix_diff[right + 1] -= val;
+        }
+
+        let diff = 0;
+        const res = Array.from(s).map(
+            (c) => c.charCodeAt(0) - 'a'.charCodeAt(0),
+        );
+
+        for (let i = 0; i < n; i++) {
+            diff += prefix_diff[i];
+            res[i] = ((diff % 26) + res[i] + 26) % 26;
+        }
+
+        return res
+            .map((x) => String.fromCharCode('a'.charCodeAt(0) + x))
+            .join('');
     }
 }
 ```
@@ -1069,6 +1124,85 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class BIT {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @constructor
+     * @param {number} size
+     */
+    constructor(size: number) {
+        this.n = size + 2;
+        this.tree = new Array(this.n).fill(0);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} delta
+     * @return {void}
+     */
+    update(index: number, delta: number): void {
+        index++;
+        while (index < this.n) {
+            this.tree[index] += delta;
+            index += index & -index;
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    prefixSum(index: number): number {
+        index++;
+        let sum = 0;
+        while (index > 0) {
+            sum += this.tree[index];
+            index -= index & -index;
+        }
+        return sum;
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @param {number} delta
+     * @return {void}
+     */
+    rangeUpdate(left: number, right: number, delta: number): void {
+        this.update(left, delta);
+        this.update(right + 1, -delta);
+    }
+}
+
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number[][]} shifts
+     * @return {string}
+     */
+    shiftingLetters(s: string, shifts: number[][]): string {
+        const n = s.length;
+        const bit = new BIT(n);
+        for (const [left, right, d] of shifts) {
+            const delta = d === 1 ? 1 : -1;
+            bit.rangeUpdate(left, right, delta);
+        }
+
+        let res = '';
+        for (let i = 0; i < n; i++) {
+            const shift = bit.prefixSum(i) % 26;
+            const code = (s.charCodeAt(i) - 97 + shift + 26) % 26;
+            res += String.fromCharCode(97 + code);
+        }
+
+        return res;
     }
 }
 ```

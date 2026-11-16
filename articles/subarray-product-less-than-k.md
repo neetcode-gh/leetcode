@@ -208,6 +208,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    numSubarrayProductLessThanK(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let curProd = 1;
+            for (let j = i; j < n; j++) {
+                curProd *= nums[j];
+                if (curProd >= k) break;
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -380,6 +405,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func numSubarrayProductLessThanK(nums []int, k int) int {
     if k <= 1 {
         return 0
@@ -492,6 +519,40 @@ impl Solution {
             res += (l - (i + 1)) as i32;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    numSubarrayProductLessThanK(nums: number[], k: number): number {
+        if (k <= 1) return 0;
+        const n = nums.length;
+        const logs: number[] = new Array(n + 1).fill(0);
+        const logK = Math.log(k);
+        for (let i = 0; i < n; i++) {
+            logs[i + 1] = logs[i] + Math.log(nums[i]);
+        }
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            let l = i + 1,
+                r = n + 1;
+            while (l < r) {
+                let mid = (l + r) >> 1;
+                if (logs[mid] < logs[i] + logK - 1e-12) {
+                    l = mid + 1;
+                } else {
+                    r = mid;
+                }
+            }
+            res += l - (i + 1);
+        }
+        return res;
     }
 }
 ```
@@ -685,6 +746,29 @@ impl Solution {
             res += (r - l + 1) as i32;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    numSubarrayProductLessThanK(nums: number[], k: number): number {
+        let res = 0,
+            l = 0,
+            product = 1;
+        for (let r = 0; r < nums.length; r++) {
+            product *= nums[r];
+            while (l <= r && product >= k) {
+                product = Math.floor(product / nums[l++]);
+            }
+            res += r - l + 1;
+        }
+        return res;
     }
 }
 ```

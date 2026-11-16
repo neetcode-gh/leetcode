@@ -359,6 +359,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    largestValues(root: TreeNode | null): number[] {
+        if (!root) return [];
+
+        const res: number[] = [];
+        const q = new Queue([root]);
+
+        while (!q.isEmpty()) {
+            let rowMax: number = q.front().val;
+            for (let i = q.size(); i > 0; i--) {
+                const node: TreeNode = q.pop();
+                rowMax = Math.max(rowMax, node.val);
+                if (node.left) q.push(node.left);
+                if (node.right) q.push(node.right);
+            }
+            res.push(rowMax);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -678,6 +706,33 @@ impl Solution {
             Self::dfs(&n.left, level + 1, res);
             Self::dfs(&n.right, level + 1, res);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    largestValues(root: TreeNode | null): number[] {
+        if (!root) return [];
+
+        const res: number[] = [];
+        const dfs = (node: TreeNode | null, level: number): void => {
+            if (!node) return;
+            if (level === res.length) {
+                res.push(node.val);
+            } else {
+                res[level] = Math.max(res[level], node.val);
+            }
+            dfs(node.left, level + 1);
+            dfs(node.right, level + 1);
+        };
+
+        dfs(root, 0);
+        return res;
     }
 }
 ```
@@ -1044,6 +1099,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    largestValues(root: TreeNode | null): number[] {
+        if (!root) return [];
+
+        const res: number[] = [];
+        const stack: [TreeNode, number][] = [[root, 0]];
+        while (stack.length) {
+            const [node, level] = stack.pop()!;
+            if (level === res.length) {
+                res.push(node.val);
+            } else {
+                res[level] = Math.max(res[level], node.val);
+            }
+
+            if (node.right) stack.push([node.right, level + 1]);
+            if (node.left) stack.push([node.left, level + 1]);
+        }
+
+        return res;
     }
 }
 ```

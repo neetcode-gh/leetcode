@@ -108,6 +108,8 @@ public class Solution {
 ```
 
 ```go
+import "sort"
+
 func frequencySort(nums []int) []int {
     count := make(map[int]int)
     for _, num := range nums {
@@ -176,6 +178,28 @@ impl Solution {
         });
 
         nums
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    frequencySort(nums: number[]): number[] {
+        const count: { [key: number]: number } = {};
+        for (let num of nums) {
+            count[num] = (count[num] || 0) + 1;
+        }
+
+        nums.sort((a, b) => {
+            if (count[a] !== count[b]) return count[a] - count[b];
+            return b - a;
+        });
+
+        return nums;
     }
 }
 ```

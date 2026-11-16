@@ -154,6 +154,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} details
+     * @return {number}
+     */
+    countSeniors(details: string[]): number {
+        let res = 0;
+        for (let d of details) {
+            if (parseInt(d.slice(11, 13)) > 60) {
+                res++;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -331,6 +349,27 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} details
+     * @return {number}
+     */
+    countSeniors(details: string[]): number {
+        let res = 0;
+        for (let d of details) {
+            let ten = d.charCodeAt(11) - 48;
+            let one = d.charCodeAt(12) - 48;
+            let age = one + 10 * ten;
+            if (age > 60) {
+                res++;
+            }
+        }
+        return res;
     }
 }
 ```

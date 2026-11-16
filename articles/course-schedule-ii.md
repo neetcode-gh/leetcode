@@ -451,6 +451,71 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {number[]}
+     */
+    findOrder(numCourses: number, prerequisites: number[][]): number[] {
+        const prereq = new Map<number, number[]>();
+        for (const [course, pre] of prerequisites) {
+            if (!prereq.has(course)) {
+                prereq.set(course, []);
+            }
+            prereq.get(course)!.push(pre);
+        }
+
+        const output: number[] = [];
+        const visit = new Set<number>();
+        const cycle = new Set<number>();
+
+        for (let c = 0; c < numCourses; c++) {
+            if (!this.dfs(c, prereq, visit, cycle, output)) {
+                return [];
+            }
+        }
+
+        return output;
+    }
+
+    /**
+     * @param {number} course
+     * @param {Map} prereq
+     * @param {Set} visit
+     * @param {Set} cycle
+     * @param {number[]} output
+     * @return {boolean}
+     */
+    dfs(
+        course: number,
+        prereq: Map<number, number[]>,
+        visit: Set<number>,
+        cycle: Set<number>,
+        output: number[],
+    ): boolean {
+        if (cycle.has(course)) {
+            return false;
+        }
+        if (visit.has(course)) {
+            return true;
+        }
+
+        cycle.add(course);
+        for (const pre of prereq.get(course) || []) {
+            if (!this.dfs(pre, prereq, visit, cycle, output)) {
+                return false;
+            }
+        }
+        cycle.delete(course);
+        visit.add(course);
+        output.push(course);
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -848,6 +913,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {number[]}
+     */
+    findOrder(numCourses: number, prerequisites: number[][]): number[] {
+        let indegree: number[] = Array(numCourses).fill(0);
+        let adj: number[][] = Array.from({ length: numCourses }, () => []);
+        for (let [src, dst] of prerequisites) {
+            indegree[dst]++;
+            adj[src].push(dst);
+        }
+
+        let q = new Queue();
+        for (let i = 0; i < numCourses; i++) {
+            if (indegree[i] === 0) {
+                q.push(i);
+            }
+        }
+
+        let finish = 0;
+        let output: number[] = Array(numCourses);
+        while (!q.isEmpty()) {
+            let node: number = q.pop();
+            output[numCourses - finish - 1] = node;
+            finish++;
+            for (let nei of adj[node]) {
+                indegree[nei]--;
+                if (indegree[nei] === 0) {
+                    q.push(nei);
+                }
+            }
+        }
+
+        if (finish !== numCourses) {
+            return [];
+        }
+        return output;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1219,6 +1328,46 @@ impl Solution {
         }
 
         if output.len() == n { output } else { vec![] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {number[]}
+     */
+    findOrder(numCourses: number, prerequisites: number[][]): number[] {
+        let adj: number[][] = Array.from({ length: numCourses }, () => []);
+        let indegree: number[] = Array(numCourses).fill(0);
+
+        for (let [nxt, pre] of prerequisites) {
+            indegree[nxt]++;
+            adj[pre].push(nxt);
+        }
+
+        let output: number[] = [];
+
+        const dfs = (node: number): void => {
+            output.push(node);
+            indegree[node]--;
+            for (let nei of adj[node]) {
+                indegree[nei]--;
+                if (indegree[nei] === 0) {
+                    dfs(nei);
+                }
+            }
+        };
+
+        for (let i = 0; i < numCourses; i++) {
+            if (indegree[i] === 0) {
+                dfs(i);
+            }
+        }
+
+        return output.length === numCourses ? output : [];
     }
 }
 ```

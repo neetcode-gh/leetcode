@@ -174,6 +174,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minimumOneBitOperations(n: number): number {
+        if (n === 0) {
+            return 0;
+        }
+
+        let k = 1;
+        while (k << 1 <= n) {
+            k <<= 1;
+        }
+
+        return (k << 1) - 1 - this.minimumOneBitOperations(k ^ n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -391,6 +412,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minimumOneBitOperations(n: number): number {
+        let res = 0,
+            k = 1 << 30,
+            sign = 1;
+
+        while (n !== 0) {
+            while (k > n) {
+                k >>= 1;
+            }
+
+            res += sign * ((k << 1) - 1);
+            sign *= -1;
+            n ^= k;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -554,6 +601,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minimumOneBitOperations(n: number): number {
+        let res = 0,
+            sign = 1;
+        while (n !== 0) {
+            res += sign * (n ^ (n - 1));
+            n &= n - 1;
+            sign *= -1;
+        }
+        return Math.abs(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -695,6 +761,23 @@ impl Solution {
             res ^= n;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minimumOneBitOperations(n: number): number {
+        let res = n;
+        while (n !== 0) {
+            n >>= 1;
+            res ^= n;
+        }
+        return res;
     }
 }
 ```

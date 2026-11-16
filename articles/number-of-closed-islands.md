@@ -411,6 +411,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    closedIsland(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions = [0, 1, 0, -1, 0];
+        const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+
+        const dfs = (r: number, c: number): boolean => {
+            if (r < 0 || c < 0 || r === ROWS || c === COLS) return false;
+            if (grid[r][c] === 1 || visit[r][c]) return true;
+
+            visit[r][c] = true;
+            let res = true;
+            for (let d = 0; d < 4; d++) {
+                if (!dfs(r + directions[d], c + directions[d + 1])) {
+                    res = false;
+                }
+            }
+            return res;
+        };
+
+        let res = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 0 && !visit[r][c]) {
+                    if (dfs(r, c)) res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -746,8 +787,8 @@ class Solution {
         }
 
         var res = 0
-        for r in 1..<(ROWS - 1) {
-            for c in 1..<(COLS - 1) {
+        for r in stride(from: 1, to: ROWS - 1, by: 1) {
+            for c in stride(from: 1, to: COLS - 1, by: 1) {
                 if grid[r][c] == 0 {
                     dfs(r, c)
                     res += 1
@@ -800,6 +841,49 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    closedIsland(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions = [0, 1, 0, -1, 0];
+
+        const dfs = (r: number, c: number): void => {
+            if (r < 0 || c < 0 || r === ROWS || c === COLS || grid[r][c] === 1)
+                return;
+            grid[r][c] = 1;
+            for (let d = 0; d < 4; d++) {
+                dfs(r + directions[d], c + directions[d + 1]);
+            }
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            dfs(r, 0);
+            dfs(r, COLS - 1);
+        }
+        for (let c = 0; c < COLS; c++) {
+            dfs(0, c);
+            dfs(ROWS - 1, c);
+        }
+
+        let res = 0;
+        for (let r = 1; r < ROWS - 1; r++) {
+            for (let c = 1; c < COLS - 1; c++) {
+                if (grid[r][c] === 0) {
+                    dfs(r, c);
+                    res++;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1259,6 +1343,60 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    closedIsland(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        const visit: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+        let res = 0;
+
+        const bfs = (r: number, c: number): boolean => {
+            const q = new Queue([[r, c]]);
+            visit[r][c] = true;
+            let isClosed = true;
+
+            while (!q.isEmpty()) {
+                const [x, y]: number[] = q.pop();
+                for (const [dx, dy] of directions) {
+                    const nx = x + dx,
+                        ny = y + dy;
+                    if (nx < 0 || ny < 0 || nx >= ROWS || ny >= COLS) {
+                        isClosed = false;
+                        continue;
+                    }
+                    if (grid[nx][ny] === 1 || visit[nx][ny]) continue;
+                    visit[nx][ny] = true;
+                    q.push([nx, ny]);
+                }
+            }
+            return isClosed;
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 0 && !visit[r][c]) {
+                    if (bfs(r, c)) res++;
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1955,6 +2093,98 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class DSU {
+    private parent: number[];
+    private size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.size = new Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} u=v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.size[pu] >= this.size[pv]) {
+            this.size[pu] += this.size[pv];
+            this.parent[pv] = pu;
+        } else {
+            this.size[pv] += this.size[pu];
+            this.parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    closedIsland(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const N = ROWS * COLS;
+
+        const dsu = new DSU(N);
+        const directions = [0, 1, 0, -1, 0];
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 0) {
+                    for (let d = 0; d < 4; d++) {
+                        let nr = r + directions[d],
+                            nc = c + directions[d + 1];
+                        if (nr < 0 || nc < 0 || nr === ROWS || nc === COLS) {
+                            dsu.union(N, r * COLS + c);
+                        } else if (grid[nr][nc] === 0) {
+                            dsu.union(r * COLS + c, nr * COLS + nc);
+                        }
+                    }
+                }
+            }
+        }
+
+        let res = 0,
+            rootN = dsu.find(N);
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 0) {
+                    let node = r * COLS + c;
+                    let root = dsu.find(node);
+                    if (root === node && root !== rootN) {
+                        res++;
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```

@@ -632,6 +632,96 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    largestBSTSubtree(root: TreeNode | null): number {
+        if (!root) {
+            return 0;
+        }
+
+        // If current subtree is a validBST, its children will have smaller size BST.
+        if (this.isValidBST(root)) {
+            return this.countNodes(root);
+        }
+        // Find BST in left and right subtrees of current nodes.
+        return Math.max(
+            this.largestBSTSubtree(root.left),
+            this.largestBSTSubtree(root.right),
+        );
+    }
+
+    // Function to check if given tree is a valid Binary Search Tree or not.
+    isValidBST(root: TreeNode | null): boolean {
+        // An empty tree is a valid Binary Search Tree.
+        if (!root) {
+            return true;
+        }
+        // Find the max node in the left subtree of current node.
+        let leftMax = this.findMax(root.left);
+        // If the left subtree has a node greater than or equal to the current node,
+        // then it is not a valid Binary Search Tree.
+        if (leftMax >= root.val) {
+            return false;
+        }
+        // Find the min node in the right subtree of current node.
+        let rightMin = this.findMin(root.right);
+        // If the right subtree has a value less than or equal to the current node,
+        // then it is not a valid Binary Search Tree.
+        if (rightMin <= root.val) {
+            return false;
+        }
+        // If the left and right subtrees of current tree are also valid BST.
+        // then the whole tree is a BST.
+        if (this.isValidBST(root.left) && this.isValidBST(root.right)) {
+            return true;
+        }
+        return false;
+    }
+
+    findMax(root: TreeNode | null): number {
+        // Max node in a empty tree should me smaller than parent.
+        if (!root) {
+            return Number.MIN_SAFE_INTEGER;
+        }
+
+        // Check the maximum node from the current node, left and right subtree of the current tree
+        return Math.max(
+            root.val,
+            this.findMax(root.left),
+            this.findMax(root.right),
+        );
+    }
+
+    findMin(root: TreeNode | null): number {
+        // Min node in a empty tree should me larger than parent.
+        if (!root) {
+            return Number.MAX_SAFE_INTEGER;
+        }
+
+        // Check the minimum node from the current node, left and right subtree of the current tree
+        return Math.min(
+            root.val,
+            this.findMin(root.left),
+            this.findMin(root.right),
+        );
+    }
+
+    countNodes(root: TreeNode | null): number {
+        // Empty tree has 0 nodes.
+        if (!root) {
+            return 0;
+        }
+        // Add nodes in left and right subtree.
+        // Add 1 and return total size.
+        return 1 + this.countNodes(root.left) + this.countNodes(root.right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1122,6 +1212,63 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private previous: TreeNode | null = null;
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    largestBSTSubtree(root: TreeNode | null): number {
+        if (!root) {
+            return 0;
+        }
+        // Set previous node to NULL initially.
+        this.previous = null;
+        // If current subtree is a validBST, its children will have smaller size BST.
+        if (this.isValidBST(root)) {
+            return this.countNodes(root);
+        }
+        // Find BST in left and right subtrees of current nodes.
+        return Math.max(
+            this.largestBSTSubtree(root.left),
+            this.largestBSTSubtree(root.right),
+        );
+    }
+
+    // Function to check if given tree is a valid Binary Search Tree or not.
+    isValidBST(root: TreeNode | null): boolean {
+        // An empty tree is a valid Binary Search Tree.
+        if (!root) {
+            return true;
+        }
+        // If left subtree is not a valid BST return false.
+        if (!this.isValidBST(root.left)) {
+            return false;
+        }
+        // If current node's value is not greater than the previous
+        // node's value in the in-order traversal return false.
+        if (this.previous && this.previous.val >= root.val) {
+            return false;
+        }
+        // Update previous node to current node.
+        this.previous = root;
+        // If right subtree is not a valid BST return false.
+        return this.isValidBST(root.right);
+    }
+
+    countNodes(root: TreeNode | null): number {
+        if (!root) {
+            return 0;
+        }
+        // Add nodes in left and right subtree.
+        // Add 1 and return total size.
+        return 1 + this.countNodes(root.left) + this.countNodes(root.right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1282,7 +1429,7 @@ class Solution {
      * @return {number}
      */
     largestBSTSubtree(root) {
-        return largestBSTSubtreeHelper(root).maxSize;
+        return this.largestBSTSubtreeHelper(root).maxSize;
     }
 
     largestBSTSubtreeHelper(root) {
@@ -1296,8 +1443,8 @@ class Solution {
         }
 
         // Get values from left and right subtree of current tree.
-        let left = largestBSTSubtreeHelper(root.left);
-        let right = largestBSTSubtreeHelper(root.right);
+        let left = this.largestBSTSubtreeHelper(root.left);
+        let right = this.largestBSTSubtreeHelper(root.right);
 
         // Current node is greater than max in left AND smaller than min in right, it is a BST.
         if (left.maxNode < root.val && root.val < right.minNode) {
@@ -1506,6 +1653,63 @@ impl Solution {
                 }
             }
         }
+    }
+}
+```
+
+```typescript
+// Each node will return isBST, max node value, min node value, size
+class NodeValue {
+    maxNode: number;
+    minNode: number;
+    maxSize: number;
+
+    constructor(minNode: number, maxNode: number, maxSize: number) {
+        this.maxNode = maxNode;
+        this.minNode = minNode;
+        this.maxSize = maxSize;
+    }
+}
+
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    largestBSTSubtree(root: TreeNode | null): number {
+        return this.largestBSTSubtreeHelper(root).maxSize;
+    }
+
+    largestBSTSubtreeHelper(root: TreeNode | null): NodeValue {
+        // An empty tree is a BST of size 0.
+        if (!root) {
+            return new NodeValue(
+                Number.MAX_SAFE_INTEGER,
+                Number.MIN_SAFE_INTEGER,
+                0,
+            );
+        }
+
+        // Get values from left and right subtree of current tree.
+        let left = this.largestBSTSubtreeHelper(root.left);
+        let right = this.largestBSTSubtreeHelper(root.right);
+
+        // Current node is greater than max in left AND smaller than min in right, it is a BST.
+        if (left.maxNode < root.val && root.val < right.minNode) {
+            // It is a BST.
+            return new NodeValue(
+                Math.min(root.val, left.minNode),
+                Math.max(root.val, right.maxNode),
+                left.maxSize + right.maxSize + 1,
+            );
+        }
+
+        // Otherwise, return [-inf, inf] so that parent can't be valid BST
+        return new NodeValue(
+            Number.MIN_SAFE_INTEGER,
+            Number.MAX_SAFE_INTEGER,
+            Math.max(left.maxSize, right.maxSize),
+        );
     }
 }
 ```

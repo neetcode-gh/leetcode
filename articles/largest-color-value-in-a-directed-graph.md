@@ -411,6 +411,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    largestPathValue(colors: string, edges: number[][]): number {
+        const n = colors.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+        }
+
+        const visit: boolean[] = new Array(n).fill(false);
+        const dfs = (node: number, c: number): number => {
+            if (visit[node]) return Infinity;
+
+            visit[node] = true;
+            let clrCnt = 0;
+            for (const nei of adj[node]) {
+                const cur = dfs(nei, c);
+                if (cur === Infinity) return cur;
+                clrCnt = Math.max(clrCnt, cur);
+            }
+            visit[node] = false;
+            return clrCnt + (c === colors.charCodeAt(node) - 97 ? 1 : 0);
+        };
+
+        let res = -1;
+        for (let i = 0; i < n; i++) {
+            for (let c = 0; c < 26; c++) {
+                const cnt = dfs(i, c);
+                if (cnt === Infinity) return -1;
+                res = Math.max(res, cnt);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -932,6 +974,59 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    largestPathValue(colors: string, edges: number[][]): number {
+        const n = colors.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [src, dst] of edges) {
+            adj[src].push(dst);
+        }
+
+        const visit: boolean[] = new Array(n).fill(false);
+        const path: boolean[] = new Array(n).fill(false);
+        const count: number[][] = Array.from({ length: n }, () => new Array(26).fill(0));
+
+        const dfs = (node: number): number => {
+            if (path[node]) return Infinity;
+            if (visit[node]) return 0;
+
+            visit[node] = true;
+            path[node] = true;
+            const colorIndex = colors.charCodeAt(node) - 'a'.charCodeAt(0);
+            count[node][colorIndex] = 1;
+
+            for (const nei of adj[node]) {
+                if (dfs(nei) === Infinity) return Infinity;
+                for (let c = 0; c < 26; c++) {
+                    count[node][c] = Math.max(
+                        count[node][c],
+                        (c === colorIndex ? 1 : 0) + count[nei][c],
+                    );
+                }
+            }
+
+            path[node] = false;
+            return 0;
+        };
+
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            if (dfs(i) === Infinity) return -1;
+            for (let c = 0; c < 26; c++) {
+                res = Math.max(res, count[i][c]);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1373,6 +1468,55 @@ impl Solution {
         }
 
         if visit == n as i32 { res } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    largestPathValue(colors: string, edges: number[][]): number {
+        const n = colors.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        const indegree: number[] = new Array(n).fill(0);
+        const count: number[][] = Array.from({ length: n }, () => new Array(26).fill(0));
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            indegree[v]++;
+        }
+
+        const q = new Queue();
+        for (let i = 0; i < n; i++) {
+            if (indegree[i] === 0) {
+                q.push(i);
+            }
+        }
+
+        let visit = 0,
+            res = 0;
+        while (!q.isEmpty()) {
+            const node: number = q.pop();
+            visit++;
+            const colorIndex = colors.charCodeAt(node) - 'a'.charCodeAt(0);
+            count[node][colorIndex]++;
+            res = Math.max(res, count[node][colorIndex]);
+
+            for (const nei of adj[node]) {
+                for (let c = 0; c < 26; c++) {
+                    count[nei][c] = Math.max(count[nei][c], count[node][c]);
+                }
+                if (--indegree[nei] === 0) {
+                    q.push(nei);
+                }
+            }
+        }
+
+        return visit === n ? res : -1;
     }
 }
 ```

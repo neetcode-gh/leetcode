@@ -277,6 +277,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countTriplets(arr: number[]): number {
+        const N = arr.length;
+        let res = 0;
+
+        for (let i = 0; i < N - 1; i++) {
+            for (let j = i + 1; j < N; j++) {
+                for (let k = j; k < N; k++) {
+                    let a = 0,
+                        b = 0;
+                    for (let idx = i; idx < j; idx++) {
+                        a ^= arr[idx];
+                    }
+                    for (let idx = j; idx <= k; idx++) {
+                        b ^= arr[idx];
+                    }
+                    if (a === b) {
+                        res++;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -529,6 +562,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countTriplets(arr: number[]): number {
+        const N = arr.length;
+        let res = 0;
+
+        for (let i = 0; i < N - 1; i++) {
+            let a = 0;
+            for (let j = i + 1; j < N; j++) {
+                a ^= arr[j - 1];
+                let b = 0;
+                for (let k = j; k < N; k++) {
+                    b ^= arr[k];
+                    if (a === b) {
+                        res++;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -739,6 +801,31 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countTriplets(arr: number[]): number {
+        const N = arr.length;
+        let res = 0;
+
+        for (let i = 0; i < N - 1; i++) {
+            let curXor = arr[i];
+            for (let k = i + 1; k < N; k++) {
+                curXor ^= arr[k];
+                if (curXor === 0) {
+                    res += k - i;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -972,6 +1059,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    countTriplets(arr: number[]): number {
+        const N = arr.length;
+        let res = 0,
+            prefix = 0;
+        const count = new Map<number, number>(); // number of prefixes
+        const indexSum = new Map<number, number>(); // sum of indices with that prefix
+        count.set(0, 1);
+
+        for (let i = 0; i < N; i++) {
+            prefix ^= arr[i];
+            if (count.has(prefix)) {
+                res += i * count.get(prefix)! - (indexSum.get(prefix) || 0);
+            }
+            count.set(prefix, (count.get(prefix) || 0) + 1);
+            indexSum.set(prefix, (indexSum.get(prefix) || 0) + i + 1);
+        }
+
+        return res;
     }
 }
 ```

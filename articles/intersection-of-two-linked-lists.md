@@ -238,30 +238,51 @@ class Solution {
 ```
 
 ```rust
-// Note: In Rust on LeetCode, linked list intersection
-// problems typically compare by pointer identity using
-// raw pointers, since Option<Box<ListNode>> has unique
-// ownership. Below follows the same brute-force algorithm.
+// Definition for singly-linked list.
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Rc<RefCell<ListNode>>>,
+// }
 impl Solution {
     pub fn get_intersection_node(
-        head_a: Option<Box<ListNode>>,
-        head_b: Option<Box<ListNode>>,
-    ) -> Option<Box<ListNode>> {
-        let mut a = &head_a;
+        head_a: Option<Rc<RefCell<ListNode>>>,
+        head_b: Option<Rc<RefCell<ListNode>>>,
+    ) -> Option<Rc<RefCell<ListNode>>> {
+        let mut a = head_a;
         while let Some(node_a) = a {
-            let mut b = &head_b;
-            while let Some(node_b) = b {
-                if std::ptr::eq(node_a.as_ref(), node_b.as_ref()) {
-                    return Some(Box::new(ListNode {
-                        val: node_a.val,
-                        next: None,
-                    }));
+            let mut cur = head_b.clone();
+            while let Some(node_b) = cur {
+                if Rc::ptr_eq(&node_a, &node_b) {
+                    return Some(node_a);
                 }
-                b = &node_b.next;
+                cur = node_b.borrow().next.clone();
             }
-            a = &node_a.next;
+            a = node_a.borrow().next.clone();
         }
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} headA
+     * @param {ListNode} headB
+     * @return {ListNode}
+     */
+    getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {
+        while (headA) {
+            let cur = headB;
+            while (cur) {
+                if (headA === cur) {
+                    return headA;
+                }
+                cur = cur.next;
+            }
+            headA = headA.next;
+        }
+        return null;
     }
 }
 ```
@@ -547,29 +568,62 @@ class Solution {
 ```
 
 ```rust
+// Definition for singly-linked list.
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Rc<RefCell<ListNode>>>,
+// }
 impl Solution {
     pub fn get_intersection_node(
-        head_a: Option<Box<ListNode>>,
-        head_b: Option<Box<ListNode>>,
-    ) -> Option<Box<ListNode>> {
-        let mut node_set = HashSet::new();
-        let mut cur = &head_a;
+        head_a: Option<Rc<RefCell<ListNode>>>,
+        head_b: Option<Rc<RefCell<ListNode>>>,
+    ) -> Option<Rc<RefCell<ListNode>>> {
+        let mut node_set: HashSet<*const RefCell<ListNode>> = HashSet::new();
+
+        let mut cur = head_a;
         while let Some(node) = cur {
-            node_set.insert(node.as_ref() as *const ListNode);
-            cur = &node.next;
+            node_set.insert(Rc::as_ptr(&node));
+            cur = node.borrow().next.clone();
         }
 
-        let mut cur = &head_b;
+        let mut cur = head_b;
         while let Some(node) = cur {
-            if node_set.contains(&(node.as_ref() as *const ListNode)) {
-                return Some(Box::new(ListNode {
-                    val: node.val,
-                    next: None,
-                }));
+            if node_set.contains(&Rc::as_ptr(&node)) {
+                return Some(node);
             }
-            cur = &node.next;
+            cur = node.borrow().next.clone();
         }
+
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} headA
+     * @param {ListNode} headB
+     * @return {ListNode}
+     */
+    getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {
+        const nodeSet = new Set<ListNode>();
+
+        let cur = headA;
+        while (cur) {
+            nodeSet.add(cur);
+            cur = cur.next;
+        }
+
+        cur = headB;
+        while (cur) {
+            if (nodeSet.has(cur)) {
+                return cur;
+            }
+            cur = cur.next;
+        }
+
+        return null;
     }
 }
 ```
@@ -956,48 +1010,100 @@ class Solution {
 ```
 
 ```rust
+// Definition for singly-linked list.
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Rc<RefCell<ListNode>>>,
+// }
 impl Solution {
+    fn same(a: &Option<Rc<RefCell<ListNode>>>, b: &Option<Rc<RefCell<ListNode>>>) -> bool {
+        match (a, b) {
+            (Some(x), Some(y)) => Rc::ptr_eq(x, y),
+            (None, None) => true,
+            _ => false,
+        }
+    }
+
+    fn next(node: &Option<Rc<RefCell<ListNode>>>) -> Option<Rc<RefCell<ListNode>>> {
+        node.as_ref().and_then(|n| n.borrow().next.clone())
+    }
+
+    fn get_length(head: &Option<Rc<RefCell<ListNode>>>) -> i32 {
+        let mut length = 0;
+        let mut cur = head.clone();
+        while cur.is_some() {
+            length += 1;
+            cur = Self::next(&cur);
+        }
+        length
+    }
+
     pub fn get_intersection_node(
-        head_a: Option<Box<ListNode>>,
-        head_b: Option<Box<ListNode>>,
-    ) -> Option<Box<ListNode>> {
-        fn get_length(head: &Option<Box<ListNode>>) -> usize {
-            let mut length = 0;
-            let mut cur = head;
-            while let Some(node) = cur {
-                length += 1;
-                cur = &node.next;
-            }
-            length
+        head_a: Option<Rc<RefCell<ListNode>>>,
+        head_b: Option<Rc<RefCell<ListNode>>>,
+    ) -> Option<Rc<RefCell<ListNode>>> {
+        let mut m = Self::get_length(&head_a);
+        let mut n = Self::get_length(&head_b);
+        let (mut l1, mut l2) = (head_a, head_b);
+
+        if m < n {
+            std::mem::swap(&mut m, &mut n);
+            std::mem::swap(&mut l1, &mut l2);
         }
 
-        let mut m = get_length(&head_a);
-        let mut n = get_length(&head_b);
-        let (mut l1, mut l2) = if m >= n {
-            (&head_a, &head_b)
-        } else {
-            std::mem::swap(&mut m, &mut n);
-            (&head_b, &head_a)
+        while m > n {
+            l1 = Self::next(&l1);
+            m -= 1;
+        }
+
+        while l1.is_some() && !Self::same(&l1, &l2) {
+            l1 = Self::next(&l1);
+            l2 = Self::next(&l2);
+        }
+
+        l1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} headA
+     * @param {ListNode} headB
+     * @return {ListNode}
+     */
+    getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {
+        const getLength = (head: ListNode | null): number => {
+            let length = 0,
+                cur = head;
+            while (cur) {
+                length++;
+                cur = cur.next;
+            }
+            return length;
         };
 
-        for _ in 0..(m - n) {
-            l1 = &l1.as_ref().unwrap().next;
+        let m = getLength(headA);
+        let n = getLength(headB);
+        let l1 = headA,
+            l2 = headB;
+
+        if (m < n) {
+            [m, n] = [n, m];
+            [l1, l2] = [l2, l1];
         }
 
-        while l1.is_some() && !std::ptr::eq(
-            l1.as_ref().unwrap().as_ref(),
-            l2.as_ref().unwrap_or(&Box::new(ListNode::new(0))).as_ref(),
-        ) {
-            l1 = &l1.as_ref().unwrap().next;
-            l2 = &l2.as_ref().unwrap().next;
+        while (m-- > n) {
+            l1 = l1!.next;
         }
 
-        l1.as_ref().map(|node| {
-            Box::new(ListNode {
-                val: node.val,
-                next: None,
-            })
-        })
+        while (l1 && l1 !== l2) {
+            l1 = l1.next;
+            l2 = l2!.next;
+        }
+
+        return l1;
     }
 }
 ```
@@ -1217,43 +1323,53 @@ class Solution {
 ```
 
 ```rust
+// Definition for singly-linked list.
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Rc<RefCell<ListNode>>>,
+// }
 impl Solution {
+    fn same(a: &Option<Rc<RefCell<ListNode>>>, b: &Option<Rc<RefCell<ListNode>>>) -> bool {
+        match (a, b) {
+            (Some(x), Some(y)) => Rc::ptr_eq(x, y),
+            (None, None) => true,
+            _ => false,
+        }
+    }
+
+    fn next(node: &Option<Rc<RefCell<ListNode>>>) -> Option<Rc<RefCell<ListNode>>> {
+        node.as_ref().and_then(|n| n.borrow().next.clone())
+    }
+
     pub fn get_intersection_node(
-        head_a: Option<Box<ListNode>>,
-        head_b: Option<Box<ListNode>>,
-    ) -> Option<Box<ListNode>> {
-        fn to_vec(head: &Option<Box<ListNode>>) -> Vec<*const ListNode> {
-            let mut v = Vec::new();
-            let mut cur = head;
-            while let Some(node) = cur {
-                v.push(node.as_ref() as *const ListNode);
-                cur = &node.next;
-            }
-            v
+        head_a: Option<Rc<RefCell<ListNode>>>,
+        head_b: Option<Rc<RefCell<ListNode>>>,
+    ) -> Option<Rc<RefCell<ListNode>>> {
+        let (mut l1, mut l2) = (head_a.clone(), head_b.clone());
+        while !Self::same(&l1, &l2) {
+            l1 = if l1.is_some() { Self::next(&l1) } else { head_b.clone() };
+            l2 = if l2.is_some() { Self::next(&l2) } else { head_a.clone() };
         }
+        l1
+    }
+}
+```
 
-        let a = to_vec(&head_a);
-        let b = to_vec(&head_b);
-        let (mut ia, mut ib) = (a.len(), b.len());
-
-        let mut result = None;
-        while ia > 0 && ib > 0 {
-            ia -= 1;
-            ib -= 1;
-            if a[ia] == b[ib] {
-                // Walk the list to find the node at position ia
-                let mut cur = &head_a;
-                for _ in 0..ia {
-                    cur = &cur.as_ref().unwrap().next;
-                }
-                result = cur.as_ref().map(|node| {
-                    Box::new(ListNode { val: node.val, next: None })
-                });
-            } else {
-                break;
-            }
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} headA
+     * @param {ListNode} headB
+     * @return {ListNode}
+     */
+    getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {
+        let l1 = headA,
+            l2 = headB;
+        while (l1 !== l2) {
+            l1 = l1 ? l1.next : headB;
+            l2 = l2 ? l2.next : headA;
         }
-        result
+        return l1;
     }
 }
 ```

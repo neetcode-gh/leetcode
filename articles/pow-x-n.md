@@ -220,6 +220,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} n
+     * @return {number}
+     */
+    myPow(x: number, n: number): number {
+        if (x === 0) {
+            return 0;
+        }
+        if (n === 0) {
+            return 1;
+        }
+
+        let res = 1;
+        for (let i = 0; i < Math.abs(n); i++) {
+            res *= x;
+        }
+        return n >= 0 ? res : 1 / res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -479,6 +503,37 @@ impl Solution {
         let power = (n as i64).abs();
         let res = helper(x, power);
         if n >= 0 { res } else { 1.0 / res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} n
+     * @return {number}
+     */
+    myPow(x: number, n: number): number {
+        /**
+         * @param {number} x
+         * @param {number} n
+         * @return {number}
+         */
+        function helper(x: number, n: number): number {
+            if (x === 0) {
+                return 0;
+            }
+            if (n === 0) {
+                return 1;
+            }
+
+            const res = helper(x * x, Math.floor(n / 2));
+            return n % 2 === 0 ? res : x * res;
+        }
+
+        const res = helper(x, Math.abs(n));
+        return n >= 0 ? res : 1 / res;
     }
 }
 ```
@@ -756,6 +811,33 @@ impl Solution {
         }
 
         if n >= 0 { res } else { 1.0 / res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} n
+     * @return {number}
+     */
+    myPow(x: number, n: number): number {
+        if (x === 0) return 0;
+        if (n === 0) return 1;
+
+        let res = 1;
+        let power = Math.abs(n);
+
+        while (power > 0) {
+            if (power % 2 === 1) {
+                res *= x;
+            }
+            x *= x;
+            power = Math.floor(power / 2);
+        }
+
+        return n >= 0 ? res : 1 / res;
     }
 }
 ```

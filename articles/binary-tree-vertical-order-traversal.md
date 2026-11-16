@@ -315,6 +315,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    verticalOrder(root: TreeNode | null): number[][] {
+        if (!root) return [];
+
+        const cols = new Map<number, number[]>();
+        const queue = new Queue([[root, 0]]);
+
+        while (!queue.isEmpty()) {
+            const [node, pos]: [TreeNode, number] = queue.pop();
+            if (!cols.has(pos)) cols.set(pos, []);
+            cols.get(pos)!.push(node.val);
+
+            if (node.left) queue.push([node.left, pos - 1]);
+            if (node.right) queue.push([node.right, pos + 1]);
+        }
+
+        const sortedKeys = Array.from(cols.keys()).sort((a, b) => a - b);
+        return sortedKeys.map((k) => cols.get(k)!);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -648,6 +675,35 @@ impl Solution {
             Self::dfs(&n.left, row + 1, col - 1, cols);
             Self::dfs(&n.right, row + 1, col + 1, cols);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    verticalOrder(root: TreeNode | null): number[][] {
+        const cols = new Map<number, number[][]>();
+
+        const dfs = (node: TreeNode | null, row: number, col: number): void => {
+            if (!node) return;
+            if (!cols.has(col)) cols.set(col, []);
+            cols.get(col)!.push([row, node.val]);
+            dfs(node.left, row + 1, col - 1);
+            dfs(node.right, row + 1, col + 1);
+        };
+
+        dfs(root, 0, 0);
+
+        const sortedCols = Array.from(cols.entries()).sort(
+            (a, b) => a[0] - b[0],
+        );
+        return sortedCols.map(([_, vec]) =>
+            vec.sort((a, b) => a[0] - b[0]).map(([_, val]) => val),
+        );
     }
 }
 ```
@@ -1018,6 +1074,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    verticalOrder(root: TreeNode | null): number[][] {
+        if (!root) return [];
+
+        const cols = new Map<number, number[]>();
+        const queue = new Queue([[root, 0]]);
+        let minCol = 0,
+            maxCol = 0;
+
+        while (!queue.isEmpty()) {
+            const [node, col]: [TreeNode, number] = queue.pop();
+            if (!cols.has(col)) cols.set(col, []);
+            cols.get(col)!.push(node.val);
+            minCol = Math.min(minCol, col);
+            maxCol = Math.max(maxCol, col);
+
+            if (node.left) queue.push([node.left, col - 1]);
+            if (node.right) queue.push([node.right, col + 1]);
+        }
+
+        const res: number[][] = [];
+        for (let c = minCol; c <= maxCol; c++) {
+            res.push(cols.get(c)!);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1264,6 +1354,107 @@ public class Solution {
 }
 ```
 
+```go
+func verticalOrder(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    cols := make(map[int][][2]int)
+    minCol, maxCol := 0, 0
+
+    var dfs func(node *TreeNode, row, col int)
+    dfs = func(node *TreeNode, row, col int) {
+        if node == nil {
+            return
+        }
+        cols[col] = append(cols[col], [2]int{row, node.Val})
+        minCol = min(minCol, col)
+        maxCol = max(maxCol, col)
+        dfs(node.Left, row+1, col-1)
+        dfs(node.Right, row+1, col+1)
+    }
+
+    dfs(root, 0, 0)
+
+    res := [][]int{}
+    for c := minCol; c <= maxCol; c++ {
+        list := cols[c]
+        sort.SliceStable(list, func(i, j int) bool {
+            return list[i][0] < list[j][0] // sort by row
+        })
+        colVals := []int{}
+        for _, p := range list {
+            colVals = append(colVals, p[1])
+        }
+        res = append(res, colVals)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val cols = HashMap<Int, MutableList<IntArray>>()
+    private var minCol = 0
+    private var maxCol = 0
+
+    fun verticalOrder(root: TreeNode?): List<List<Int>> {
+        if (root == null) return emptyList()
+        dfs(root, 0, 0)
+
+        val res = mutableListOf<List<Int>>()
+        for (c in minCol..maxCol) {
+            val list = cols.getOrDefault(c, mutableListOf())
+            list.sortBy { it[0] } // sort by row
+            res.add(list.map { it[1] })
+        }
+        return res
+    }
+
+    private fun dfs(node: TreeNode?, row: Int, col: Int) {
+        if (node == null) return
+        cols.getOrPut(col) { mutableListOf() }.add(intArrayOf(row, node.`val`))
+        minCol = minOf(minCol, col)
+        maxCol = maxOf(maxCol, col)
+        dfs(node.left, row + 1, col - 1)
+        dfs(node.right, row + 1, col + 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    private var cols = [Int: [(Int, Int)]]()
+    private var minCol = 0
+    private var maxCol = 0
+
+    func verticalOrder(_ root: TreeNode?) -> [[Int]] {
+        guard let root = root else { return [] }
+        dfs(root, 0, 0)
+
+        var res = [[Int]]()
+        for c in minCol...maxCol {
+            var list = cols[c, default: []]
+            list = list.enumerated().sorted {
+                $0.element.0 != $1.element.0 ? $0.element.0 < $1.element.0 : $0.offset < $1.offset
+            }.map { $0.element } // sort by row
+            res.append(list.map { $0.1 })
+        }
+        return res
+    }
+
+    private func dfs(_ node: TreeNode?, _ row: Int, _ col: Int) {
+        guard let node = node else { return }
+        cols[col, default: []].append((row, node.val))
+        minCol = min(minCol, col)
+        maxCol = max(maxCol, col)
+        dfs(node.left, row + 1, col - 1)
+        dfs(node.right, row + 1, col + 1)
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn vertical_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
@@ -1303,6 +1494,43 @@ impl Solution {
             Self::dfs(&n.left, row + 1, col - 1, cols, min_col, max_col);
             Self::dfs(&n.right, row + 1, col + 1, cols, min_col, max_col);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    verticalOrder(root: TreeNode | null): number[][] {
+        if (!root) return [];
+
+        const cols = new Map<number, number[][]>();
+        let minCol = 0,
+            maxCol = 0;
+
+        const dfs = (node: TreeNode | null, row: number, col: number): void => {
+            if (!node) return;
+            if (!cols.has(col)) cols.set(col, []);
+            cols.get(col)!.push([row, node.val]);
+            minCol = Math.min(minCol, col);
+            maxCol = Math.max(maxCol, col);
+            dfs(node.left, row + 1, col - 1);
+            dfs(node.right, row + 1, col + 1);
+        };
+
+        dfs(root, 0, 0);
+
+        const res: number[][] = [];
+        for (let c = minCol; c <= maxCol; c++) {
+            let entries = cols.get(c) || [];
+            entries.sort((a, b) => a[0] - b[0]); // sort by row only
+            res.push(entries.map(([_, val]) => val));
+        }
+
+        return res;
     }
 }
 ```

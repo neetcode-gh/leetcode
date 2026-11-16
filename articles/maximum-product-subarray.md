@@ -209,6 +209,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProduct(nums: number[]): number {
+        let res = nums[0];
+
+        for (let i = 0; i < nums.length; i++) {
+            let cur = nums[i];
+            res = Math.max(res, cur);
+            for (let j = i + 1; j < nums.length; j++) {
+                cur *= nums[j];
+                res = Math.max(res, cur);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -702,6 +725,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProduct(nums: number[]): number {
+        let A: number[][] = [];
+        let cur: number[] = [];
+        let res = -Infinity;
+
+        nums.forEach((num) => {
+            res = Math.max(res, num);
+            if (num === 0) {
+                if (cur.length) A.push(cur);
+                cur = [];
+            } else {
+                cur.push(num);
+            }
+        });
+        if (cur.length) A.push(cur);
+
+        A.forEach((sub) => {
+            let negs = 0;
+            sub.forEach((i) => {
+                if (i < 0) negs++;
+            });
+
+            let prod = 1;
+            let need = negs % 2 === 0 ? negs : negs - 1;
+            negs = 0;
+            for (let i = 0, j = 0; i < sub.length; i++) {
+                prod *= sub[i];
+                if (sub[i] < 0) {
+                    negs++;
+                    while (negs > need) {
+                        prod /= sub[j];
+                        if (sub[j] < 0) negs--;
+                        j++;
+                    }
+                }
+                if (j <= i) res = Math.max(res, prod);
+            }
+        });
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -916,6 +989,28 @@ impl Solution {
             res = res.max(cur_max);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProduct(nums: number[]): number {
+        let res = nums[0];
+        let curMin = 1;
+        let curMax = 1;
+
+        for (const num of nums) {
+            const tmp = curMax * num;
+            curMax = Math.max(Math.max(num * curMax, num * curMin), num);
+            curMin = Math.min(Math.min(tmp, num * curMin), num);
+            res = Math.max(res, curMax);
+        }
+        return res;
     }
 }
 ```
@@ -1139,6 +1234,28 @@ impl Solution {
             res = res.max(prefix.max(suffix));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxProduct(nums: number[]): number {
+        let n = nums.length,
+            res = nums[0];
+        let prefix = 0,
+            suffix = 0;
+
+        for (let i = 0; i < n; i++) {
+            prefix = nums[i] * (prefix === 0 ? 1 : prefix);
+            suffix = nums[n - 1 - i] * (suffix === 0 ? 1 : suffix);
+            res = Math.max(res, Math.max(prefix, suffix));
+        }
+        return res === -0 ? 0 : res;
     }
 }
 ```

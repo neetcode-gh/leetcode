@@ -231,6 +231,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    characterReplacement(s: string, k: number): number {
+        let res = 0;
+        for (let i = 0; i < s.length; i++) {
+            let count = new Map<string, number>();
+            let maxf = 0;
+            for (let j = i; j < s.length; j++) {
+                count.set(s[j], (count.get(s[j]) || 0) + 1);
+                maxf = Math.max(maxf, count.get(s[j])!);
+                if (j - i + 1 - maxf <= k) {
+                    res = Math.max(res, j - i + 1);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -542,6 +567,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    characterReplacement(s: string, k: number): number {
+        let res = 0;
+        let charSet = new Set<string>(s);
+
+        for (let c of charSet) {
+            let count = 0,
+                l = 0;
+            for (let r = 0; r < s.length; r++) {
+                if (s[r] === c) {
+                    count++;
+                }
+
+                while (r - l + 1 - count > k) {
+                    if (s[l] === c) {
+                        count--;
+                    }
+                    l++;
+                }
+
+                res = Math.max(res, r - l + 1);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -811,6 +870,35 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    characterReplacement(s: string, k: number): number {
+        let count = new Map<string, number>();
+        let res = 0;
+
+        let l = 0,
+            maxf = 0;
+        for (let r = 0; r < s.length; r++) {
+            count.set(s[r], (count.get(s[r]) || 0) + 1);
+            maxf = Math.max(maxf, count.get(s[r])!);
+
+            while (r - l + 1 - maxf > k) {
+                count.set(s[l], count.get(s[l])! - 1);
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+
+        return res;
     }
 }
 ```

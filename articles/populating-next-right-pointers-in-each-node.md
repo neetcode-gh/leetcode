@@ -345,33 +345,77 @@ class Solution {
 ```
 
 ```rust
-// Note: This problem uses a Node with a `next` pointer, which
-// doesn't map to the standard LeetCode Rust TreeNode. Below is
-// a conceptual translation using a typical BFS approach.
-impl Solution {
-    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-        if root.is_none() {
-            return None;
-        }
-        let mut q: VecDeque<Rc<RefCell<TreeNode>>> = VecDeque::new();
-        q.push_back(root.clone().unwrap());
+// Definition for a Node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct Node {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<Node>>>,
+//     pub right: Option<Rc<RefCell<Node>>>,
+//     pub next: Option<Rc<RefCell<Node>>>,
+// }
 
+impl Solution {
+    pub fn connect(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let start = match &root {
+            Some(node) => node.clone(),
+            None => return None,
+        };
+
+        let mut q = VecDeque::new();
+        q.push_back(start);
         while !q.is_empty() {
-            let level_size = q.len();
-            for i in 0..level_size {
+            let mut level_size = q.len();
+            while level_size > 0 {
                 let node = q.pop_front().unwrap();
-                let node_borrow = node.borrow();
-                // In a Node-with-next structure, we'd set:
-                // node.next = q.front() if i < level_size - 1
-                if let Some(left) = node_borrow.left.clone() {
-                    q.push_back(left);
+                if level_size > 1 {
+                    node.borrow_mut().next = q.front().cloned();
                 }
-                if let Some(right) = node_borrow.right.clone() {
-                    q.push_back(right);
+                let n = node.borrow();
+                if let Some(left) = &n.left {
+                    q.push_back(left.clone());
                 }
+                if let Some(right) = &n.right {
+                    q.push_back(right.clone());
+                }
+                level_size -= 1;
             }
         }
+
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} root
+     * @return {Node}
+     */
+    connect(root: Node | null): Node | null {
+        if (!root) return null;
+
+        const q = new Queue();
+        q.push(root);
+
+        while (!q.isEmpty()) {
+            let levelSize: number = q.size();
+            while (levelSize > 0) {
+                let node: Node = q.pop();
+                if (levelSize > 1) {
+                    node.next = q.front();
+                }
+                if (node.left) {
+                    q.push(node.left);
+                }
+                if (node.right) {
+                    q.push(node.right);
+                }
+                levelSize--;
+            }
+        }
+
+        return root;
     }
 }
 ```
@@ -697,22 +741,69 @@ class Solution {
 ```
 
 ```rust
-impl Solution {
-    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-        let mut mp: HashMap<i32, Rc<RefCell<TreeNode>>> = HashMap::new();
+// Definition for a Node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct Node {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<Node>>>,
+//     pub right: Option<Rc<RefCell<Node>>>,
+//     pub next: Option<Rc<RefCell<Node>>>,
+// }
 
-        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, depth: i32, mp: &mut HashMap<i32, Rc<RefCell<TreeNode>>>) {
-            if let Some(n) = node {
-                // In a Node-with-next structure, we'd connect mp[depth].next = n
-                mp.insert(depth, n.clone());
-                let borrowed = n.borrow();
-                dfs(&borrowed.left, depth + 1, mp);
-                dfs(&borrowed.right, depth + 1, mp);
+impl Solution {
+    pub fn connect(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        fn dfs(
+            node: &Option<Rc<RefCell<Node>>>,
+            depth: i32,
+            mp: &mut HashMap<i32, Rc<RefCell<Node>>>,
+        ) {
+            let node = match node {
+                Some(n) => n,
+                None => return,
+            };
+
+            if let Some(prev) = mp.get(&depth) {
+                prev.borrow_mut().next = Some(node.clone());
             }
+            mp.insert(depth, node.clone());
+
+            let n = node.borrow();
+            dfs(&n.left, depth + 1, mp);
+            dfs(&n.right, depth + 1, mp);
         }
 
+        let mut mp = HashMap::new();
         dfs(&root, 0, &mut mp);
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} root
+     * @return {Node}
+     */
+    connect(root: Node | null): Node | null {
+        let mp = new Map<number, Node>();
+
+        const dfs = (node: Node | null, depth: number): void => {
+            if (!node) return;
+
+            if (!mp.has(depth)) {
+                mp.set(depth, node);
+            } else {
+                mp.get(depth)!.next = node;
+                mp.set(depth, node);
+            }
+
+            dfs(node.left, depth + 1);
+            dfs(node.right, depth + 1);
+        };
+
+        dfs(root, 0);
+        return root;
     }
 }
 ```
@@ -994,21 +1085,55 @@ class Solution {
 ```
 
 ```rust
+// Definition for a Node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct Node {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<Node>>>,
+//     pub right: Option<Rc<RefCell<Node>>>,
+//     pub next: Option<Rc<RefCell<Node>>>,
+// }
+
 impl Solution {
-    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-        // In a perfect binary tree with a `next` pointer on each Node,
-        // we'd connect left.next = right and right.next = parent.next.left.
-        // Standard Rust TreeNode lacks a `next` field; this is a structural outline.
+    pub fn connect(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
         if let Some(node) = &root {
-            let borrowed = node.borrow();
-            if borrowed.left.is_some() {
-                // left.next = right
-                // if node.next exists: right.next = node.next.left
-                Self::connect(borrowed.left.clone());
-                Self::connect(borrowed.right.clone());
+            let n = node.borrow();
+            if let (Some(left), Some(right)) = (&n.left, &n.right) {
+                left.borrow_mut().next = Some(right.clone());
+                if let Some(next) = &n.next {
+                    right.borrow_mut().next = next.borrow().left.clone();
+                }
+
+                Self::connect(Some(left.clone()));
+                Self::connect(Some(right.clone()));
             }
         }
+
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} root
+     * @return {Node}
+     */
+    connect(root: Node | null): Node | null {
+        if (!root) return root;
+
+        if (root.left) {
+            root.left.next = root.right;
+            if (root.next) {
+                root.right.next = root.next.left;
+            }
+
+            this.connect(root.left);
+            this.connect(root.right);
+        }
+
+        return root;
     }
 }
 ```
@@ -1330,16 +1455,69 @@ class Solution {
 ```
 
 ```rust
+// Definition for a Node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct Node {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<Node>>>,
+//     pub right: Option<Rc<RefCell<Node>>>,
+//     pub next: Option<Rc<RefCell<Node>>>,
+// }
+
 impl Solution {
-    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-        // The O(1) space BFS approach uses the `next` pointer to traverse
-        // each level without a queue. Standard Rust TreeNode lacks `next`,
-        // so this is a structural translation of the algorithm.
-        // cur walks the current level; nxt is the leftmost node of the next level.
-        // cur.left.next = cur.right
-        // cur.right.next = cur.next.left (if cur.next exists)
-        // When cur reaches end of level, drop to nxt and advance nxt to nxt.left.
+    pub fn connect(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let mut cur = root.clone();
+        let mut nxt = root.as_ref().and_then(|r| r.borrow().left.clone());
+
+        while let (Some(c), Some(_)) = (cur.clone(), nxt.clone()) {
+            {
+                let cb = c.borrow();
+                let left = cb.left.as_ref().unwrap();
+                let right = cb.right.as_ref().unwrap();
+                left.borrow_mut().next = Some(right.clone());
+                if let Some(next) = &cb.next {
+                    right.borrow_mut().next = next.borrow().left.clone();
+                }
+            }
+
+            cur = c.borrow().next.clone();
+            if cur.is_none() {
+                cur = nxt.clone();
+                nxt = cur.as_ref().unwrap().borrow().left.clone();
+            }
+        }
+
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} root
+     * @return {Node}
+     */
+    connect(root: Node | null): Node | null {
+        if (!root) return null;
+
+        let cur: Node | null = root,
+            nxt: Node | null = root.left;
+
+        while (cur && nxt) {
+            cur.left.next = cur.right;
+            if (cur.next) {
+                cur.right.next = cur.next.left;
+            }
+
+            cur = cur.next;
+            if (!cur) {
+                cur = nxt;
+                nxt = cur!.left;
+            }
+        }
+
+        return root;
     }
 }
 ```

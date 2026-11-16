@@ -261,6 +261,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @param {number[][]} queries
+     * @return {boolean[]}
+     */
+    checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+        const adj: number[][] = Array.from({ length: numCourses }, () => []);
+        for (const [u, v] of prerequisites) {
+            adj[u].push(v);
+        }
+
+        const dfs = (node: number, target: number): boolean => {
+            if (node === target) return true;
+            for (const nei of adj[node]) {
+                if (dfs(nei, target)) return true;
+            }
+            return false;
+        };
+
+        const res: boolean[] = [];
+        for (const [u, v] of queries) {
+            res.push(dfs(u, v));
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -601,6 +632,43 @@ impl Solution {
         queries.iter().map(|q| {
             prereq_map[q[1] as usize].as_ref().map_or(false, |s| s.contains(&(q[0] as usize)))
         }).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @param {number[][]} queries
+     * @return {boolean[]}
+     */
+    checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+        const adj: number[][] = Array.from({ length: numCourses }, () => []);
+        const prereqMap = new Map<number, Set<number>>();
+
+        for (const [pre, crs] of prerequisites) {
+            adj[crs].push(pre);
+        }
+
+        const dfs = (crs: number): Set<number> => {
+            if (prereqMap.has(crs)) {
+                return prereqMap.get(crs)!;
+            }
+            const prereqs = new Set<number>();
+            for (const pre of adj[crs]) {
+                for (const p of dfs(pre)) prereqs.add(p);
+            }
+            prereqs.add(crs);
+            prereqMap.set(crs, prereqs);
+            return prereqs;
+        };
+
+        for (let crs = 0; crs < numCourses; crs++) {
+            dfs(crs);
+        }
+        return queries.map(([u, v]) => prereqMap.get(v)!.has(u));
     }
 }
 ```
@@ -964,6 +1032,43 @@ impl Solution {
         }
 
         queries.iter().map(|q| dfs(q[1] as usize, q[0] as usize, &adj, &mut is_prereq)).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @param {number[][]} queries
+     * @return {boolean[]}
+     */
+    checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+        const adj: number[][] = Array.from({ length: numCourses }, () => []);
+        const isPrereq: number[][] = Array.from({ length: numCourses }, () =>
+            Array(numCourses).fill(-1),
+        );
+        for (const [prereq, crs] of prerequisites) {
+            adj[crs].push(prereq);
+            isPrereq[crs][prereq] = 1;
+        }
+
+        const dfs = (crs: number, prereq: number): boolean => {
+            if (isPrereq[crs][prereq] !== -1) {
+                return isPrereq[crs][prereq] === 1;
+            }
+            for (const pre of adj[crs]) {
+                if (pre === prereq || dfs(pre, prereq)) {
+                    isPrereq[crs][prereq] = 1;
+                    return true;
+                }
+            }
+            isPrereq[crs][prereq] = 0;
+            return false;
+        };
+
+        return queries.map(([u, v]) => dfs(v, u));
     }
 }
 ```
@@ -1343,6 +1448,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @param {number[][]} queries
+     * @return {boolean[]}
+     */
+    checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+        const adj: Set<number>[] = Array.from({ length: numCourses }, () => new Set());
+        const isPrereq: Set<number>[] = Array.from({ length: numCourses }, () => new Set());
+        const indegree: number[] = Array(numCourses).fill(0);
+
+        for (const [pre, crs] of prerequisites) {
+            adj[pre].add(crs);
+            indegree[crs]++;
+        }
+
+        const q = new Queue();
+        for (let i = 0; i < numCourses; i++) {
+            if (indegree[i] === 0) q.push(i);
+        }
+
+        while (!q.isEmpty()) {
+            const node: number = q.pop();
+            for (const neighbor of adj[node]) {
+                isPrereq[neighbor].add(node);
+                for (const it of isPrereq[node]) {
+                    isPrereq[neighbor].add(it);
+                }
+                indegree[neighbor]--;
+                if (indegree[neighbor] === 0) q.push(neighbor);
+            }
+        }
+
+        return queries.map(([u, v]) => isPrereq[v].has(u));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1599,6 +1744,41 @@ impl Solution {
         }
 
         queries.iter().map(|q| adj[q[0] as usize][q[1] as usize]).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @param {number[][]} queries
+     * @return {boolean[]}
+     */
+    checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+        let adj: boolean[][] = Array.from({ length: numCourses }, () =>
+            Array(numCourses).fill(false),
+        );
+        let res: boolean[] = [];
+
+        for (let [pre, crs] of prerequisites) {
+            adj[pre][crs] = true;
+        }
+
+        for (let k = 0; k < numCourses; k++) {
+            for (let i = 0; i < numCourses; i++) {
+                for (let j = 0; j < numCourses; j++) {
+                    adj[i][j] = adj[i][j] || (adj[i][k] && adj[k][j]);
+                }
+            }
+        }
+
+        for (let [u, v] of queries) {
+            res.push(adj[u][v]);
+        }
+
+        return res;
     }
 }
 ```

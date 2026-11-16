@@ -349,6 +349,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxProduct(s: string): number {
+        const isPal = (str: string): boolean => {
+            let i = 0,
+                j = str.length - 1;
+            while (i < j) {
+                if (str[i] !== str[j]) return false;
+                i++;
+                j--;
+            }
+            return true;
+        };
+
+        let res = 0;
+
+        const rec = (i: number, seq1: string, seq2: string): void => {
+            if (i === s.length) {
+                if (isPal(seq1) && isPal(seq2)) {
+                    res = Math.max(res, seq1.length * seq2.length);
+                }
+                return;
+            }
+
+            rec(i + 1, seq1, seq2);
+            rec(i + 1, seq1 + s[i], seq2);
+            rec(i + 1, seq1, seq2 + s[i]);
+        };
+
+        rec(0, '', '');
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -761,6 +800,54 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxProduct(s: string): number {
+        const isPal = (str: string): boolean => {
+            let i = 0,
+                j = str.length - 1;
+            while (i < j) {
+                if (str[i] !== str[j]) return false;
+                i++;
+                j--;
+            }
+            return true;
+        };
+
+        const N = s.length;
+        let res = 0;
+        const pali = new Map<number, number>();
+
+        for (let mask = 1; mask < 1 << N; mask++) {
+            let subseq = '';
+            for (let i = 0; i < N; i++) {
+                if ((mask & (1 << i)) !== 0) {
+                    subseq += s[i];
+                }
+            }
+
+            if (isPal(subseq)) {
+                pali.set(mask, subseq.length);
+            }
+        }
+
+        for (let [m1, len1] of pali) {
+            for (let [m2, len2] of pali) {
+                if ((m1 & m2) === 0) {
+                    res = Math.max(res, len1 * len2);
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1321,6 +1408,77 @@ impl Solution {
             j -= 1;
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    longestPalindromeSubseq(s: string): number {
+        const n = s.length;
+        if (n === 0) return 0;
+
+        const dp: number[] = new Array(n).fill(1);
+        for (let i = n - 1; i >= 0; i--) {
+            let prev = 0;
+            for (let j = i + 1; j < n; j++) {
+                let tmp = dp[j];
+                if (s[i] === s[j]) {
+                    dp[j] = 2 + prev;
+                } else {
+                    dp[j] = Math.max(dp[j - 1], dp[j]);
+                }
+                prev = tmp;
+            }
+        }
+        return dp[n - 1];
+    }
+
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxProduct(s: string): number {
+        const n = s.length;
+        let res = 0;
+
+        for (let i = 1; i < 1 << n; i++) {
+            let seq1 = '',
+                seq2 = '';
+
+            for (let j = 0; j < n; j++) {
+                if ((i & (1 << j)) !== 0) seq1 += s[j];
+                else seq2 += s[j];
+            }
+
+            if (!this.isPal(seq1)) continue;
+
+            const lps = this.longestPalindromeSubseq(seq2);
+            res = Math.max(res, seq1.length * lps);
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    isPal(s: string): boolean {
+        let i = 0,
+            j = s.length - 1;
+        while (i < j) {
+            if (s[i] !== s[j]) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
     }
 }
 ```
@@ -1922,6 +2080,83 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} mask
+     * @param {number[]} dp
+     * @return {number}
+     */
+    longestPalindromeSubseq(s: string, mask: number, dp: number[]): number {
+        const n = s.length;
+        for (let i = n - 1; i >= 0; i--) {
+            if ((mask & (1 << i)) !== 0) continue;
+
+            let prev = 0;
+            for (let j = i + 1; j < n; j++) {
+                const tmp = dp[j];
+                if ((mask & (1 << j)) === 0 && s[i] === s[j]) {
+                    dp[j] = 2 + prev;
+                } else {
+                    dp[j] = Math.max(dp[j - 1], dp[j]);
+                }
+                prev = tmp;
+            }
+        }
+        return dp[n - 1];
+    }
+
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    maxProduct(s: string): number {
+        const n = s.length;
+        let res = 0;
+        const dp: number[] = Array(n).fill(1);
+
+        for (let i = 1; i < 1 << n; i++) {
+            const m1 = this.palsize(s, i);
+            if (m1 === 0) continue;
+
+            for (let j = 0; j < n; j++) {
+                if ((i & (1 << j)) === 0) {
+                    dp[j] = 1;
+                } else {
+                    dp[j] = 0;
+                }
+            }
+            const m2 = this.longestPalindromeSubseq(s, i, dp);
+            res = Math.max(res, m1 * m2);
+        }
+        return res;
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} mask
+     * @return {number}
+     */
+    palsize(s: string, mask: number): number {
+        let i = 0,
+            j = s.length - 1;
+        let res = 0;
+        while (i <= j) {
+            if ((mask & (1 << i)) === 0) i++;
+            else if ((mask & (1 << j)) === 0) j--;
+            else {
+                if (s[i] !== s[j]) return 0;
+                res += i === j ? 1 : 2;
+                i++;
+                j--;
+            }
+        }
+        return res;
     }
 }
 ```

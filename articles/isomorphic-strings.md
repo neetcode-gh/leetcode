@@ -204,6 +204,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    helper(s: string, t: string): boolean {
+        const map = new Map<string, string>();
+        for (let i = 0; i < s.length; i++) {
+            if (map.has(s[i]) && map.get(s[i]) !== t[i]) {
+                return false;
+            }
+            map.set(s[i], t[i]);
+        }
+        return true;
+    }
+
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isIsomorphic(s: string, t: string): boolean {
+        return this.helper(s, t) && this.helper(t, s);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -453,6 +482,37 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isIsomorphic(s: string, t: string): boolean {
+        const mapTS = new Map<string, string>();
+        const mapST = new Map<string, string>();
+
+        for (let i = 0; i < s.length; i++) {
+            const c1 = s[i],
+                c2 = t[i];
+
+            if (
+                (mapST.has(c1) && mapST.get(c1) !== c2) ||
+                (mapTS.has(c2) && mapTS.get(c2) !== c1)
+            ) {
+                return false;
+            }
+
+            mapST.set(c1, c2);
+            mapTS.set(c2, c1);
+        }
+
+        return true;
     }
 }
 ```

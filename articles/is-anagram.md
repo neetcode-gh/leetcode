@@ -159,6 +159,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isAnagram(s: string, t: string): boolean {
+        if (s.length !== t.length) {
+            return false;
+        }
+
+        let sSort = s.split('').sort().join();
+        let tSort = t.split('').sort().join();
+        return sSort == tSort;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +386,35 @@ impl Solution {
             *count_t.entry(b).or_insert(0) += 1;
         }
         count_s == count_t
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isAnagram(s: string, t: string): boolean {
+        if (s.length !== t.length) {
+            return false;
+        }
+
+        const countS: { [key: string]: number } = {};
+        const countT: { [key: string]: number } = {};
+        for (let i = 0; i < s.length; i++) {
+            countS[s[i]] = (countS[s[i]] || 0) + 1;
+            countT[t[i]] = (countT[t[i]] || 0) + 1;
+        }
+
+        for (const key in countS) {
+            if (countS[key] !== countT[key]) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ```
@@ -595,6 +643,28 @@ impl Solution {
             count[(b - b'a') as usize] -= 1;
         }
         count.iter().all(|&v| v == 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isAnagram(s: string, t: string): boolean {
+        if (s.length !== t.length) {
+            return false;
+        }
+
+        const count: number[] = new Array(26).fill(0);
+        for (let i = 0; i < s.length; i++) {
+            count[s.charCodeAt(i) - 'a'.charCodeAt(0)]++;
+            count[t.charCodeAt(i) - 'a'.charCodeAt(0)]--;
+        }
+        return count.every((val) => val === 0);
     }
 }
 ```

@@ -320,6 +320,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    minRemoveToMakeValid(s: string): string {
+        let res: string[] = [];
+        let cnt = 0;
+
+        for (let c of s) {
+            if (c === '(') {
+                res.push(c);
+                cnt++;
+            } else if (c === ')' && cnt > 0) {
+                res.push(c);
+                cnt--;
+            } else if (c !== ')') {
+                res.push(c);
+            }
+        }
+
+        let filtered: string[] = [];
+        for (let i = res.length - 1; i >= 0; i--) {
+            let c = res[i];
+            if (c === '(' && cnt > 0) {
+                cnt--;
+            } else {
+                filtered.push(c);
+            }
+        }
+        return filtered.reverse().join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -621,6 +657,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    minRemoveToMakeValid(s: string): string {
+        let arr = [...s];
+        let cnt = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            let c = s[i];
+            if (c === '(') {
+                cnt++;
+            } else if (c === ')' && cnt > 0) {
+                cnt--;
+            } else if (c === ')') {
+                arr[i] = '';
+            }
+        }
+
+        let res: string[] = [];
+        for (let i = arr.length - 1; i >= 0; i--) {
+            let c = arr[i];
+            if (c === '(' && cnt > 0) {
+                cnt--;
+            } else if (c !== '') {
+                res.push(c);
+            }
+        }
+
+        return res.reverse().join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -912,6 +984,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    minRemoveToMakeValid(s: string): string {
+        const arr = [...s];
+        const stack: number[] = [];
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === '(') {
+                stack.push(i);
+            } else if (arr[i] === ')') {
+                if (stack.length > 0) {
+                    stack.pop();
+                } else {
+                    arr[i] = '';
+                }
+            }
+        }
+
+        while (stack.length > 0) {
+            arr[stack.pop()!] = '';
+        }
+
+        return arr.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1176,6 +1279,37 @@ impl Solution {
         }
 
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    minRemoveToMakeValid(s: string): string {
+        let openCnt = 0,
+            closeCnt = 0;
+        for (const c of s) {
+            if (c === ')') closeCnt++;
+        }
+
+        let res: string[] = [];
+        for (const c of s) {
+            if (c === '(') {
+                if (openCnt === closeCnt) continue;
+                openCnt++;
+            } else if (c === ')') {
+                closeCnt--;
+                if (openCnt === 0) continue;
+                openCnt--;
+            }
+            res.push(c);
+        }
+
+        return res.join('');
     }
 }
 ```

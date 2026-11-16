@@ -214,6 +214,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s1
+     * @param {string} s2
+     * @return {string[]}
+     */
+    uncommonFromSentences(s1: string, s2: string): string[] {
+        const words = (s1 + ' ' + s2).split(' ');
+        const count = new Map<string, number>();
+
+        for (const w of words) {
+            count.set(w, (count.get(w) || 0) + 1);
+        }
+
+        const res: string[] = [];
+        for (const [w, c] of count.entries()) {
+            if (c === 1) {
+                res.push(w);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,6 +416,26 @@ impl Solution {
             .filter(|&(_, c)| c == 1)
             .map(|(w, _)| w.to_string())
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s1
+     * @param {string} s2
+     * @return {string[]}
+     */
+    uncommonFromSentences(s1: string, s2: string): string[] {
+        const words = (s1 + ' ' + s2).split(' ');
+        const count = new Map<string, number>();
+
+        for (const w of words) {
+            count.set(w, (count.get(w) || 0) + 1);
+        }
+
+        return [...count.entries()].filter(([_, c]) => c === 1).map(([w]) => w);
     }
 }
 ```

@@ -315,6 +315,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maximumValueSum(nums: number[], k: number, edges: number[][]): number {
+        const n = nums.length;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const dfs = (node: number, parent: number): number[] => {
+            let res = [nums[node], nums[node] ^ k];
+
+            for (const child of adj[node]) {
+                if (child === parent) continue;
+
+                const cur = dfs(child, node);
+                const tmp: number[] = [];
+                tmp[0] = Math.max(res[0] + cur[0], res[1] + cur[1]);
+                tmp[1] = Math.max(res[1] + cur[0], res[0] + cur[1]);
+                res = tmp;
+            }
+
+            return res;
+        };
+
+        return dfs(0, -1)[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -579,6 +617,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maximumValueSum(nums: number[], k: number, edges: number[][]): number {
+        const n = nums.length;
+        const dp: (number | null)[][] = Array.from({ length: n + 1 }, () => [null, null]);
+        dp[n][0] = 0;
+        dp[n][1] = -Infinity;
+
+        const dfs = (i: number, xorCnt: number): number => {
+            if (dp[i][xorCnt] !== null) return dp[i][xorCnt]!;
+
+            let res = nums[i] + dfs(i + 1, xorCnt);
+            res = Math.max(res, (nums[i] ^ k) + dfs(i + 1, xorCnt ^ 1));
+            return (dp[i][xorCnt] = res);
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -778,6 +843,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maximumValueSum(nums: number[], k: number, edges: number[][]): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => [0, 0]);
+        dp[n][1] = -Infinity;
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i][0] = Math.max(
+                nums[i] + dp[i + 1][0],
+                (nums[i] ^ k) + dp[i + 1][1],
+            );
+            dp[i][1] = Math.max(
+                nums[i] + dp[i + 1][1],
+                (nums[i] ^ k) + dp[i + 1][0],
+            );
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -973,6 +1067,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maximumValueSum(nums: number[], k: number, edges: number[][]): number {
+        const n = nums.length;
+        let dp = [0, -Infinity];
+
+        for (let i = n - 1; i >= 0; i--) {
+            let nextDp = [0, 0];
+            nextDp[0] = Math.max(nums[i] + dp[0], (nums[i] ^ k) + dp[1]);
+            nextDp[1] = Math.max(nums[i] + dp[1], (nums[i] ^ k) + dp[0]);
+            dp = nextDp;
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1128,8 +1246,6 @@ public class Solution {
 ```
 
 ```go
-import "sort"
-
 func maximumValueSum(nums []int, k int, edges [][]int) int64 {
     n := len(nums)
     delta := make([]int, n)
@@ -1225,6 +1341,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maximumValueSum(nums: number[], k: number, edges: number[][]): number {
+        const n = nums.length;
+        let res = 0;
+        let delta: number[] = [];
+        for (let i = 0; i < n; i++) {
+            res += nums[i];
+            delta.push((nums[i] ^ k) - nums[i]);
+        }
+
+        delta.sort((a, b) => b - a);
+        for (let i = 0; i + 1 < n; i += 2) {
+            let pathDelta = delta[i] + delta[i + 1];
+            if (pathDelta <= 0) {
+                break;
+            }
+            res += pathDelta;
+        }
+
+        return res;
     }
 }
 ```
@@ -1462,6 +1609,35 @@ impl Solution {
         }
 
         res - (xor_cnt as i64) * (min_diff as i64)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    maximumValueSum(nums: number[], k: number, edges: number[][]): number {
+        let xorCnt = 0,
+            res = 0,
+            minDiff = 1 << 30;
+
+        for (let num of nums) {
+            let xorNum = num ^ k;
+            if (xorNum > num) {
+                res += xorNum;
+                xorCnt ^= 1;
+            } else {
+                res += num;
+            }
+            minDiff = Math.min(minDiff, Math.abs(xorNum - num));
+        }
+
+        return res - xorCnt * minDiff;
     }
 }
 ```

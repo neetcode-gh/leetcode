@@ -187,40 +187,40 @@ public class Solution {
 
 ```go
 func networkDelayTime(times [][]int, n int, k int) int {
-	adj := make(map[int][][]int)
-	for _, time := range times {
-		u, v, w := time[0], time[1], time[2]
-		adj[u] = append(adj[u], []int{v, w})
-	}
+    adj := make(map[int][][]int)
+    for _, time := range times {
+        u, v, w := time[0], time[1], time[2]
+        adj[u] = append(adj[u], []int{v, w})
+    }
 
-	dist := make(map[int]int)
-	for i := 1; i <= n; i++ {
-		dist[i] = math.MaxInt32
-	}
+    dist := make(map[int]int)
+    for i := 1; i <= n; i++ {
+        dist[i] = math.MaxInt32
+    }
 
-	var dfs func(int, int)
-	dfs = func(node int, time int) {
-		if time >= dist[node] {
-			return
-		}
-		dist[node] = time
-		for _, edge := range adj[node] {
-			nei, w := edge[0], edge[1]
-			dfs(nei, time+w)
-		}
-	}
+    var dfs func(int, int)
+    dfs = func(node int, time int) {
+        if time >= dist[node] {
+            return
+        }
+        dist[node] = time
+        for _, edge := range adj[node] {
+            nei, w := edge[0], edge[1]
+            dfs(nei, time+w)
+        }
+    }
 
-	dfs(k, 0)
-	res := 0
-	for _, time := range dist {
-		if time == math.MaxInt32 {
-			return -1
-		}
-		if time > res {
-			res = time
-		}
-	}
-	return res
+    dfs(k, 0)
+    res := 0
+    for _, time := range dist {
+        if time == math.MaxInt32 {
+            return -1
+        }
+        if time > res {
+            res = time
+        }
+    }
+    return res
 }
 ```
 
@@ -314,6 +314,38 @@ impl Solution {
         dfs(k, 0, &adj, &mut dist);
         let res = *dist[1..=n].iter().max().unwrap();
         if res == i32::MAX { -1 } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} times
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    networkDelayTime(times: number[][], n: number, k: number): number {
+        const adj: { [key: number]: number[][] } = {};
+        for (const [u, v, w] of times) {
+            if (!adj[u]) adj[u] = [];
+            adj[u].push([v, w]);
+        }
+
+        const dist: number[] = Array(n + 1).fill(Infinity);
+        const dfs = (node: number, time: number): void => {
+            if (time >= dist[node]) return;
+            dist[node] = time;
+            if (!adj[node]) return;
+            for (const [nei, w] of adj[node]) {
+                dfs(nei, time + w);
+            }
+        };
+
+        dfs(k, 0);
+        const res = Math.max(...dist.slice(1));
+        return res === Infinity ? -1 : res;
     }
 }
 ```
@@ -499,53 +531,53 @@ public class Solution {
 
 ```go
 func networkDelayTime(times [][]int, n int, k int) int {
-	inf := math.MaxInt32
-	dist := make([][]int, n)
-	for i := range dist {
-		dist[i] = make([]int, n)
-		for j := range dist[i] {
-			dist[i][j] = inf
-		}
-	}
+    inf := math.MaxInt32
+    dist := make([][]int, n)
+    for i := range dist {
+        dist[i] = make([]int, n)
+        for j := range dist[i] {
+            dist[i][j] = inf
+        }
+    }
 
-	for _, time := range times {
-		u, v, w := time[0]-1, time[1]-1, time[2]
-		dist[u][v] = w
-	}
-	for i := 0; i < n; i++ {
-		dist[i][i] = 0
-	}
+    for _, time := range times {
+        u, v, w := time[0]-1, time[1]-1, time[2]
+        dist[u][v] = w
+    }
+    for i := 0; i < n; i++ {
+        dist[i][i] = 0
+    }
 
-	for mid := 0; mid < n; mid++ {
-		for i := 0; i < n; i++ {
-			for j := 0; j < n; j++ {
-				dist[i][j] = min(dist[i][j], dist[i][mid]+dist[mid][j])
-			}
-		}
-	}
+    for mid := 0; mid < n; mid++ {
+        for i := 0; i < n; i++ {
+            for j := 0; j < n; j++ {
+                dist[i][j] = min(dist[i][j], dist[i][mid]+dist[mid][j])
+            }
+        }
+    }
 
-	res := 0
-	for i := 0; i < n; i++ {
-		if dist[k-1][i] == inf {
-			return -1
-		}
-		res = max(res, dist[k-1][i])
-	}
-	return res
+    res := 0
+    for i := 0; i < n; i++ {
+        if dist[k-1][i] == inf {
+            return -1
+        }
+        res = max(res, dist[k-1][i])
+    }
+    return res
 }
 
 func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+    if a < b {
+        return a
+    }
+    return b
 }
 
 func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+    if a > b {
+        return a
+    }
+    return b
 }
 ```
 
@@ -632,6 +664,42 @@ impl Solution {
 
         let res = *dist[k as usize - 1].iter().max().unwrap();
         if res == inf { -1 } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} times
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    networkDelayTime(times: number[][], n: number, k: number): number {
+        const inf = Infinity;
+        const dist: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(inf),
+        );
+
+        for (let i = 0; i < n; i++) {
+            dist[i][i] = 0;
+        }
+
+        for (const [u, v, w] of times) {
+            dist[u - 1][v - 1] = w;
+        }
+
+        for (let mid = 0; mid < n; mid++)
+            for (let i = 0; i < n; i++)
+                for (let j = 0; j < n; j++)
+                    dist[i][j] = Math.min(
+                        dist[i][j],
+                        dist[i][mid] + dist[mid][j],
+                    );
+
+        const res = Math.max(...dist[k - 1]);
+        return res === inf ? -1 : res;
     }
 }
 ```
@@ -880,6 +948,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} times
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    networkDelayTime(times: number[][], n: number, k: number): number {
+        let dist: number[] = new Array(n).fill(Infinity);
+        dist[k - 1] = 0;
+
+        for (let i = 0; i < n - 1; i++) {
+            for (const [u, v, w] of times) {
+                if (dist[u - 1] + w < dist[v - 1]) {
+                    dist[v - 1] = dist[u - 1] + w;
+                }
+            }
+        }
+
+        const maxDist = Math.max(...dist);
+        return maxDist === Infinity ? -1 : maxDist;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1098,46 +1192,46 @@ public class Solution {
 
 ```go
 func networkDelayTime(times [][]int, n int, k int) int {
-	adj := make(map[int][][]int)
-	for _, edge := range times {
-		u, v, w := edge[0], edge[1], edge[2]
-		adj[u] = append(adj[u], []int{v, w})
-	}
+    adj := make(map[int][][]int)
+    for _, edge := range times {
+        u, v, w := edge[0], edge[1], edge[2]
+        adj[u] = append(adj[u], []int{v, w})
+    }
 
-	dist := make(map[int]int)
-	for i := 1; i <= n; i++ {
-		dist[i] = math.MaxInt
-	}
-	dist[k] = 0
+    dist := make(map[int]int)
+    for i := 1; i <= n; i++ {
+        dist[i] = math.MaxInt
+    }
+    dist[k] = 0
 
-	q := [][]int{{k, 0}}
+    q := [][]int{{k, 0}}
 
-	for len(q) > 0 {
-		node, time := q[0][0], q[0][1]
-		q = q[1:]
+    for len(q) > 0 {
+        node, time := q[0][0], q[0][1]
+        q = q[1:]
 
-		if time > dist[node] {
-			continue
-		}
-		for _, nei := range adj[node] {
-			v, w := nei[0], nei[1]
-			if time+w < dist[v] {
-				dist[v] = time + w
-				q = append(q, []int{v, time + w})
-			}
-		}
-	}
+        if time > dist[node] {
+            continue
+        }
+        for _, nei := range adj[node] {
+            v, w := nei[0], nei[1]
+            if time+w < dist[v] {
+                dist[v] = time + w
+                q = append(q, []int{v, time + w})
+            }
+        }
+    }
 
-	res := -1
-	for _, d := range dist {
-		if d == math.MaxInt {
-			return -1
-		}
-		if d > res {
-			res = d
-		}
-	}
-	return res
+    res := -1
+    for _, d := range dist {
+        if d == math.MaxInt {
+            return -1
+        }
+        if d > res {
+            res = d
+        }
+    }
+    return res
 }
 ```
 
@@ -1240,6 +1334,44 @@ impl Solution {
 
         let res = *dist[1..=n].iter().max().unwrap();
         if res == i32::MAX { -1 } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} times
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    networkDelayTime(times: number[][], n: number, k: number): number {
+        const adj: { [key: number]: number[][] } = {};
+        for (let i = 1; i <= n; i++) adj[i] = [];
+        for (const [u, v, w] of times) {
+            adj[u].push([v, w]);
+        }
+
+        const dist: { [key: number]: number } = {};
+        for (let i = 1; i <= n; i++) dist[i] = Infinity;
+        dist[k] = 0;
+
+        const q = new Queue([[k, 0]]);
+
+        while (!q.isEmpty()) {
+            const [node, time]: number[] = q.pop();
+            if (dist[node] < time) continue;
+            for (const [nei, w] of adj[node]) {
+                if (time + w < dist[nei]) {
+                    dist[nei] = time + w;
+                    q.push([nei, time + w]);
+                }
+            }
+        }
+
+        let res = Math.max(...Object.values(dist));
+        return res === Infinity ? -1 : res;
     }
 }
 ```
@@ -1646,6 +1778,47 @@ impl Solution {
         }
 
         if visited.len() == n { t } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} times
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    networkDelayTime(times: number[][], n: number, k: number): number {
+        const edges = new Map<number, number[][]>();
+        for (let i = 1; i <= n; i++) {
+            edges.set(i, []);
+        }
+        for (const [u, v, w] of times) {
+            edges.get(u)!.push([v, w]);
+        }
+
+        const minHeap = new MinPriorityQueue((entry: number[]) => entry[0]);
+        minHeap.enqueue([0, k]);
+
+        const visit = new Set<number>();
+        let t = 0;
+
+        while (!minHeap.isEmpty()) {
+            const [w1, n1]: number[] = minHeap.dequeue();
+            if (visit.has(n1)) continue;
+            visit.add(n1);
+            t = w1;
+
+            for (const [n2, w2] of edges.get(n1)!) {
+                if (!visit.has(n2)) {
+                    minHeap.enqueue([w1 + w2, n2]);
+                }
+            }
+        }
+
+        return visit.size === n ? t : -1;
     }
 }
 ```

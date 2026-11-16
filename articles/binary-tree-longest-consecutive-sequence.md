@@ -238,6 +238,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private maxLength: number;
+
+    constructor() {
+        this.maxLength = 0;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    longestConsecutive(root: TreeNode | null): number {
+        this.maxLength = 0;
+        this.dfs(root, null, 0);
+        return this.maxLength;
+    }
+
+    /**
+     * @param {TreeNode} p
+     * @param {TreeNode} parent
+     * @param {number} length
+     * @return {void}
+     */
+    dfs(p: TreeNode | null, parent: TreeNode | null, length: number): void {
+        if (p === null) return;
+
+        length = parent !== null && p.val === parent.val + 1 ? length + 1 : 1;
+        this.maxLength = Math.max(this.maxLength, length);
+
+        this.dfs(p.left, p, length);
+        this.dfs(p.right, p, length);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -563,6 +599,50 @@ impl Solution {
         let length = l.max(r);
         *max_length = (*max_length).max(length);
         length
+    }
+}
+```
+
+```typescript
+class Solution {
+    private maxLength: number;
+
+    constructor() {
+        this.maxLength = 0;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    longestConsecutive(root: TreeNode | null): number {
+        this.maxLength = 0;
+        this.dfs(root);
+        return this.maxLength;
+    }
+
+    /**
+     * @param {TreeNode} p
+     * @return {number}
+     */
+    dfs(p: TreeNode | null): number {
+        if (p === null) return 0;
+
+        let L = this.dfs(p.left) + 1;
+        let R = this.dfs(p.right) + 1;
+
+        if (p.left !== null && p.val + 1 !== p.left.val) {
+            L = 1;
+        }
+
+        if (p.right !== null && p.val + 1 !== p.right.val) {
+            R = 1;
+        }
+
+        let length = Math.max(L, R);
+        this.maxLength = Math.max(this.maxLength, length);
+
+        return length;
     }
 }
 ```

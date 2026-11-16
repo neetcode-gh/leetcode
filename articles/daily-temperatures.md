@@ -251,6 +251,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} temperatures
+     * @return {number[]}
+     */
+    dailyTemperatures(temperatures: number[]): number[] {
+        const n = temperatures.length;
+        const res: number[] = new Array(n).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            let count = 1;
+            let j = i + 1;
+            while (j < n) {
+                if (temperatures[j] > temperatures[i]) {
+                    break;
+                }
+                j++;
+                count++;
+            }
+            count = j === n ? 0 : count;
+            res[i] = count;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -454,6 +482,29 @@ impl Solution {
             stack.push((t, i));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} temperatures
+     * @return {number[]}
+     */
+    dailyTemperatures(temperatures: number[]): number[] {
+        const res: number[] = new Array(temperatures.length).fill(0);
+        const stack: number[][] = []; // pair: [temp, index]
+
+        for (let i = 0; i < temperatures.length; i++) {
+            const t = temperatures[i];
+            while (stack.length > 0 && t > stack[stack.length - 1][0]) {
+                const [stackT, stackInd] = stack.pop()!;
+                res[stackInd] = i - stackInd;
+            }
+            stack.push([t, i]);
+        }
+        return res;
     }
 }
 ```
@@ -708,6 +759,35 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} temperatures
+     * @return {number[]}
+     */
+    dailyTemperatures(temperatures: number[]): number[] {
+        const n = temperatures.length;
+        const res: number[] = new Array(n).fill(0);
+
+        for (let i = n - 2; i >= 0; i--) {
+            let j = i + 1;
+            while (j < n && temperatures[j] <= temperatures[i]) {
+                if (res[j] === 0) {
+                    j = n;
+                    break;
+                }
+                j += res[j];
+            }
+
+            if (j < n) {
+                res[i] = j - i;
+            }
+        }
+        return res;
     }
 }
 ```

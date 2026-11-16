@@ -103,6 +103,109 @@ class Solution {
 }
 ```
 
+```cpp
+class Solution {
+public:
+    int minKnightMoves(int x, int y) {
+        // the offsets in the eight directions
+        int offsets[8][2] = {{1, 2}, {2, 1}, {2, -1}, {1, -2},
+                             {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}};
+
+        // - Rather than using the inefficient hash set, we use the bitmap
+        //     otherwise we would run out of time for the test cases.
+        // - We create a bitmap that is sufficient to cover all the possible
+        //     inputs, according to the description of the problem.
+        vector<vector<bool>> visited(607, vector<bool>(607, false));
+
+        queue<pair<int, int>> q;
+        q.push({0, 0});
+        int steps = 0;
+
+        while (!q.empty()) {
+            int currLevelSize = q.size();
+            // iterate through the current level
+            for (int i = 0; i < currLevelSize; i++) {
+                auto [cx, cy] = q.front();
+                q.pop();
+                if (cx == x && cy == y) {
+                    return steps;
+                }
+
+                for (auto& offset : offsets) {
+                    int nx = cx + offset[0], ny = cy + offset[1];
+                    // align the coordinate to the bitmap
+                    if (!visited[nx + 302][ny + 302]) {
+                        visited[nx + 302][ny + 302] = true;
+                        q.push({nx, ny});
+                    }
+                }
+            }
+            // move on to the next level
+            steps++;
+        }
+        return steps;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {number}
+     */
+    minKnightMoves(x, y) {
+        // the offsets in the eight directions
+        const offsets = [
+            [1, 2],
+            [2, 1],
+            [2, -1],
+            [1, -2],
+            [-1, -2],
+            [-2, -1],
+            [-2, 1],
+            [-1, 2],
+        ];
+
+        // - Rather than using the inefficient hash set, we use the bitmap
+        //     otherwise we would run out of time for the test cases.
+        // - We create a bitmap that is sufficient to cover all the possible
+        //     inputs, according to the description of the problem.
+        const visited = Array.from({ length: 607 }, () =>
+            new Array(607).fill(false),
+        );
+
+        let queue = [[0, 0]];
+        let steps = 0;
+
+        while (queue.length > 0) {
+            const nextQueue = [];
+            // iterate through the current level
+            for (const [cx, cy] of queue) {
+                if (cx === x && cy === y) {
+                    return steps;
+                }
+
+                for (const [ox, oy] of offsets) {
+                    const nx = cx + ox,
+                        ny = cy + oy;
+                    // align the coordinate to the bitmap
+                    if (!visited[nx + 302][ny + 302]) {
+                        visited[nx + 302][ny + 302] = true;
+                        nextQueue.push([nx, ny]);
+                    }
+                }
+            }
+            queue = nextQueue;
+            // move on to the next level
+            steps++;
+        }
+        return steps;
+    }
+}
+```
+
 ```csharp
 public class Solution {
     public int MinKnightMoves(int x, int y) {
@@ -285,6 +388,64 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {number}
+     */
+    minKnightMoves(x: number, y: number): number {
+        // the offsets in the eight directions
+        const offsets: number[][] = [
+            [1, 2],
+            [2, 1],
+            [2, -1],
+            [1, -2],
+            [-1, -2],
+            [-2, -1],
+            [-2, 1],
+            [-1, 2],
+        ];
+
+        // - Rather than using the inefficient hash set, we use the bitmap
+        //     otherwise we would run out of time for the test cases.
+        // - We create a bitmap that is sufficient to cover all the possible
+        //     inputs, according to the description of the problem.
+        const visited: boolean[][] = Array.from({ length: 607 }, () =>
+            new Array(607).fill(false),
+        );
+
+        let queue: number[][] = [[0, 0]];
+        let steps = 0;
+
+        while (queue.length > 0) {
+            const nextQueue: number[][] = [];
+            // iterate through the current level
+            for (const [cx, cy] of queue) {
+                if (cx === x && cy === y) {
+                    return steps;
+                }
+
+                for (const [ox, oy] of offsets) {
+                    const nx = cx + ox,
+                        ny = cy + oy;
+                    // align the coordinate to the bitmap
+                    if (!visited[nx + 302][ny + 302]) {
+                        visited[nx + 302][ny + 302] = true;
+                        nextQueue.push([nx, ny]);
+                    }
+                }
+            }
+            queue = nextQueue;
+            // move on to the next level
+            steps++;
+        }
+        return steps;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -403,6 +564,130 @@ class Solution {
                 if (!targetDistance.containsKey(nextTargetXY)) {
                     targetQueue.addLast(new int[]{nextTarget[0], nextTarget[1], target[2] + 1});
                     targetDistance.put(nextTargetXY, target[2] + 1);
+                }
+            }
+        }
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int minKnightMoves(int x, int y) {
+        // the offsets in the eight directions
+        int offsets[8][2] = {{1, 2}, {2, 1}, {2, -1}, {1, -2},
+                             {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}};
+
+        auto key = [](int a, int b) { return (long long)a * 1000 + b; };
+
+        // data structures needed to move from the origin point
+        queue<array<int, 3>> originQueue;
+        originQueue.push({0, 0, 0});
+        unordered_map<long long, int> originDistance;
+        originDistance[key(0, 0)] = 0;
+
+        // data structures needed to move from the target point
+        queue<array<int, 3>> targetQueue;
+        targetQueue.push({x, y, 0});
+        unordered_map<long long, int> targetDistance;
+        targetDistance[key(x, y)] = 0;
+
+        while (true) {
+            // check if we reach the circle of target
+            auto origin = originQueue.front();
+            originQueue.pop();
+            long long originXY = key(origin[0], origin[1]);
+            if (targetDistance.count(originXY)) {
+                return origin[2] + targetDistance[originXY];
+            }
+
+            // check if we reach the circle of origin
+            auto target = targetQueue.front();
+            targetQueue.pop();
+            long long targetXY = key(target[0], target[1]);
+            if (originDistance.count(targetXY)) {
+                return target[2] + originDistance[targetXY];
+            }
+
+            for (auto& offset : offsets) {
+                // expand the circle of origin
+                int nox = origin[0] + offset[0], noy = origin[1] + offset[1];
+                long long nextOriginXY = key(nox, noy);
+                if (!originDistance.count(nextOriginXY)) {
+                    originQueue.push({nox, noy, origin[2] + 1});
+                    originDistance[nextOriginXY] = origin[2] + 1;
+                }
+
+                // expand the circle of target
+                int ntx = target[0] + offset[0], nty = target[1] + offset[1];
+                long long nextTargetXY = key(ntx, nty);
+                if (!targetDistance.count(nextTargetXY)) {
+                    targetQueue.push({ntx, nty, target[2] + 1});
+                    targetDistance[nextTargetXY] = target[2] + 1;
+                }
+            }
+        }
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {number}
+     */
+    minKnightMoves(x, y) {
+        // the offsets in the eight directions
+        const offsets = [
+            [1, 2],
+            [2, 1],
+            [2, -1],
+            [1, -2],
+            [-1, -2],
+            [-2, -1],
+            [-2, 1],
+            [-1, 2],
+        ];
+
+        // data structures needed to move from the origin point
+        const originQueue = new Queue([[0, 0, 0]]);
+        const originDistance = new Map([['0,0', 0]]);
+
+        // data structures needed to move from the target point
+        const targetQueue = new Queue([[x, y, 0]]);
+        const targetDistance = new Map([[`${x},${y}`, 0]]);
+
+        while (true) {
+            // check if we reach the circle of target
+            const [ox, oy, oSteps] = originQueue.pop();
+            const originXY = `${ox},${oy}`;
+            if (targetDistance.has(originXY)) {
+                return oSteps + targetDistance.get(originXY);
+            }
+
+            // check if we reach the circle of origin
+            const [tx, ty, tSteps] = targetQueue.pop();
+            const targetXY = `${tx},${ty}`;
+            if (originDistance.has(targetXY)) {
+                return tSteps + originDistance.get(targetXY);
+            }
+
+            for (const [dx, dy] of offsets) {
+                // expand the circle of origin
+                const nextOriginXY = `${ox + dx},${oy + dy}`;
+                if (!originDistance.has(nextOriginXY)) {
+                    originQueue.push([ox + dx, oy + dy, oSteps + 1]);
+                    originDistance.set(nextOriginXY, oSteps + 1);
+                }
+
+                // expand the circle of target
+                const nextTargetXY = `${tx + dx},${ty + dy}`;
+                if (!targetDistance.has(nextTargetXY)) {
+                    targetQueue.push([tx + dx, ty + dy, tSteps + 1]);
+                    targetDistance.set(nextTargetXY, tSteps + 1);
                 }
             }
         }
@@ -670,6 +955,69 @@ impl Solution {
                 if !target_distance.contains_key(&nt) {
                     target_queue.push_back((nt.0, nt.1, ts + 1));
                     target_distance.insert(nt, ts + 1);
+                }
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {number}
+     */
+    minKnightMoves(x: number, y: number): number {
+        // the offsets in the eight directions
+        const offsets: number[][] = [
+            [1, 2],
+            [2, 1],
+            [2, -1],
+            [1, -2],
+            [-1, -2],
+            [-2, -1],
+            [-2, 1],
+            [-1, 2],
+        ];
+
+        // data structures needed to move from the origin point
+        const originQueue = new Queue([[0, 0, 0]]);
+        const originDistance = new Map<string, number>([['0,0', 0]]);
+
+        // data structures needed to move from the target point
+        const targetQueue = new Queue([[x, y, 0]]);
+        const targetDistance = new Map<string, number>([[`${x},${y}`, 0]]);
+
+        while (true) {
+            // check if we reach the circle of target
+            const [ox, oy, oSteps]: number[] = originQueue.pop();
+            const originXY = `${ox},${oy}`;
+            if (targetDistance.has(originXY)) {
+                return oSteps + targetDistance.get(originXY)!;
+            }
+
+            // check if we reach the circle of origin
+            const [tx, ty, tSteps]: number[] = targetQueue.pop();
+            const targetXY = `${tx},${ty}`;
+            if (originDistance.has(targetXY)) {
+                return tSteps + originDistance.get(targetXY)!;
+            }
+
+            for (const [dx, dy] of offsets) {
+                // expand the circle of origin
+                const nextOriginXY = `${ox + dx},${oy + dy}`;
+                if (!originDistance.has(nextOriginXY)) {
+                    originQueue.push([ox + dx, oy + dy, oSteps + 1]);
+                    originDistance.set(nextOriginXY, oSteps + 1);
+                }
+
+                // expand the circle of target
+                const nextTargetXY = `${tx + dx},${ty + dy}`;
+                if (!targetDistance.has(nextTargetXY)) {
+                    targetQueue.push([tx + dx, ty + dy, tSteps + 1]);
+                    targetDistance.set(nextTargetXY, tSteps + 1);
                 }
             }
         }
@@ -970,6 +1318,42 @@ impl Solution {
             + 1;
         memo.insert((x, y), ret);
         ret
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {number}
+     */
+    minKnightMoves(x: number, y: number): number {
+        const memo = new Map<string, number>();
+
+        const dfs = (x: number, y: number): number => {
+            const key = `${x},${y}`;
+            if (memo.has(key)) {
+                return memo.get(key)!;
+            }
+
+            if (x + y === 0) {
+                return 0;
+            } else if (x + y === 2) {
+                return 2;
+            } else {
+                const ret =
+                    Math.min(
+                        dfs(Math.abs(x - 1), Math.abs(y - 2)),
+                        dfs(Math.abs(x - 2), Math.abs(y - 1)),
+                    ) + 1;
+                memo.set(key, ret);
+                return ret;
+            }
+        };
+
+        return dfs(Math.abs(x), Math.abs(y));
     }
 }
 ```

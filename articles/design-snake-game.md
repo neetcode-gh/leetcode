@@ -464,7 +464,7 @@ class SnakeGame(width: Int, height: Int, food: Array<IntArray>) {
         val crossesBoundary1 = newHeadRow < 0 || newHeadRow >= height
         val crossesBoundary2 = newHeadCol < 0 || newHeadCol >= width
 
-        val tail = snake.last()
+        val tail = snake.peekLast()
         val newHeadKey = "$newHeadRow,$newHeadCol"
         val tailKey = "${tail.first},${tail.second}"
         val bitesItself = snakeSet.contains(newHeadKey) && newHeadKey != tailKey
@@ -576,8 +576,8 @@ impl SnakeGame {
         }
     }
 
-    fn make_move(&mut self, direction: &str) -> i32 {
-        let (dr, dc) = match direction {
+    fn make_move(&mut self, direction: String) -> i32 {
+        let (dr, dc) = match direction.as_str() {
             "U" => (-1, 0),
             "D" => (1, 0),
             "L" => (0, -1),
@@ -616,6 +616,91 @@ impl SnakeGame {
         self.snake_set.insert(new_head);
 
         self.snake.len() as i32 - 1
+    }
+}
+```
+
+```typescript
+class SnakeGame {
+    private snake: any;
+    private snakeSet: Set<string>;
+    private width: number;
+    private height: number;
+    private food: number[][];
+    private foodIndex: number;
+    private movement: { [key: string]: number[] };
+
+    /**
+     * @param {number} width
+     * @param {number} height
+     * @param {number[][]} food
+     */
+    constructor(width: number, height: number, food: number[][]) {
+        this.snake = new Deque(); // Using @datastructures-js/deque
+        this.snake.pushFront([0, 0]); // snake head is at the front
+        this.snakeSet = new Set();
+        this.snakeSet.add('0,0');
+        this.width = width;
+        this.height = height;
+        this.food = food;
+        this.foodIndex = 0;
+        this.movement = { U: [-1, 0], L: [0, -1], R: [0, 1], D: [1, 0] };
+    }
+
+    /**
+     * @param {string} direction
+     * @return {number}
+     */
+    move(direction: string): number {
+        let currentHead: number[] = this.snake.front();
+        let newHead = [
+            currentHead[0] + this.movement[direction][0],
+            currentHead[1] + this.movement[direction][1],
+        ];
+
+        // Boundary conditions.
+        let crossesBoundary1 = newHead[0] < 0 || newHead[0] >= this.height;
+        let crossesBoundary2 = newHead[1] < 0 || newHead[1] >= this.width;
+
+        // Checking if the snake bites itself.
+        let newHeadKey = newHead[0] + ',' + newHead[1];
+        let currentTail: number[] = this.snake.back();
+        let tailKey = currentTail[0] + ',' + currentTail[1];
+        let bitesItself =
+            this.snakeSet.has(newHeadKey) && newHeadKey !== tailKey;
+
+        // If any of the terminal conditions are satisfied, then we exit with rcode -1.
+        if (crossesBoundary1 || crossesBoundary2 || bitesItself) {
+            return -1;
+        }
+
+        // Note the food list could be empty at this point.
+        let nextFoodItem =
+            this.foodIndex < this.food.length
+                ? this.food[this.foodIndex]
+                : null;
+
+        // If there's an available food item and it is on the cell occupied by the snake after the move, eat it
+        if (
+            this.foodIndex < this.food.length &&
+            nextFoodItem![0] === newHead[0] &&
+            nextFoodItem![1] === newHead[1]
+        ) {
+            // eat food
+            this.foodIndex++;
+        } else {
+            // not eating food: delete tail
+            let tail: number[] = this.snake.popBack();
+            this.snakeSet.delete(tail[0] + ',' + tail[1]);
+        }
+
+        // A new head always gets added
+        this.snake.pushFront(newHead);
+
+        // Also add the head to the set
+        this.snakeSet.add(newHeadKey);
+
+        return this.snake.size() - 1;
     }
 }
 ```

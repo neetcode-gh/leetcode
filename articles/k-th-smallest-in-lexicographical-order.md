@@ -136,6 +136,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    findKthNumber(n: number, k: number): number {
+        const nums: string[] = [];
+        for (let num = 1; num <= n; num++) {
+            nums.push(num.toString());
+        }
+        nums.sort();
+        return parseInt(nums[k - 1], 10);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,6 +469,42 @@ impl Solution {
             }
         }
         cur as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    findKthNumber(n: number, k: number): number {
+        let cur = 1,
+            i = 1;
+        const count = (curVal: number): number => {
+            let res = 0,
+                nei = curVal + 1;
+            while (curVal <= n) {
+                res += Math.min(nei, n + 1) - curVal;
+                curVal *= 10;
+                nei *= 10;
+            }
+            return res;
+        };
+
+        while (i < k) {
+            const steps = count(cur);
+            if (i + steps <= k) {
+                cur++;
+                i += steps;
+            } else {
+                cur *= 10;
+                i++;
+            }
+        }
+        return cur;
     }
 }
 ```

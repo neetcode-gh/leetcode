@@ -162,7 +162,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int LeastBricks(IList<IList<int>> wall) {
+    public int LeastBricks(List<List<int>> wall) {
         int n = wall.Count;
         int m = 0;
         foreach (int brick in wall[0]) {
@@ -483,7 +483,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int LeastBricks(IList<IList<int>> wall) {
+    public int LeastBricks(List<List<int>> wall) {
         Dictionary<int, int> countGap = new Dictionary<int, int>();
         countGap[0] = 0;
 

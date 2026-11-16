@@ -142,8 +142,8 @@ type MovingAverage struct {
     queue []int
 }
 
-func Constructor(size int) MovingAverage {
-    return MovingAverage{size: size, queue: []int{}}
+func Constructor(size int) *MovingAverage {
+    return &MovingAverage{size: size, queue: []int{}}
 }
 
 func (ma *MovingAverage) Next(val int) float64 {
@@ -225,6 +225,37 @@ impl MovingAverage {
         };
         let window_sum: i32 = self.queue[start..].iter().sum();
         window_sum as f64 / self.queue.len().min(self.size) as f64
+    }
+}
+```
+
+```typescript
+class MovingAverage {
+    private size: number;
+    private queue: number[];
+
+    /**
+     * @param {number} size
+     */
+    constructor(size: number) {
+        this.size = size;
+        this.queue = [];
+    }
+
+    /**
+     * @param {number} val
+     * @return {number}
+     */
+    next(val: number): number {
+        const size = this.size;
+        const queue = this.queue;
+
+        queue.push(val);
+
+        // calculate the sum of the moving window
+        const windowSum = queue.slice(-size).reduce((sum, num) => sum + num, 0);
+
+        return windowSum / Math.min(queue.length, size);
     }
 }
 ```
@@ -327,7 +358,7 @@ public:
 class MovingAverage {
     constructor(size) {
         this.size = size;
-        this.queue = [];
+        this.queue = new Queue();
         this.windowSum = 0;
         this.count = 0;
     }
@@ -335,7 +366,7 @@ class MovingAverage {
     next(val) {
         this.count++;
         this.queue.push(val);
-        let tail = this.count > this.size ? this.queue.shift() : 0;
+        let tail = this.count > this.size ? this.queue.pop() : 0;
         this.windowSum = this.windowSum - tail + val;
         return this.windowSum / Math.min(this.size, this.count);
     }
@@ -370,8 +401,8 @@ type MovingAverage struct {
     count     int
 }
 
-func Constructor(size int) MovingAverage {
-    return MovingAverage{size: size, queue: []int{}, windowSum: 0, count: 0}
+func Constructor(size int) *MovingAverage {
+    return &MovingAverage{size: size, queue: []int{}, windowSum: 0, count: 0}
 }
 
 func (ma *MovingAverage) Next(val int) float64 {
@@ -460,6 +491,30 @@ impl MovingAverage {
 
         self.window_sum = self.window_sum - tail + val;
         self.window_sum as f64 / self.size.min(self.count) as f64
+    }
+}
+```
+
+```typescript
+class MovingAverage {
+    private size: number;
+    private queue: any;
+    private windowSum: number;
+    private count: number;
+
+    constructor(size: number) {
+        this.size = size;
+        this.queue = new Queue();
+        this.windowSum = 0;
+        this.count = 0;
+    }
+
+    next(val: number): number {
+        this.count++;
+        this.queue.push(val);
+        let tail = this.count > this.size ? this.queue.pop() : 0;
+        this.windowSum = this.windowSum - tail + val;
+        return this.windowSum / Math.min(this.size, this.count);
     }
 }
 ```
@@ -638,8 +693,8 @@ type MovingAverage struct {
     count     int
 }
 
-func Constructor(size int) MovingAverage {
-    return MovingAverage{
+func Constructor(size int) *MovingAverage {
+    return &MovingAverage{
         size:      size,
         queue:     make([]int, size),
         head:      0,
@@ -739,6 +794,46 @@ impl MovingAverage {
         self.head = (self.head + 1) % self.size;
         self.queue[self.head] = val;
         self.window_sum as f64 / self.size.min(self.count) as f64
+    }
+}
+```
+
+```typescript
+class MovingAverage {
+    private size: number;
+    private queue: number[];
+    private head: number;
+    private windowSum: number;
+    private count: number;
+
+    /**
+     * @param {number} size
+     */
+    constructor(size: number) {
+        this.size = size;
+        this.queue = new Array(this.size).fill(0);
+        this.head = 0;
+        this.windowSum = 0;
+        // number of elements seen so far
+        this.count = 0;
+    }
+
+    /**
+     * @param {number} val
+     * @return {number}
+     */
+    next(val: number): number {
+        this.count += 1;
+
+        // calculate the new sum by shifting the window
+        const tail = (this.head + 1) % this.size;
+        this.windowSum = this.windowSum - this.queue[tail] + val;
+
+        // move on to the next head
+        this.head = (this.head + 1) % this.size;
+        this.queue[this.head] = val;
+
+        return this.windowSum / Math.min(this.size, this.count);
     }
 }
 ```

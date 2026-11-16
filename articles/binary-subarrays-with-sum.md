@@ -207,6 +207,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} goal
+     * @return {number}
+     */
+    numSubarraysWithSum(nums: number[], goal: number): number {
+        const n = nums.length;
+        let res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let curSum = 0;
+            for (let j = i; j < n; j++) {
+                curSum += nums[j];
+                if (curSum === goal) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -398,6 +424,30 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} goal
+     * @return {number}
+     */
+    numSubarraysWithSum(nums: number[], goal: number): number {
+        let prefixSum = 0,
+            res = 0;
+        const count = new Map<number, number>();
+        count.set(0, 1);
+
+        for (const num of nums) {
+            prefixSum += num;
+            res += count.get(prefixSum - goal) || 0;
+            count.set(prefixSum, (count.get(prefixSum) || 0) + 1);
+        }
+
+        return res;
     }
 }
 ```
@@ -615,6 +665,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} goal
+     * @return {number}
+     */
+    numSubarraysWithSum(nums: number[], goal: number): number {
+        const n = nums.length;
+        const count: number[] = Array(n + 1).fill(0);
+        count[0] = 1;
+        let prefixSum = 0,
+            res = 0;
+
+        for (const num of nums) {
+            prefixSum += num;
+            if (prefixSum >= goal) {
+                res += count[prefixSum - goal];
+            }
+            count[prefixSum]++;
+        }
+
+        return res;
     }
 }
 ```
@@ -849,6 +926,35 @@ impl Solution {
         }
 
         helper(&nums, goal) - helper(&nums, goal - 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} goal
+     * @return {number}
+     */
+    numSubarraysWithSum(nums: number[], goal: number): number {
+        const helper = (x: number): number => {
+            if (x < 0) return 0;
+            let res = 0,
+                l = 0,
+                cur = 0;
+            for (let r = 0; r < nums.length; r++) {
+                cur += nums[r];
+                while (cur > x) {
+                    cur -= nums[l];
+                    l++;
+                }
+                res += r - l + 1;
+            }
+            return res;
+        };
+
+        return helper(goal) - helper(goal - 1);
     }
 }
 ```

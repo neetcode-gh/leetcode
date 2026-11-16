@@ -249,6 +249,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} coins
+     * @param {number} amount
+     * @return {number}
+     */
+    coinChange(coins: number[], amount: number): number {
+        const dfs = (amount: number): number => {
+            if (amount === 0) return 0;
+
+            let res = Infinity;
+            for (let coin of coins) {
+                if (amount - coin >= 0) {
+                    res = Math.min(res, 1 + dfs(amount - coin));
+                }
+            }
+            return res;
+        };
+
+        const minCoins = dfs(amount);
+        return minCoins === Infinity ? -1 : minCoins;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +583,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} coins
+     * @param {number} amount
+     * @return {number}
+     */
+    coinChange(coins: number[], amount: number): number {
+        let memo: { [key: number]: number } = {};
+
+        const dfs = (amount: number): number => {
+            if (amount === 0) return 0;
+            if (memo[amount] !== undefined) return memo[amount];
+
+            let res = Infinity;
+            for (let coin of coins) {
+                if (amount - coin >= 0) {
+                    res = Math.min(res, 1 + dfs(amount - coin));
+                }
+            }
+
+            memo[amount] = res;
+            return res;
+        };
+
+        const minCoins = dfs(amount);
+        return minCoins === Infinity ? -1 : minCoins;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -771,6 +828,28 @@ impl Solution {
         }
 
         if dp[amount] > amount as i32 { -1 } else { dp[amount] }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} coins
+     * @param {number} amount
+     * @return {number}
+     */
+    coinChange(coins: number[], amount: number): number {
+        const dp: number[] = new Array(amount + 1).fill(amount + 1);
+        dp[0] = 0;
+        for (let i = 1; i <= amount; i++) {
+            for (let j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - coins[j]]);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
     }
 }
 ```
@@ -1102,6 +1181,41 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} coins
+     * @param {number} amount
+     * @return {number}
+     */
+    coinChange(coins: number[], amount: number): number {
+        if (amount === 0) return 0;
+
+        const q = new Queue([0]);
+        const seen: boolean[] = new Array(amount + 1).fill(false);
+        seen[0] = true;
+        let res = 0;
+
+        while (!q.isEmpty()) {
+            res++;
+            const size = q.size();
+            for (let i = 0; i < size; i++) {
+                const cur: number = q.pop();
+                for (const coin of coins) {
+                    const nxt = cur + coin;
+                    if (nxt === amount) return res;
+                    if (nxt > amount || seen[nxt]) continue;
+                    seen[nxt] = true;
+                    q.push(nxt);
+                }
+            }
+        }
+
+        return -1;
     }
 }
 ```

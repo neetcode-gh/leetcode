@@ -146,6 +146,23 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    arrangeCoins(n: number): number {
+        let row = 0;
+        while (n - row > 0) {
+            row++;
+            n -= row;
+        }
+        return row;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -372,6 +389,33 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    arrangeCoins(n: number): number {
+        let l = 1,
+            r = n,
+            res = 0;
+
+        while (l <= r) {
+            let mid = Math.floor((l + r) / 2);
+            let coins = (mid * (mid + 1)) / 2;
+            if (coins > n) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+                res = Math.max(res, mid);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -614,6 +658,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    arrangeCoins(n: number): number {
+        if (n <= 3) {
+            return n == 1 ? 1 : n - 1;
+        }
+
+        let l = 1,
+            r = n / 2 + 1;
+        while (l < r) {
+            let mid = Math.floor((l + r) / 2);
+            let coins = (mid * (mid + 1)) / 2;
+            if (coins <= n) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        return l - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -806,6 +878,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    arrangeCoins(n: number): number {
+        let mask = 1 << 15;
+        let rows = 0;
+        while (mask > 0) {
+            rows |= mask;
+            let coins = (rows * (rows + 1)) / 2;
+            if (coins > n) {
+                rows ^= mask;
+            }
+            mask >>= 1;
+        }
+        return rows;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -833,7 +927,7 @@ Simplifying gives us `k = sqrt(2n + 0.25) - 0.5`. We take the floor of this valu
 ```python
 class Solution:
     def arrangeCoins(self, n: int) -> int:
-        return int(sqrt(2 * n + 0.25) - 0.5)
+        return int(math.sqrt(2 * n + 0.25) - 0.5)
 ```
 
 ```java
@@ -899,6 +993,18 @@ class Solution {
 impl Solution {
     pub fn arrange_coins(n: i32) -> i32 {
         ((2.0 * n as f64 + 0.25).sqrt() - 0.5) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    arrangeCoins(n: number): number {
+        return Math.floor(Math.sqrt(2 * n + 0.25) - 0.5);
     }
 }
 ```

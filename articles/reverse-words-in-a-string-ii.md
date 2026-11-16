@@ -324,6 +324,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[]} s
+     * @return {void} Do not return anything, modify s in-place instead.
+     */
+    reverseWords(s: string[]): void {
+        // reverse the whole string
+        this.reverse(s, 0, s.length - 1);
+        // reverse each word
+        this.reverseEachWord(s);
+    }
+
+    reverse(s: string[], left: number, right: number): void {
+        while (left < right) {
+            let tmp = s[left];
+            s[left++] = s[right];
+            s[right--] = tmp;
+        }
+    }
+
+    reverseEachWord(s: string[]): void {
+        const n = s.length;
+        let start = 0,
+            end = 0;
+
+        while (start < n) {
+            // go to the end of the word
+            while (end < n && s[end] !== ' ') ++end;
+            // reverse the word
+            this.reverse(s, start, end - 1);
+            // move to the next word
+            start = end + 1;
+            ++end;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

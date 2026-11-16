@@ -39,7 +39,7 @@ class Solution:
 
         def dfs(i, steps):
             if steps == 0:
-                return i == 0
+                return 1 if i == 0 else 0
             if (i, steps) in dp:
                 return dp[(i, steps)]
 
@@ -305,6 +305,37 @@ impl Solution {
         }
 
         dfs(0, steps, max_pos, &mut dp)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} steps
+     * @param {number} arrLen
+     * @return {number}
+     */
+    numWays(steps: number, arrLen: number): number {
+        const MOD = 1e9 + 7;
+        const maxPos = Math.min(steps, arrLen);
+        const dp: number[][] = Array.from({ length: maxPos + 1 }, () =>
+            Array(steps + 1).fill(-1),
+        );
+
+        const dfs = (i: number, steps: number): number => {
+            if (steps === 0) return i === 0 ? 1 : 0;
+            if (dp[i][steps] !== -1) return dp[i][steps];
+
+            let res = dfs(i, steps - 1);
+            if (i > 0) res = (res + dfs(i - 1, steps - 1)) % MOD;
+            if (i < maxPos - 1) res = (res + dfs(i + 1, steps - 1)) % MOD;
+
+            dp[i][steps] = res;
+            return res;
+        };
+
+        return dfs(0, steps);
     }
 }
 ```
@@ -577,6 +608,39 @@ impl Solution {
         }
 
         dp[steps][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} steps
+     * @param {number} arrLen
+     * @return {number}
+     */
+    numWays(steps: number, arrLen: number): number {
+        const MOD = 1e9 + 7;
+        arrLen = Math.min(arrLen, steps);
+        const dp: number[][] = Array.from({ length: steps + 1 }, () =>
+            Array(arrLen + 1).fill(0),
+        );
+        dp[0][0] = 1;
+
+        for (let step = 1; step <= steps; step++) {
+            for (let i = 0; i < arrLen; i++) {
+                let res = dp[step - 1][i];
+                if (i > 0) {
+                    res = (res + dp[step - 1][i - 1]) % MOD;
+                }
+                if (i < arrLen - 1) {
+                    res = (res + dp[step - 1][i + 1]) % MOD;
+                }
+                dp[step][i] = res;
+            }
+        }
+
+        return dp[steps][0];
     }
 }
 ```
@@ -856,6 +920,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} steps
+     * @param {number} arrLen
+     * @return {number}
+     */
+    numWays(steps: number, arrLen: number): number {
+        const MOD = 1e9 + 7;
+        arrLen = Math.min(steps, arrLen);
+        let dp: number[] = new Array(arrLen).fill(0);
+        dp[0] = 1;
+
+        for (let step = 0; step < steps; step++) {
+            const nextDp: number[] = new Array(arrLen).fill(0);
+            for (let i = 0; i < arrLen; i++) {
+                nextDp[i] = dp[i];
+                if (i > 0) {
+                    nextDp[i] = (nextDp[i] + dp[i - 1]) % MOD;
+                }
+                if (i < arrLen - 1) {
+                    nextDp[i] = (nextDp[i] + dp[i + 1]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -980,6 +1076,7 @@ class Solution {
         dp[0] = 1;
 
         for (let step = 0; step < steps; step++) {
+            let prev = 0;
             for (let i = 0; i < arrLen; i++) {
                 const cur = dp[i];
                 if (i > 0) {
@@ -1129,6 +1226,38 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} steps
+     * @param {number} arrLen
+     * @return {number}
+     */
+    numWays(steps: number, arrLen: number): number {
+        const MOD = 1e9 + 7;
+        arrLen = Math.min(steps, arrLen);
+        const dp: number[] = new Array(arrLen).fill(0);
+        dp[0] = 1;
+
+        for (let step = 0; step < steps; step++) {
+            let prev = 0;
+            for (let i = 0; i < arrLen; i++) {
+                const cur = dp[i];
+                if (i > 0) {
+                    dp[i] = (dp[i] + prev) % MOD;
+                }
+                if (i < arrLen - 1) {
+                    dp[i] = (dp[i] + dp[i + 1]) % MOD;
+                }
+                prev = cur;
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

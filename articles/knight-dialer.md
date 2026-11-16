@@ -300,6 +300,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    knightDialer(n: number): number {
+        if (n === 1) return 10;
+        const MOD = 1000000007;
+        const jumps = [
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
+        ];
+
+        const dfs = (n: number, d: number): number => {
+            if (n === 0) return 1;
+
+            let res = 0;
+            for (const next of jumps[d]) {
+                res = (res + dfs(n - 1, next)) % MOD;
+            }
+            return res;
+        };
+
+        let res = 0;
+        for (let d = 0; d < 10; d++) {
+            res = (res + dfs(n - 1, d)) % MOD;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,6 +687,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    knightDialer(n: number): number {
+        if (n === 1) return 10;
+        const MOD = 1000000007;
+        const jumps = [
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
+        ];
+
+        const dp: number[][] = Array.from({ length: 10 }, () => Array(n + 1).fill(-1));
+
+        const dfs = (n: number, d: number): number => {
+            if (n === 0) return 1;
+            if (dp[d][n] !== -1) return dp[d][n];
+
+            dp[d][n] = 0;
+            for (const next of jumps[d]) {
+                dp[d][n] = (dp[d][n] + dfs(n - 1, next)) % MOD;
+            }
+            return dp[d][n];
+        };
+
+        let res = 0;
+        for (let d = 0; d < 10; d++) {
+            res = (res + dfs(n - 1, d)) % MOD;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -960,6 +1045,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    knightDialer(n: number): number {
+        if (n === 1) return 10;
+        const MOD = 1000000007;
+        const jumps = [
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
+        ];
+
+        const dp: number[][] = Array.from({ length: 10 }, () => Array(n + 1).fill(0));
+        for (let d = 0; d < 10; d++) {
+            dp[d][0] = 1;
+        }
+
+        for (let step = 1; step < n; step++) {
+            for (let d = 0; d < 10; d++) {
+                for (const j of jumps[d]) {
+                    dp[d][step] = (dp[d][step] + dp[j][step - 1]) % MOD;
+                }
+            }
+        }
+
+        let res = 0;
+        for (let d = 0; d < 10; d++) {
+            res = (res + dp[d][n - 1]) % MOD;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1262,6 +1391,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    knightDialer(n: number): number {
+        if (n === 1) return 10;
+        const MOD = 1000000007;
+        const jumps = [
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
+        ];
+
+        let dp: number[] = new Array(10).fill(1);
+
+        for (let step = 0; step < n - 1; step++) {
+            let nextDp: number[] = new Array(10).fill(0);
+            for (let d = 0; d < 10; d++) {
+                for (const j of jumps[d]) {
+                    nextDp[j] = (nextDp[j] + dp[d]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp.reduce((res, d) => (res + d) % MOD, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1489,6 +1657,32 @@ impl Solution {
             jumps = tmp;
         }
         (jumps.iter().sum::<i64>() % MOD) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    knightDialer(n: number): number {
+        if (n === 1) return 10;
+
+        const MOD = 1000000007;
+        let jumps = [1, 4, 2, 2]; // [D, A, B, C]
+
+        for (let i = 0; i < n - 1; i++) {
+            let tmp: number[] = new Array(4).fill(0);
+            tmp[0] = jumps[3];
+            tmp[1] = (2 * jumps[2] + 2 * jumps[3]) % MOD;
+            tmp[2] = jumps[1];
+            tmp[3] = (2 * jumps[0] + jumps[1]) % MOD;
+            jumps = tmp;
+        }
+
+        return jumps.reduce((sum, num) => (sum + num) % MOD, 0);
     }
 }
 ```
@@ -2075,6 +2269,94 @@ impl Solution {
             }
         }
         ans as i32
+    }
+}
+```
+
+```typescript
+class Matrix {
+    size: number;
+    a: number[][];
+    MOD: bigint;
+
+    constructor(size: number) {
+        this.size = size;
+        this.a = Array.from({ length: size }, () => Array(size).fill(0));
+        this.MOD = BigInt(1e9 + 7);
+    }
+
+    multiply(other: Matrix): Matrix {
+        const product = new Matrix(this.size);
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                let sum = BigInt(0);
+                for (let k = 0; k < this.size; k++) {
+                    sum =
+                        (sum + BigInt(this.a[i][k]) * BigInt(other.a[k][j])) %
+                        this.MOD;
+                }
+                product.a[i][j] = Number(sum);
+            }
+        }
+        return product;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    knightDialer(n: number): number {
+        if (n === 1) return 10;
+
+        const matpow = (mat: Matrix, exp: number, size: number): Matrix => {
+            let res = new Matrix(size);
+            for (let i = 0; i < size; i++) {
+                res.a[i][i] = 1; // Identity matrix
+            }
+
+            while (exp > 0) {
+                if (exp & 1) {
+                    res = res.multiply(mat);
+                }
+                mat = mat.multiply(mat);
+                exp >>= 1;
+            }
+            return res;
+        };
+
+        const jumps = [
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
+        ];
+
+        const mat = new Matrix(10);
+        for (let i = 0; i < 10; i++) {
+            for (let j of jumps[i]) {
+                mat.a[i][j] = 1;
+            }
+        }
+
+        const res = matpow(mat, n - 1, 10);
+        const mod = 1e9 + 7;
+        let ans = 0;
+
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                ans = (ans + res.a[i][j]) % mod;
+            }
+        }
+
+        return ans;
     }
 }
 ```

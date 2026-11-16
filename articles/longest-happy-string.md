@@ -391,6 +391,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @return {string}
+     */
+    longestDiverseString(a: number, b: number, c: number): string {
+        const count = [a, b, c];
+        const res: string[] = [];
+
+        const getMax = (repeated: number): number => {
+            let idx = -1;
+            let maxCnt = 0;
+            for (let i = 0; i < 3; i++) {
+                if (i === repeated || count[i] === 0) {
+                    continue;
+                }
+                if (maxCnt < count[i]) {
+                    maxCnt = count[i];
+                    idx = i;
+                }
+            }
+            return idx;
+        };
+
+        let repeated = -1;
+        while (true) {
+            const maxChar = getMax(repeated);
+            if (maxChar === -1) {
+                break;
+            }
+            res.push(String.fromCharCode(maxChar + 97));
+            count[maxChar]--;
+
+            if (res.length > 1 && res[res.length - 1] === res[res.length - 2]) {
+                repeated = maxChar;
+            } else {
+                repeated = -1;
+            }
+        }
+
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -657,8 +705,6 @@ func longestDiverseString(a int, b int, c int) string {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Solution {
     fun longestDiverseString(a: Int, b: Int, c: Int): String {
         val res = StringBuilder()
@@ -803,6 +849,46 @@ impl Solution {
         }
 
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @return {string}
+     */
+    longestDiverseString(a: number, b: number, c: number): string {
+        const res: string[] = [];
+        const maxHeap = new MaxPriorityQueue((x: [number, string]) => x[0]);
+
+        if (a > 0) maxHeap.enqueue([a, 'a']);
+        if (b > 0) maxHeap.enqueue([b, 'b']);
+        if (c > 0) maxHeap.enqueue([c, 'c']);
+
+        while (!maxHeap.isEmpty()) {
+            const [count, char]: [number, string] = maxHeap.dequeue();
+
+            if (
+                res.length > 1 &&
+                res[res.length - 1] === char &&
+                res[res.length - 2] === char
+            ) {
+                if (maxHeap.isEmpty()) break;
+                const [count2, char2]: [number, string] = maxHeap.dequeue();
+                res.push(char2);
+                if (count2 - 1 > 0) maxHeap.enqueue([count2 - 1, char2]);
+                maxHeap.enqueue([count, char]);
+            } else {
+                res.push(char);
+                if (count - 1 > 0) maxHeap.enqueue([count - 1, char]);
+            }
+        }
+
+        return res.join('');
     }
 }
 ```
@@ -1119,6 +1205,47 @@ impl Solution {
         }
 
         String::from_utf8(rec(a, b, c, b'a', b'b', b'c')).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @return {string}
+     */
+    longestDiverseString(a: number, b: number, c: number): string {
+        const rec = (
+            max1: number,
+            max2: number,
+            max3: number,
+            char1: string,
+            char2: string,
+            char3: string,
+        ): string[] => {
+            if (max1 < max2) {
+                return rec(max2, max1, max3, char2, char1, char3);
+            }
+            if (max2 < max3) {
+                return rec(max1, max3, max2, char1, char3, char2);
+            }
+            if (max2 === 0) {
+                return Array(Math.min(2, max1)).fill(char1);
+            }
+
+            const use1 = Math.min(2, max1);
+            const use2 = max1 - use1 >= max2 ? 1 : 0;
+
+            const res: string[] = Array(use1).fill(char1).concat(Array(use2).fill(char2));
+            return res.concat(
+                rec(max1 - use1, max2 - use2, max3, char1, char2, char3),
+            );
+        };
+
+        return rec(a, b, c, 'a', 'b', 'c').join('');
     }
 }
 ```

@@ -359,6 +359,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    convertBST(root: TreeNode | null): TreeNode | null {
+        const getSum = (node: TreeNode | null): number => {
+            if (!node) return 0;
+            return node.val + getSum(node.left) + getSum(node.right);
+        };
+
+        let totalSum = getSum(root);
+
+        const dfs = (node: TreeNode | null): void => {
+            if (!node) return;
+
+            dfs(node.left);
+            let tmp = node.val;
+            node.val = totalSum;
+            totalSum -= tmp;
+            dfs(node.right);
+        };
+
+        dfs(root);
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -659,6 +689,31 @@ impl Solution {
         let mut cur_sum = 0;
         dfs(&root, &mut cur_sum);
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    convertBST(root: TreeNode | null): TreeNode | null {
+        let curSum = 0;
+
+        const dfs = (node: TreeNode | null): void => {
+            if (!node) return;
+
+            dfs(node.right);
+            let tmp = node.val;
+            node.val += curSum;
+            curSum += tmp;
+            dfs(node.left);
+        };
+
+        dfs(root);
+        return root;
     }
 }
 ```
@@ -986,6 +1041,33 @@ impl Solution {
         }
 
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    convertBST(root: TreeNode | null): TreeNode | null {
+        let curSum = 0;
+        const stack: TreeNode[] = [];
+        let node = root;
+
+        while (stack.length || node) {
+            while (node) {
+                stack.push(node);
+                node = node.right;
+            }
+
+            node = stack.pop()!;
+            curSum += node.val;
+            node.val = curSum;
+            node = node.left;
+        }
+        return root;
     }
 }
 ```
@@ -1369,9 +1451,87 @@ class Solution {
 ```
 
 ```rust
-// Morris Traversal is not directly feasible with Rc<RefCell<TreeNode>>
-// since it requires temporarily modifying tree pointers, which conflicts
-// with Rust's ownership model. Use the iterative DFS approach above instead.
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn convert_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut cur_sum = 0;
+        let mut cur = root.clone();
+
+        while let Some(node) = cur {
+            let right = node.borrow().right.clone();
+            if let Some(r) = right {
+                let mut prev = r.clone();
+                loop {
+                    let left = prev.borrow().left.clone();
+                    match left {
+                        Some(l) if !Rc::ptr_eq(&l, &node) => prev = l,
+                        _ => break,
+                    }
+                }
+
+                let threaded = prev.borrow().left.is_some();
+                if !threaded {
+                    prev.borrow_mut().left = Some(node.clone());
+                    cur = Some(r);
+                } else {
+                    prev.borrow_mut().left = None;
+                    cur_sum += node.borrow().val;
+                    node.borrow_mut().val = cur_sum;
+                    cur = node.borrow().left.clone();
+                }
+            } else {
+                cur_sum += node.borrow().val;
+                node.borrow_mut().val = cur_sum;
+                cur = node.borrow().left.clone();
+            }
+        }
+
+        root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {TreeNode}
+     */
+    convertBST(root: TreeNode | null): TreeNode | null {
+        let curSum = 0;
+        let cur = root;
+
+        while (cur) {
+            if (cur.right) {
+                let prev = cur.right;
+                while (prev.left && prev.left !== cur) {
+                    prev = prev.left;
+                }
+
+                if (!prev.left) {
+                    prev.left = cur;
+                    cur = cur.right;
+                } else {
+                    prev.left = null;
+                    curSum += cur.val;
+                    cur.val = curSum;
+                    cur = cur.left;
+                }
+            } else {
+                curSum += cur.val;
+                cur.val = curSum;
+                cur = cur.left;
+            }
+        }
+        return root;
+    }
+}
 ```
 
 ::tabs-end

@@ -49,7 +49,7 @@ class UndergroundSystem:
 ```java
 public class UndergroundSystem {
     private Map<Integer, Pair<String, Integer>> checkInMap;
-    private Map<String, int[]> routeMap;
+    private Map<String, long[]> routeMap;
 
     public UndergroundSystem() {
         checkInMap = new HashMap<>();
@@ -63,13 +63,13 @@ public class UndergroundSystem {
     public void checkOut(int id, String endStation, int t) {
         Pair<String, Integer> entry = checkInMap.get(id);
         String route = entry.getKey() + "," + endStation;
-        routeMap.putIfAbsent(route, new int[]{0, 0});
+        routeMap.putIfAbsent(route, new long[]{0, 0});
         routeMap.get(route)[0] += t - entry.getValue();
         routeMap.get(route)[1] += 1;
     }
 
     public double getAverageTime(String startStation, String endStation) {
-        int[] data = routeMap.get(startStation + "," + endStation);
+        long[] data = routeMap.get(startStation + "," + endStation);
         return (double) data[0] / data[1];
     }
 }
@@ -78,7 +78,7 @@ public class UndergroundSystem {
 ```cpp
 class UndergroundSystem {
     unordered_map<int, pair<string, int>> checkInMap;
-    unordered_map<string, pair<int, int>> routeMap;
+    unordered_map<string, pair<long long, int>> routeMap;
 
 public:
     UndergroundSystem() {}
@@ -155,11 +155,11 @@ class UndergroundSystem {
 ```csharp
 public class UndergroundSystem {
     private Dictionary<int, (string, int)> checkInMap;
-    private Dictionary<string, int[]> routeMap;
+    private Dictionary<string, long[]> routeMap;
 
     public UndergroundSystem() {
         checkInMap = new Dictionary<int, (string, int)>();
-        routeMap = new Dictionary<string, int[]>();
+        routeMap = new Dictionary<string, long[]>();
     }
 
     public void CheckIn(int id, string startStation, int t) {
@@ -170,14 +170,14 @@ public class UndergroundSystem {
         var (startStation, time) = checkInMap[id];
         string route = startStation + "," + endStation;
         if (!routeMap.ContainsKey(route)) {
-            routeMap[route] = new int[]{0, 0};
+            routeMap[route] = new long[]{0, 0};
         }
         routeMap[route][0] += t - time;
         routeMap[route][1] += 1;
     }
 
     public double GetAverageTime(string startStation, string endStation) {
-        int[] data = routeMap[startStation + "," + endStation];
+        long[] data = routeMap[startStation + "," + endStation];
         return (double)data[0] / data[1];
     }
 }
@@ -221,7 +221,7 @@ func (this *UndergroundSystem) GetAverageTime(startStation string, endStation st
 ```kotlin
 class UndergroundSystem() {
     private val checkInMap = HashMap<Int, Pair<String, Int>>()
-    private val routeMap = HashMap<String, IntArray>()
+    private val routeMap = HashMap<String, LongArray>()
 
     fun checkIn(id: Int, stationName: String, t: Int) {
         checkInMap[id] = Pair(stationName, t)
@@ -231,7 +231,7 @@ class UndergroundSystem() {
         val (startStation, time) = checkInMap[id]!!
         val route = "$startStation,$stationName"
         if (route !in routeMap) {
-            routeMap[route] = intArrayOf(0, 0)
+            routeMap[route] = longArrayOf(0, 0)
         }
         routeMap[route]!![0] += t - time
         routeMap[route]!![1] += 1
@@ -278,7 +278,7 @@ class UndergroundSystem {
 ```rust
 struct UndergroundSystem {
     check_in_map: HashMap<i32, (String, i32)>,
-    route_map: HashMap<String, [i32; 2]>,
+    route_map: HashMap<String, [i64; 2]>,
 }
 
 impl UndergroundSystem {
@@ -297,7 +297,7 @@ impl UndergroundSystem {
         let (start_station, time) = self.check_in_map.get(&id).unwrap().clone();
         let route = format!("{},{}", start_station, station_name);
         let entry = self.route_map.entry(route).or_insert([0, 0]);
-        entry[0] += t - time;
+        entry[0] += (t - time) as i64;
         entry[1] += 1;
     }
 
@@ -305,6 +305,57 @@ impl UndergroundSystem {
         let route = format!("{},{}", start_station, end_station);
         let data = self.route_map.get(&route).unwrap();
         data[0] as f64 / data[1] as f64
+    }
+}
+```
+
+```typescript
+class UndergroundSystem {
+    private checkInMap: Map<number, [string, number]>;
+    private routeMap: Map<string, number[]>;
+
+    /**
+     * @constructor
+     */
+    constructor() {
+        this.checkInMap = new Map();
+        this.routeMap = new Map();
+    }
+
+    /**
+     * @param {number} id
+     * @param {string} startStation
+     * @param {number} t
+     * @return {void}
+     */
+    checkIn(id: number, startStation: string, t: number): void {
+        this.checkInMap.set(id, [startStation, t]);
+    }
+
+    /**
+     * @param {number} id
+     * @param {string} endStation
+     * @param {number} t
+     * @return {void}
+     */
+    checkOut(id: number, endStation: string, t: number): void {
+        const [startStation, time] = this.checkInMap.get(id)!;
+        const route = `${startStation},${endStation}`;
+        if (!this.routeMap.has(route)) this.routeMap.set(route, [0, 0]);
+        this.routeMap.get(route)![0] += t - time;
+        this.routeMap.get(route)![1] += 1;
+    }
+
+    /**
+     * @param {string} startStation
+     * @param {string} endStation
+     * @return {number}
+     */
+    getAverageTime(startStation: string, endStation: string): number {
+        const [totalTime, count] = this.routeMap.get(
+            `${startStation},${endStation}`,
+        )!;
+        return totalTime / count;
     }
 }
 ```
@@ -380,7 +431,7 @@ public class UndergroundSystem {
     private static final int MOD1 = 768258391, MOD2 = 685683731;
     private static final int BASE1 = 37, BASE2 = 31;
     private Map<Integer, Pair<String, Integer>> checkInMap;
-    private Map<Long, int[]> routeMap;
+    private Map<Long, long[]> routeMap;
 
     public UndergroundSystem() {
         checkInMap = new HashMap<>();
@@ -407,15 +458,15 @@ public class UndergroundSystem {
     public void checkOut(int id, String endStation, int t) {
         Pair<String, Integer> checkInData = checkInMap.get(id);
         long routeHash = getHash(checkInData.getKey(), endStation);
-        routeMap.putIfAbsent(routeHash, new int[]{0, 0});
-        int[] data = routeMap.get(routeHash);
+        routeMap.putIfAbsent(routeHash, new long[]{0, 0});
+        long[] data = routeMap.get(routeHash);
         data[0] += (t - checkInData.getValue());
         data[1]++;
     }
 
     public double getAverageTime(String startStation, String endStation) {
         long routeHash = getHash(startStation, endStation);
-        int[] data = routeMap.get(routeHash);
+        long[] data = routeMap.get(routeHash);
         return (double) data[0] / data[1];
     }
 }
@@ -427,7 +478,7 @@ private:
     static constexpr int MOD1 = 768258391, MOD2 = 685683731;
     static constexpr int BASE1 = 37, BASE2 = 31;
     unordered_map<int, pair<string, int>> checkInMap;
-    unordered_map<unsigned long long, pair<int, int>> routeMap;
+    unordered_map<unsigned long long, pair<long long, int>> routeMap;
 
     unsigned long long getHash(const string& s1, const string& s2) {
         long long h1 = 0, h2 = 0, p1 = 1, p2 = 1;
@@ -545,11 +596,11 @@ public class UndergroundSystem {
     private const int MOD1 = 768258391, MOD2 = 685683731;
     private const int BASE1 = 37, BASE2 = 31;
     private Dictionary<int, (string, int)> checkInMap;
-    private Dictionary<long, int[]> routeMap;
+    private Dictionary<long, long[]> routeMap;
 
     public UndergroundSystem() {
         checkInMap = new Dictionary<int, (string, int)>();
-        routeMap = new Dictionary<long, int[]>();
+        routeMap = new Dictionary<long, long[]>();
     }
 
     private long GetHash(string s1, string s2) {
@@ -572,7 +623,7 @@ public class UndergroundSystem {
         var (startStation, time) = checkInMap[id];
         long routeHash = GetHash(startStation, endStation);
         if (!routeMap.ContainsKey(routeHash)) {
-            routeMap[routeHash] = new int[]{0, 0};
+            routeMap[routeHash] = new long[]{0, 0};
         }
         routeMap[routeHash][0] += t - time;
         routeMap[routeHash][1]++;
@@ -580,7 +631,7 @@ public class UndergroundSystem {
 
     public double GetAverageTime(string startStation, string endStation) {
         long routeHash = GetHash(startStation, endStation);
-        int[] data = routeMap[routeHash];
+        long[] data = routeMap[routeHash];
         return (double)data[0] / data[1];
     }
 }
@@ -646,7 +697,7 @@ class UndergroundSystem() {
     private val BASE1 = 37L
     private val BASE2 = 31L
     private val checkInMap = HashMap<Int, Pair<String, Int>>()
-    private val routeMap = HashMap<Long, IntArray>()
+    private val routeMap = HashMap<Long, LongArray>()
 
     private fun getHash(s1: String, s2: String): Long {
         var h1 = 0L
@@ -671,7 +722,7 @@ class UndergroundSystem() {
         val (startStation, time) = checkInMap[id]!!
         val routeHash = getHash(startStation, stationName)
         if (routeHash !in routeMap) {
-            routeMap[routeHash] = intArrayOf(0, 0)
+            routeMap[routeHash] = longArrayOf(0, 0)
         }
         routeMap[routeHash]!![0] += t - time
         routeMap[routeHash]!![1]++
@@ -740,7 +791,7 @@ class UndergroundSystem {
 ```rust
 struct UndergroundSystem {
     check_in_map: HashMap<i32, (String, i32)>,
-    route_map: HashMap<u64, [i32; 2]>,
+    route_map: HashMap<u64, [i64; 2]>,
 }
 
 const MOD1: i64 = 768258391;
@@ -780,7 +831,7 @@ impl UndergroundSystem {
         let (start_station, time) = self.check_in_map.get(&id).unwrap().clone();
         let route_hash = Self::get_hash(&start_station, &station_name);
         let entry = self.route_map.entry(route_hash).or_insert([0, 0]);
-        entry[0] += t - time;
+        entry[0] += (t - time) as i64;
         entry[1] += 1;
     }
 
@@ -788,6 +839,89 @@ impl UndergroundSystem {
         let route_hash = Self::get_hash(&start_station, &end_station);
         let data = self.route_map.get(&route_hash).unwrap();
         data[0] as f64 / data[1] as f64
+    }
+}
+```
+
+```typescript
+class UndergroundSystem {
+    private MOD1: number;
+    private MOD2: number;
+    private BASE1: number;
+    private BASE2: number;
+    private checkInMap: Map<number, [string, number]>;
+    private routeMap: Map<bigint, number[]>;
+
+    /**
+     * @constructor
+     */
+    constructor() {
+        this.MOD1 = 768258391;
+        this.MOD2 = 685683731;
+        this.BASE1 = 37;
+        this.BASE2 = 31;
+        this.checkInMap = new Map();
+        this.routeMap = new Map();
+    }
+
+    /**
+     * @param {string} s1
+     * @param {string} s2
+     * @return {number}
+     */
+    getHash(s1: string, s2: string): bigint {
+        let h1 = 0,
+            h2 = 0,
+            p1 = 1,
+            p2 = 1;
+        let combined = s1 + ',' + s2;
+
+        for (let i = 0; i < combined.length; i++) {
+            let c = combined.charCodeAt(i) - 96;
+            h1 = (h1 + c * p1) % this.MOD1;
+            h2 = (h2 + c * p2) % this.MOD2;
+            p1 = (p1 * this.BASE1) % this.MOD1;
+            p2 = (p2 * this.BASE2) % this.MOD2;
+        }
+        return (BigInt(h1) << BigInt(32)) | BigInt(h2);
+    }
+
+    /**
+     * @param {number} id
+     * @param {string} startStation
+     * @param {number} t
+     * @return {void}
+     */
+    checkIn(id: number, startStation: string, t: number): void {
+        this.checkInMap.set(id, [startStation, t]);
+    }
+
+    /**
+     * @param {number} id
+     * @param {string} endStation
+     * @param {number} t
+     * @return {void}
+     */
+    checkOut(id: number, endStation: string, t: number): void {
+        let [startStation, time] = this.checkInMap.get(id)!;
+        let routeHash = this.getHash(startStation, endStation);
+        if (!this.routeMap.has(routeHash)) {
+            this.routeMap.set(routeHash, [0, 0]);
+        }
+        let data = this.routeMap.get(routeHash)!;
+        data[0] += t - time;
+        data[1]++;
+    }
+
+    /**
+     * @param {string} startStation
+     * @param {string} endStation
+     * @return {number}
+     */
+    getAverageTime(startStation: string, endStation: string): number {
+        let routeHash = this.getHash(startStation, endStation);
+        let [totalTime, count] = this.routeMap.get(routeHash)!;
+        return totalTime / count;
     }
 }
 ```

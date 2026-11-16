@@ -138,6 +138,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    searchInsert(nums: number[], target: number): number {
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] >= target) {
+                return i;
+            }
+        }
+        return nums.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +385,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    searchInsert(nums: number[], target: number): number {
+        let res = nums.length;
+        let l = 0,
+            r = nums.length - 1;
+        while (l <= r) {
+            const mid = Math.floor((l + r) / 2);
+            if (nums[mid] === target) {
+                return mid;
+            }
+            if (nums[mid] > target) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -578,6 +624,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    searchInsert(nums: number[], target: number): number {
+        let l = 0,
+            r = nums.length - 1;
+        while (l <= r) {
+            const mid = Math.floor((l + r) / 2);
+            if (nums[mid] === target) {
+                return mid;
+            }
+            if (nums[mid] > target) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -762,6 +834,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    searchInsert(nums: number[], target: number): number {
+        let l = 0,
+            r = nums.length;
+        while (l < r) {
+            let m = l + Math.floor((r - l) / 2);
+            if (nums[m] >= target) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -874,6 +969,21 @@ impl Solution {
             Ok(i) => i as i32,
             Err(i) => i as i32,
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    searchInsert(nums: number[], target: number): number {
+        // There is no built in Binary Search function for JS.
+        let index = nums.findIndex((x) => x >= target);
+        return index !== -1 ? index : nums.length;
     }
 }
 ```

@@ -241,6 +241,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canJump(nums: number[]): boolean {
+        const dfs = (i: number): boolean => {
+            if (i === nums.length - 1) {
+                return true;
+            }
+            const end = Math.min(nums.length - 1, i + nums[i]);
+            for (let j = i + 1; j <= end; j++) {
+                if (dfs(j)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -577,6 +602,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canJump(nums: number[]): boolean {
+        const memo = new Map<number, boolean>();
+        const dfs = (i: number): boolean => {
+            if (memo.has(i)) {
+                return memo.get(i)!;
+            }
+            if (i == nums.length - 1) {
+                return true;
+            }
+            if (nums[i] === 0) {
+                return false;
+            }
+            const end = Math.min(nums.length - 1, i + nums[i]);
+            for (let j = i + 1; j <= end; j++) {
+                if (dfs(j)) {
+                    memo.set(i, true);
+                    return true;
+                }
+            }
+            memo.set(i, false);
+            return false;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -810,6 +869,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canJump(nums: number[]): boolean {
+        const n = nums.length;
+        const dp: boolean[] = new Array(n).fill(false);
+        dp[n - 1] = true;
+
+        for (let i = n - 2; i >= 0; i--) {
+            const end = Math.min(nums.length, i + nums[i] + 1);
+            for (let j = i + 1; j < end; j++) {
+                if (dp[j]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -988,6 +1072,26 @@ impl Solution {
             }
         }
         goal == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canJump(nums: number[]): boolean {
+        let goal = nums.length - 1;
+
+        for (let i = nums.length - 2; i >= 0; i--) {
+            if (i + nums[i] >= goal) {
+                goal = i;
+            }
+        }
+
+        return goal === 0;
     }
 }
 ```

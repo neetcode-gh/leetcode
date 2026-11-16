@@ -1213,7 +1213,7 @@ class Solution {
      */
     pushDominoes(dominoes: string): string {
         const dom = dominoes.split('');
-        const q = new Queue<[number, string]>();
+        const q = new Queue();
 
         for (let i = 0; i < dom.length; i++) {
             if (dom[i] !== '.') {

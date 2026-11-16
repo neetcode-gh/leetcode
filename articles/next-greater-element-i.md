@@ -222,6 +222,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    nextGreaterElement(nums1: number[], nums2: number[]): number[] {
+        const n = nums2.length;
+        const res: number[] = [];
+        for (const num of nums1) {
+            let nextGreater = -1;
+            for (let i = n - 1; i >= 0; i--) {
+                if (nums2[i] > num) {
+                    nextGreater = nums2[i];
+                } else if (nums2[i] === num) {
+                    break;
+                }
+            }
+            res.push(nextGreater);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +521,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    nextGreaterElement(nums1: number[], nums2: number[]): number[] {
+        const nums1Idx = new Map<number, number>();
+        nums1.forEach((num, i) => nums1Idx.set(num, i));
+
+        const res: number[] = new Array(nums1.length).fill(-1);
+
+        for (let i = 0; i < nums2.length; i++) {
+            if (!nums1Idx.has(nums2[i])) {
+                continue;
+            }
+            for (let j = i + 1; j < nums2.length; j++) {
+                if (nums2[j] > nums2[i]) {
+                    const idx = nums1Idx.get(nums2[i])!;
+                    res[idx] = nums2[j];
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -703,7 +759,7 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (num in nums2) {
-            while (stack.isNotEmpty() && num > stack.last()) {
+            while (stack.isNotEmpty() && num > stack.peekLast()) {
                 val value = stack.removeLast()
                 val idx = nums1Idx[value]!!
                 res[idx] = num
@@ -767,6 +823,35 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    nextGreaterElement(nums1: number[], nums2: number[]): number[] {
+        const nums1Idx = new Map<number, number>();
+        nums1.forEach((num, i) => nums1Idx.set(num, i));
+
+        const res: number[] = new Array(nums1.length).fill(-1);
+        const stack: number[] = [];
+
+        for (let num of nums2) {
+            while (stack.length && num > stack[stack.length - 1]) {
+                const val = stack.pop()!;
+                const idx = nums1Idx.get(val)!;
+                res[idx] = num;
+            }
+            if (nums1Idx.has(num)) {
+                stack.push(num);
+            }
+        }
+        return res;
     }
 }
 ```

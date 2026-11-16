@@ -432,7 +432,7 @@ public class UnionFind {
 }
 
 public class Solution {
-    public IList<int> NumIslands2(int m, int n, int[][] positions) {
+    public List<int> NumIslands2(int m, int n, int[][] positions) {
         int[] dx = { -1, 1, 0, 0 };
         int[] dy = { 0, 0, -1, 1 };
         UnionFind dsu = new UnionFind(m * n);
@@ -781,6 +781,126 @@ impl Solution {
         }
 
         answer
+    }
+}
+```
+
+```typescript
+class UnionFind {
+    private parent: number[];
+    private rank: number[];
+    private count: number;
+
+    /**
+     * @param {number} size
+     */
+    constructor(size: number) {
+        this.parent = new Array(size).fill(-1);
+        this.rank = new Array(size).fill(0);
+        this.count = 0;
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    addLand(x: number): void {
+        if (this.parent[x] >= 0) return;
+        this.parent[x] = x;
+        this.count++;
+    }
+
+    /**
+     * @param {number} x
+     * @return {boolean}
+     */
+    isLand(x: number): boolean {
+        if (this.parent[x] >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    numberOfIslands(): number {
+        return this.count;
+    }
+
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    find(x: number): number {
+        if (this.parent[x] !== x) this.parent[x] = this.find(this.parent[x]);
+        return this.parent[x];
+    }
+
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    union(x: number, y: number): void {
+        let xset = this.find(x);
+        let yset = this.find(y);
+
+        if (xset === yset) {
+            return;
+        } else if (this.rank[xset] < this.rank[yset]) {
+            this.parent[xset] = yset;
+        } else if (this.rank[xset] > this.rank[yset]) {
+            this.parent[yset] = xset;
+        } else {
+            this.parent[yset] = xset;
+            this.rank[xset]++;
+        }
+
+        this.count--;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @param {number[][]} positions
+     * @return {number[]}
+     */
+    numIslands2(m: number, n: number, positions: number[][]): number[] {
+        let x = [-1, 1, 0, 0];
+        let y = [0, 0, -1, 1];
+        let dsu = new UnionFind(m * n);
+        let answer: number[] = [];
+
+        for (let position of positions) {
+            let landPosition = position[0] * n + position[1];
+            dsu.addLand(landPosition);
+
+            for (let i = 0; i < 4; i++) {
+                let neighborX = position[0] + x[i];
+                let neighborY = position[1] + y[i];
+                let neighborPosition = neighborX * n + neighborY;
+
+                // If neighborX and neighborY correspond to a point in the grid and there is a
+                // land at that point, then merge it with the current land.
+                if (
+                    neighborX >= 0 &&
+                    neighborX < m &&
+                    neighborY >= 0 &&
+                    neighborY < n &&
+                    dsu.isLand(neighborPosition)
+                ) {
+                    dsu.union(landPosition, neighborPosition);
+                }
+            }
+
+            answer.push(dsu.numberOfIslands());
+        }
+
+        return answer;
     }
 }
 ```

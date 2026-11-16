@@ -580,7 +580,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn accounts_merge(accounts: Vec<Vec<String>>) -> Vec<Vec<String>> {
@@ -648,6 +647,88 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} accounts
+     * @return {string[][]}
+     */
+    accountsMerge(accounts: string[][]): string[][] {
+        const emailIdx = new Map<string, number>(); // email -> id
+        const emails: string[] = []; // set of emails of all accounts
+        const emailToAcc = new Map<number, number>(); // email_index -> account_Id
+        const adj: number[][] = [];
+        const emailGroup = new Map<number, string[]>(); // index of acc -> list of emails
+        let visited: boolean[] = [];
+
+        const n = accounts.length;
+        let m = 0;
+
+        // Build email index and mappings
+        for (let accId = 0; accId < n; accId++) {
+            const account = accounts[accId];
+            for (let i = 1; i < account.length; i++) {
+                const email = account[i];
+                if (!emailIdx.has(email)) {
+                    emails.push(email);
+                    emailIdx.set(email, m);
+                    emailToAcc.set(m, accId);
+                    m++;
+                }
+            }
+        }
+
+        // Build adjacency list
+        for (let i = 0; i < m; i++) {
+            adj.push([]);
+        }
+        for (const account of accounts) {
+            for (let i = 2; i < account.length; i++) {
+                const id1 = emailIdx.get(account[i])!;
+                const id2 = emailIdx.get(account[i - 1])!;
+                adj[id1].push(id2);
+                adj[id2].push(id1);
+            }
+        }
+
+        // Initialize visited array
+        visited = Array(m).fill(false);
+
+        // DFS traversal
+        const dfs = (node: number, accId: number): void => {
+            visited[node] = true;
+            emailGroup.get(accId)!.push(emails[node]);
+            for (const neighbor of adj[node]) {
+                if (!visited[neighbor]) {
+                    dfs(neighbor, accId);
+                }
+            }
+        };
+
+        for (let i = 0; i < m; i++) {
+            if (!visited[i]) {
+                const accId = emailToAcc.get(i)!;
+                if (!emailGroup.has(accId)) {
+                    emailGroup.set(accId, []);
+                }
+                dfs(i, accId);
+            }
+        }
+
+        // Build result
+        const res: string[][] = [];
+        for (const [accId, group] of emailGroup.entries()) {
+            group.sort();
+            const merged = [accounts[accId][0], ...group];
+            res.push(merged);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1271,7 +1352,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn accounts_merge(accounts: Vec<Vec<String>>) -> Vec<Vec<String>> {
@@ -1339,6 +1419,94 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[][]} accounts
+     * @return {string[][]}
+     */
+    accountsMerge(accounts: string[][]): string[][] {
+        const emailIdx = new Map<string, number>(); // email -> id
+        const emails: string[] = []; // set of emails of all accounts
+        const emailToAcc = new Map<number, number>(); // email_index -> account_Id
+        const adj: number[][] = [];
+        const emailGroup = new Map<number, string[]>(); // index of acc -> list of emails
+        let visited: boolean[] = [];
+
+        const n = accounts.length;
+        let m = 0;
+
+        // Build email index and mappings
+        for (let accId = 0; accId < n; accId++) {
+            const account = accounts[accId];
+            for (let i = 1; i < account.length; i++) {
+                const email = account[i];
+                if (!emailIdx.has(email)) {
+                    emails.push(email);
+                    emailIdx.set(email, m);
+                    emailToAcc.set(m, accId);
+                    m++;
+                }
+            }
+        }
+
+        // Build adjacency list
+        for (let i = 0; i < m; i++) {
+            adj.push([]);
+        }
+        for (const account of accounts) {
+            for (let i = 2; i < account.length; i++) {
+                const id1 = emailIdx.get(account[i])!;
+                const id2 = emailIdx.get(account[i - 1])!;
+                adj[id1].push(id2);
+                adj[id2].push(id1);
+            }
+        }
+
+        // Initialize visited array
+        visited = Array(m).fill(false);
+
+        // BFS traversal
+        const bfs = (start: number, accId: number): void => {
+            const queue = new Queue([start]);
+            visited[start] = true;
+
+            while (!queue.isEmpty()) {
+                const node: number = queue.pop();
+                emailGroup.get(accId)!.push(emails[node]);
+                for (const neighbor of adj[node]) {
+                    if (!visited[neighbor]) {
+                        visited[neighbor] = true;
+                        queue.push(neighbor);
+                    }
+                }
+            }
+        };
+
+        for (let i = 0; i < m; i++) {
+            if (!visited[i]) {
+                const accId = emailToAcc.get(i)!;
+                if (!emailGroup.has(accId)) {
+                    emailGroup.set(accId, []);
+                }
+                bfs(i, accId);
+            }
+        }
+
+        // Build result
+        const res: string[][] = [];
+        for (const [accId, group] of emailGroup.entries()) {
+            group.sort();
+            const merged = [accounts[accId][0], ...group];
+            res.push(merged);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1951,7 +2119,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 struct UnionFind {
     parent: Vec<usize>,
@@ -2024,6 +2191,99 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class UnionFind {
+    private parent: number[];
+    private rank: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n }, (_, i) => i);
+        this.rank = Array(n).fill(1);
+    }
+
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    find(x: number): number {
+        if (x !== this.parent[x]) {
+            this.parent[x] = this.find(this.parent[x]);
+        }
+        return this.parent[x];
+    }
+
+    /**
+     * @param {number} x1
+     * @param {number} x2
+     * @return {boolean}
+     */
+    union(x1: number, x2: number): boolean {
+        const p1 = this.find(x1);
+        const p2 = this.find(x2);
+        if (p1 === p2) {
+            return false;
+        }
+        if (this.rank[p1] > this.rank[p2]) {
+            this.parent[p2] = p1;
+            this.rank[p1] += this.rank[p2];
+        } else {
+            this.parent[p1] = p2;
+            this.rank[p2] += this.rank[p1];
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[][]} accounts
+     * @return {string[][]}
+     */
+    accountsMerge(accounts: string[][]): string[][] {
+        const n = accounts.length;
+        const uf = new UnionFind(n);
+        const emailToAcc = new Map<string, number>(); // email -> index of acc
+
+        // Build union-find structure
+        for (let i = 0; i < n; i++) {
+            for (let j = 1; j < accounts[i].length; j++) {
+                const email = accounts[i][j];
+                if (emailToAcc.has(email)) {
+                    uf.union(i, emailToAcc.get(email)!);
+                } else {
+                    emailToAcc.set(email, i);
+                }
+            }
+        }
+
+        // Group emails by leader account
+        const emailGroup = new Map<number, string[]>(); // index of acc -> list of emails
+        for (const [email, accId] of emailToAcc.entries()) {
+            const leader = uf.find(accId);
+            if (!emailGroup.has(leader)) {
+                emailGroup.set(leader, []);
+            }
+            emailGroup.get(leader)!.push(email);
+        }
+
+        // Build result
+        const res: string[][] = [];
+        for (const [accId, emails] of emailGroup.entries()) {
+            emails.sort();
+            const merged = [accounts[accId][0], ...emails];
+            res.push(merged);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -223,6 +223,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} target
+     * @param {number[]} position
+     * @param {number[]} speed
+     * @return {number}
+     */
+    carFleet(target: number, position: number[], speed: number[]): number {
+        let pair = position.map((p, i) => [p, speed[i]]);
+        pair.sort((a, b) => b[0] - a[0]);
+        let stack: number[] = [];
+        for (let [p, s] of pair) {
+            stack.push((target - p) / s);
+            if (
+                stack.length >= 2 &&
+                stack[stack.length - 1] <= stack[stack.length - 2]
+            ) {
+                stack.pop();
+            }
+        }
+        return stack.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -463,6 +489,32 @@ impl Solution {
         }
 
         fleets
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} target
+     * @param {number[]} position
+     * @param {number[]} speed
+     * @return {number}
+     */
+    carFleet(target: number, position: number[], speed: number[]): number {
+        let pair = position.map((p, i) => [p, speed[i]]);
+        pair.sort((a, b) => b[0] - a[0]);
+
+        let fleets = 1;
+        let prevTime = (target - pair[0][0]) / pair[0][1];
+        for (let i = 1; i < pair.length; i++) {
+            let currTime = (target - pair[i][0]) / pair[i][1];
+            if (currTime > prevTime) {
+                fleets++;
+                prevTime = currTime;
+            }
+        }
+        return fleets;
     }
 }
 ```

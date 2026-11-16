@@ -233,6 +233,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    reverse(x: number): number {
+        const org = x;
+        x = Math.abs(x);
+        let res = parseInt(x.toString().split('').reverse().join(''));
+        if (org < 0) {
+            res *= -1;
+        }
+        if (res < -(2 ** 31) || res > 2 ** 31 - 1) {
+            return 0;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,6 +493,35 @@ impl Solution {
             return 0;
         }
         reversed_num as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    reverse(x: number): number {
+        let res = this.rec(Math.abs(x), 0) * (x < 0 ? -1 : 1);
+        if (res < -(2 ** 31) || res > 2 ** 31 - 1) {
+            return 0;
+        }
+        return res;
+    }
+
+    /**
+     * @param {number} n
+     * @param {number} rev
+     * @return {number}
+     */
+    rec(n: number, rev: number): number {
+        if (n === 0) {
+            return rev;
+        }
+        rev = rev * 10 + (n % 10);
+        return this.rec(Math.floor(n / 10), rev);
     }
 }
 ```
@@ -732,6 +782,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    reverse(x: number): number {
+        const MIN = -2147483648; // -2^31
+        const MAX = 2147483647; // 2^31 - 1
+
+        let res = 0;
+        while (x !== 0) {
+            const digit = x % 10;
+            x = Math.trunc(x / 10);
+
+            if (res > MAX / 10 || (res === MAX / 10 && digit > MAX % 10))
+                return 0;
+            if (res < MIN / 10 || (res === MIN / 10 && digit < MIN % 10))
+                return 0;
+            res = res * 10 + digit;
+        }
+
+        return res;
     }
 }
 ```

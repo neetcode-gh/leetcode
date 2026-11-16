@@ -403,6 +403,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} x
+     * @return {ListNode}
+     */
+    partition(head: ListNode | null, x: number): ListNode | null {
+        if (!head) return null;
+
+        let less: number[] = [],
+            greater: number[] = [];
+        let cur: ListNode | null = head;
+
+        while (cur) {
+            if (cur.val < x) {
+                less.push(cur.val);
+            } else {
+                greater.push(cur.val);
+            }
+            cur = cur.next;
+        }
+
+        cur = head;
+        for (let val of less) {
+            cur!.val = val;
+            cur = cur!.next;
+        }
+
+        for (let val of greater) {
+            cur!.val = val;
+            cur = cur!.next;
+        }
+
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -733,6 +772,37 @@ impl Solution {
 
         left_tail.next = right_dummy.next;
         left_dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} x
+     * @return {ListNode}
+     */
+    partition(head: ListNode | null, x: number): ListNode | null {
+        let left = new ListNode(0),
+            right = new ListNode(0);
+        let ltail = left,
+            rtail = right;
+
+        while (head) {
+            if (head.val < x) {
+                ltail.next = head;
+                ltail = ltail.next;
+            } else {
+                rtail.next = head;
+                rtail = rtail.next;
+            }
+            head = head.next;
+        }
+
+        ltail.next = right.next;
+        rtail.next = null;
+        return left.next;
     }
 }
 ```

@@ -455,6 +455,53 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} left
+     * @param {number} right
+     * @return {ListNode}
+     */
+    reverseBetween(
+        head: ListNode | null,
+        left: number,
+        right: number,
+    ): ListNode | null {
+        const reverseList = (head: ListNode | null): ListNode | null => {
+            if (!head || !head.next) {
+                return head;
+            }
+
+            const newHead = reverseList(head.next);
+            head.next.next = head;
+            head.next = null;
+
+            return newHead;
+        };
+
+        const dummy = new ListNode(0, head);
+        let prev: ListNode = dummy;
+        for (let i = 0; i < left - 1; i++) {
+            prev = prev.next!;
+        }
+
+        const sublistHead = prev.next!;
+        let sublistTail = sublistHead;
+        for (let i = 0; i < right - left; i++) {
+            sublistTail = sublistTail.next!;
+        }
+
+        const nextNode = sublistTail.next;
+        sublistTail.next = null;
+        prev.next = reverseList(sublistHead);
+        sublistHead.next = nextNode;
+
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -779,6 +826,41 @@ impl Solution {
         prev.next = reversed;
 
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} left
+     * @param {number} right
+     * @return {ListNode}
+     */
+    reverseBetween(
+        head: ListNode | null,
+        left: number,
+        right: number,
+    ): ListNode | null {
+        const reverseList = (
+            node: ListNode,
+            n: number,
+        ): [ListNode, ListNode | null] => {
+            if (n === 1) {
+                return [node, node.next];
+            }
+            const [newHead, nextNode] = reverseList(node.next!, n - 1);
+            node.next!.next = node;
+            node.next = nextNode;
+            return [newHead, nextNode];
+        };
+
+        if (left === 1) {
+            return reverseList(head!, right)[0];
+        }
+        head!.next = this.reverseBetween(head!.next, left - 1, right - 1);
+        return head;
     }
 }
 ```
@@ -1236,6 +1318,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} left
+     * @param {number} right
+     * @return {ListNode}
+     */
+    reverseBetween(
+        head: ListNode | null,
+        left: number,
+        right: number,
+    ): ListNode | null {
+        const reverseList = (head: ListNode | null): ListNode | null => {
+            let prev: ListNode | null = null;
+            let curr = head;
+
+            while (curr) {
+                let temp = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = temp;
+            }
+            return prev;
+        };
+
+        const dummy = new ListNode(0, head);
+        let prev: ListNode = dummy;
+        for (let i = 0; i < left - 1; i++) {
+            prev = prev.next!;
+        }
+
+        const sublistHead = prev.next!;
+        let sublistTail = sublistHead;
+        for (let i = 0; i < right - left; i++) {
+            sublistTail = sublistTail.next!;
+        }
+
+        const nextNode = sublistTail.next;
+        sublistTail.next = null;
+        prev.next = reverseList(sublistHead);
+        sublistHead.next = nextNode;
+
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1594,6 +1724,44 @@ impl Solution {
         prev.next = reversed;
 
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} left
+     * @param {number} right
+     * @return {ListNode}
+     */
+    reverseBetween(
+        head: ListNode | null,
+        left: number,
+        right: number,
+    ): ListNode | null {
+        const dummy = new ListNode(0, head);
+        let leftPrev: ListNode = dummy,
+            cur = head;
+
+        for (let i = 0; i < left - 1; i++) {
+            leftPrev = cur!;
+            cur = cur!.next;
+        }
+
+        let prev: ListNode | null = null;
+        for (let i = 0; i < right - left + 1; i++) {
+            const tmpNext: ListNode | null = cur!.next;
+            cur!.next = prev;
+            prev = cur;
+            cur = tmpNext;
+        }
+
+        leftPrev.next!.next = cur;
+        leftPrev.next = prev;
+
+        return dummy.next;
     }
 }
 ```

@@ -190,6 +190,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number[][]}
+     */
+    transpose(matrix: number[][]): number[][] {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        const res: number[][] = Array.from({ length: COLS }, () =>
+            Array(ROWS).fill(0),
+        );
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                res[c][r] = matrix[r][c];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,6 +505,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {number[][]}
+     */
+    transpose(matrix: number[][]): number[][] {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+
+        if (ROWS === COLS) {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < r; c++) {
+                    [matrix[r][c], matrix[c][r]] = [matrix[c][r], matrix[r][c]];
+                }
+            }
+
+            return matrix;
+        }
+
+        const res: number[][] = Array.from({ length: COLS }, () =>
+            Array(ROWS).fill(0),
+        );
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                res[c][r] = matrix[r][c];
+            }
+        }
+
+        return res;
     }
 }
 ```

@@ -197,6 +197,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        const dfs = (num: number): number => {
+            if (num === 1) return 1;
+
+            let res = num === n ? 0 : num;
+            for (let i = 1; i < num; i++) {
+                const val = dfs(i) * dfs(num - i);
+                res = Math.max(res, val);
+            }
+            return res;
+        };
+
+        return dfs(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,6 +413,30 @@ impl Solution {
             (i * dfs(num - i, i)).max(dfs(num, i - 1))
         }
         dfs(n, n - 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        const dfs = (num: number, i: number): number => {
+            if (Math.min(num, i) === 0) {
+                return 1;
+            }
+
+            if (i > num) {
+                return dfs(num, num);
+            }
+
+            return Math.max(i * dfs(num - i, i), dfs(num, i - 1));
+        };
+
+        return dfs(n, n - 1);
     }
 }
 ```
@@ -643,6 +690,36 @@ impl Solution {
         }
 
         dfs(n, n, &mut dp)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        const dp = new Map<number, number>();
+        dp.set(1, 1);
+
+        const dfs = (num: number): number => {
+            if (dp.has(num)) {
+                return dp.get(num)!;
+            }
+
+            let res = num === n ? 0 : num;
+            for (let i = 1; i < num; i++) {
+                const val = dfs(i) * dfs(num - i);
+                res = Math.max(res, val);
+            }
+
+            dp.set(num, res);
+            return res;
+        };
+
+        return dfs(n);
     }
 }
 ```
@@ -914,6 +991,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(n).fill(-1));
+
+        const dfs = (num: number, i: number): number => {
+            if (Math.min(num, i) === 0) {
+                return 1;
+            }
+            if (dp[num][i] !== -1) {
+                return dp[num][i];
+            }
+            if (i > num) {
+                dp[num][i] = dfs(num, num);
+                return dp[num][i];
+            }
+            dp[num][i] = Math.max(i * dfs(num - i, i), dfs(num, i - 1));
+            return dp[num][i];
+        };
+
+        return dfs(n, n - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1107,6 +1213,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        const dp: number[] = new Array(n + 1).fill(0);
+        dp[1] = 1;
+
+        for (let num = 2; num <= n; num++) {
+            dp[num] = num === n ? 0 : num;
+            for (let i = 1; i < num; i++) {
+                dp[num] = Math.max(dp[num], dp[i] * dp[num - i]);
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1271,6 +1399,25 @@ impl Solution {
             n -= 3;
         }
         res * n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        if (n <= 3) return n - 1;
+
+        let res = 1;
+        while (n > 4) {
+            res *= 3;
+            n -= 3;
+        }
+        return res * n;
     }
 }
 ```
@@ -1460,6 +1607,27 @@ impl Solution {
         }
 
         res * (n % 3).max(1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    integerBreak(n: number): number {
+        if (n <= 3) {
+            return n - 1;
+        }
+
+        let res = Math.pow(3, Math.floor(n / 3));
+        if (n % 3 === 1) {
+            return Math.floor(res / 3) * 4;
+        }
+
+        return res * Math.max(1, n % 3);
     }
 }
 ```

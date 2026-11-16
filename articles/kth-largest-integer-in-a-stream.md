@@ -193,6 +193,32 @@ impl KthLargest {
 }
 ```
 
+```typescript
+class KthLargest {
+    private arr: number[];
+    private k: number;
+
+    /**
+     * @param {number} k
+     * @param {number[]} nums
+     */
+    constructor(k: number, nums: number[]) {
+        this.arr = nums;
+        this.k = k;
+    }
+
+    /**
+     * @param {number} val
+     * @return {number}
+     */
+    add(val: number): number {
+        this.arr.push(val);
+        this.arr.sort((a, b) => a - b);
+        return this.arr[this.arr.length - this.k];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -491,6 +517,42 @@ impl KthLargest {
             self.min_heap.pop();
         }
         self.min_heap.peek().unwrap().0
+    }
+}
+```
+
+```typescript
+class KthLargest {
+    private minHeap: any;
+    private k: number;
+
+    /**
+     * @param {number} k
+     * @param {number[]} nums
+     */
+    constructor(k: number, nums: number[]) {
+        this.minHeap = new MinPriorityQueue();
+        this.k = k;
+
+        for (const num of nums) {
+            this.minHeap.enqueue(num);
+        }
+
+        while (this.minHeap.size() > k) {
+            this.minHeap.dequeue();
+        }
+    }
+
+    /**
+     * @param {number} val
+     * @return {number}
+     */
+    add(val: number): number {
+        this.minHeap.enqueue(val);
+        if (this.minHeap.size() > this.k) {
+            this.minHeap.dequeue();
+        }
+        return this.minHeap.front();
     }
 }
 ```

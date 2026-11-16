@@ -161,7 +161,7 @@ class Solution {
         var res = Set<String>()
         let chars = Array(s)
 
-        for l in 0..<(chars.count - 9) {
+        for l in stride(from: 0, to: chars.count - 9, by: 1) {
             let cur = String(chars[l..<(l + 10)])
             if seen.contains(cur) {
                 res.insert(cur)
@@ -194,6 +194,28 @@ impl Solution {
         res.into_iter()
             .map(|b| String::from_utf8_lossy(b).into_owned())
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    findRepeatedDnaSequences(s: string): string[] {
+        const seen = new Set<string>();
+        const res = new Set<string>();
+
+        for (let l = 0; l < s.length - 9; l++) {
+            const cur = s.substring(l, l + 10);
+            if (seen.has(cur)) {
+                res.add(cur);
+            }
+            seen.add(cur);
+        }
+        return Array.from(res);
     }
 }
 ```
@@ -428,6 +450,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    findRepeatedDnaSequences(s: string): string[] {
+        if (s.length < 10) {
+            return [];
+        }
+
+        const mp = new Map<string, number>();
+        const res: string[] = [];
+
+        for (let l = 0; l <= s.length - 10; l++) {
+            const cur = s.substring(l, l + 10);
+            mp.set(cur, (mp.get(cur) || 0) + 1);
+            if (mp.get(cur) === 2) {
+                res.push(cur);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -838,6 +887,57 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    findRepeatedDnaSequences(s: string): string[] {
+        const n = s.length;
+        if (n < 10) return [];
+
+        const cnt = new Map<string, number>();
+        const res: string[] = [];
+        const base1 = 31,
+            base2 = 37;
+        let hash1 = 0,
+            hash2 = 0,
+            power1 = 1,
+            power2 = 1;
+        const MOD1 = 685683731,
+            MOD2 = 768258391;
+
+        for (let i = 0; i < 9; i++) {
+            power1 = (power1 * base1) % MOD1;
+            power2 = (power2 * base2) % MOD2;
+        }
+
+        for (let i = 0; i < n; i++) {
+            hash1 = (hash1 * base1 + s.charCodeAt(i)) % MOD1;
+            hash2 = (hash2 * base2 + s.charCodeAt(i)) % MOD2;
+
+            if (i >= 9) {
+                const key = `${hash1},${hash2}`;
+                cnt.set(key, (cnt.get(key) || 0) + 1);
+                if (cnt.get(key) === 2) {
+                    res.push(s.substring(i - 9, i + 1));
+                }
+
+                hash1 =
+                    (hash1 - ((power1 * s.charCodeAt(i - 9)) % MOD1) + MOD1) %
+                    MOD1;
+                hash2 =
+                    (hash2 - ((power2 * s.charCodeAt(i - 9)) % MOD2) + MOD2) %
+                    MOD2;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1114,6 +1214,36 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[]}
+     */
+    findRepeatedDnaSequences(s: string): string[] {
+        if (s.length < 10) return [];
+
+        const mp: { [key: string]: number } = { A: 0, C: 1, G: 2, T: 3 };
+        const cnt = new Map<number, number>();
+        const res: string[] = [];
+        let mask = 0;
+
+        for (let i = 0; i < s.length; i++) {
+            mask = ((mask << 2) | mp[s[i]]) & 0xfffff;
+
+            if (i >= 9) {
+                cnt.set(mask, (cnt.get(mask) || 0) + 1);
+                if (cnt.get(mask) === 2) {
+                    res.push(s.substring(i - 9, i + 1));
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

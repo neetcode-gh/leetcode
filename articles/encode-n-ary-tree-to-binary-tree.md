@@ -432,7 +432,7 @@ class Codec {
 // Definition for a Node.
 public class Node {
     public int val;
-    public IList<Node> children;
+    public List<Node> children;
 
     public Node() {}
 
@@ -440,7 +440,7 @@ public class Node {
         val = _val;
     }
 
-    public Node(int _val, IList<Node> _children) {
+    public Node(int _val, List<Node> _children) {
         val = _val;
         children = _children;
     }
@@ -459,7 +459,7 @@ public class TreeNode {
 
 public class Codec {
     // Encodes an n-ary tree to a binary tree.
-    public TreeNode encode(Node root) {
+    public TreeNode Encode(Node root) {
         if (root == null) return null;
 
         TreeNode rootNode = new TreeNode(root.val);
@@ -489,7 +489,7 @@ public class Codec {
     }
 
     // Decodes your binary tree to an n-ary tree.
-    public Node decode(TreeNode data) {
+    public Node Decode(TreeNode data) {
         if (data == null) return null;
 
         Node rootNode = new Node(data.val, new List<Node>());
@@ -770,13 +770,10 @@ class Codec {
 
 ```rust
 // Definition for a Node.
-// struct Node {
-//     val: i32,
-//     children: Vec<Option<Rc<RefCell<Node>>>>,
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Rc<RefCell<Node>>>,
 // }
-
-// Uses TreeNode with Option<Rc<RefCell<TreeNode>>>
-// and a custom NaryNode for the N-ary tree.
 
 struct Codec;
 
@@ -786,28 +783,26 @@ impl Codec {
     }
 
     // Encodes an n-ary tree to a binary tree.
-    fn encode(&self, root: Option<Rc<RefCell<NaryNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+    fn encode(&self, root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<TreeNode>>> {
         let root = root?;
         let root_val = root.borrow().val;
         let root_node = Rc::new(RefCell::new(TreeNode::new(root_val)));
-        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, Rc<RefCell<NaryNode>>)> = VecDeque::new();
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, Rc<RefCell<Node>>)> = VecDeque::new();
         queue.push_back((root_node.clone(), root));
 
         while let Some((parent, curr)) = queue.pop_front() {
             let mut prev_b_node: Option<Rc<RefCell<TreeNode>>> = None;
             let mut head_b_node: Option<Rc<RefCell<TreeNode>>> = None;
 
-            for child in &curr.borrow().children {
-                if let Some(child_rc) = child {
-                    let new_b_node = Rc::new(RefCell::new(TreeNode::new(child_rc.borrow().val)));
-                    if let Some(prev) = &prev_b_node {
-                        prev.borrow_mut().right = Some(new_b_node.clone());
-                    } else {
-                        head_b_node = Some(new_b_node.clone());
-                    }
-                    prev_b_node = Some(new_b_node.clone());
-                    queue.push_back((new_b_node, child_rc.clone()));
+            for child_rc in &curr.borrow().children {
+                let new_b_node = Rc::new(RefCell::new(TreeNode::new(child_rc.borrow().val)));
+                if let Some(prev) = &prev_b_node {
+                    prev.borrow_mut().right = Some(new_b_node.clone());
+                } else {
+                    head_b_node = Some(new_b_node.clone());
                 }
+                prev_b_node = Some(new_b_node.clone());
+                queue.push_back((new_b_node, child_rc.clone()));
             }
 
             parent.borrow_mut().left = head_b_node;
@@ -817,24 +812,96 @@ impl Codec {
     }
 
     // Decodes your binary tree to an n-ary tree.
-    fn decode(&self, data: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<NaryNode>>> {
+    fn decode(&self, data: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<Node>>> {
         let data = data?;
         let root_val = data.borrow().val;
-        let root_node = Rc::new(RefCell::new(NaryNode { val: root_val, children: vec![] }));
-        let mut queue: VecDeque<(Rc<RefCell<NaryNode>>, Rc<RefCell<TreeNode>>)> = VecDeque::new();
+        let root_node = Rc::new(RefCell::new(Node::new(root_val)));
+        let mut queue: VecDeque<(Rc<RefCell<Node>>, Rc<RefCell<TreeNode>>)> = VecDeque::new();
         queue.push_back((root_node.clone(), data));
 
         while let Some((parent, curr)) = queue.pop_front() {
             let mut sibling = curr.borrow().left.clone();
             while let Some(sib) = sibling {
-                let new_node = Rc::new(RefCell::new(NaryNode { val: sib.borrow().val, children: vec![] }));
-                parent.borrow_mut().children.push(Some(new_node.clone()));
+                let new_node = Rc::new(RefCell::new(Node::new(sib.borrow().val)));
+                parent.borrow_mut().children.push(new_node.clone());
                 queue.push_back((new_node, sib.clone()));
                 sibling = sib.borrow().right.clone();
             }
         }
 
         Some(root_node)
+    }
+}
+```
+
+```typescript
+class Codec {
+    constructor() {}
+
+    /**
+     * @param {_Node|null} root
+     * @return {TreeNode|null}
+     */
+    // Encodes an n-ary tree to a binary tree.
+    encode(root: _Node | null): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+
+        const rootNode = new TreeNode(root.val);
+        const queue = new Deque([[rootNode, root]]); // Using @datastructures-js/deque
+
+        while (!queue.isEmpty()) {
+            const [parent, curr]: [TreeNode, _Node] = queue.popFront();
+            let prevBNode: TreeNode | null = null;
+            let headBNode: TreeNode | null = null;
+
+            // traverse each child one by one
+            for (const child of curr.children) {
+                const newBNode = new TreeNode(child.val);
+                if (prevBNode) {
+                    prevBNode.right = newBNode;
+                } else {
+                    headBNode = newBNode;
+                }
+                prevBNode = newBNode;
+                queue.pushBack([newBNode, child]);
+            }
+
+            // use the first child in the left node of parent
+            parent.left = headBNode;
+        }
+
+        return rootNode;
+    }
+
+    /**
+     * @param {TreeNode|null} data
+     * @return {_Node|null}
+     */
+    // Decodes your binary tree to an n-ary tree.
+    decode(data: TreeNode | null): _Node | null {
+        if (!data) {
+            return null;
+        }
+
+        const rootNode = new _Node(data.val, []);
+        const queue = new Deque([[rootNode, data]]); // Using @datastructures-js/deque
+
+        while (!queue.isEmpty()) {
+            const [parent, curr]: [_Node, TreeNode] = queue.popFront();
+            let firstChild = curr.left;
+            let sibling = firstChild;
+
+            while (sibling) {
+                const newNode = new _Node(sibling.val, []);
+                parent.children.push(newNode);
+                queue.pushBack([newNode, sibling]);
+                sibling = sibling.right;
+            }
+        }
+
+        return rootNode;
     }
 }
 ```
@@ -1174,7 +1241,7 @@ class Codec {
 // Definition for a Node.
 public class Node {
     public int val;
-    public IList<Node> children;
+    public List<Node> children;
 
     public Node() {}
 
@@ -1182,7 +1249,7 @@ public class Node {
         val = _val;
     }
 
-    public Node(int _val, IList<Node> _children) {
+    public Node(int _val, List<Node> _children) {
         val = _val;
         children = _children;
     }
@@ -1201,19 +1268,19 @@ public class TreeNode {
 
 public class Codec {
     // Encodes an n-ary tree to a binary tree.
-    public TreeNode encode(Node root) {
+    public TreeNode Encode(Node root) {
         if (root == null) return null;
 
         TreeNode rootNode = new TreeNode(root.val);
 
         if (root.children.Count > 0) {
             Node firstChild = root.children[0];
-            rootNode.left = encode(firstChild);
+            rootNode.left = Encode(firstChild);
         }
 
         TreeNode curr = rootNode.left;
         for (int i = 1; i < root.children.Count; i++) {
-            curr.right = encode(root.children[i]);
+            curr.right = Encode(root.children[i]);
             curr = curr.right;
         }
 
@@ -1221,14 +1288,14 @@ public class Codec {
     }
 
     // Decodes your binary tree to an n-ary tree.
-    public Node decode(TreeNode data) {
+    public Node Decode(TreeNode data) {
         if (data == null) return null;
 
         Node rootNode = new Node(data.val, new List<Node>());
 
         TreeNode curr = data.left;
         while (curr != null) {
-            rootNode.children.Add(decode(curr));
+            rootNode.children.Add(Decode(curr));
             curr = curr.right;
         }
 
@@ -1304,7 +1371,7 @@ func (this *Codec) decode(data *TreeNode) *Node {
 /**
  * Definition for a Node.
  * class Node(var `val`: Int) {
- *     var children: List<Node?> = listOf()
+ *     var children: MutableList<Node> = mutableListOf()
  * }
  */
 
@@ -1342,11 +1409,11 @@ class Codec {
         if (data == null) return null
 
         val rootNode = Node(data.`val`)
-        val children = mutableListOf<Node?>()
+        val children = mutableListOf<Node>()
 
         var curr = data.left
         while (curr != null) {
-            children.add(decode(curr))
+            children.add(decode(curr)!!)
             curr = curr.right
         }
 
@@ -1396,7 +1463,7 @@ class Codec {
         }
 
         var curr = rootNode.left
-        for i in 1..<root.children.count {
+        for i in stride(from: 1, to: root.children.count, by: 1) {
             curr?.right = encode(root.children[i])
             curr = curr?.right
         }
@@ -1424,6 +1491,12 @@ class Codec {
 ```
 
 ```rust
+// Definition for a Node.
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Rc<RefCell<Node>>>,
+// }
+
 struct Codec;
 
 impl Codec {
@@ -1432,49 +1505,100 @@ impl Codec {
     }
 
     // Encodes an n-ary tree to a binary tree (DFS).
-    fn encode(&self, root: Option<Rc<RefCell<NaryNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+    fn encode(&self, root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<TreeNode>>> {
         let root = root?;
         let root_ref = root.borrow();
         let mut root_node = TreeNode::new(root_ref.val);
 
-        if !root_ref.children.is_empty() {
-            if let Some(first_child) = &root_ref.children[0] {
-                root_node.left = self.encode(Some(first_child.clone()));
-            }
+        if let Some(first_child) = root_ref.children.first() {
+            root_node.left = self.encode(Some(first_child.clone()));
         }
 
         let root_rc = Rc::new(RefCell::new(root_node));
         let mut curr = root_rc.borrow().left.clone();
 
-        for i in 1..root_ref.children.len() {
-            if let Some(child) = &root_ref.children[i] {
-                let encoded = self.encode(Some(child.clone()));
-                if let Some(c) = &curr {
-                    c.borrow_mut().right = encoded.clone();
-                }
-                curr = encoded;
+        for child in root_ref.children.iter().skip(1) {
+            let encoded = self.encode(Some(child.clone()));
+            if let Some(c) = &curr {
+                c.borrow_mut().right = encoded.clone();
             }
+            curr = encoded;
         }
 
         Some(root_rc)
     }
 
     // Decodes your binary tree to an n-ary tree (DFS).
-    fn decode(&self, data: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<NaryNode>>> {
+    fn decode(&self, data: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<Node>>> {
         let data = data?;
         let data_ref = data.borrow();
-        let mut children = vec![];
+        let node = Rc::new(RefCell::new(Node::new(data_ref.val)));
 
         let mut curr = data_ref.left.clone();
         while let Some(c) = curr {
-            children.push(self.decode(Some(c.clone())));
+            if let Some(child) = self.decode(Some(c.clone())) {
+                node.borrow_mut().children.push(child);
+            }
             curr = c.borrow().right.clone();
         }
 
-        Some(Rc::new(RefCell::new(NaryNode {
-            val: data_ref.val,
-            children,
-        })))
+        Some(node)
+    }
+}
+```
+
+```typescript
+class Codec {
+    constructor() {}
+
+    /**
+     * @param {_Node|null} root
+     * @return {TreeNode|null}
+     */
+    // Encodes an n-ary tree to a binary tree.
+    encode(root: _Node | null): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+
+        const rootNode = new TreeNode(root.val);
+
+        if (root.children.length > 0) {
+            const firstChild = root.children[0];
+            rootNode.left = this.encode(firstChild);
+        }
+
+        // the parent for the rest of the children
+        let curr = rootNode.left;
+
+        // encode the rest of the children
+        for (let i = 1; i < root.children.length; i++) {
+            curr.right = this.encode(root.children[i]);
+            curr = curr.right;
+        }
+
+        return rootNode;
+    }
+
+    /**
+     * @param {TreeNode|null} data
+     * @return {_Node|null}
+     */
+    // Decodes your binary tree to an n-ary tree.
+    decode(data: TreeNode | null): _Node | null {
+        if (!data) {
+            return null;
+        }
+
+        const rootNode = new _Node(data.val, []);
+
+        let curr = data.left;
+        while (curr) {
+            rootNode.children.push(this.decode(curr));
+            curr = curr.right;
+        }
+
+        return rootNode;
     }
 }
 ```

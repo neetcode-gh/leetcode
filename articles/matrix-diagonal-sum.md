@@ -262,6 +262,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    diagonalSum(mat: number[][]): number {
+        const n = mat.length;
+
+        const helper = (matrix: number[][]): number => {
+            let res = 0;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (i === j) {
+                        res += matrix[i][j];
+                    }
+                }
+                matrix[i].reverse();
+            }
+            return res;
+        };
+
+        return (
+            helper(mat) +
+            helper(mat) -
+            (n % 2 === 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0)
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -447,6 +478,28 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    diagonalSum(mat: number[][]): number {
+        let res = 0,
+            n = mat.length;
+
+        for (let r = 0; r < n; r++) {
+            res += mat[r][r];
+            res += mat[r][n - r - 1];
+        }
+
+        return (
+            res - (n % 2 == 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0)
+        );
     }
 }
 ```

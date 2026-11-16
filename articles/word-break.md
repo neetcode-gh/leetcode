@@ -268,6 +268,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {boolean}
+     */
+    wordBreak(s: string, wordDict: string[]): boolean {
+        return this.dfs(s, wordDict, 0);
+    }
+
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @param {number} i
+     * @return {boolean}
+     */
+    dfs(s: string, wordDict: string[], i: number): boolean {
+        if (i === s.length) {
+            return true;
+        }
+
+        for (let w of wordDict) {
+            if (
+                i + w.length <= s.length &&
+                s.substring(i, i + w.length) === w
+            ) {
+                if (this.dfs(s, wordDict, i + w.length)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -530,6 +567,35 @@ impl Solution {
         }
 
         dfs(&s, &word_set, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {boolean}
+     */
+    wordBreak(s: string, wordDict: string[]): boolean {
+        const wordSet = new Set<string>(wordDict);
+        const dfs = (i: number): boolean => {
+            if (i === s.length) {
+                return true;
+            }
+
+            for (let j = i; j < s.length; j++) {
+                if (wordSet.has(s.substring(i, j + 1))) {
+                    if (dfs(j + 1)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        return dfs(0);
     }
 }
 ```
@@ -849,6 +915,52 @@ impl Solution {
         }
 
         dfs(s.as_bytes(), &word_dict, 0, &mut memo)
+    }
+}
+```
+
+```typescript
+class Solution {
+    private memo: { [key: number]: boolean };
+
+    constructor() {
+        this.memo = {};
+    }
+
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {boolean}
+     */
+    wordBreak(s: string, wordDict: string[]): boolean {
+        this.memo = { [s.length]: true };
+        return this.dfs(s, wordDict, 0);
+    }
+
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @param {number} i
+     * @return {boolean}
+     */
+    dfs(s: string, wordDict: string[], i: number): boolean {
+        if (i in this.memo) {
+            return this.memo[i];
+        }
+
+        for (let w of wordDict) {
+            if (
+                i + w.length <= s.length &&
+                s.substring(i, i + w.length) === w
+            ) {
+                if (this.dfs(s, wordDict, i + w.length)) {
+                    this.memo[i] = true;
+                    return true;
+                }
+            }
+        }
+        this.memo[i] = false;
+        return false;
     }
 }
 ```
@@ -1224,6 +1336,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private wordSet: Set<string> = new Set();
+    private memo: (boolean | null)[] = [];
+    private t: number = 0;
+
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {boolean}
+     */
+    wordBreak(s: string, wordDict: string[]): boolean {
+        this.wordSet = new Set(wordDict);
+        this.memo = new Array(s.length).fill(null);
+        this.t = 0;
+        for (const w of wordDict) {
+            this.t = Math.max(this.t, w.length);
+        }
+        return this.dfs(s, 0);
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} i
+     * @return {boolean}
+     */
+    dfs(s: string, i: number): boolean {
+        if (i === s.length) {
+            return true;
+        }
+        if (this.memo[i] !== null) {
+            return this.memo[i]!;
+        }
+
+        for (let j = i; j < Math.min(i + this.t, s.length); j++) {
+            if (this.wordSet.has(s.substring(i, j + 1))) {
+                if (this.dfs(s, j + 1)) {
+                    this.memo[i] = true;
+                    return true;
+                }
+            }
+        }
+        this.memo[i] = false;
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1465,6 +1625,36 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {boolean}
+     */
+    wordBreak(s: string, wordDict: string[]): boolean {
+        const dp: boolean[] = new Array(s.length + 1).fill(false);
+        dp[s.length] = true;
+
+        for (let i = s.length - 1; i >= 0; i--) {
+            for (const w of wordDict) {
+                if (
+                    i + w.length <= s.length &&
+                    s.slice(i, i + w.length) === w
+                ) {
+                    dp[i] = dp[i + w.length];
+                }
+                if (dp[i]) {
+                    break;
+                }
+            }
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1822,7 +2012,7 @@ public class Trie {
 }
 
 public class Solution {
-    public bool WordBreak(string s, IList<string> wordDict) {
+    public bool WordBreak(string s, List<string> wordDict) {
         Trie trie = new Trie();
         foreach (string word in wordDict) {
             trie.Insert(word);
@@ -2103,6 +2293,91 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: { [key: string]: TrieNode };
+    isWord: boolean;
+
+    constructor() {
+        this.children = {};
+        this.isWord = false;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    insert(word: string): void {
+        let node = this.root;
+        for (let char of word) {
+            if (!node.children[char]) {
+                node.children[char] = new TrieNode();
+            }
+            node = node.children[char];
+        }
+        node.isWord = true;
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} i
+     * @param {number} j
+     * @return {boolean}
+     */
+    search(s: string, i: number, j: number): boolean {
+        let node = this.root;
+        for (let idx = i; idx <= j; idx++) {
+            if (!node.children[s[idx]]) {
+                return false;
+            }
+            node = node.children[s[idx]];
+        }
+        return node.isWord;
+    }
+}
+
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string[]} wordDict
+     * @return {boolean}
+     */
+    wordBreak(s: string, wordDict: string[]): boolean {
+        const trie = new Trie();
+        for (let word of wordDict) {
+            trie.insert(word);
+        }
+
+        const dp: boolean[] = new Array(s.length + 1).fill(false);
+        dp[s.length] = true;
+
+        let maxLen = 0;
+        for (let w of wordDict) {
+            maxLen = Math.max(maxLen, w.length);
+        }
+
+        for (let i = s.length - 1; i >= 0; i--) {
+            for (let j = i; j < Math.min(s.length, i + maxLen); j++) {
+                if (trie.search(s, i, j)) {
+                    dp[i] = dp[j + 1];
+                    if (dp[i]) break;
+                }
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

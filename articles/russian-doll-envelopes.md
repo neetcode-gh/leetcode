@@ -347,6 +347,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} envelopes
+     * @return {number}
+     */
+    maxEnvelopes(envelopes: number[][]): number {
+        const n = envelopes.length;
+        envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+        const nums = envelopes.map((e) => e[1]);
+        const memo: number[] = new Array(n).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (memo[i] !== -1) return memo[i];
+            let lis = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (nums[i] < nums[j]) {
+                    lis = Math.max(lis, 1 + dfs(j));
+                }
+            }
+            memo[i] = lis;
+            return lis;
+        };
+
+        let result = 0;
+        for (let i = 0; i < n; i++) {
+            result = Math.max(result, dfs(i));
+        }
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,6 +630,32 @@ impl Solution {
             ans = ans.max(lis[i]);
         }
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} envelopes
+     * @return {number}
+     */
+    maxEnvelopes(envelopes: number[][]): number {
+        envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+        const heights = envelopes.map((e) => e[1]);
+        const n = heights.length;
+        if (n === 0) return 0;
+        const LIS: number[] = new Array(n).fill(1);
+        let ans = 0;
+        for (let i = n - 1; i >= 0; i--) {
+            for (let j = i + 1; j < n; j++) {
+                if (heights[i] < heights[j]) {
+                    LIS[i] = Math.max(LIS[i], 1 + LIS[j]);
+                }
+            }
+            ans = Math.max(ans, LIS[i]);
+        }
+        return ans;
     }
 }
 ```
@@ -911,6 +970,45 @@ impl Solution {
         }
 
         lis
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} envelopes
+     * @return {number}
+     */
+    maxEnvelopes(envelopes: number[][]): number {
+        const n = envelopes.length;
+        envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+        const nums = envelopes.map((e) => e[1]);
+        const dp: number[] = [];
+        dp.push(nums[0]);
+
+        let LIS = 1;
+        for (let i = 1; i < n; i++) {
+            if (dp[dp.length - 1] < nums[i]) {
+                dp.push(nums[i]);
+                LIS++;
+                continue;
+            }
+
+            let left = 0,
+                right = dp.length - 1;
+            while (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                if (dp[mid] < nums[i]) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            dp[left] = nums[i];
+        }
+
+        return LIS;
     }
 }
 ```
@@ -1619,6 +1717,94 @@ impl Solution {
             lis = lis.max(cur_lis);
         }
         lis
+    }
+}
+```
+
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    constructor(N: number, a: number[]) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = new Array(2 * this.n).fill(0);
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     */
+    update(i: number, val: number): void {
+        this.tree[this.n + i] = val;
+        let j = (this.n + i) >> 1;
+        while (j >= 1) {
+            this.tree[j] = Math.max(this.tree[j << 1], this.tree[(j << 1) | 1]);
+            j >>= 1;
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        if (l > r) {
+            return 0;
+        }
+        let res = -Infinity;
+        l += this.n;
+        r += this.n + 1;
+        while (l < r) {
+            if (l & 1) {
+                res = Math.max(res, this.tree[l]);
+                l++;
+            }
+            if (r & 1) {
+                r--;
+                res = Math.max(res, this.tree[r]);
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} envelopes
+     * @return {number}
+     */
+    maxEnvelopes(envelopes: number[][]): number {
+        envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+        const heights = envelopes.map((e) => e[1]);
+
+        const lis = (nums: number[]): number => {
+            const sortedArr = Array.from(new Set(nums)).sort((a, b) => a - b);
+            const map = new Map<number, number>();
+
+            sortedArr.forEach((num, index) => {
+                map.set(num, index);
+            });
+
+            const order = nums.map((num) => map.get(num)!);
+            const n = sortedArr.length;
+            const segTree = new SegmentTree(n, order);
+
+            let LIS = 0;
+            for (const num of order) {
+                const curLIS = segTree.query(0, num - 1) + 1;
+                segTree.update(num, curLIS);
+                LIS = Math.max(LIS, curLIS);
+            }
+            return LIS;
+        };
+        return lis(heights);
     }
 }
 ```

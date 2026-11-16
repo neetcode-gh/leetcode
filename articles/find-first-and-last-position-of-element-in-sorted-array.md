@@ -207,6 +207,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[]}
+     */
+    searchRange(nums: number[], target: number): number[] {
+        let res = [-1, -1];
+
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] === target) {
+                if (res[0] === -1) {
+                    res[0] = res[1] = i;
+                } else {
+                    res[1] = i;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -516,6 +541,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[]}
+     */
+    searchRange(nums: number[], target: number): number[] {
+        let left = this.binarySearch(nums, target, true);
+        let right = this.binarySearch(nums, target, false);
+        return [left, right];
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @param {boolean} leftBias
+     * @return {number}
+     */
+    binarySearch(nums: number[], target: number, leftBias: boolean): number {
+        let l = 0,
+            r = nums.length - 1,
+            i = -1;
+        while (l <= r) {
+            let m = Math.floor((l + r) / 2);
+            if (target > nums[m]) {
+                l = m + 1;
+            } else if (target < nums[m]) {
+                r = m - 1;
+            } else {
+                i = m;
+                if (leftBias) {
+                    r = m - 1;
+                } else {
+                    l = m + 1;
+                }
+            }
+        }
+        return i;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -796,6 +864,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[]}
+     */
+    searchRange(nums: number[], target: number): number[] {
+        const n = nums.length;
+
+        const binarySearch = (target: number): number => {
+            let l = 0,
+                r = n;
+            while (l < r) {
+                let m = Math.floor(l + (r - l) / 2);
+                if (nums[m] >= target) {
+                    r = m;
+                } else {
+                    l = m + 1;
+                }
+            }
+            return l;
+        };
+
+        let start = binarySearch(target);
+        if (start === n || nums[start] !== target) {
+            return [-1, -1];
+        }
+
+        return [start, binarySearch(target + 1) - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -821,6 +923,9 @@ Most programming languages provide built-in functions for binary search that fin
 ::tabs-start
 
 ```python
+import bisect
+
+
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
         left = bisect.bisect_left(nums, target)
@@ -974,6 +1079,22 @@ impl Solution {
         }
         let right = nums.partition_point(|&x| x <= target) - 1;
         vec![left as i32, right as i32]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[]}
+     */
+    searchRange(nums: number[], target: number): number[] {
+        let left = nums.indexOf(target);
+        let right = nums.lastIndexOf(target);
+
+        return left === -1 ? [-1, -1] : [left, right];
     }
 }
 ```

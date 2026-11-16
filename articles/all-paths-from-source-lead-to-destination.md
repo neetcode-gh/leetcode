@@ -33,7 +33,7 @@ A leaf node (no outgoing edges) must be the destination. If we find any leaf tha
 
 ```python
 class Solution:
-    
+
     # We don't use the state WHITE as such anywhere. Instead, the "null" value in the states array below is a substitute for WHITE.
     GRAY = 1
     BLACK = 2
@@ -41,89 +41,89 @@ class Solution:
     def leadsToDestination(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
         graph = self.buildDigraph(n, edges)
         return self.leadsToDest(graph, source, destination, [None] * n)
-        
+
     def leadsToDest(self, graph, node, dest, states):
-        
+
         # If the state is GRAY, this is a backward edge and hence, it creates a Loop.
         if states[node] != None:
             return states[node] == Solution.BLACK
-        
+
         # If this is a leaf node, it should be equal to the destination.
         if len(graph[node]) == 0:
             return node == dest
-        
+
         # Now, we are processing this node. So we mark it as GRAY.
         states[node] = Solution.GRAY
-        
+
         for next_node in graph[node]:
-            
+
             # If we get a `false` from any recursive call on the neighbors, we short circuit and return from there.
             if not self.leadsToDest(graph, next_node, dest, states):
                 return False
-        
+
         # Recursive processing done for the node. We mark it BLACK.
         states[node] = Solution.BLACK
         return True
-        
+
     def buildDigraph(self, n, edges):
         graph = [[] for _ in range(n)]
-        
+
         for edge in edges:
             graph[edge[0]].append(edge[1])
-            
-        return graph   
+
+        return graph
 ```
 
 ```java
 class Solution {
-    
+
     // We don't use the state WHITE as such anywhere. Instead, the "null" value in the states array below is a substitute for WHITE.
     enum Color { GRAY, BLACK };
-    
+
     public boolean leadsToDestination(int n, int[][] edges, int source, int destination) {
-        
+
         List<Integer>[] graph = buildDigraph(n, edges);
         return leadsToDest(graph, source, destination, new Color[n]);
     }
-    
+
     private boolean leadsToDest(List<Integer>[] graph, int node, int dest, Color[] states) {
-        
+
         // If the state is GRAY, this is a backward edge and hence, it creates a loop.
         if (states[node] != null) {
             return states[node] == Color.BLACK;
         }
-        
+
         // If this is a leaf node, it should be equal to the destination.
         if (graph[node].isEmpty()) {
             return node == dest;
         }
-        
+
         // Now, we are processing this node. So we mark it as GRAY
         states[node] = Color.GRAY;
-        
+
         for (int next : graph[node]) {
-            
+
             // If we get a `false` from any recursive call on the neighbors, we short circuit and return from there.
             if (!leadsToDest(graph, next, dest, states)) {
                 return false;
             }
         }
-        
+
         // Recursive processing done for the node. We mark it BLACK
         states[node] = Color.BLACK;
         return true;
     }
-    
+
     private List<Integer>[] buildDigraph(int n, int[][] edges) {
         List<Integer>[] graph = new List[n];
         for (int i = 0; i < n; i++) {
             graph[i] = new ArrayList<>();
         }
-        
+
         for (int[] edge : edges) {
             graph[edge[0]].add(edge[1]);
         }
-        
+
         return graph;
     }
 }
@@ -134,13 +134,13 @@ class Solution {
 public:
     static const int GRAY = 1;
     static const int BLACK = 2;
-    
+
     bool leadsToDestination(int n, vector<vector<int>>& edges, int source, int destination) {
         vector<vector<int>> graph = buildDigraph(n, edges);
         vector<int> states(n, 0);
         return leadsToDest(graph, source, destination, states);
     }
-    
+
 private:
     bool leadsToDest(vector<vector<int>>& graph, int node, int dest, vector<int>& states) {
         if (states[node] != 0) {
@@ -158,7 +158,7 @@ private:
         states[node] = BLACK;
         return true;
     }
-    
+
     vector<vector<int>> buildDigraph(int n, vector<vector<int>>& edges) {
         vector<vector<int>> graph(n);
         for (auto& edge : edges) {
@@ -375,7 +375,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn leads_to_destination(
@@ -416,6 +415,64 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    static GRAY = 1;
+    static BLACK = 2;
+
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @param {number} source
+     * @param {number} destination
+     * @return {boolean}
+     */
+    leadsToDestination(n: number, edges: number[][], source: number, destination: number): boolean {
+        const graph = this.buildDigraph(n, edges);
+        const states: (number | null)[] = new Array(n).fill(null);
+        return this.leadsToDest(graph, source, destination, states);
+    }
+
+    /**
+     * @param {number[][]} graph
+     * @param {number} node
+     * @param {number} dest
+     * @param {(number|null)[]} states
+     * @return {boolean}
+     */
+    leadsToDest(graph: number[][], node: number, dest: number, states: (number | null)[]): boolean {
+        if (states[node] !== null) {
+            return states[node] === Solution.BLACK;
+        }
+        if (graph[node].length === 0) {
+            return node === dest;
+        }
+        states[node] = Solution.GRAY;
+        for (const next_node of graph[node]) {
+            if (!this.leadsToDest(graph, next_node, dest, states)) {
+                return false;
+            }
+        }
+        states[node] = Solution.BLACK;
+        return true;
+    }
+
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number[][]}
+     */
+    buildDigraph(n: number, edges: number[][]): number[][] {
+        const graph: number[][] = Array.from({ length: n }, () => []);
+        for (const edge of edges) {
+            graph[edge[0]].push(edge[1]);
+        }
+        return graph;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

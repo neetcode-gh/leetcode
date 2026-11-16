@@ -259,6 +259,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} target
+     * @return {number}
+     */
+    numWays(words: string[], target: string): number {
+        const n = target.length;
+        const m = words[0].length;
+        const MOD = 1e9 + 7;
+
+        const dfs = (i: number, k: number): number => {
+            if (i === n) return 1;
+            if (k === m) return 0;
+
+            let res = dfs(i, k + 1);
+            for (const w of words) {
+                if (w[k] != target[i]) {
+                    continue;
+                }
+                res = (res + dfs(i + 1, k + 1)) % MOD;
+            }
+
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -612,6 +644,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} target
+     * @return {number}
+     */
+    numWays(words: string[], target: string): number {
+        const MOD = 1e9 + 7;
+        const n = target.length,
+            m = words[0].length;
+        const cnt: number[][] = Array.from({ length: m }, () =>
+            Array(26).fill(0),
+        );
+
+        for (const word of words) {
+            for (let i = 0; i < word.length; i++) {
+                cnt[i][word.charCodeAt(i) - 97]++;
+            }
+        }
+
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(-1),
+        );
+
+        const dfs = (i: number, k: number): number => {
+            if (i === n) return 1;
+            if (k === m) return 0;
+            if (dp[i][k] !== -1) return dp[i][k];
+
+            const c = target.charCodeAt(i) - 97;
+            dp[i][k] = dfs(i, k + 1); // Skip k position
+            dp[i][k] = (dp[i][k] + cnt[k][c] * dfs(i + 1, k + 1)) % MOD;
+            return dp[i][k];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -930,6 +1003,47 @@ impl Solution {
         }
 
         dp[0][0] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} target
+     * @return {number}
+     */
+    numWays(words: string[], target: string): number {
+        const MOD = 1e9 + 7;
+        const n = target.length,
+            m = words[0].length;
+
+        const cnt: number[][] = Array.from({ length: m }, () =>
+            Array(26).fill(0),
+        );
+        for (const word of words) {
+            for (let i = 0; i < word.length; i++) {
+                cnt[i][word.charCodeAt(i) - 'a'.charCodeAt(0)]++;
+            }
+        }
+
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(0),
+        );
+        dp[n][m] = 1;
+
+        for (let i = n; i >= 0; i--) {
+            for (let k = m - 1; k >= 0; k--) {
+                dp[i][k] = dp[i][k + 1];
+                if (i < n) {
+                    const c = target.charCodeAt(i) - 'a'.charCodeAt(0);
+                    dp[i][k] = (dp[i][k] + cnt[k][c] * dp[i + 1][k + 1]) % MOD;
+                }
+            }
+        }
+
+        return dp[0][0];
     }
 }
 ```
@@ -1286,6 +1400,49 @@ impl Solution {
         }
 
         dp[0] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string} target
+     * @return {number}
+     */
+    numWays(words: string[], target: string): number {
+        const MOD = 1e9 + 7;
+        const n = target.length,
+            m = words[0].length;
+
+        const cnt: number[][] = Array.from({ length: m }, () =>
+            Array(26).fill(0),
+        );
+        for (const word of words) {
+            for (let i = 0; i < word.length; i++) {
+                cnt[i][word.charCodeAt(i) - 'a'.charCodeAt(0)]++;
+            }
+        }
+
+        const dp: number[] = new Array(m + 1).fill(0);
+        dp[m] = 1;
+
+        for (let i = n; i >= 0; i--) {
+            let nxt = i === n - 1 ? 1 : 0;
+            for (let k = m - 1; k >= 0; k--) {
+                const cur = dp[k];
+                dp[k] = dp[k + 1];
+                if (i < n) {
+                    const c = target.charCodeAt(i) - 'a'.charCodeAt(0);
+                    dp[k] = (dp[k] + cnt[k][c] * nxt) % MOD;
+                }
+                nxt = cur;
+            }
+            dp[m] = 0;
+        }
+
+        return dp[0];
     }
 }
 ```

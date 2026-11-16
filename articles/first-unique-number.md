@@ -283,6 +283,41 @@ impl FirstUnique {
 }
 ```
 
+```typescript
+class FirstUnique {
+    private _queue: number[];
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this._queue = nums.slice();
+    }
+    /**
+     * @return {number}
+     */
+    showFirstUnique(): number {
+        for (let item of this._queue) {
+            let count = 0;
+            for (let el of this._queue) {
+                if (el === item) count++;
+            }
+            if (count === 1) {
+                return item;
+            }
+        }
+        return -1;
+    }
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    add(value: number): void {
+        this._queue.push(value);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -441,7 +476,7 @@ class FirstUnique {
      * @param {number[]} nums
      */
     constructor(nums) {
-        this._queue = nums.slice();
+        this._queue = new Queue(nums.slice());
         this._is_unique = {};
 
         for (let num of nums) {
@@ -453,12 +488,12 @@ class FirstUnique {
      * @return {number}
      */
     showFirstUnique() {
-        while (this._queue.length > 0 && !this._is_unique[this._queue[0]]) {
-            this._queue.shift();
+        while (!this._queue.isEmpty() && !this._is_unique[this._queue.front()]) {
+            this._queue.pop();
         }
 
-        if (this._queue.length > 0) {
-            return this._queue[0];
+        if (!this._queue.isEmpty()) {
+            return this._queue.front();
         }
 
         return -1;
@@ -627,14 +662,14 @@ class FirstUnique {
 
 ```rust
 struct FirstUnique {
-    queue: VecDeque<i32>,
+    queue: RefCell<VecDeque<i32>>,
     is_unique: HashMap<i32, bool>,
 }
 
 impl FirstUnique {
     fn new(nums: Vec<i32>) -> Self {
         let mut fu = FirstUnique {
-            queue: VecDeque::new(),
+            queue: RefCell::new(VecDeque::new()),
             is_unique: HashMap::new(),
         };
         for num in nums {
@@ -643,10 +678,11 @@ impl FirstUnique {
         fu
     }
 
-    fn show_first_unique(&mut self) -> i32 {
-        while let Some(&front) = self.queue.front() {
+    fn show_first_unique(&self) -> i32 {
+        let mut queue = self.queue.borrow_mut();
+        while let Some(&front) = queue.front() {
             if !self.is_unique[&front] {
-                self.queue.pop_front();
+                queue.pop_front();
             } else {
                 return front;
             }
@@ -657,9 +693,56 @@ impl FirstUnique {
     fn add(&mut self, value: i32) {
         if !self.is_unique.contains_key(&value) {
             self.is_unique.insert(value, true);
-            self.queue.push_back(value);
+            self.queue.borrow_mut().push_back(value);
         } else {
             self.is_unique.insert(value, false);
+        }
+    }
+}
+```
+
+```typescript
+class FirstUnique {
+    private _queue: any;
+    private _is_unique: { [key: number]: boolean };
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this._queue = new Queue(nums.slice());
+        this._is_unique = {};
+
+        for (let num of nums) {
+            this.add(num);
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    showFirstUnique(): number {
+        while (!this._queue.isEmpty() && !this._is_unique[this._queue.front()]) {
+            this._queue.pop();
+        }
+
+        if (!this._queue.isEmpty()) {
+            return this._queue.front();
+        }
+
+        return -1;
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    add(value: number): void {
+        if (!(value in this._is_unique)) {
+            this._is_unique[value] = true;
+            this._queue.push(value);
+        } else {
+            this._is_unique[value] = false;
         }
     }
 }
@@ -1050,6 +1133,55 @@ impl FirstUnique {
             if let Some(&ord) = self.order.get(&value) {
                 self.set_queue.remove(&(ord, value));
             }
+        }
+    }
+}
+```
+
+```typescript
+class FirstUnique {
+    private setQueue: Set<number>;
+    private isUnique: Map<number, boolean>;
+
+    /**
+     * @param {number[]} nums
+     */
+    constructor(nums: number[]) {
+        this.setQueue = new Set();
+        this.isUnique = new Map();
+
+        for (const num of nums) {
+            this.add(num);
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    showFirstUnique(): number {
+        // If the queue contains values, we need to get the first one from it.
+        // We can do this by making an iterator, and getting its first item.
+        if (this.setQueue.size > 0) {
+            return this.setQueue.values().next().value!;
+        }
+        return -1;
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    add(value: number): void {
+        // Case 1: This value is not yet in the data structure.
+        // It should be ADDED.
+        if (!this.isUnique.has(value)) {
+            this.isUnique.set(value, true);
+            this.setQueue.add(value);
+            // Case 2: This value has been seen once, so is now becoming
+            // non-unique. It should be REMOVED.
+        } else if (this.isUnique.get(value)) {
+            this.isUnique.set(value, false);
+            this.setQueue.delete(value);
         }
     }
 }

@@ -184,6 +184,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} logs
+     * @return {number}
+     */
+    minOperations(logs: string[]): number {
+        let stack: string[] = [];
+        for (let log of logs) {
+            if (log === '../') {
+                if (stack.length > 0) {
+                    stack.pop();
+                }
+            } else if (log !== './') {
+                stack.push(log);
+            }
+        }
+        return stack.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +399,29 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} logs
+     * @return {number}
+     */
+    minOperations(logs: string[]): number {
+        let res = 0;
+        for (let log of logs) {
+            if (log === './') {
+                continue;
+            }
+            if (log === '../') {
+                res = Math.max(0, res - 1);
+            } else {
+                res++;
+            }
+        }
+        return res;
     }
 }
 ```

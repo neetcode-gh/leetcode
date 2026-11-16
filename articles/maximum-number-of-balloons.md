@@ -202,6 +202,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} text
+     * @return {number}
+     */
+    maxNumberOfBalloons(text: string): number {
+        const countText: { [key: string]: number } = {};
+        for (const c of text) {
+            countText[c] = (countText[c] || 0) + 1;
+        }
+
+        const balloon: { [key: string]: number } = { b: 1, a: 1, l: 2, o: 2, n: 1 };
+
+        let res = text.length;
+        for (const c in balloon) {
+            res = Math.min(res, Math.floor((countText[c] || 0) / balloon[c]));
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -417,6 +440,31 @@ impl Solution {
         *mp.get_mut(&'l').unwrap() /= 2;
         *mp.get_mut(&'o').unwrap() /= 2;
         *mp.values().min().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} text
+     * @return {number}
+     */
+    maxNumberOfBalloons(text: string): number {
+        const mp = new Map<string, number>();
+        for (let c of text) {
+            if ('balon'.includes(c)) {
+                mp.set(c, (mp.get(c) || 0) + 1);
+            }
+        }
+
+        if (mp.size < 5) {
+            return 0;
+        }
+
+        mp.set('l', Math.floor(mp.get('l')! / 2));
+        mp.set('o', Math.floor(mp.get('o')! / 2));
+        return Math.min(...Array.from(mp.values()));
     }
 }
 ```

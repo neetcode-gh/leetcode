@@ -407,6 +407,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isEvenOddTree(root: TreeNode | null): boolean {
+        let even = true;
+        const q = new Queue([root]);
+
+        while (!q.isEmpty()) {
+            let prev = even ? -Infinity : Infinity;
+            for (let i = q.size(); i > 0; i--) {
+                let node: TreeNode = q.pop();
+
+                if (even && (node.val % 2 === 0 || node.val <= prev))
+                    return false;
+                if (!even && (node.val % 2 === 1 || node.val >= prev))
+                    return false;
+
+                if (node.left) q.push(node.left);
+                if (node.right) q.push(node.right);
+
+                prev = node.val;
+            }
+            even = !even;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -818,6 +850,43 @@ impl Solution {
         }
 
         dfs(&root, 0, &mut levels)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isEvenOddTree(root: TreeNode | null): boolean {
+        const levels: number[] = [];
+
+        const dfs = (node: TreeNode | null, level: number): boolean => {
+            if (!node) return true;
+
+            const even = level % 2 === 0;
+            if ((even && node.val % 2 === 0) || (!even && node.val % 2 === 1)) {
+                return false;
+            }
+
+            if (levels.length === level) {
+                levels.push(node.val);
+            } else {
+                if (
+                    (even && node.val <= levels[level]) ||
+                    (!even && node.val >= levels[level])
+                ) {
+                    return false;
+                }
+                levels[level] = node.val;
+            }
+
+            return dfs(node.left, level + 1) && dfs(node.right, level + 1);
+        };
+
+        return dfs(root, 0);
     }
 }
 ```
@@ -1264,6 +1333,43 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    isEvenOddTree(root: TreeNode | null): boolean {
+        const stack: [TreeNode, number][] = [[root!, 0]];
+        const levels: number[] = [];
+
+        while (stack.length) {
+            const [node, level] = stack.pop()!;
+
+            const even = level % 2 === 0;
+            if ((even && node.val % 2 === 0) || (!even && node.val % 2 === 1))
+                return false;
+
+            if (levels.length === level) {
+                levels.push(node.val);
+            } else {
+                if (
+                    (even && node.val <= levels[level]) ||
+                    (!even && node.val >= levels[level])
+                )
+                    return false;
+                levels[level] = node.val;
+            }
+
+            if (node.right) stack.push([node.right, level + 1]);
+            if (node.left) stack.push([node.left, level + 1]);
+        }
+
+        return true;
     }
 }
 ```

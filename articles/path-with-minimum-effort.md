@@ -438,6 +438,59 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number}
+     */
+    minimumEffortPath(heights: number[][]): number {
+        const rows = heights.length;
+        const cols = heights[0].length;
+        const dist: number[][] = Array.from({ length: rows }, () =>
+            Array(cols).fill(Infinity),
+        );
+        dist[0][0] = 0;
+
+        const minHeap = new MinPriorityQueue((a: number[]) => a[0]);
+        minHeap.enqueue([0, 0, 0]); // [diff, row, col]
+
+        const directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+
+        while (!minHeap.isEmpty()) {
+            const [diff, r, c]: number[] = minHeap.dequeue();
+
+            if (r === rows - 1 && c === cols - 1) return diff;
+            if (dist[r][c] < diff) continue;
+
+            for (const [dr, dc] of directions) {
+                const newR = r + dr;
+                const newC = c + dc;
+                if (newR < 0 || newC < 0 || newR >= rows || newC >= cols) {
+                    continue;
+                }
+
+                const newDiff = Math.max(
+                    diff,
+                    Math.abs(heights[r][c] - heights[newR][newC]),
+                );
+                if (newDiff < dist[newR][newC]) {
+                    dist[newR][newC] = newDiff;
+                    minHeap.enqueue([newDiff, newR, newC]);
+                }
+            }
+        }
+
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -930,6 +983,74 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number}
+     */
+    minimumEffortPath(heights: number[][]): number {
+        const ROWS = heights.length;
+        const COLS = heights[0].length;
+        const directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        let visited: boolean[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
+
+        const dfs = (r: number, c: number, limit: number): boolean => {
+            if (r === ROWS - 1 && c === COLS - 1) {
+                return true;
+            }
+
+            visited[r][c] = true;
+            for (const [dr, dc] of directions) {
+                const newR = r + dr;
+                const newC = c + dc;
+
+                if (
+                    newR < 0 ||
+                    newC < 0 ||
+                    newR >= ROWS ||
+                    newC >= COLS ||
+                    visited[newR][newC]
+                ) {
+                    continue;
+                }
+                if (Math.abs(heights[newR][newC] - heights[r][c]) > limit) {
+                    continue;
+                }
+                if (dfs(newR, newC, limit)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        let l = 0,
+            r = 1_000_000,
+            res = r;
+        while (l <= r) {
+            const mid = Math.floor((l + r) / 2);
+            for (const row of visited) {
+                row.fill(false);
+            }
+            if (dfs(0, 0, mid)) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1565,6 +1686,88 @@ impl Solution {
 }
 ```
 
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number}
+     */
+    minimumEffortPath(heights: number[][]): number {
+        const ROWS = heights.length;
+        const COLS = heights[0].length;
+        const edges: number[][] = [];
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (r + 1 < ROWS) {
+                    edges.push([
+                        Math.abs(heights[r][c] - heights[r + 1][c]),
+                        r * COLS + c,
+                        (r + 1) * COLS + c,
+                    ]);
+                }
+                if (c + 1 < COLS) {
+                    edges.push([
+                        Math.abs(heights[r][c] - heights[r][c + 1]),
+                        r * COLS + c,
+                        r * COLS + c + 1,
+                    ]);
+                }
+            }
+        }
+
+        edges.sort((a, b) => a[0] - b[0]);
+        const dsu = new DSU(ROWS * COLS);
+        for (const [weight, u, v] of edges) {
+            dsu.union(u, v);
+            if (dsu.find(0) === dsu.find(ROWS * COLS - 1)) {
+                return weight;
+            }
+        }
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2001,6 +2204,61 @@ impl Solution {
         }
 
         dist[rows * cols - 1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} heights
+     * @return {number}
+     */
+    minimumEffortPath(heights: number[][]): number {
+        const ROWS = heights.length,
+            COLS = heights[0].length;
+        const dist: number[] = Array(ROWS * COLS).fill(Infinity);
+        dist[0] = 0;
+
+        const inQueue: boolean[] = Array(ROWS * COLS).fill(false);
+        const queue = new Queue();
+        queue.push(0);
+        inQueue[0] = true;
+
+        const directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+
+        while (!queue.isEmpty()) {
+            const u: number = queue.pop();
+            inQueue[u] = false;
+
+            const r = Math.floor(u / COLS),
+                c = u % COLS;
+            for (const [dr, dc] of directions) {
+                const newR = r + dr,
+                    newC = c + dc;
+                if (newR >= 0 && newC >= 0 && newR < ROWS && newC < COLS) {
+                    const v = newR * COLS + newC;
+                    const weight = Math.abs(
+                        heights[r][c] - heights[newR][newC],
+                    );
+                    const newDist = Math.max(dist[u], weight);
+                    if (newDist < dist[v]) {
+                        dist[v] = newDist;
+                        if (!inQueue[v]) {
+                            queue.push(v);
+                            inQueue[v] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return dist[ROWS * COLS - 1];
     }
 }
 ```

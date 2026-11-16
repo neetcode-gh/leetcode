@@ -162,8 +162,8 @@ public class Solution {
         return hashKey.ToString();
     }
 
-    public IList<IList<string>> GroupStrings(string[] strings) {
-        var mapHashToList = new Dictionary<string, IList<string>>();
+    public List<List<string>> GroupStrings(string[] strings) {
+        var mapHashToList = new Dictionary<string, List<string>>();
 
         // Create a hash_value (hashKey) for each string and append the string
         // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
@@ -176,7 +176,7 @@ public class Solution {
         }
 
         // Return a list of all of the grouped strings
-        return mapHashToList.Values.ToList<IList<string>>();
+        return mapHashToList.Values.ToList<List<string>>();
     }
 }
 ```
@@ -280,6 +280,40 @@ impl Solution {
         }
 
         map.into_values().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strings
+     * @return {string[][]}
+     */
+    groupStrings(strings: string[]): string[][] {
+        function getHash(string: string): string {
+            const key: string[] = [];
+            for (let i = 0; i < string.length - 1; i++) {
+                const diff =
+                    (string.charCodeAt(i + 1) - string.charCodeAt(i) + 26) % 26;
+                key.push(String.fromCharCode(diff + 'a'.charCodeAt(0)));
+            }
+            return key.join('');
+        }
+
+        // Create a hash value (hash_key) for each string and append the string
+        // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
+        const groups = new Map<string, string[]>();
+        for (const string of strings) {
+            const hashKey = getHash(string);
+            if (!groups.has(hashKey)) {
+                groups.set(hashKey, []);
+            }
+            groups.get(hashKey)!.push(string);
+        }
+
+        // Return a list of all of the grouped strings
+        return Array.from(groups.values());
     }
 }
 ```

@@ -282,6 +282,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {boolean}
+     */
+    flipEquiv(root1: TreeNode | null, root2: TreeNode | null): boolean {
+        if (!root1 || !root2) return !root1 && !root2;
+        if (root1.val !== root2.val) return false;
+
+        return (
+            (this.flipEquiv(root1.left, root2.left) &&
+                this.flipEquiv(root1.right, root2.right)) ||
+            (this.flipEquiv(root1.left, root2.right) &&
+                this.flipEquiv(root1.right, root2.left))
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -707,6 +728,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {boolean}
+     */
+    flipEquiv(root1: TreeNode | null, root2: TreeNode | null): boolean {
+        let q = new Queue([[root1, root2]]);
+
+        while (!q.isEmpty()) {
+            let [node1, node2]: (TreeNode | null)[] = q.pop();
+
+            if (!node1 || !node2) {
+                if (node1 !== node2) return false;
+                continue;
+            }
+
+            if (node1.val !== node2.val) return false;
+
+            if (
+                (node1.left &&
+                    node2.left &&
+                    node1.left.val === node2.left.val) ||
+                (!node1.left && !node2.left)
+            ) {
+                q.push([node1.left, node2.left]);
+                q.push([node1.right, node2.right]);
+            } else {
+                q.push([node1.left, node2.right]);
+                q.push([node1.right, node2.left]);
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1126,6 +1186,45 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root1
+     * @param {TreeNode} root2
+     * @return {boolean}
+     */
+    flipEquiv(root1: TreeNode | null, root2: TreeNode | null): boolean {
+        let stack: (TreeNode | null)[][] = [[root1, root2]];
+
+        while (stack.length > 0) {
+            let [node1, node2] = stack.pop()!;
+
+            if (!node1 || !node2) {
+                if (node1 !== node2) return false;
+                continue;
+            }
+
+            if (node1.val !== node2.val) return false;
+
+            if (
+                (node1.left &&
+                    node2.left &&
+                    node1.left.val === node2.left.val) ||
+                (!node1.left && !node2.left)
+            ) {
+                stack.push([node1.left, node2.left]);
+                stack.push([node1.right, node2.right]);
+            } else {
+                stack.push([node1.left, node2.right]);
+                stack.push([node1.right, node2.left]);
+            }
+        }
+
+        return true;
     }
 }
 ```

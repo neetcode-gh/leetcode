@@ -558,7 +558,6 @@ class MyLinkedList {
 }
 ```
 
-
 ```rust
 struct MyLinkedList {
     head: Option<Box<Node>>,
@@ -629,6 +628,101 @@ impl MyLinkedList {
             *cur = removed.next;
         }
         self.size -= 1;
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: number;
+    next: ListNode | null;
+
+    /**
+     * @constructor
+     * @param {number} val
+     */
+    constructor(val: number) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+class MyLinkedList {
+    private head: ListNode;
+    private size: number;
+
+    constructor() {
+        this.head = new ListNode(0);
+        this.size = 0;
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index: number): number {
+        if (index >= this.size) return -1;
+        let cur = this.head.next!;
+        for (let i = 0; i < index; i++) {
+            cur = cur.next!;
+        }
+        return cur.val;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val: number): void {
+        const node = new ListNode(val);
+        node.next = this.head.next;
+        this.head.next = node;
+        this.size++;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val: number): void {
+        const node = new ListNode(val);
+        let cur = this.head;
+        while (cur.next !== null) {
+            cur = cur.next;
+        }
+        cur.next = node;
+        this.size++;
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index: number, val: number): void {
+        if (index > this.size) return;
+        let cur = this.head;
+        for (let i = 0; i < index; i++) {
+            cur = cur.next!;
+        }
+        const node = new ListNode(val);
+        node.next = cur.next;
+        cur.next = node;
+        this.size++;
+    }
+
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index: number): void {
+        if (index >= this.size) return;
+        let cur = this.head;
+        for (let i = 0; i < index; i++) {
+            cur = cur.next!;
+        }
+        cur.next = cur.next!.next;
+        this.size--;
     }
 }
 ```
@@ -1137,7 +1231,6 @@ class MyLinkedList {
 }
 ```
 
-
 ```rust
 struct MyLinkedList {
     head: Option<Box<Node>>,
@@ -1208,6 +1301,100 @@ impl MyLinkedList {
             *cur = removed.next;
         }
         self.size -= 1;
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: number;
+    next: ListNode | null;
+
+    /**
+     * @constructor
+     * @param {number}
+     * @param {ListNode|null}
+     */
+    constructor(val: number = 0, next: ListNode | null = null) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
+class MyLinkedList {
+    private head: ListNode;
+    private size: number;
+
+    constructor() {
+        this.head = new ListNode(0);
+        this.size = 0;
+    }
+
+    /**
+     * @param {number} index
+     * @return {ListNode}
+     */
+    getPrev(index: number): ListNode {
+        let cur = this.head;
+        for (let i = 0; i < index; i++) {
+            cur = cur.next!;
+        }
+        return cur;
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index: number): number {
+        if (index >= this.size) {
+            return -1;
+        }
+        return this.getPrev(index).next!.val;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val: number): void {
+        this.addAtIndex(0, val);
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val: number): void {
+        this.addAtIndex(this.size, val);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index: number, val: number): void {
+        if (index > this.size) {
+            return;
+        }
+        let prev = this.getPrev(index);
+        let node = new ListNode(val, prev.next);
+        prev.next = node;
+        this.size++;
+    }
+
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index: number): void {
+        if (index >= this.size) {
+            return;
+        }
+        let prev = this.getPrev(index);
+        prev.next = prev.next!.next;
+        this.size--;
     }
 }
 ```
@@ -1399,79 +1586,79 @@ class MyLinkedList {
         ListNode(int val) : val(val), prev(nullptr), next(nullptr) {}
     };
 public:
-	ListNode* head;
-	ListNode* tail;
+    ListNode* head;
+    ListNode* tail;
 
-	MyLinkedList() {
-		head = new ListNode(0);
-		tail = new ListNode(0);
-		head->next = tail;
-		tail->prev = head;
-	}
+    MyLinkedList() {
+        head = new ListNode(0);
+        tail = new ListNode(0);
+        head->next = tail;
+        tail->prev = head;
+    }
 
-	int get(int index) {
-		ListNode* cur = head->next;
-		while (cur && index > 0) {
-			cur = cur->next;
-			index--;
-		}
-		if (cur && cur != tail && index == 0) {
-			return cur->val;
-		}
-		return -1;
-	}
+    int get(int index) {
+        ListNode* cur = head->next;
+        while (cur && index > 0) {
+            cur = cur->next;
+            index--;
+        }
+        if (cur && cur != tail && index == 0) {
+            return cur->val;
+        }
+        return -1;
+    }
 
-	void addAtHead(int val) {
-		ListNode* node = new ListNode(val);
-		ListNode* next = head->next;
-		ListNode* prev = head;
-		prev->next = node;
-		next->prev = node;
-		node->next = next;
-		node->prev = prev;
-	}
+    void addAtHead(int val) {
+        ListNode* node = new ListNode(val);
+        ListNode* next = head->next;
+        ListNode* prev = head;
+        prev->next = node;
+        next->prev = node;
+        node->next = next;
+        node->prev = prev;
+    }
 
-	void addAtTail(int val) {
-		ListNode* node = new ListNode(val);
-		ListNode* next = tail;
-		ListNode* prev = tail->prev;
-		prev->next = node;
-		next->prev = node;
-		node->next = next;
-		node->prev = prev;
-	}
+    void addAtTail(int val) {
+        ListNode* node = new ListNode(val);
+        ListNode* next = tail;
+        ListNode* prev = tail->prev;
+        prev->next = node;
+        next->prev = node;
+        node->next = next;
+        node->prev = prev;
+    }
 
-	void addAtIndex(int index, int val) {
-		ListNode* cur = head->next;
-		while (cur && index > 0) {
-			cur = cur->next;
-			index--;
-		}
-		if (cur && index == 0) {
-			ListNode* node = new ListNode(val);
-			ListNode* next = cur;
-			ListNode* prev = cur->prev;
-			prev->next = node;
-			next->prev = node;
-			node->next = next;
-			node->prev = prev;
-		}
-	}
+    void addAtIndex(int index, int val) {
+        ListNode* cur = head->next;
+        while (cur && index > 0) {
+            cur = cur->next;
+            index--;
+        }
+        if (cur && index == 0) {
+            ListNode* node = new ListNode(val);
+            ListNode* next = cur;
+            ListNode* prev = cur->prev;
+            prev->next = node;
+            next->prev = node;
+            node->next = next;
+            node->prev = prev;
+        }
+    }
 
-	void deleteAtIndex(int index) {
-		ListNode* cur = head->next;
-		while (cur && index > 0) {
-			cur = cur->next;
-			index--;
-		}
-		if (cur && cur != tail && index == 0) {
-			ListNode* next = cur->next;
-			ListNode* prev = cur->prev;
-			next->prev = prev;
-			prev->next = next;
-			delete cur;
-		}
-	}
+    void deleteAtIndex(int index) {
+        ListNode* cur = head->next;
+        while (cur && index > 0) {
+            cur = cur->next;
+            index--;
+        }
+        if (cur && cur != tail && index == 0) {
+            ListNode* next = cur->next;
+            ListNode* prev = cur->prev;
+            next->prev = prev;
+            prev->next = next;
+            delete cur;
+        }
+    }
 };
 ```
 
@@ -1930,7 +2117,6 @@ class MyLinkedList {
 }
 ```
 
-
 ```rust
 struct MyLinkedList {
     vals: Vec<i32>,
@@ -2011,6 +2197,120 @@ impl MyLinkedList {
         self.next.push(nxt);
         self.next[node] = new_idx;
         self.prev[nxt] = new_idx;
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: number;
+    prev: ListNode | null;
+    next: ListNode | null;
+
+    /**
+     * @constructor
+     * @param {number} val
+     */
+    constructor(val: number) {
+        this.val = val;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class MyLinkedList {
+    private head: ListNode;
+    private tail: ListNode;
+
+    constructor() {
+        this.head = new ListNode(0);
+        this.tail = new ListNode(0);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index: number): number {
+        let cur = this.head.next;
+        while (cur && index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        if (cur && cur !== this.tail && index === 0) {
+            return cur.val;
+        }
+        return -1;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val: number): void {
+        const node = new ListNode(val);
+        const next = this.head.next!;
+        const prev = this.head;
+        prev.next = node;
+        next.prev = node;
+        node.next = next;
+        node.prev = prev;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val: number): void {
+        const node = new ListNode(val);
+        const next = this.tail;
+        const prev = this.tail.prev!;
+        prev.next = node;
+        next.prev = node;
+        node.next = next;
+        node.prev = prev;
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index: number, val: number): void {
+        let cur = this.head.next;
+        while (cur && index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        if (cur && index === 0) {
+            const node = new ListNode(val);
+            const next = cur;
+            const prev = cur.prev!;
+            prev.next = node;
+            next.prev = node;
+            node.next = next;
+            node.prev = prev;
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index: number): void {
+        let cur = this.head.next;
+        while (cur && index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        if (cur && cur !== this.tail && index === 0) {
+            const next = cur.next!;
+            const prev = cur.prev!;
+            next.prev = prev;
+            prev.next = next;
+        }
     }
 }
 ```
@@ -2677,7 +2977,6 @@ class MyLinkedList {
 }
 ```
 
-
 ```rust
 struct MyLinkedList {
     vals: Vec<i32>,
@@ -2758,6 +3057,122 @@ impl MyLinkedList {
         self.next[prev] = nxt;
         self.prev[nxt] = prev;
         self.size -= 1;
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: number;
+    next: ListNode | null;
+    prev: ListNode | null;
+
+    /**
+     * @constructor
+     * @param {number}
+     * @param {ListNode|null}
+     * @param {ListNode|null}
+     */
+    constructor(val: number = 0, next: ListNode | null = null, prev: ListNode | null = null) {
+        this.val = val;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+
+class MyLinkedList {
+    private head: ListNode;
+    private tail: ListNode;
+    private size: number;
+
+    constructor() {
+        this.head = new ListNode(0);
+        this.tail = new ListNode(0);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+        this.size = 0;
+    }
+
+    /**
+     * @param {number} index
+     * @return {ListNode}
+     */
+    getPrev(index: number): ListNode {
+        let cur: ListNode;
+        if (index <= this.size / 2) {
+            cur = this.head;
+            for (let i = 0; i < index; i++) {
+                cur = cur.next!;
+            }
+        } else {
+            cur = this.tail;
+            for (let i = 0; i < this.size - index + 1; i++) {
+                cur = cur.prev!;
+            }
+        }
+        return cur;
+    }
+
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index: number): number {
+        if (index >= this.size) {
+            return -1;
+        }
+        return this.getPrev(index).next!.val;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val: number): void {
+        this.addAtIndex(0, val);
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val: number): void {
+        this.addAtIndex(this.size, val);
+    }
+
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index: number, val: number): void {
+        if (index > this.size) {
+            return;
+        }
+        const node = new ListNode(val);
+        const prev = this.getPrev(index);
+        const next = prev.next!;
+        prev.next = node;
+        node.prev = prev;
+        node.next = next;
+        next.prev = node;
+        this.size++;
+    }
+
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index: number): void {
+        if (index >= this.size) {
+            return;
+        }
+        const prev = this.getPrev(index);
+        const cur = prev.next!;
+        const next = cur.next!;
+        prev.next = next;
+        next.prev = prev;
+        this.size--;
     }
 }
 ```

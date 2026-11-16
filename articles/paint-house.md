@@ -252,6 +252,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCost(costs: number[][]): number {
+        const n = costs.length;
+
+        const dfs = (i: number, prevColor: number): number => {
+            if (i === n) return 0;
+
+            let res = Infinity;
+            for (let c = 0; c < 3; c++) {
+                if (c === prevColor) continue;
+                res = Math.min(res, costs[i][c] + dfs(i + 1, c));
+            }
+            return res;
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -280,7 +305,7 @@ We can use memoization to store results for each unique state `(house index, pre
 
 ```python
 class Solution:
-    def min_cost(self, costs: List[List[int]]) -> int:
+    def minCost(self, costs: List[List[int]]) -> int:
         n = len(costs)
         dp = [[-1] * 4 for _ in range(n)]
 
@@ -564,6 +589,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCost(costs: number[][]): number {
+        const n = costs.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(4).fill(-1),
+        );
+
+        const dfs = (i: number, prevColor: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (dp[i][prevColor + 1] !== -1) {
+                return dp[i][prevColor + 1];
+            }
+
+            let res = Infinity;
+            for (let c = 0; c < 3; c++) {
+                if (c === prevColor) continue;
+                res = Math.min(res, costs[i][c] + dfs(i + 1, c));
+            }
+
+            return (dp[i][prevColor + 1] = res);
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -592,7 +651,7 @@ The key insight is that the minimum cost to paint house `i` with color `c` equal
 
 ```python
 class Solution:
-    def min_cost(self, costs: List[List[int]]) -> int:
+    def minCost(self, costs: List[List[int]]) -> int:
         n = len(costs)
         if n == 0:
             return 0
@@ -813,6 +872,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCost(costs: number[][]): number {
+        let n = costs.length;
+        if (n === 0) return 0;
+
+        let dp: number[][] = Array.from({ length: n }, () =>
+            Array(3).fill(0),
+        );
+        for (let c = 0; c < 3; c++) {
+            dp[0][c] = costs[0][c];
+        }
+
+        for (let i = 1; i < n; i++) {
+            for (let c = 0; c < 3; c++) {
+                dp[i][c] =
+                    costs[i][c] +
+                    Math.min(dp[i - 1][(c + 1) % 3], dp[i - 1][(c + 2) % 3]);
+            }
+        }
+
+        return Math.min(dp[n - 1][0], dp[n - 1][1], dp[n - 1][2]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1009,6 +1098,27 @@ impl Solution {
         }
 
         dp0.min(dp1).min(dp2)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCost(costs: number[][]): number {
+        let dp = [0, 0, 0];
+
+        for (let i = 0; i < costs.length; i++) {
+            let dp0 = costs[i][0] + Math.min(dp[1], dp[2]);
+            let dp1 = costs[i][1] + Math.min(dp[0], dp[2]);
+            let dp2 = costs[i][2] + Math.min(dp[0], dp[1]);
+            dp = [dp0, dp1, dp2];
+        }
+
+        return Math.min(dp[0], dp[1], dp[2]);
     }
 }
 ```

@@ -400,7 +400,7 @@ class Solution {
 ```rust
 impl Solution {
     pub fn make_good(s: String) -> String {
-        let mut stack = Vec::new();
+        let mut stack: Vec<u8> = Vec::new();
         for c in s.bytes() {
             if !stack.is_empty()
                 && *stack.last().unwrap() != c

@@ -249,6 +249,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const N = nums.length;
+        let res = Infinity;
+        const uniqueNums = Array.from(new Set(nums)).sort((a, b) => a - b);
+        const n = uniqueNums.length;
+
+        for (let i = 0; i < n; i++) {
+            let noChange = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (uniqueNums[j] < uniqueNums[i] + N) {
+                    noChange++;
+                }
+            }
+            res = Math.min(res, N - noChange);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -526,6 +553,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const N = nums.length;
+        let res = Infinity;
+        const uniqueNums = Array.from(new Set(nums)).sort((a, b) => a - b);
+        const n = uniqueNums.length;
+
+        for (let i = 0; i < n; i++) {
+            let l = i,
+                r = n;
+            while (l < r) {
+                const mid = Math.floor((l + r) / 2);
+                if (uniqueNums[mid] < uniqueNums[i] + N) {
+                    l = mid + 1;
+                } else {
+                    r = mid;
+                }
+            }
+            const noChange = l - i;
+            res = Math.min(res, N - noChange);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -754,6 +813,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const length = nums.length;
+        const uniqueNums = Array.from(new Set(nums)).sort((a, b) => a - b);
+        let res = length,
+            r = 0;
+
+        for (let l = 0; l < uniqueNums.length; l++) {
+            while (
+                r < uniqueNums.length &&
+                uniqueNums[r] < uniqueNums[l] + length
+            ) {
+                r++;
+            }
+            const window = r - l;
+            res = Math.min(res, length - window);
+        }
+
+        return res;
     }
 }
 ```
@@ -1009,6 +1096,36 @@ impl Solution {
         }
 
         length - (n - l) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minOperations(nums: number[]): number {
+        const length = nums.length;
+        nums.sort((a, b) => a - b);
+        let n = 1;
+
+        for (let i = 1; i < length; i++) {
+            if (nums[i] !== nums[i - 1]) {
+                nums[n] = nums[i];
+                n++;
+            }
+        }
+
+        let l = 0;
+        for (let r = 0; r < n; r++) {
+            if (nums[r] - nums[l] > length - 1) {
+                l++;
+            }
+        }
+
+        return length - (n - l);
     }
 }
 ```

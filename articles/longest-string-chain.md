@@ -383,6 +383,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    longestStrChain(words: string[]): number {
+        words.sort((a, b) => b.length - a.length);
+        const wordIndex = new Map<string, number>();
+        for (let i = 0; i < words.length; i++) {
+            wordIndex.set(words[i], i);
+        }
+
+        const dp: number[] = new Array(words.length).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (dp[i] !== -1) {
+                return dp[i];
+            }
+
+            let res = 1;
+            const w = words[i];
+            for (let j = 0; j < w.length; j++) {
+                const pred = w.slice(0, j) + w.slice(j + 1);
+                if (wordIndex.has(pred)) {
+                    res = Math.max(res, 1 + dfs(wordIndex.get(pred)!));
+                }
+            }
+            dp[i] = res;
+            return res;
+        };
+
+        let maxChain = 1;
+        for (let i = 0; i < words.length; i++) {
+            maxChain = Math.max(maxChain, dfs(i));
+        }
+        return maxChain;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -774,6 +815,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    longestStrChain(words: string[]): number {
+        words.sort((a, b) => a.length - b.length);
+        const n = words.length;
+        const dp: number[] = new Array(n).fill(1);
+
+        const isPred = (w1: string, w2: string): boolean => {
+            let i = 0;
+            for (const c of w2) {
+                if (i === w1.length) {
+                    return true;
+                }
+                if (w1[i] === c) {
+                    i++;
+                }
+            }
+            return i === w1.length;
+        };
+
+        for (let i = 1; i < n; i++) {
+            for (let j = i - 1; j >= 0; j--) {
+                if (words[j].length + 1 < words[i].length) {
+                    break;
+                }
+                if (
+                    words[j].length + 1 > words[i].length ||
+                    !isPred(words[j], words[i])
+                ) {
+                    continue;
+                }
+                dp[i] = Math.max(dp[i], 1 + dp[j]);
+            }
+        }
+
+        return Math.max(...dp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1018,6 +1103,33 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {number}
+     */
+    longestStrChain(words: string[]): number {
+        words.sort((a, b) => a.length - b.length);
+        const dp = new Map<string, number>();
+        let res = 0;
+
+        for (const word of words) {
+            dp.set(word, 1);
+            for (let i = 0; i < word.length; i++) {
+                const pred = word.slice(0, i) + word.slice(i + 1);
+                if (dp.has(pred)) {
+                    dp.set(word, Math.max(dp.get(word)!, dp.get(pred)! + 1));
+                }
+            }
+            res = Math.max(res, dp.get(word)!);
+        }
+
+        return res;
     }
 }
 ```

@@ -197,6 +197,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxAscendingSum(nums: number[]): number {
+        let res = 0;
+        for (let i = 0; i < nums.length; i++) {
+            let curSum = nums[i];
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[j] <= nums[j - 1]) {
+                    break;
+                }
+                curSum += nums[j];
+            }
+            res = Math.max(res, curSum);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -387,6 +410,29 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxAscendingSum(nums: number[]): number {
+        let res = nums[0],
+            curSum = nums[0];
+
+        for (let i = 1; i < nums.length; i++) {
+            if (nums[i] <= nums[i - 1]) {
+                curSum = 0;
+            }
+            curSum += nums[i];
+            res = Math.max(res, curSum);
+        }
+
+        return res;
     }
 }
 ```

@@ -212,6 +212,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} haystack
+     * @param {string} needle
+     * @return {number}
+     */
+    strStr(haystack: string, needle: string): number {
+        let n = haystack.length,
+            m = needle.length;
+        for (let i = 0; i < n - m + 1; i++) {
+            let j = 0;
+            while (j < m) {
+                if (haystack[i + j] !== needle[j]) {
+                    break;
+                }
+                j++;
+            }
+            if (j === m) return i;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -659,6 +684,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} haystack
+     * @param {string} needle
+     * @return {number}
+     */
+    strStr(haystack: string, needle: string): number {
+        if (needle === '') return 0;
+
+        const m = needle.length;
+        const lps: number[] = new Array(m).fill(0);
+
+        let prevLPS = 0,
+            i = 1;
+        while (i < m) {
+            if (needle[i] === needle[prevLPS]) {
+                lps[i] = prevLPS + 1;
+                prevLPS++;
+                i++;
+            } else if (prevLPS === 0) {
+                lps[i] = 0;
+                i++;
+            } else {
+                prevLPS = lps[prevLPS - 1];
+            }
+        }
+
+        i = 0; // ptr for haystack
+        let j = 0; // ptr for needle
+        while (i < haystack.length) {
+            if (haystack[i] === needle[j]) {
+                i++;
+                j++;
+            } else {
+                if (j === 0) {
+                    i++;
+                } else {
+                    j = lps[j - 1];
+                }
+            }
+
+            if (j === m) {
+                return i - m;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1003,6 +1080,46 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} haystack
+     * @param {string} needle
+     * @return {number}
+     */
+    strStr(haystack: string, needle: string): number {
+        if (needle === '') return 0;
+
+        const s = needle + '$' + haystack;
+        const n = s.length;
+        const z: number[] = new Array(n).fill(0);
+        let l = 0,
+            r = 0;
+
+        for (let i = 1; i < n; i++) {
+            if (i <= r) {
+                z[i] = Math.min(r - i + 1, z[i - l]);
+            }
+            while (i + z[i] < n && s[z[i]] === s[i + z[i]]) {
+                z[i]++;
+            }
+            if (i + z[i] - 1 > r) {
+                l = i;
+                r = i + z[i] - 1;
+            }
+        }
+
+        for (let i = needle.length + 1; i < n; i++) {
+            if (z[i] === needle.length) {
+                return i - needle.length - 1;
+            }
+        }
+
+        return -1;
     }
 }
 ```
@@ -1489,6 +1606,76 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} haystack
+     * @param {string} needle
+     * @return {number}
+     */
+    strStr(haystack: string, needle: string): number {
+        if (needle === '') return 0;
+
+        const base1 = 31,
+            mod1 = 768258391;
+        const base2 = 37,
+            mod2 = 685683731;
+
+        const n = haystack.length,
+            m = needle.length;
+        if (m > n) return -1;
+
+        let power1 = 1,
+            power2 = 1;
+        for (let i = 0; i < m; i++) {
+            power1 = (power1 * base1) % mod1;
+            power2 = (power2 * base2) % mod2;
+        }
+
+        let needleHash1 = 0,
+            needleHash2 = 0;
+        let haystackHash1 = 0,
+            haystackHash2 = 0;
+
+        for (let i = 0; i < m; i++) {
+            needleHash1 = (needleHash1 * base1 + needle.charCodeAt(i)) % mod1;
+            needleHash2 = (needleHash2 * base2 + needle.charCodeAt(i)) % mod2;
+            haystackHash1 =
+                (haystackHash1 * base1 + haystack.charCodeAt(i)) % mod1;
+            haystackHash2 =
+                (haystackHash2 * base2 + haystack.charCodeAt(i)) % mod2;
+        }
+
+        for (let i = 0; i <= n - m; i++) {
+            if (
+                haystackHash1 === needleHash1 &&
+                haystackHash2 === needleHash2
+            ) {
+                return i;
+            }
+
+            if (i + m < n) {
+                haystackHash1 =
+                    (haystackHash1 * base1 -
+                        haystack.charCodeAt(i) * power1 +
+                        haystack.charCodeAt(i + m)) %
+                    mod1;
+                haystackHash2 =
+                    (haystackHash2 * base2 -
+                        haystack.charCodeAt(i) * power2 +
+                        haystack.charCodeAt(i + m)) %
+                    mod2;
+
+                if (haystackHash1 < 0) haystackHash1 += mod1;
+                if (haystackHash2 < 0) haystackHash2 += mod2;
+            }
+        }
+
+        return -1;
     }
 }
 ```

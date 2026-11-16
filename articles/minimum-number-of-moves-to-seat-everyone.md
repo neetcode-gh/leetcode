@@ -104,6 +104,8 @@ public class Solution {
 ```
 
 ```go
+import "sort"
+
 func minMovesToSeat(seats []int, students []int) int {
     sort.Ints(seats)
     sort.Ints(students)
@@ -159,6 +161,26 @@ impl Solution {
         seats.iter().zip(students.iter())
             .map(|(s, st)| (s - st).abs())
             .sum()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} seats
+     * @param {number[]} students
+     * @return {number}
+     */
+    minMovesToSeat(seats: number[], students: number[]): number {
+        seats.sort((a, b) => a - b);
+        students.sort((a, b) => a - b);
+
+        let res = 0;
+        for (let i = 0; i < seats.length; i++) {
+            res += Math.abs(seats[i] - students[i]);
+        }
+        return res;
     }
 }
 ```
@@ -498,6 +520,44 @@ impl Solution {
             remain -= 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} seats
+     * @param {number[]} students
+     * @return {number}
+     */
+    minMovesToSeat(seats: number[], students: number[]): number {
+        let max_index = Math.max(...seats, ...students) + 1;
+        let count_seats: number[] = new Array(max_index).fill(0);
+        let count_students: number[] = new Array(max_index).fill(0);
+
+        for (let seat of seats) count_seats[seat]++;
+        for (let student of students) count_students[student]++;
+
+        let i = 0,
+            j = 0,
+            res = 0,
+            remain = seats.length;
+        while (remain > 0) {
+            if (count_seats[i] === 0) {
+                i++;
+                continue;
+            }
+            if (count_students[j] === 0) {
+                j++;
+                continue;
+            }
+            res += Math.abs(i - j);
+            count_seats[i]--;
+            count_students[j]--;
+            remain--;
+        }
+        return res;
     }
 }
 ```
@@ -850,6 +910,47 @@ impl Solution {
             remain -= tmp;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} seats
+     * @param {number[]} students
+     * @return {number}
+     */
+    minMovesToSeat(seats: number[], students: number[]): number {
+        let maxSeat = Math.max(...seats);
+        let maxStudent = Math.max(...students);
+
+        let count_seats: number[] = new Array(maxSeat + 1).fill(0);
+        let count_students: number[] = new Array(maxStudent + 1).fill(0);
+
+        for (let s of seats) count_seats[s]++;
+        for (let s of students) count_students[s]++;
+
+        let remain = seats.length,
+            i = 0,
+            j = 0,
+            res = 0;
+        while (remain > 0) {
+            if (count_seats[i] === 0) {
+                i++;
+                continue;
+            }
+            if (count_students[j] === 0) {
+                j++;
+                continue;
+            }
+            let tmp = Math.min(count_seats[i], count_students[j]);
+            res += Math.abs(i - j) * tmp;
+            count_seats[i] -= tmp;
+            count_students[j] -= tmp;
+            remain -= tmp;
+        }
+        return res;
     }
 }
 ```

@@ -371,6 +371,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    getLengthOfOptimalCompression(s: string, k: number): number {
+        const INF = 1e9;
+        const n = s.length;
+        const dp: { [key: string]: number } = {};
+
+        const count = (
+            i: number,
+            k: number,
+            prev: number,
+            prevCnt: number,
+        ): number => {
+            if (k < 0) return INF;
+            if (i === n) return 0;
+            const key = `${i},${k},${prev},${prevCnt}`;
+            if (key in dp) return dp[key];
+
+            let res: number;
+            if (prev === s.charCodeAt(i) - 97) {
+                const incr =
+                    prevCnt === 1 || prevCnt === 9 || prevCnt === 99 ? 1 : 0;
+                res = incr + count(i + 1, k, prev, prevCnt + 1);
+            } else {
+                res = 1 + count(i + 1, k, s.charCodeAt(i) - 97, 1); // don't delete
+                if (k > 0) {
+                    res = Math.min(res, count(i + 1, k - 1, prev, prevCnt)); // delete s[i]
+                }
+            }
+
+            dp[key] = res;
+            return res;
+        };
+
+        return count(0, k, 26, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -749,6 +793,48 @@ impl Solution {
         }
 
         dfs(0, k, s, &mut dp)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    getLengthOfOptimalCompression(s: string, k: number): number {
+        const n = s.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(-1),
+        );
+
+        const dfs = (i: number, k: number): number => {
+            if (n - i <= k) return 0;
+            if (dp[i][k] !== -1) return dp[i][k];
+
+            let res = 150;
+            if (k > 0) res = dfs(i + 1, k - 1);
+
+            let freq = 0,
+                delCnt = 0,
+                comp_len = 1;
+            for (let j = i; j < n; j++) {
+                if (s[i] === s[j]) {
+                    if (freq === 1 || freq === 9 || freq === 99) comp_len++;
+                    freq++;
+                } else {
+                    delCnt++;
+                    if (delCnt > k) break;
+                }
+                res = Math.min(res, comp_len + dfs(j + 1, k - delCnt));
+            }
+            dp[i][k] = res;
+            return res;
+        };
+
+        return dfs(0, k);
     }
 }
 ```
@@ -1136,6 +1222,55 @@ impl Solution {
         }
 
         dp[0][k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    getLengthOfOptimalCompression(s: string, k: number): number {
+        const n = s.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(150),
+        );
+
+        for (let remK = 0; remK <= k; remK++) {
+            dp[n][remK] = 0;
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let remK = 0; remK <= k; remK++) {
+                if (remK > 0) {
+                    dp[i][remK] = dp[i + 1][remK - 1];
+                }
+
+                let freq = 0,
+                    delCnt = 0,
+                    compLen = 1;
+                for (let j = i; j < n; j++) {
+                    if (s[i] === s[j]) {
+                        if (freq === 1 || freq === 9 || freq === 99) {
+                            compLen++;
+                        }
+                        freq++;
+                    } else {
+                        delCnt++;
+                        if (delCnt > remK) break;
+                    }
+                    dp[i][remK] = Math.min(
+                        dp[i][remK],
+                        compLen + dp[j + 1][remK - delCnt],
+                    );
+                }
+            }
+        }
+
+        return dp[0][k];
     }
 }
 ```

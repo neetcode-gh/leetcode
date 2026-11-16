@@ -467,6 +467,55 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} workers
+     * @param {number[][]} bikes
+     * @return {number[]}
+     */
+    assignBikes(workers: number[][], bikes: number[][]): number[] {
+        const findDistance = (workerLoc: number[], bikeLoc: number[]): number => {
+            return (
+                Math.abs(workerLoc[0] - bikeLoc[0]) +
+                Math.abs(workerLoc[1] - bikeLoc[1])
+            );
+        };
+
+        const allTriplets: number[][] = [];
+        for (let worker = 0; worker < workers.length; worker++) {
+            for (let bike = 0; bike < bikes.length; bike++) {
+                const distance = findDistance(workers[worker], bikes[bike]);
+                allTriplets.push([distance, worker, bike]);
+            }
+        }
+
+        allTriplets.sort((a, b) => {
+            if (a[0] !== b[0]) return a[0] - b[0];
+            if (a[1] !== b[1]) return a[1] - b[1];
+            return a[2] - b[2];
+        });
+
+        const bikeStatus: boolean[] = new Array(bikes.length).fill(false);
+        const workerStatus: number[] = new Array(workers.length).fill(-1);
+        let pairCount = 0;
+
+        for (const [distance, worker, bike] of allTriplets) {
+            if (workerStatus[worker] === -1 && !bikeStatus[bike]) {
+                bikeStatus[bike] = true;
+                workerStatus[worker] = bike;
+                pairCount++;
+                if (pairCount === workers.length) {
+                    return workerStatus;
+                }
+            }
+        }
+
+        return workerStatus;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -919,6 +968,68 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} workers
+     * @param {number[][]} bikes
+     * @return {number[]}
+     */
+    assignBikes(workers: number[][], bikes: number[][]): number[] {
+        const findDistance = (workerLoc: number[], bikeLoc: number[]): number => {
+            return (
+                Math.abs(workerLoc[0] - bikeLoc[0]) +
+                Math.abs(workerLoc[1] - bikeLoc[1])
+            );
+        };
+
+        let minDist = Infinity;
+        const distToPairs = new Map<number, number[][]>();
+
+        // Generate all worker-bike pairs and group by distance
+        for (let worker = 0; worker < workers.length; worker++) {
+            const workerLoc = workers[worker];
+            for (let bike = 0; bike < bikes.length; bike++) {
+                const bikeLoc = bikes[bike];
+                const distance = findDistance(workerLoc, bikeLoc);
+
+                if (!distToPairs.has(distance)) {
+                    distToPairs.set(distance, []);
+                }
+                distToPairs.get(distance)!.push([worker, bike]);
+                minDist = Math.min(minDist, distance);
+            }
+        }
+
+        let currDist = minDist;
+        // Initialize all values to false, to signify no bikes have been taken
+        const bikeStatus: boolean[] = new Array(bikes.length).fill(false);
+        // Initialize all values to -1, to signify no worker has a bike
+        const workerStatus: number[] = new Array(workers.length).fill(-1);
+        // Keep track of how many worker-bike pairs have been made
+        let pairCount = 0;
+
+        // While all workers have not been assigned a bike
+        while (pairCount < workers.length) {
+            // Check if there are pairs at current distance
+            if (distToPairs.has(currDist)) {
+                for (const [worker, bike] of distToPairs.get(currDist)!) {
+                    if (workerStatus[worker] === -1 && !bikeStatus[bike]) {
+                        // If both worker and bike are free, assign them to each other
+                        bikeStatus[bike] = true;
+                        workerStatus[worker] = bike;
+                        pairCount++;
+                    }
+                }
+            }
+            currDist++;
+        }
+
+        return workerStatus;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1179,12 +1290,10 @@ class Solution {
         };
 
         const workerToBikeList = [];
-        const pq = new MinPriorityQueue({
-            compare: (a, b) => {
-                if (a[0] !== b[0]) return a[0] - b[0];
-                if (a[1] !== b[1]) return a[1] - b[1];
-                return a[2] - b[2];
-            },
+        const pq = new PriorityQueue((a, b) => {
+            if (a[0] !== b[0]) return a[0] - b[0];
+            if (a[1] !== b[1]) return a[1] - b[1];
+            return a[2] - b[2];
         });
 
         for (let worker = 0; worker < workers.length; worker++) {
@@ -1278,10 +1387,6 @@ func assignBikes(workers [][]int, bikes [][]int) []int {
         return abs(worker[0]-bike[0]) + abs(worker[1]-bike[1])
     }
 
-    type triplet struct {
-        dist, worker, bike int
-    }
-
     workerToBikeList := make([][]triplet, len(workers))
     pq := &minHeap{}
     heap.Init(pq)
@@ -1328,7 +1433,11 @@ func assignBikes(workers [][]int, bikes [][]int) []int {
     return workerStatus
 }
 
-type minHeap []struct{ dist, worker, bike int }
+type triplet struct {
+    dist, worker, bike int
+}
+
+type minHeap []triplet
 
 func (h minHeap) Len() int { return len(h) }
 func (h minHeap) Less(i, j int) bool {
@@ -1341,7 +1450,7 @@ func (h minHeap) Less(i, j int) bool {
     return h[i].bike < h[j].bike
 }
 func (h minHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
-func (h *minHeap) Push(x interface{}) { *h = append(*h, x.(struct{ dist, worker, bike int })) }
+func (h *minHeap) Push(x interface{}) { *h = append(*h, x.(triplet)) }
 func (h *minHeap) Pop() interface{} {
     old := *h
     n := len(old)
@@ -1489,6 +1598,63 @@ impl Solution {
         }
 
         worker_status
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} workers
+     * @param {number[][]} bikes
+     * @return {number[]}
+     */
+    assignBikes(workers: number[][], bikes: number[][]): number[] {
+        const findDistance = (workerLoc: number[], bikeLoc: number[]): number => {
+            return (
+                Math.abs(workerLoc[0] - bikeLoc[0]) +
+                Math.abs(workerLoc[1] - bikeLoc[1])
+            );
+        };
+
+        const workerToBikeList: number[][][] = [];
+        const pq = new PriorityQueue((a: number[], b: number[]) => {
+            if (a[0] !== b[0]) return a[0] - b[0];
+            if (a[1] !== b[1]) return a[1] - b[1];
+            return a[2] - b[2];
+        });
+
+        for (let worker = 0; worker < workers.length; worker++) {
+            const currWorkerPairs: number[][] = [];
+            for (let bike = 0; bike < bikes.length; bike++) {
+                const distance = findDistance(workers[worker], bikes[bike]);
+                currWorkerPairs.push([distance, worker, bike]);
+            }
+            currWorkerPairs.sort((a, b) => {
+                if (a[0] !== b[0]) return b[0] - a[0];
+                if (a[1] !== b[1]) return b[1] - a[1];
+                return b[2] - a[2];
+            });
+            pq.enqueue(currWorkerPairs.pop());
+            workerToBikeList.push(currWorkerPairs);
+        }
+
+        const bikeStatus: boolean[] = new Array(bikes.length).fill(false);
+        const workerStatus: number[] = new Array(workers.length).fill(-1);
+
+        while (!pq.isEmpty()) {
+            const [distance, worker, bike]: number[] = pq.dequeue();
+
+            if (!bikeStatus[bike]) {
+                bikeStatus[bike] = true;
+                workerStatus[worker] = bike;
+            } else {
+                const nextClosestBike = workerToBikeList[worker].pop();
+                pq.enqueue(nextClosestBike);
+            }
+        }
+
+        return workerStatus;
     }
 }
 ```

@@ -276,6 +276,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    numDistinct(s: string, t: string): number {
+        if (t.length > s.length) {
+            return 0;
+        }
+
+        const dfs = (i: number, j: number): number => {
+            if (j === t.length) {
+                return 1;
+            }
+            if (i === s.length) {
+                return 0;
+            }
+
+            let res = dfs(i + 1, j);
+            if (s[i] === t[j]) {
+                res += dfs(i + 1, j + 1);
+            }
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -596,6 +628,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    numDistinct(s: string, t: string): number {
+        let m = s.length,
+            n = t.length;
+        if (n > m) return 0;
+        let dp: number[][] = Array(m + 1)
+            .fill(0)
+            .map(() => Array(n + 1).fill(-1));
+
+        const dfs = (i: number, j: number): number => {
+            if (j === n) return 1;
+            if (i === m) return 0;
+            if (dp[i][j] !== -1) return dp[i][j];
+
+            let res = dfs(i + 1, j);
+            if (s[i] === t[j]) {
+                res += dfs(i + 1, j + 1);
+            }
+            dp[i][j] = res;
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -880,6 +945,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    numDistinct(s: string, t: string): number {
+        let m = s.length,
+            n = t.length;
+        let dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+        for (let i = 0; i <= m; i++) {
+            dp[i][n] = 1;
+        }
+
+        for (let i = m - 1; i >= 0; i--) {
+            for (let j = n - 1; j >= 0; j--) {
+                dp[i][j] = dp[i + 1][j];
+                if (s[i] === t[j]) {
+                    dp[i][j] += dp[i + 1][j + 1];
+                }
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1160,6 +1255,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    numDistinct(s: string, t: string): number {
+        let m = s.length,
+            n = t.length;
+        let dp: number[] = new Array(n + 1).fill(0);
+        let nextDp: number[] = new Array(n + 1).fill(0);
+
+        dp[n] = nextDp[n] = 1;
+        for (let i = m - 1; i >= 0; i--) {
+            for (let j = n - 1; j >= 0; j--) {
+                nextDp[j] = dp[j];
+                if (s[i] === t[j]) {
+                    nextDp[j] += dp[j + 1];
+                }
+            }
+            dp = nextDp.slice();
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1436,6 +1560,37 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    numDistinct(s: string, t: string): number {
+        let m = s.length,
+            n = t.length;
+        let dp: number[] = new Array(n + 1).fill(0);
+
+        dp[n] = 1;
+        for (let i = m - 1; i >= 0; i--) {
+            let prev = 1;
+            for (let j = n - 1; j >= 0; j--) {
+                let res = dp[j];
+                if (s[i] === t[j]) {
+                    res += prev;
+                }
+
+                prev = dp[j];
+                dp[j] = res;
+            }
+        }
+
+        return dp[0];
     }
 }
 ```

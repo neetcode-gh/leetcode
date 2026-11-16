@@ -258,6 +258,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} instructions
+     * @return {boolean}
+     */
+    isRobotBounded(instructions: string): boolean {
+        let dirX = 0,
+            dirY = 1;
+        let x = 0,
+            y = 0;
+
+        for (const d of instructions) {
+            if (d === 'G') {
+                x += dirX;
+                y += dirY;
+            } else if (d === 'L') {
+                [dirX, dirY] = [-dirY, dirX];
+            } else {
+                [dirX, dirY] = [dirY, -dirX];
+            }
+        }
+
+        return (x === 0 && y === 0) || dirX !== 0 || dirY !== 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

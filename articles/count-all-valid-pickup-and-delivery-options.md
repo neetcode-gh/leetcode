@@ -258,6 +258,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countOrders(n: number): number {
+        const MOD = 1_000_000_007;
+
+        const dfs = (picked: number, delivered: number): number => {
+            if (picked === n && delivered === n) {
+                return 1;
+            }
+
+            let res = 0;
+            if (picked < n) {
+                res = (res + (n - picked) * dfs(picked + 1, delivered)) % MOD;
+            }
+            if (delivered < picked) {
+                res =
+                    (res + (picked - delivered) * dfs(picked, delivered + 1)) %
+                    MOD;
+            }
+
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,6 +598,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countOrders(n: number): number {
+        const MOD = 1_000_000_007;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(n + 1).fill(-1));
+
+        const dfs = (picked: number, delivered: number): number => {
+            if (picked === n && delivered === n) {
+                return 1;
+            }
+            if (dp[picked][delivered] !== -1) {
+                return dp[picked][delivered];
+            }
+
+            let res = 0;
+            if (picked < n) {
+                res = (res + (n - picked) * dfs(picked + 1, delivered)) % MOD;
+            }
+            if (delivered < picked) {
+                res =
+                    (res + (picked - delivered) * dfs(picked, delivered + 1)) %
+                    MOD;
+            }
+
+            dp[picked][delivered] = res;
+            return res;
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -823,6 +892,40 @@ impl Solution {
         }
 
         dp[n][n] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countOrders(n: number): number {
+        const MOD = 1_000_000_007;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
+        dp[0][0] = 1;
+
+        for (let picked = 0; picked <= n; picked++) {
+            for (let delivered = 0; delivered <= n; delivered++) {
+                if (picked < n) {
+                    dp[picked + 1][delivered] =
+                        (dp[picked + 1][delivered] +
+                            (n - picked) * dp[picked][delivered]) %
+                        MOD;
+                }
+
+                if (delivered < picked) {
+                    dp[picked][delivered + 1] =
+                        (dp[picked][delivered + 1] +
+                            (picked - delivered) * dp[picked][delivered]) %
+                        MOD;
+                }
+            }
+        }
+
+        return dp[n][n];
     }
 }
 ```
@@ -1106,6 +1209,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countOrders(n: number): number {
+        const MOD = 1000000007;
+        let dp: number[] = new Array(n + 1).fill(0);
+        dp[0] = 1;
+
+        for (let picked = 0; picked <= n; picked++) {
+            for (let delivered = 0; delivered < picked; delivered++) {
+                dp[delivered + 1] =
+                    (dp[delivered + 1] + (picked - delivered) * dp[delivered]) %
+                    MOD;
+            }
+
+            if (picked < n) {
+                let next_dp: number[] = new Array(n + 1).fill(0);
+                for (let delivered = 0; delivered <= picked; delivered++) {
+                    next_dp[delivered] =
+                        (next_dp[delivered] + (n - picked) * dp[delivered]) %
+                        MOD;
+                }
+                dp = next_dp;
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1275,6 +1412,27 @@ impl Solution {
             slots -= 2;
         }
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countOrders(n: number): number {
+        const MOD = 1000000007;
+        let slots = 2 * n,
+            res = 1;
+
+        while (slots > 0) {
+            let validChoices = (slots * (slots - 1)) / 2;
+            res = (res * validChoices) % MOD;
+            slots -= 2;
+        }
+        return res;
     }
 }
 ```
@@ -1462,6 +1620,28 @@ impl Solution {
             res %= MOD;
         }
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    countOrders(n: number): number {
+        const MOD = BigInt(1000000007);
+        let res = BigInt(1);
+
+        for (let slot = 1; slot <= 2 * n; slot++) {
+            res *= BigInt(slot);
+            if (slot % 2 === 0) {
+                res /= BigInt(2);
+            }
+            res %= MOD;
+        }
+        return Number(res);
     }
 }
 ```

@@ -263,6 +263,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsets(nums: number[]): number[][] {
+        const res: number[][] = [];
+        const subset: number[] = [];
+        this.dfs(nums, 0, subset, res);
+        return res;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} i
+     * @param {number[]} subset
+     * @param {number[][]} res
+     * @return {void}
+     */
+    dfs(nums: number[], i: number, subset: number[], res: number[][]): void {
+        if (i >= nums.length) {
+            res.push([...subset]);
+            return;
+        }
+        subset.push(nums[i]);
+        this.dfs(nums, i + 1, subset, res);
+        subset.pop();
+        this.dfs(nums, i + 1, subset, res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -466,6 +499,29 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsets(nums: number[]): number[][] {
+        let res: number[][] = [[]];
+
+        for (let num of nums) {
+            let size = res.length;
+            for (let i = 0; i < size; i++) {
+                let subset = res[i].slice();
+                subset.push(num);
+                res.push(subset);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -691,6 +747,29 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    subsets(nums: number[]): number[][] {
+        let res: number[][] = [];
+        let n = nums.length;
+        for (let i = 0; i < 1 << n; i++) {
+            let subset: number[] = [];
+            for (let j = 0; j < n; j++) {
+                if (i & (1 << j)) {
+                    subset.push(nums[j]);
+                }
+            }
+            res.push(subset);
+        }
+        return res;
     }
 }
 ```

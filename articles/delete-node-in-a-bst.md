@@ -387,6 +387,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} key
+     * @return {TreeNode}
+     */
+    deleteNode(root: TreeNode | null, key: number): TreeNode | null {
+        if (!root) return root;
+
+        if (key > root.val) {
+            root.right = this.deleteNode(root.right, key);
+        } else if (key < root.val) {
+            root.left = this.deleteNode(root.left, key);
+        } else {
+            if (!root.left) return root.right;
+            if (!root.right) return root.left;
+
+            let cur = root.right;
+            while (cur.left) {
+                cur = cur.left;
+            }
+            root.val = cur.val;
+            root.right = this.deleteNode(root.right, root.val);
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -780,6 +811,39 @@ impl Solution {
         }
 
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} key
+     * @return {TreeNode}
+     */
+    deleteNode(root: TreeNode | null, key: number): TreeNode | null {
+        if (!root) return root;
+
+        if (key > root.val) {
+            root.right = this.deleteNode(root.right, key);
+        } else if (key < root.val) {
+            root.left = this.deleteNode(root.left, key);
+        } else {
+            if (!root.left) return root.right;
+            if (!root.right) return root.left;
+
+            let cur = root.right;
+            while (cur.left) {
+                cur = cur.left;
+            }
+            cur.left = root.left;
+            let res = root.right;
+            root = null;
+            return res;
+        }
+
+        return root;
     }
 }
 ```
@@ -1452,6 +1516,71 @@ impl Solution {
         }
 
         root
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} key
+     * @return {TreeNode}
+     */
+    deleteNode(root: TreeNode | null, key: number): TreeNode | null {
+        if (!root) return root;
+
+        let parent: TreeNode | null = null;
+        let cur: TreeNode | null = root;
+
+        // Find the node to delete
+        while (cur && cur.val !== key) {
+            parent = cur;
+            if (key > cur.val) {
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+        }
+
+        if (!cur) return root;
+
+        // Node with only one child or no child
+        if (!cur.left || !cur.right) {
+            const child = cur.left || cur.right;
+            if (!parent) return child;
+            if (parent.left === cur) {
+                parent.left = child;
+            } else {
+                parent.right = child;
+            }
+        } else {
+            // Node with two children
+            let par: TreeNode | null = null; // parent of right subtree's min node
+            const delNode: TreeNode = cur;
+            cur = cur.right!;
+            while (cur.left) {
+                par = cur;
+                cur = cur.left;
+            }
+
+            if (par) {
+                // if there was a left traversal
+                par.left = cur.right;
+                cur.right = delNode.right;
+            }
+            cur.left = delNode.left;
+
+            if (!parent) return cur; // if deleting root
+
+            if (parent.left === delNode) {
+                parent.left = cur;
+            } else {
+                parent.right = cur;
+            }
+        }
+
+        return root;
     }
 }
 ```

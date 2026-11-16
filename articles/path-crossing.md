@@ -248,6 +248,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} path
+     * @return {boolean}
+     */
+    isPathCrossing(path: string): boolean {
+        const visit = new Set<string>();
+        let x = 0,
+            y = 0;
+        visit.add(`${x},${y}`);
+
+        for (const c of path) {
+            if (c === 'N') y++;
+            else if (c === 'S') y--;
+            else if (c === 'E') x++;
+            else if (c === 'W') x--;
+
+            const pos = `${x},${y}`;
+            if (visit.has(pos)) return true;
+            visit.add(pos);
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -542,6 +570,43 @@ impl Solution {
 
     fn hash(x: i64, y: i64) -> i64 {
         (x << 32) + y
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} path
+     * @return {boolean}
+     */
+    isPathCrossing(path: string): boolean {
+        const visit = new Set<number>();
+        let x = 0,
+            y = 0;
+        visit.add(this.hash(x, y));
+
+        for (const c of path) {
+            if (c === 'N') y++;
+            else if (c === 'S') y--;
+            else if (c === 'E') x++;
+            else if (c === 'W') x--;
+
+            const pos = this.hash(x, y);
+            if (visit.has(pos)) return true;
+            visit.add(pos);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {number} x
+     * @param {number} x
+     * @return {number}
+     */
+    hash(x: number, y: number): number {
+        return (x << 16) + y;
     }
 }
 ```

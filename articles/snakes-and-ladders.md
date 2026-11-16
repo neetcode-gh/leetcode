@@ -383,6 +383,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} board
+     * @return {number}
+     */
+    snakesAndLadders(board: number[][]): number {
+        const n = board.length;
+        const queue = new Queue([[1, 0]]);
+        const visit = new Set<number>();
+
+        const intToPos = (square: number): number[] => {
+            let r = Math.floor((square - 1) / n);
+            let c = (square - 1) % n;
+            if (r % 2 === 1) c = n - 1 - c;
+            r = n - 1 - r;
+            return [r, c];
+        };
+
+        while (!queue.isEmpty()) {
+            const [square, moves]: number[] = queue.pop();
+
+            for (let i = 1; i <= 6; i++) {
+                let nextSquare = square + i;
+                const [r, c] = intToPos(nextSquare);
+                if (board[r][c] !== -1) {
+                    nextSquare = board[r][c];
+                }
+                if (nextSquare === n * n) return moves + 1;
+                if (!visit.has(nextSquare)) {
+                    visit.add(nextSquare);
+                    queue.push([nextSquare, moves + 1]);
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -829,6 +869,53 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} board
+     * @return {number}
+     */
+    snakesAndLadders(board: number[][]): number {
+        const n = board.length;
+        const dist: number[] = new Array(n * n + 1).fill(-1);
+        const queue = new Queue([1]);
+        dist[1] = 0;
+
+        const intToPos = (square: number): number[] => {
+            let r = Math.floor((square - 1) / n);
+            let c = (square - 1) % n;
+            if (r % 2 === 1) c = n - 1 - c;
+            r = n - 1 - r;
+            return [r, c];
+        };
+
+        while (!queue.isEmpty()) {
+            const square: number = queue.pop();
+
+            for (let i = 1; i <= 6; i++) {
+                let nextSquare = square + i;
+                if (nextSquare > n * n) break;
+
+                const [r, c] = intToPos(nextSquare);
+                if (board[r][c] !== -1) {
+                    nextSquare = board[r][c];
+                }
+
+                if (dist[nextSquare] === -1) {
+                    dist[nextSquare] = dist[square] + 1;
+                    if (nextSquare === n * n) {
+                        return dist[nextSquare];
+                    }
+                    queue.push(nextSquare);
+                }
+            }
+        }
+
+        return -1;
     }
 }
 ```
@@ -1304,6 +1391,56 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} board
+     * @return {number}
+     */
+    snakesAndLadders(board: number[][]): number {
+        const n = board.length;
+        const queue = new Queue([1]);
+        board[n - 1][0] = 0;
+
+        const intToPos = (square: number): number[] => {
+            let r = Math.floor((square - 1) / n);
+            let c = (square - 1) % n;
+            if (r % 2 === 1) c = n - 1 - c;
+            r = n - 1 - r;
+            return [r, c];
+        };
+
+        let moves = 0;
+        while (!queue.isEmpty()) {
+            for (let it = queue.size(); it > 0; it--) {
+                const square: number = queue.pop();
+                for (let i = 1; i <= 6; i++) {
+                    let nextSquare = square + i;
+                    if (nextSquare > n * n) break;
+
+                    const [r, c] = intToPos(nextSquare);
+                    if (board[r][c] !== -1) {
+                        nextSquare = board[r][c];
+                    }
+
+                    if (board[r][c] !== 0) {
+                        if (nextSquare === n * n) {
+                            return moves + 1;
+                        }
+
+                        board[r][c] = 0;
+                        queue.push(nextSquare);
+                    }
+                }
+            }
+            moves++;
+        }
+
+        return -1;
     }
 }
 ```

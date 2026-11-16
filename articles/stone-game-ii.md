@@ -359,6 +359,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private dp: number[][][] = [];
+
+    /**
+     * @param {number[]} piles
+     * @return {number}
+     */
+    stoneGameII(piles: number[]): number {
+        const n = piles.length;
+        this.dp = Array.from({ length: 2 }, () =>
+            Array.from({ length: n }, () => Array(n + 1).fill(-1)),
+        );
+
+        const dfs = (alice: number, i: number, M: number): number => {
+            if (i === n) return 0;
+            if (this.dp[alice][i][M] !== -1) return this.dp[alice][i][M];
+
+            let res = alice === 1 ? 0 : Infinity;
+            let total = 0;
+
+            for (let X = 1; X <= 2 * M; X++) {
+                if (i + X > n) break;
+                total += piles[i + X - 1];
+                if (alice === 1) {
+                    res = Math.max(res, total + dfs(0, i + X, Math.max(M, X)));
+                } else {
+                    res = Math.min(res, dfs(1, i + X, Math.max(M, X)));
+                }
+            }
+
+            this.dp[alice][i][M] = res;
+            return res;
+        };
+
+        return dfs(1, 0, 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -702,6 +742,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} piles
+     * @return {number}
+     */
+    stoneGameII(piles: number[]): number {
+        const n = piles.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(n + 1).fill(-1),
+        );
+
+        const suffixSum: number[] = Array(n).fill(0);
+        suffixSum[n - 1] = piles[n - 1];
+        for (let i = n - 2; i >= 0; i--) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1];
+        }
+
+        const dfs = (i: number, M: number): number => {
+            if (i === n) return 0;
+            if (dp[i][M] !== -1) return dp[i][M];
+
+            let res = 0;
+            for (let X = 1; X <= 2 * M; X++) {
+                if (i + X > n) break;
+                res = Math.max(res, suffixSum[i] - dfs(i + X, Math.max(M, X)));
+            }
+
+            return (dp[i][M] = res);
+        };
+
+        return dfs(0, 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -983,6 +1059,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} piles
+     * @return {number}
+     */
+    stoneGameII(piles: number[]): number {
+        const n = piles.length;
+        const dp: number[][][] = Array.from({ length: 2 }, () =>
+            Array.from({ length: n + 1 }, () => Array(n + 1).fill(0)),
+        );
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let M = 1; M <= n; M++) {
+                let total = 0;
+                dp[1][i][M] = 0;
+                dp[0][i][M] = Infinity;
+
+                for (let X = 1; X <= 2 * M; X++) {
+                    if (i + X > n) break;
+                    total += piles[i + X - 1];
+
+                    dp[1][i][M] = Math.max(
+                        dp[1][i][M],
+                        total + dp[0][i + X][Math.max(M, X)],
+                    );
+                    dp[0][i][M] = Math.min(
+                        dp[0][i][M],
+                        dp[1][i + X][Math.max(M, X)],
+                    );
+                }
+            }
+        }
+
+        return dp[1][0][1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1253,6 +1368,42 @@ impl Solution {
         }
 
         dp[0][1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} piles
+     * @return {number}
+     */
+    stoneGameII(piles: number[]): number {
+        const n = piles.length;
+
+        const suffixSum: number[] = Array(n).fill(0);
+        suffixSum[n - 1] = piles[n - 1];
+        for (let i = n - 2; i >= 0; i--) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1];
+        }
+
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(n + 1).fill(0),
+        );
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let M = 1; M <= n; M++) {
+                for (let X = 1; X <= 2 * M; X++) {
+                    if (i + X > n) break;
+                    dp[i][M] = Math.max(
+                        dp[i][M],
+                        suffixSum[i] - dp[i + X][Math.max(M, X)],
+                    );
+                }
+            }
+        }
+
+        return dp[0][1];
     }
 }
 ```

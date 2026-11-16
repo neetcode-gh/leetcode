@@ -317,6 +317,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    check(nums: number[]): boolean {
+        const n = nums.length;
+        const sortedNums = [...nums].sort((a, b) => a - b);
+
+        for (let i = 0; i < n; i++) {
+            let match = true;
+            let idx = 0;
+
+            for (let j = n - i; j < n && match; j++) {
+                if (nums[idx] !== sortedNums[j]) {
+                    match = false;
+                }
+                idx++;
+            }
+
+            for (let j = 0; j < n - i && match; j++) {
+                if (nums[idx] !== sortedNums[j]) {
+                    match = false;
+                }
+                idx++;
+            }
+
+            if (match) return true;
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -539,6 +575,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    check(nums: number[]): boolean {
+        const N = nums.length;
+        let count = 1;
+
+        for (let i = 1; i < 2 * N; i++) {
+            if (nums[(i - 1) % N] <= nums[i % N]) {
+                count++;
+            } else {
+                count = 1;
+            }
+            if (count === N) {
+                return true;
+            }
+        }
+
+        return N === 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -721,6 +783,27 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    check(nums: number[]): boolean {
+        let count = 0,
+            N = nums.length;
+
+        for (let i = 0; i < N; i++) {
+            if (nums[i] > nums[(i + 1) % N] && ++count > 1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 ```

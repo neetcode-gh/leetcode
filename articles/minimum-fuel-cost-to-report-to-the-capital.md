@@ -43,7 +43,7 @@ class Solution:
                 if child != parent:
                     p = dfs(child, node)
                     passengers += p
-                    res += ceil(p / seats)
+                    res += math.ceil(p / seats)
             return passengers + 1
 
         dfs(0, -1)
@@ -319,6 +319,41 @@ impl Solution {
             }
         }
         passengers + 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} roads
+     * @param {number} seats
+     * @return {number}
+     */
+    minimumFuelCost(roads: number[][], seats: number): number {
+        const n = roads.length + 1;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        let res = 0;
+
+        for (const [src, dst] of roads) {
+            adj[src].push(dst);
+            adj[dst].push(src);
+        }
+
+        const dfs = (node: number, parent: number): number => {
+            let passengers = 0;
+            for (const child of adj[node]) {
+                if (child !== parent) {
+                    let p = dfs(child, node);
+                    passengers += p;
+                    res += Math.ceil(p / seats);
+                }
+            }
+            return passengers + 1;
+        };
+
+        dfs(0, -1);
+        return res;
     }
 }
 ```
@@ -695,6 +730,46 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} roads
+     * @param {number} seats
+     * @return {number}
+     */
+    minimumFuelCost(roads: number[][], seats: number): number {
+        const n = roads.length + 1;
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        const indegree: number[] = new Array(n).fill(0);
+        const passengers: number[] = new Array(n).fill(1);
+        let res = 0;
+
+        for (const [src, dst] of roads) {
+            adj[src].push(dst);
+            adj[dst].push(src);
+            indegree[src] += 1;
+            indegree[dst] += 1;
+        }
+
+        const q = new Queue();
+        for (let i = 1; i < n; i++) {
+            if (indegree[i] === 1) q.push(i);
+        }
+
+        while (!q.isEmpty()) {
+            const node: number = q.pop();
+            res += Math.ceil(passengers[node] / seats);
+            for (const parent of adj[node]) {
+                if (--indegree[parent] === 1 && parent !== 0) q.push(parent);
+                passengers[parent] += passengers[node];
+            }
+        }
+
+        return res;
     }
 }
 ```

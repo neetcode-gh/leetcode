@@ -409,28 +409,28 @@ class Solution {
 
 ```swift
 class Solution {
-    private var cache: [[[Character]?]] = []
+    private var cache: [[[UInt8]?]] = []
     private var n = 0
     private var m = 0
 
     func shortestCommonSupersequence(_ str1: String, _ str2: String) -> String {
-        let s1 = Array(str1)
-        let s2 = Array(str2)
+        let s1 = Array(str1.utf8)
+        let s2 = Array(str2.utf8)
         n = s1.count
         m = s2.count
         cache = Array(repeating: Array(repeating: nil, count: m + 1), count: n + 1)
 
         let res = dfs(0, 0, s1, s2)
-        return String(res.reversed())
+        return String(decoding: res.reversed(), as: UTF8.self)
     }
 
-    private func dfs(_ i: Int, _ j: Int, _ str1: [Character], _ str2: [Character]) -> [Character] {
+    private func dfs(_ i: Int, _ j: Int, _ str1: [UInt8], _ str2: [UInt8]) -> [UInt8] {
         if let cached = cache[i][j] {
             return cached
         }
 
         if i == n {
-            var res = [Character]()
+            var res = [UInt8]()
             for k in stride(from: m - 1, through: j, by: -1) {
                 res.append(str2[k])
             }
@@ -438,7 +438,7 @@ class Solution {
             return res
         }
         if j == m {
-            var res = [Character]()
+            var res = [UInt8]()
             for k in stride(from: n - 1, through: i, by: -1) {
                 res.append(str1[k])
             }
@@ -446,7 +446,7 @@ class Solution {
             return res
         }
 
-        var result: [Character]
+        var result: [UInt8]
         if str1[i] == str2[j] {
             result = dfs(i + 1, j + 1, str1, str2)
             result.append(str1[i])
@@ -519,6 +519,58 @@ impl Solution {
         let mut result = dfs(0, 0, &s1, &s2, n, m, &mut cache);
         result.reverse();
         String::from_utf8(result).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    shortestCommonSupersequence(str1: string, str2: string): string {
+        const n = str1.length,
+            m = str2.length;
+        const cache: (string[] | null)[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(null),
+        );
+
+        const dfs = (i: number, j: number): string[] => {
+            if (cache[i][j] !== null) return cache[i][j]!;
+            if (i === n) {
+                let arr = str2.slice(j).split('');
+                arr.reverse();
+                cache[i][j] = arr;
+                return arr;
+            }
+            if (j === m) {
+                let arr = str1.slice(i).split('');
+                arr.reverse();
+                cache[i][j] = arr;
+                return arr;
+            }
+            let res: string[];
+            if (str1[i] === str2[j]) {
+                res = [...dfs(i + 1, j + 1)];
+                res.push(str1[i]);
+            } else {
+                const s1 = dfs(i + 1, j);
+                const s2 = dfs(i, j + 1);
+                if (s1.length < s2.length) {
+                    res = [...s1];
+                    res.push(str1[i]);
+                } else {
+                    res = [...s2];
+                    res.push(str2[j]);
+                }
+            }
+            cache[i][j] = res;
+            return res;
+        };
+
+        return dfs(0, 0).reverse().join('');
     }
 }
 ```
@@ -1094,6 +1146,70 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    shortestCommonSupersequence(str1: string, str2: string): string {
+        const n = str1.length,
+            m = str2.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(-1),
+        );
+
+        const dfs = (i: number, j: number): number => {
+            if (dp[i][j] !== -1) return dp[i][j];
+            if (i === n) return (dp[i][j] = m - j);
+            if (j === m) return (dp[i][j] = n - i);
+
+            if (str1[i] === str2[j]) {
+                dp[i][j] = 1 + dfs(i + 1, j + 1);
+            } else {
+                dp[i][j] = 1 + Math.min(dfs(i + 1, j), dfs(i, j + 1));
+            }
+            return dp[i][j];
+        };
+
+        dfs(0, 0);
+
+        const buildSCS = (): string => {
+            const res: string[] = [];
+            let i = 0,
+                j = 0;
+
+            while (i < n || j < m) {
+                if (i === n) {
+                    res.push(...str2.slice(j));
+                    break;
+                }
+                if (j === m) {
+                    res.push(...str1.slice(i));
+                    break;
+                }
+                if (str1[i] === str2[j]) {
+                    res.push(str1[i]);
+                    i++;
+                    j++;
+                } else if (dp[i + 1][j] < dp[i][j + 1]) {
+                    res.push(str1[i]);
+                    i++;
+                } else {
+                    res.push(str2[j]);
+                    j++;
+                }
+            }
+
+            return res.join('');
+        };
+
+        return buildSCS();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1388,6 +1504,42 @@ impl Solution {
         }
 
         String::from_utf8(dp[n][m].clone()).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    shortestCommonSupersequence(str1: string, str2: string): string {
+        const n = str1.length,
+            m = str2.length;
+        const dp: string[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(''),
+        );
+
+        for (let i = 0; i <= n; i++) {
+            for (let j = 0; j <= m; j++) {
+                if (i === 0) {
+                    dp[i][j] = str2.slice(0, j);
+                } else if (j === 0) {
+                    dp[i][j] = str1.slice(0, i);
+                } else if (str1[i - 1] === str2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + str1[i - 1];
+                } else {
+                    dp[i][j] =
+                        dp[i - 1][j].length < dp[i][j - 1].length
+                            ? dp[i - 1][j] + str1[i - 1]
+                            : dp[i][j - 1] + str2[j - 1];
+                }
+            }
+        }
+
+        return dp[n][m];
     }
 }
 ```
@@ -1881,6 +2033,66 @@ impl Solution {
 
         res.reverse();
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} str1
+     * @param {string} str2
+     * @return {string}
+     */
+    shortestCommonSupersequence(str1: string, str2: string): string {
+        const n = str1.length,
+            m = str2.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(0),
+        );
+
+        for (let i = 0; i <= n; i++) {
+            for (let j = 0; j <= m; j++) {
+                if (i === 0) {
+                    dp[i][j] = j;
+                } else if (j === 0) {
+                    dp[i][j] = i;
+                } else if (str1[i - 1] === str2[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        const res: string[] = [];
+        let i = n,
+            j = m;
+        while (i > 0 && j > 0) {
+            if (str1[i - 1] === str2[j - 1]) {
+                res.push(str1[i - 1]);
+                i--;
+                j--;
+            } else if (dp[i - 1][j] < dp[i][j - 1]) {
+                res.push(str1[i - 1]);
+                i--;
+            } else {
+                res.push(str2[j - 1]);
+                j--;
+            }
+        }
+
+        while (i > 0) {
+            res.push(str1[i - 1]);
+            i--;
+        }
+
+        while (j > 0) {
+            res.push(str2[j - 1]);
+            j--;
+        }
+
+        return res.reverse().join('');
     }
 }
 ```

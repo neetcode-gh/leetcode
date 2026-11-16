@@ -40,8 +40,8 @@ class Solution:
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -60,8 +60,8 @@ public class Solution extends GuessGame {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -81,8 +81,8 @@ public:
 /**
  * Forward declaration of guess API.
  * @param {number} num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * function guess(num) {}
  */
@@ -105,8 +105,8 @@ class Solution {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -125,8 +125,8 @@ public class Solution : GuessGame {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * func guess(num int) int;
  */
@@ -145,14 +145,14 @@ func guessNumber(n int) int {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * fun guess(num: Int): Int {}
  */
 
 class Solution : GuessGame() {
-    override fun guessNumber(n: Int): Int {
+    fun guessNumber(n: Int): Int {
         for (num in 1..n) {
             if (guess(num) == 0) return num
         }
@@ -165,8 +165,8 @@ class Solution : GuessGame() {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * func guess(_ num: Int) -> Int
  */
@@ -185,16 +185,40 @@ class Solution : GuessGame {
 
 ```rust
 // Forward declaration of guess API.
-// unsafe fn guess(num: i32) -> i32;
+// unsafe fn guess(num: i64) -> i64;
 
 impl Solution {
-    unsafe fn guessNumber(n: i32) -> i32 {
+    pub unsafe fn guess_number(n: i64) -> i64 {
         for num in 1..=n {
             if guess(num) == 0 {
                 return num;
             }
         }
         n
+    }
+}
+```
+
+```typescript
+/**
+ * Forward declaration of guess API.
+ * @param {number} num   your guess
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
+ *               otherwise return 0
+ * function guess(num) {}
+ */
+
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    guessNumber(n: number): number {
+        for (let num = 1; num <= n; num++) {
+            if (guess(num) === 0) return num;
+        }
+        return n;
     }
 }
 ```
@@ -252,8 +276,8 @@ class Solution:
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -280,8 +304,8 @@ public class Solution extends GuessGame {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -309,8 +333,8 @@ public:
 /**
  * Forward declaration of guess API.
  * @param {number} num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * function guess(num) {}
  */
@@ -342,8 +366,8 @@ class Solution {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -372,8 +396,8 @@ public class Solution : GuessGame {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * func guess(num int) int;
  */
@@ -398,14 +422,14 @@ func guessNumber(n int) int {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * fun guess(num: Int): Int {}
  */
 
 class Solution : GuessGame() {
-    override fun guessNumber(n: Int): Int {
+    fun guessNumber(n: Int): Int {
         var l = 1
         var r = n
         while (true) {
@@ -427,8 +451,8 @@ class Solution : GuessGame() {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * func guess(_ num: Int) -> Int
  */
@@ -454,10 +478,10 @@ class Solution : GuessGame {
 
 ```rust
 // Forward declaration of guess API.
-// unsafe fn guess(num: i32) -> i32;
+// unsafe fn guess(num: i64) -> i64;
 
 impl Solution {
-    unsafe fn guessNumber(n: i32) -> i32 {
+    pub unsafe fn guess_number(n: i64) -> i64 {
         let (mut l, mut r) = (1, n);
         loop {
             let m = l + (r - l) / 2;
@@ -465,6 +489,39 @@ impl Solution {
             if res > 0 {
                 l = m + 1;
             } else if res < 0 {
+                r = m - 1;
+            } else {
+                return m;
+            }
+        }
+    }
+}
+```
+
+```typescript
+/**
+ * Forward declaration of guess API.
+ * @param {number} num   your guess
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
+ *               otherwise return 0
+ * function guess(num) {}
+ */
+
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    guessNumber(n: number): number {
+        let l = 1,
+            r = n;
+        while (true) {
+            let m = Math.floor((l + r) / 2);
+            let res = guess(m);
+            if (res > 0) {
+                l = m + 1;
+            } else if (res < 0) {
                 r = m - 1;
             } else {
                 return m;
@@ -533,8 +590,8 @@ class Solution:
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -564,8 +621,8 @@ public class Solution extends GuessGame {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -596,8 +653,8 @@ public:
 /**
  * Forward declaration of guess API.
  * @param {number} num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * function guess(num) {}
  */
@@ -632,8 +689,8 @@ class Solution {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -667,8 +724,8 @@ public class Solution : GuessGame {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * func guess(num int) int;
  */
@@ -700,14 +757,14 @@ func guessNumber(n int) int {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * fun guess(num: Int): Int {}
  */
 
 class Solution : GuessGame() {
-    override fun guessNumber(n: Int): Int {
+    fun guessNumber(n: Int): Int {
         var l = 1
         var r = n
         while (true) {
@@ -732,8 +789,8 @@ class Solution : GuessGame() {
 /**
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is higher than the picked number
- *			      1 if num is lower than the picked number
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
  *               otherwise return 0
  * func guess(_ num: Int) -> Int
  */
@@ -762,10 +819,10 @@ class Solution : GuessGame {
 
 ```rust
 // Forward declaration of guess API.
-// unsafe fn guess(num: i32) -> i32;
+// unsafe fn guess(num: i64) -> i64;
 
 impl Solution {
-    unsafe fn guessNumber(n: i32) -> i32 {
+    pub unsafe fn guess_number(n: i64) -> i64 {
         let (mut l, mut r) = (1, n);
         loop {
             let m1 = l + (r - l) / 3;
@@ -776,6 +833,42 @@ impl Solution {
                 l = m1 + 1;
                 r = m2 - 1;
             } else if guess(m1) == -1 {
+                r = m1 - 1;
+            } else {
+                l = m2 + 1;
+            }
+        }
+    }
+}
+```
+
+```typescript
+/**
+ * Forward declaration of guess API.
+ * @param {number} num   your guess
+ * @return        -1 if num is higher than the picked number
+ *                 1 if num is lower than the picked number
+ *               otherwise return 0
+ * function guess(num) {}
+ */
+
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    guessNumber(n: number): number {
+        let l = 1,
+            r = n;
+        while (true) {
+            let m1 = l + Math.floor((r - l) / 3);
+            let m2 = r - Math.floor((r - l) / 3);
+            if (guess(m1) === 0) return m1;
+            if (guess(m2) === 0) return m2;
+            if (guess(m1) + guess(m2) === 0) {
+                l = m1 + 1;
+                r = m2 - 1;
+            } else if (guess(m1) === -1) {
                 r = m1 - 1;
             } else {
                 l = m2 + 1;

@@ -557,6 +557,81 @@ impl LFUCache {
 }
 ```
 
+```typescript
+interface CacheNode {
+    value: number;
+    freq: number;
+    timestamp: number;
+}
+
+class LFUCache {
+    private capacity: number;
+    private timestamp: number;
+    private cache: Map<number, CacheNode>;
+
+    /**
+     * @param {number} capacity
+     */
+    constructor(capacity: number) {
+        this.capacity = capacity;
+        this.timestamp = 0;
+        this.cache = new Map();
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        if (!this.cache.has(key)) return -1;
+
+        const node = this.cache.get(key)!;
+        node.freq++;
+        node.timestamp = ++this.timestamp;
+        return node.value;
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @return {void}
+     */
+    put(key: number, value: number): void {
+        if (this.capacity <= 0) return;
+
+        this.timestamp++;
+        if (this.cache.has(key)) {
+            const node = this.cache.get(key)!;
+            node.value = value;
+            node.freq++;
+            node.timestamp = this.timestamp;
+            return;
+        }
+
+        if (this.cache.size >= this.capacity) {
+            let minFreq = Infinity,
+                minTimestamp = Infinity,
+                lfuKey: number | null = null;
+
+            for (const [k, node] of this.cache.entries()) {
+                if (
+                    node.freq < minFreq ||
+                    (node.freq === minFreq && node.timestamp < minTimestamp)
+                ) {
+                    minFreq = node.freq;
+                    minTimestamp = node.timestamp;
+                    lfuKey = k;
+                }
+            }
+
+            if (lfuKey !== null) this.cache.delete(lfuKey);
+        }
+
+        this.cache.set(key, { value, freq: 1, timestamp: this.timestamp });
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1648,6 +1723,159 @@ impl LFUCache {
         self.node_map.insert(key, idx);
         self.push_right(1, idx);
         self.lfu_count = 1;
+    }
+}
+```
+
+```typescript
+class ListNode {
+    key: number;
+    val: number;
+    freq: number;
+    prev: ListNode | null;
+    next: ListNode | null;
+
+    /**
+     * @param {number} key
+     * @param {number} val
+     */
+    constructor(key: number, val: number) {
+        this.key = key;
+        this.val = val;
+        this.freq = 1;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    left: ListNode;
+    right: ListNode;
+    size: number;
+
+    constructor() {
+        this.left = new ListNode(0, 0);
+        this.right = new ListNode(0, 0);
+        this.left.next = this.right;
+        this.right.prev = this.left;
+        this.size = 0;
+    }
+
+    /**
+     * @return {number}
+     */
+    length(): number {
+        return this.size;
+    }
+
+    /**
+     * @param {ListNode} node
+     */
+    pushRight(node: ListNode): void {
+        const prev = this.right.prev!;
+        prev.next = node;
+        node.prev = prev;
+        node.next = this.right;
+        this.right.prev = node;
+        this.size++;
+    }
+
+    /**
+     * @param {ListNode} node
+     */
+    pop(node: ListNode): void {
+        const prev = node.prev!;
+        const next = node.next!;
+        prev.next = next;
+        next.prev = prev;
+        node.prev = null;
+        node.next = null;
+        this.size--;
+    }
+
+    /**
+     * @return {ListNode}
+     */
+    popLeft(): ListNode {
+        const node = this.left.next!;
+        this.pop(node);
+        return node;
+    }
+}
+
+class LFUCache {
+    private capacity: number;
+    private lfuCount: number;
+    private nodeMap: Map<number, ListNode>;
+    private listMap: Map<number, LinkedList>;
+
+    /**
+     * @param {number} capacity
+     */
+    constructor(capacity: number) {
+        this.capacity = capacity;
+        this.lfuCount = 0;
+        this.nodeMap = new Map();
+        this.listMap = new Map();
+    }
+
+    /**
+     * @param {ListNode} node
+     */
+    counter(node: ListNode): void {
+        const count = node.freq;
+        this.listMap.get(count)!.pop(node);
+
+        if (count === this.lfuCount && this.listMap.get(count)!.length() === 0) {
+            this.lfuCount++;
+        }
+
+        node.freq++;
+        if (!this.listMap.has(node.freq)) {
+            this.listMap.set(node.freq, new LinkedList());
+        }
+        this.listMap.get(node.freq)!.pushRight(node);
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        if (!this.nodeMap.has(key)) {
+            return -1;
+        }
+        const node = this.nodeMap.get(key)!;
+        this.counter(node);
+        return node.val;
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     */
+    put(key: number, value: number): void {
+        if (this.capacity === 0) return;
+
+        if (this.nodeMap.has(key)) {
+            const node = this.nodeMap.get(key)!;
+            node.val = value;
+            this.counter(node);
+            return;
+        }
+
+        if (this.nodeMap.size === this.capacity) {
+            const toRemove = this.listMap.get(this.lfuCount)!.popLeft();
+            this.nodeMap.delete(toRemove.key);
+        }
+
+        const node = new ListNode(key, value);
+        this.nodeMap.set(key, node);
+        if (!this.listMap.has(1)) {
+            this.listMap.set(1, new LinkedList());
+        }
+        this.listMap.get(1)!.pushRight(node);
+        this.lfuCount = 1;
     }
 }
 ```

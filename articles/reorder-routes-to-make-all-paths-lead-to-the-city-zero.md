@@ -332,6 +332,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} connections
+     * @return {number}
+     */
+    minReorder(n: number, connections: number[][]): number {
+        const edges = new Set<string>();
+        const neighbors: number[][] = Array.from({ length: n }, () => []);
+        const visit: boolean[] = new Array(n).fill(false);
+        let changes = 0;
+
+        for (const [a, b] of connections) {
+            edges.add(`${a},${b}`);
+            neighbors[a].push(b);
+            neighbors[b].push(a);
+        }
+
+        const dfs = (city: number): void => {
+            visit[city] = true;
+            for (const neighbor of neighbors[city]) {
+                if (visit[neighbor]) continue;
+                if (!edges.has(`${neighbor},${city}`)) changes++;
+                dfs(neighbor);
+            }
+        };
+
+        dfs(0);
+        return changes;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -591,6 +625,34 @@ impl Solution {
         }
 
         dfs(0, -1, &adj)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} connections
+     * @return {number}
+     */
+    minReorder(n: number, connections: number[][]): number {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of connections) {
+            adj[u].push(v);
+            adj[v].push(-u);
+        }
+
+        const dfs = (node: number, parent: number): number => {
+            let changes = 0;
+            for (const nei of adj[node]) {
+                if (Math.abs(nei) === parent) continue;
+                changes += dfs(Math.abs(nei), node) + (nei > 0 ? 1 : 0);
+            }
+            return changes;
+        };
+
+        return dfs(0, -1);
     }
 }
 ```
@@ -900,6 +962,41 @@ impl Solution {
             }
         }
         changes
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} connections
+     * @return {number}
+     */
+    minReorder(n: number, connections: number[][]): number {
+        const adj: number[][][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of connections) {
+            adj[u].push([v, 1]);
+            adj[v].push([u, 0]);
+        }
+
+        const visited: boolean[] = Array(n).fill(false);
+        const queue = new Queue();
+        queue.push(0);
+        visited[0] = true;
+        let changes = 0;
+
+        while (!queue.isEmpty()) {
+            const node: number = queue.pop();
+            for (const [neighbor, isForward] of adj[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    changes += isForward;
+                    queue.push(neighbor);
+                }
+            }
+        }
+        return changes;
     }
 }
 ```

@@ -313,6 +313,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} roads
+     * @return {number}
+     */
+    minScore(n: number, roads: number[][]): number {
+        const adj: number[][][] = Array.from({ length: n + 1 }, () => []);
+        for (const [src, dst, dist] of roads) {
+            adj[src].push([dst, dist]);
+            adj[dst].push([src, dist]);
+        }
+
+        let res = Infinity;
+        const visit: boolean[] = new Array(n + 1).fill(false);
+
+        const dfs = (node: number): void => {
+            if (visit[node]) return;
+            visit[node] = true;
+
+            for (const [nei, dist] of adj[node]) {
+                res = Math.min(res, dist);
+                dfs(nei);
+            }
+        };
+
+        dfs(1);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -628,6 +661,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} roads
+     * @return {number}
+     */
+    minScore(n: number, roads: number[][]): number {
+        const adj: number[][][] = Array.from({ length: n + 1 }, () => []);
+        for (const [src, dst, dist] of roads) {
+            adj[src].push([dst, dist]);
+            adj[dst].push([src, dist]);
+        }
+
+        let res = Infinity;
+        const visit: boolean[] = new Array(n + 1).fill(false);
+        const q = new Queue([1]);
+        visit[1] = true;
+
+        while (!q.isEmpty()) {
+            const node: number = q.pop();
+            for (const [nei, dist] of adj[node]) {
+                res = Math.min(res, dist);
+                if (!visit[nei]) {
+                    visit[nei] = true;
+                    q.push(nei);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -938,6 +1006,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} roads
+     * @return {number}
+     */
+    minScore(n: number, roads: number[][]): number {
+        const adj: number[][][] = Array.from({ length: n + 1 }, () => []);
+        for (const [src, dst, dist] of roads) {
+            adj[src].push([dst, dist]);
+            adj[dst].push([src, dist]);
+        }
+
+        let res = Infinity;
+        const visit: boolean[] = new Array(n + 1).fill(false);
+        const stack: number[] = [1];
+        visit[1] = true;
+
+        while (stack.length) {
+            const node = stack.pop()!;
+            for (const [nei, dist] of adj[node]) {
+                res = Math.min(res, dist);
+                if (!visit[nei]) {
+                    visit[nei] = true;
+                    stack.push(nei);
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1446,6 +1549,76 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class DSU {
+    private parent: number[];
+    private size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.size = new Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.parent[node] !== node) {
+            this.parent[node] = this.find(this.parent[node]);
+        }
+        return this.parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} u=v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u),
+            pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.size[pu] >= this.size[pv]) {
+            this.size[pu] += this.size[pv];
+            this.parent[pv] = pu;
+        } else {
+            this.size[pv] += this.size[pu];
+            this.parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} roads
+     * @return {number}
+     */
+    minScore(n: number, roads: number[][]): number {
+        const dsu = new DSU(n);
+        for (const [src, dst] of roads) {
+            dsu.union(src, dst);
+        }
+
+        let res = Infinity;
+        const root = dsu.find(1);
+        for (const [src, dst, dist] of roads) {
+            if (dsu.find(src) === root) {
+                res = Math.min(res, dist);
+            }
+        }
+
+        return res;
     }
 }
 ```

@@ -132,6 +132,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] ImageSmoother(int[][] img) {
+        int ROWS = img.Length, COLS = img[0].Length;
+        int[][] res = new int[ROWS][];
+        for (int r = 0; r < ROWS; r++) {
+            res[r] = new int[COLS];
+        }
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                int total = 0, count = 0;
+                for (int i = r - 1; i <= r + 1; i++) {
+                    for (int j = c - 1; j <= c + 1; j++) {
+                        if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
+                            total += img[i][j];
+                            count++;
+                        }
+                    }
+                }
+                res[r][c] = total / count;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func imageSmoother(img [][]int) [][]int {
     ROWS, COLS := len(img), len(img[0])
@@ -235,6 +264,38 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} img
+     * @return {number[][]}
+     */
+    imageSmoother(img: number[][]): number[][] {
+        const ROWS = img.length,
+            COLS = img[0].length;
+        const res: number[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                let total = 0,
+                    count = 0;
+                for (let i = r - 1; i <= r + 1; i++) {
+                    for (let j = c - 1; j <= c + 1; j++) {
+                        if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
+                            total += img[i][j];
+                            count++;
+                        }
+                    }
+                }
+                res[r][c] = Math.floor(total / count);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -415,6 +476,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] ImageSmoother(int[][] img) {
+        int ROWS = img.Length, COLS = img[0].Length;
+        int[] prevRow = (int[])img[0].Clone();
+
+        for (int r = 0; r < ROWS; r++) {
+            int[] currRow = (int[])img[r].Clone();
+
+            for (int c = 0; c < COLS; c++) {
+                int total = 0, count = 0;
+                for (int i = Math.Max(0, r - 1); i < Math.Min(ROWS, r + 2); i++) {
+                    for (int j = Math.Max(0, c - 1); j < Math.Min(COLS, c + 2); j++) {
+                        if (i == r) {
+                            total += currRow[j];
+                        } else if (i == r - 1) {
+                            total += prevRow[j];
+                        } else {
+                            total += img[i][j];
+                        }
+                        count++;
+                    }
+                }
+                img[r][c] = total / count;
+            }
+
+            prevRow = currRow;
+        }
+
+        return img;
+    }
+}
+```
+
 ```go
 func imageSmoother(img [][]int) [][]int {
     ROWS, COLS := len(img), len(img[0])
@@ -564,6 +659,54 @@ impl Solution {
         }
 
         img
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} img
+     * @return {number[][]}
+     */
+    imageSmoother(img: number[][]): number[][] {
+        const ROWS = img.length,
+            COLS = img[0].length;
+        let prevRow = [...img[0]];
+
+        for (let r = 0; r < ROWS; r++) {
+            let currRow = [...img[r]];
+
+            for (let c = 0; c < COLS; c++) {
+                let total = 0,
+                    count = 0;
+                for (
+                    let i = Math.max(0, r - 1);
+                    i < Math.min(ROWS, r + 2);
+                    i++
+                ) {
+                    for (
+                        let j = Math.max(0, c - 1);
+                        j < Math.min(COLS, c + 2);
+                        j++
+                    ) {
+                        if (i === r) {
+                            total += currRow[j];
+                        } else if (i === r - 1) {
+                            total += prevRow[j];
+                        } else {
+                            total += img[i][j];
+                        }
+                        count++;
+                    }
+                }
+                img[r][c] = Math.floor(total / count);
+            }
+
+            prevRow = currRow;
+        }
+
+        return img;
     }
 }
 ```
@@ -725,6 +868,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] ImageSmoother(int[][] img) {
+        int ROWS = img.Length, COLS = img[0].Length;
+        int LIMIT = 256;
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                int total = 0, count = 0;
+                for (int i = Math.Max(0, r - 1); i < Math.Min(ROWS, r + 2); i++) {
+                    for (int j = Math.Max(0, c - 1); j < Math.Min(COLS, c + 2); j++) {
+                        total += img[i][j] % LIMIT;
+                        count++;
+                    }
+                }
+                img[r][c] += (total / count) * LIMIT;
+            }
+        }
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                img[r][c] /= LIMIT;
+            }
+        }
+
+        return img;
+    }
+}
+```
+
 ```go
 func imageSmoother(img [][]int) [][]int {
     ROWS, COLS := len(img), len(img[0])
@@ -858,6 +1031,50 @@ impl Solution {
         }
 
         img
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} img
+     * @return {number[][]}
+     */
+    imageSmoother(img: number[][]): number[][] {
+        const ROWS = img.length,
+            COLS = img[0].length;
+        const LIMIT = 256;
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                let total = 0,
+                    count = 0;
+                for (
+                    let i = Math.max(0, r - 1);
+                    i < Math.min(ROWS, r + 2);
+                    i++
+                ) {
+                    for (
+                        let j = Math.max(0, c - 1);
+                        j < Math.min(COLS, c + 2);
+                        j++
+                    ) {
+                        total += img[i][j] % LIMIT;
+                        count++;
+                    }
+                }
+                img[r][c] += Math.floor(total / count) * LIMIT;
+            }
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                img[r][c] = Math.floor(img[r][c] / LIMIT);
+            }
+        }
+
+        return img;
     }
 }
 ```
@@ -1014,6 +1231,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] ImageSmoother(int[][] img) {
+        int ROWS = img.Length, COLS = img[0].Length;
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                int total = 0, cnt = 0;
+                for (int i = r - 1; i <= r + 1; i++) {
+                    for (int j = c - 1; j <= c + 1; j++) {
+                        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
+                            continue;
+                        }
+                        total += img[i][j] % 256;
+                        cnt++;
+                    }
+                }
+                img[r][c] ^= ((total / cnt) << 8);
+            }
+        }
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                img[r][c] >>= 8;
+            }
+        }
+        return img;
+    }
+}
+```
+
 ```go
 func imageSmoother(img [][]int) [][]int {
     ROWS, COLS := len(img), len(img[0])
@@ -1134,6 +1382,43 @@ impl Solution {
             }
         }
         img
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} img
+     * @return {number[][]}
+     */
+    imageSmoother(img: number[][]): number[][] {
+        const ROWS = img.length,
+            COLS = img[0].length;
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                let total = 0,
+                    cnt = 0;
+                for (let i = r - 1; i <= r + 1; i++) {
+                    for (let j = c - 1; j <= c + 1; j++) {
+                        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
+                            continue;
+                        }
+                        total += img[i][j] % 256;
+                        cnt++;
+                    }
+                }
+                img[r][c] ^= (total / cnt) << 8;
+            }
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                img[r][c] >>= 8;
+            }
+        }
+        return img;
     }
 }
 ```

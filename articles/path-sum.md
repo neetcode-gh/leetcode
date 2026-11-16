@@ -297,6 +297,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} targetSum
+     * @return {boolean}
+     */
+    hasPathSum(root: TreeNode | null, targetSum: number): boolean {
+        const dfs = (node: TreeNode | null, curSum: number): boolean => {
+            if (!node) return false;
+
+            curSum += node.val;
+            if (!node.left && !node.right) {
+                return curSum === targetSum;
+            }
+
+            return dfs(node.left, curSum) || dfs(node.right, curSum);
+        };
+
+        return dfs(root, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -530,6 +554,25 @@ impl Solution {
         } else {
             false
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} targetSum
+     * @return {boolean}
+     */
+    hasPathSum(root: TreeNode | null, targetSum: number): boolean {
+        if (!root) return false;
+        targetSum -= root.val;
+        return (
+            this.hasPathSum(root.left, targetSum) ||
+            this.hasPathSum(root.right, targetSum) ||
+            (targetSum === 0 && !root.left && !root.right)
+        );
     }
 }
 ```
@@ -910,6 +953,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} targetSum
+     * @return {boolean}
+     */
+    hasPathSum(root: TreeNode | null, targetSum: number): boolean {
+        if (!root) return false;
+
+        const stack: [TreeNode, number][] = [[root, targetSum - root.val]];
+        while (stack.length) {
+            const [node, currSum] = stack.pop()!;
+
+            if (!node.left && !node.right && currSum === 0) {
+                return true;
+            }
+
+            if (node.right) {
+                stack.push([node.right, currSum - node.right.val]);
+            }
+
+            if (node.left) {
+                stack.push([node.left, currSum - node.left.val]);
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1283,6 +1358,38 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} targetSum
+     * @return {boolean}
+     */
+    hasPathSum(root: TreeNode | null, targetSum: number): boolean {
+        if (!root) return false;
+
+        const queue = new Queue([[root, targetSum - root.val]]);
+        while (!queue.isEmpty()) {
+            const [node, currSum]: [TreeNode, number] = queue.pop();
+
+            if (!node.left && !node.right && currSum === 0) {
+                return true;
+            }
+
+            if (node.left) {
+                queue.push([node.left, currSum - node.left.val]);
+            }
+
+            if (node.right) {
+                queue.push([node.right, currSum - node.right.val]);
+            }
+        }
+
+        return false;
     }
 }
 ```

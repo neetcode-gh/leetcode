@@ -58,10 +58,10 @@ class Solution {
     public String parseTernary(String expression) {
 
         // Checks if the string s is a valid atomic expression
-        Predicate<String> isValidAtomic = s -> (s.charAt(0) == 'T' || s.charAt(0) == 'F') && s.charAt(1) == '?' && ((s.charAt(2) >= '0' && s.charAt(2) <= '9') || s.charAt(2) == 'T' || s.charAt(2) == 'F') && s.charAt(3) == ':' && ((s.charAt(4) >= '0' && s.charAt(4) <= '9') || s.charAt(4) == 'T' || s.charAt(4) == 'F');
+        java.util.function.Predicate<String> isValidAtomic = s -> (s.charAt(0) == 'T' || s.charAt(0) == 'F') && s.charAt(1) == '?' && ((s.charAt(2) >= '0' && s.charAt(2) <= '9') || s.charAt(2) == 'T' || s.charAt(2) == 'F') && s.charAt(3) == ':' && ((s.charAt(4) >= '0' && s.charAt(4) <= '9') || s.charAt(4) == 'T' || s.charAt(4) == 'F');
 
         // Returns the value of the atomic expression
-        Function<String, String> solveAtomic = s -> s.charAt(0) == 'T' ? s.substring(2, 3) : s.substring(4, 5);
+        java.util.function.Function<String, String> solveAtomic = s -> s.charAt(0) == 'T' ? s.substring(2, 3) : s.substring(4, 5);
 
         // Reduce expression until we are left with a single character
         while (expression.length() != 1) {
@@ -316,6 +316,50 @@ impl Solution {
             expr.splice(j - 4..=j, std::iter::once(result));
         }
         String::from_utf8(expr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} expression
+     * @return {string}
+     */
+    parseTernary(expression: string): string {
+        // Checks if the string s is a valid atomic expression
+        const isValidAtomic = (s: string): boolean => {
+            return !!(
+                s[0] &&
+                (s[0] === 'T' || s[0] === 'F') &&
+                s[1] === '?' &&
+                s[2] &&
+                /[TF0-9]/.test(s[2]) &&
+                s[3] === ':' &&
+                s[4] &&
+                /[TF0-9]/.test(s[4])
+            );
+        };
+
+        // Returns the value of the atomic expression
+        const solveAtomic = (s: string): string => {
+            return s[0] === 'T' ? s[2] : s[4];
+        };
+
+        // Reduce expression until we are left with a single character
+        while (expression.length !== 1) {
+            let j = expression.length - 1;
+            while (!isValidAtomic(expression.substring(j - 4, j + 1))) {
+                j--;
+            }
+            expression =
+                expression.substring(0, j - 4) +
+                solveAtomic(expression.substring(j - 4, j + 1)) +
+                expression.substring(j + 1);
+        }
+
+        // Return the final character
+        return expression;
     }
 }
 ```
@@ -604,6 +648,38 @@ impl Solution {
 
         // Return the final character
         String::from_utf8(expr).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} expression
+     * @return {string}
+     */
+    parseTernary(expression: string): string {
+        // Reduce expression until we are left with a single character
+        while (expression.length !== 1) {
+            let questionMarkIndex = expression.length - 1;
+            while (expression[questionMarkIndex] !== '?') {
+                questionMarkIndex--;
+            }
+            // Find the value of the expression.
+            let value: string;
+            if (expression[questionMarkIndex - 1] === 'T') {
+                value = expression[questionMarkIndex + 1];
+            } else {
+                value = expression[questionMarkIndex + 3];
+            }
+            // Replace the expression with the value
+            expression =
+                expression.substring(0, questionMarkIndex - 1) +
+                value +
+                expression.substring(questionMarkIndex + 4);
+        }
+        // Return the final character
+        return expression;
     }
 }
 ```
@@ -917,6 +993,42 @@ impl Solution {
 
         // Return the final character
         String::from_utf8(vec![stack[0]]).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} expression
+     * @return {string}
+     */
+    parseTernary(expression: string): string {
+        // Initialize a stack
+        const stack: string[] = [];
+
+        // Traverse the expression from right to left
+        for (let i = expression.length - 1; i >= 0; i--) {
+            const char = expression[i];
+
+            // If stack top is ?, then replace next four characters
+            // with E1 or E2 depending on the value of B
+            if (stack.length > 0 && stack[stack.length - 1] === '?') {
+                stack.pop();
+                const onTrue = stack.pop()!;
+                stack.pop();
+                const onFalse = stack.pop()!;
+                stack.push(char === 'T' ? onTrue : onFalse);
+            }
+
+            // Otherwise, push this character
+            else {
+                stack.push(char);
+            }
+        }
+
+        // Return the final character
+        return stack[0];
     }
 }
 ```
@@ -1274,7 +1386,7 @@ class Solution {
     fun parseTernary(expression: String): String {
         index = 0
         // Construct Binary Tree
-        var root = constructTree(expression)
+        var root: TreeNode? = constructTree(expression)
 
         // Parse the binary tree till we reach the leaf node
         while (root?.left != null && root.right != null) {
@@ -1326,7 +1438,7 @@ class Solution {
         index = 0
         let chars = Array(expression)
         // Construct Binary Tree
-        var root = constructTree(chars)
+        var root: TreeNode? = constructTree(chars)
 
         // Parse the binary tree till we reach the leaf node
         while root?.left != nil && root?.right != nil {
@@ -1382,13 +1494,74 @@ impl Solution {
                 let right = construct_and_eval(bytes, idx);
                 return if val == b'T' { left } else { right };
             }
-            *idx -= 1;
             val
         }
 
         // Construct Binary Tree and evaluate
         let result = construct_and_eval(bytes, &mut index);
         String::from_utf8(vec![result]).unwrap()
+    }
+}
+```
+
+```typescript
+class TreeNode {
+    val: string;
+    left: TreeNode | null;
+    right: TreeNode | null;
+
+    constructor(val: string) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class Solution {
+    private index: number;
+
+    constructor() {
+        this.index = 0;
+    }
+
+    /**
+     * @param {string} expression
+     * @return {string}
+     */
+    parseTernary(expression: string): string {
+        // Construct Binary Tree
+        let root = this.constructTree(expression);
+
+        // Parse the binary tree till we reach the leaf node
+        while (root.left !== null && root.right !== null) {
+            if (root.val === 'T') {
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+
+        return root.val;
+    }
+
+    constructTree(expression: string): TreeNode {
+        // Storing current character of expression
+        const root = new TreeNode(expression[this.index]);
+        // If last character of expression, return
+        if (this.index === expression.length - 1) {
+            return root;
+        }
+
+        // Check next character
+        this.index++;
+        if (expression[this.index] === '?') {
+            this.index++;
+            root.left = this.constructTree(expression);
+            this.index++;
+            root.right = this.constructTree(expression);
+        }
+
+        return root;
     }
 }
 ```
@@ -1800,6 +1973,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} expression
+     * @return {string}
+     */
+    parseTernary(expression: string): string {
+        // To analyze the expression between two indices
+        const solve = (i: number, j: number): string => {
+            // If expression is a single character, return it
+            if (i === j) {
+                return expression[i];
+            }
+
+            // Find the index of ?
+            let questionMarkIndex = i;
+            while (expression[questionMarkIndex] !== '?') {
+                questionMarkIndex++;
+            }
+
+            // Find one index after corresponding :
+            let aheadColonIndex = questionMarkIndex + 1;
+            let count = 1;
+            while (count !== 0) {
+                if (expression[aheadColonIndex] === '?') {
+                    count++;
+                } else if (expression[aheadColonIndex] === ':') {
+                    count--;
+                }
+                aheadColonIndex++;
+            }
+
+            // Check the value of B and recursively solve
+            if (expression[i] === 'T') {
+                return solve(questionMarkIndex + 1, aheadColonIndex - 2);
+            } else {
+                return solve(aheadColonIndex, j);
+            }
+        };
+
+        // Solve for the entire expression
+        return solve(0, expression.length - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2096,6 +2315,41 @@ impl Solution {
             }
         }
         String::from(bytes[i] as char)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} expression
+     * @return {string}
+     */
+    parseTernary(expression: string): string {
+        let i = 0;
+        for (; i < expression.length; ) {
+            if (
+                (expression[i] != 'T' && expression[i] != 'F') ||
+                i == expression.length - 1 ||
+                expression[i + 1] == ':'
+            ) {
+                break;
+            }
+            if (expression[i] == 'T') {
+                i += 2;
+            } else {
+                let count: number;
+                for (count = 1, i += 2; count != 0; i++) {
+                    if (expression[i] == ':') {
+                        count--;
+                    } else if (expression[i] == '?') {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return expression.substring(i, i + 1);
     }
 }
 ```

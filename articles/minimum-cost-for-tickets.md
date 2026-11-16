@@ -291,6 +291,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const n = days.length;
+
+        const dfs = (i: number): number => {
+            if (i === n) return 0;
+
+            let res = costs[0] + dfs(i + 1);
+
+            let j = i;
+            while (j < n && days[j] < days[i] + 7) {
+                j++;
+            }
+            res = Math.min(res, costs[1] + dfs(j));
+
+            j = i;
+            while (j < n && days[j] < days[i] + 30) {
+                j++;
+            }
+            res = Math.min(res, costs[2] + dfs(j));
+
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -584,6 +619,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const dp: number[] = new Array(days.length).fill(-1);
+
+        const dfs = (i: number): number => {
+            if (i === days.length) return 0;
+            if (dp[i] !== -1) return dp[i];
+
+            dp[i] = Infinity;
+            let j = i;
+            [1, 7, 30].forEach((d, idx) => {
+                while (j < days.length && days[j] < days[i] + d) {
+                    j++;
+                }
+                dp[i] = Math.min(dp[i], costs[idx] + dfs(j));
+            });
+
+            return dp[i];
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -810,6 +876,33 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const n = days.length;
+        const dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i] = Infinity;
+            let j = i;
+            [1, 7, 30].forEach((d, idx) => {
+                while (j < n && days[j] < days[i] + d) {
+                    j++;
+                }
+                dp[i] = Math.min(dp[i], costs[idx] + dp[j]);
+            });
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1092,6 +1185,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        days.push(days[days.length - 1] + 30);
+        const n = days.length;
+        const dp: number[] = new Array(n).fill(0);
+        let last7 = n,
+            last30 = n;
+
+        for (let i = n - 2; i >= 0; i--) {
+            dp[i] = dp[i + 1] + costs[0];
+
+            while (last7 > i + 1 && days[last7 - 1] >= days[i] + 7) {
+                last7--;
+            }
+            dp[i] = Math.min(dp[i], costs[1] + dp[last7]);
+
+            while (last30 > i + 1 && days[last30 - 1] >= days[i] + 30) {
+                last30--;
+            }
+            dp[i] = Math.min(dp[i], costs[2] + dp[last30]);
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1353,6 +1479,38 @@ impl Solution {
         }
 
         dp
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const dp7 = new Queue();
+        const dp30 = new Queue();
+        let dp = 0;
+
+        for (const d of days) {
+            while (!dp7.isEmpty() && dp7.front()[0] + 7 <= d) {
+                dp7.pop();
+            }
+
+            while (!dp30.isEmpty() && dp30.front()[0] + 30 <= d) {
+                dp30.pop();
+            }
+
+            dp7.push([d, dp + costs[1]]);
+            dp30.push([d, dp + costs[2]]);
+
+            dp = Math.min(dp + costs[0], dp7.front()[1], dp30.front()[1]);
+        }
+
+        return dp;
     }
 }
 ```
@@ -1652,6 +1810,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const dp7 = new Deque();
+        const dp30 = new Deque();
+        let dp = 0,
+            last7 = 0,
+            last30 = 0;
+
+        for (let i = days.length - 1; i >= 0; i--) {
+            dp += costs[0];
+
+            while (!dp7.isEmpty() && dp7.back()[0] >= days[i] + 7) {
+                last7 = dp7.popBack()[1];
+            }
+            dp = Math.min(dp, costs[1] + last7);
+
+            while (!dp30.isEmpty() && dp30.back()[0] >= days[i] + 30) {
+                last30 = dp30.popBack()[1];
+            }
+            dp = Math.min(dp, costs[2] + last30);
+
+            dp7.pushFront([days[i], dp]);
+            dp30.pushFront([days[i], dp]);
+        }
+        return dp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1909,6 +2102,36 @@ impl Solution {
         }
 
         dp[365]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const dp: number[] = new Array(366).fill(0);
+        let i = 0;
+
+        for (let d = 1; d < 366; d++) {
+            dp[d] = dp[d - 1];
+
+            if (i === days.length) {
+                return dp[d];
+            }
+
+            if (d === days[i]) {
+                dp[d] += costs[0];
+                dp[d] = Math.min(dp[d], costs[1] + dp[Math.max(0, d - 7)]);
+                dp[d] = Math.min(dp[d], costs[2] + dp[Math.max(0, d - 30)]);
+                i++;
+            }
+        }
+        return dp[365];
     }
 }
 ```
@@ -2171,6 +2394,41 @@ impl Solution {
         }
 
         dp[*days.last().unwrap() as usize % 31]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} days
+     * @param {number[]} costs
+     * @return {number}
+     */
+    mincostTickets(days: number[], costs: number[]): number {
+        const dp: number[] = new Array(31).fill(0);
+        let i = 0;
+
+        for (let d = 1; d <= 365; d++) {
+            if (i >= days.length) break;
+
+            dp[d % 31] = dp[(d - 1) % 31];
+
+            if (d === days[i]) {
+                dp[d % 31] += costs[0];
+                dp[d % 31] = Math.min(
+                    dp[d % 31],
+                    costs[1] + dp[Math.max(0, d - 7) % 31],
+                );
+                dp[d % 31] = Math.min(
+                    dp[d % 31],
+                    costs[2] + dp[Math.max(0, d - 30) % 31],
+                );
+                i++;
+            }
+        }
+
+        return dp[days[days.length - 1] % 31];
     }
 }
 ```

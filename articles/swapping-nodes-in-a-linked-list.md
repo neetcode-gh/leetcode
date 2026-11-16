@@ -310,7 +310,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -342,6 +341,38 @@ impl Solution {
             }
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    swapNodes(head: ListNode | null, k: number): ListNode | null {
+        let arr: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            arr.push(cur.val);
+            cur = cur.next;
+        }
+
+        let n = arr.length;
+        [arr[k - 1], arr[n - k]] = [arr[n - k], arr[k - 1]];
+
+        cur = head;
+        let i = 0;
+        while (cur) {
+            cur.val = arr[i];
+            cur = cur.next;
+            i++;
+        }
+
+        return head;
     }
 }
 ```
@@ -715,7 +746,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -746,6 +776,42 @@ impl Solution {
             cur = &mut node.next;
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    swapNodes(head: ListNode | null, k: number): ListNode | null {
+        let left: ListNode | null = null,
+            right: ListNode | null = null,
+            startIdx = 0;
+
+        const dfs = (node: ListNode | null): number => {
+            if (!node) return 0;
+
+            startIdx++;
+            if (startIdx === k) left = node;
+
+            let endIdx = dfs(node.next) + 1;
+            if (endIdx === k) right = node;
+
+            return endIdx;
+        };
+
+        dfs(head);
+        if (left && right) {
+            const l = left as ListNode,
+                r = right as ListNode;
+            [l.val, r.val] = [r.val, l.val];
+        }
+
+        return head;
     }
 }
 ```
@@ -1085,7 +1151,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -1114,6 +1179,40 @@ impl Solution {
             cur = &mut node.next;
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    swapNodes(head: ListNode | null, k: number): ListNode | null {
+        let n = 0;
+        let cur = head;
+        while (cur) {
+            n++;
+            cur = cur.next;
+        }
+
+        let left: ListNode | null = null,
+            right: ListNode | null = null;
+        cur = head;
+        for (let i = 1; i <= n; i++) {
+            if (i === k) {
+                left = cur;
+            }
+            if (i === n - k + 1) {
+                right = cur;
+            }
+            cur = cur!.next;
+        }
+
+        [left!.val, right!.val] = [right!.val, left!.val];
+        return head;
     }
 }
 ```
@@ -1403,7 +1502,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -1432,6 +1530,33 @@ impl Solution {
             cur = &mut node.next;
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    swapNodes(head: ListNode | null, k: number): ListNode | null {
+        let cur = head!;
+        for (let i = 0; i < k - 1; i++) {
+            cur = cur.next!;
+        }
+
+        let left = cur;
+        let right = head!;
+
+        while (cur.next) {
+            cur = cur.next;
+            right = right.next!;
+        }
+
+        [left.val, right.val] = [right.val, left.val];
+        return head;
     }
 }
 ```
@@ -1740,7 +1865,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -1769,6 +1893,36 @@ impl Solution {
             cur = &mut node.next;
         }
         head
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} k
+     * @return {ListNode}
+     */
+    swapNodes(head: ListNode | null, k: number): ListNode | null {
+        let left: ListNode | null = null,
+            right: ListNode | null = null,
+            cur = head;
+
+        while (cur) {
+            if (right) {
+                right = right.next;
+            }
+            if (k === 1) {
+                left = cur;
+                right = head;
+            }
+            k--;
+            cur = cur.next;
+        }
+
+        [left!.val, right!.val] = [right!.val, left!.val];
+        return head;
     }
 }
 ```

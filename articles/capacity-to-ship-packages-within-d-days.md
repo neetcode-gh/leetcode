@@ -242,6 +242,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} weights
+     * @param {number} days
+     * @return {number}
+     */
+    shipWithinDays(weights: number[], days: number): number {
+        let res = Math.max(...weights);
+        while (true) {
+            let ships = 1,
+                cap = res;
+            for (let w of weights) {
+                if (cap - w < 0) {
+                    ships++;
+                    cap = res;
+                }
+                cap -= w;
+            }
+            if (ships <= days) {
+                return res;
+            }
+            res++;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,6 +632,49 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} weights
+     * @param {number} days
+     * @return {number}
+     */
+    shipWithinDays(weights: number[], days: number): number {
+        let l = Math.max(...weights);
+        let r = weights.reduce((a, b) => a + b, 0);
+        let res = r;
+
+        const canShip = (cap: number): boolean => {
+            let ships = 1,
+                currCap = cap;
+            for (const w of weights) {
+                if (currCap - w < 0) {
+                    ships++;
+                    if (ships > days) {
+                        return false;
+                    }
+                    currCap = cap;
+                }
+                currCap -= w;
+            }
+            return true;
+        };
+
+        while (l <= r) {
+            const cap = Math.floor((l + r) / 2);
+            if (canShip(cap)) {
+                res = Math.min(res, cap);
+                r = cap - 1;
+            } else {
+                l = cap + 1;
+            }
+        }
+
+        return res;
     }
 }
 ```

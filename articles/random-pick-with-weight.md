@@ -218,8 +218,6 @@ class Solution {
 ```
 
 ```rust
-use rand::Rng;
-
 struct Solution {
     w: Vec<i32>,
     total: i32,
@@ -232,7 +230,7 @@ impl Solution {
     }
 
     fn pick_index(&self) -> i32 {
-        let target = self.total as f64 * rand::thread_rng().gen::<f64>();
+        let target = self.total as f64 * rand::random::<f64>();
         let mut cur_sum = 0;
         for i in 0..self.w.len() {
             cur_sum += self.w[i];
@@ -241,6 +239,36 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    private w: number[];
+    private total: number;
+
+    /**
+     * @param {number[]} w
+     */
+    constructor(w: number[]) {
+        this.w = w;
+        this.total = w.reduce((a, b) => a + b, 0);
+    }
+
+    /**
+     * @return {number}
+     */
+    pickIndex(): number {
+        let target = this.total * Math.random();
+        let curSum = 0;
+        for (let i = 0; i < this.w.length; i++) {
+            curSum += this.w[i];
+            if (curSum > target) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -489,8 +517,6 @@ class Solution {
 ```
 
 ```rust
-use rand::Rng;
-
 struct Solution {
     prefix: Vec<i32>,
 }
@@ -506,7 +532,7 @@ impl Solution {
 
     fn pick_index(&self) -> i32 {
         let target = *self.prefix.last().unwrap() as f64
-            * rand::thread_rng().gen::<f64>();
+            * rand::random::<f64>();
         let (mut l, mut r) = (1, self.prefix.len());
         while l < r {
             let mid = (l + r) >> 1;
@@ -517,6 +543,41 @@ impl Solution {
             }
         }
         l as i32 - 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    private prefix: number[];
+
+    /**
+     * @param {number[]} w
+     */
+    constructor(w: number[]) {
+        this.prefix = [0];
+        for (let i = 0; i < w.length; i++) {
+            this.prefix.push(this.prefix[this.prefix.length - 1] + w[i]);
+        }
+    }
+
+    /**
+     * @return {number}
+     */
+    pickIndex(): number {
+        const total = this.prefix[this.prefix.length - 1];
+        const target = total * Math.random();
+        let l = 1,
+            r = this.prefix.length;
+        while (l < r) {
+            const mid = (l + r) >> 1;
+            if (this.prefix[mid] <= target) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        return l - 1;
     }
 }
 ```

@@ -92,6 +92,56 @@ public:
 };
 ```
 
+```javascript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @return {boolean}
+     */
+    verifyPreorder(preorder) {
+        let minLimit = -Infinity;
+        const stack = [];
+
+        for (const num of preorder) {
+            while (stack.length > 0 && stack[stack.length - 1] < num) {
+                minLimit = stack.pop();
+            }
+
+            if (num <= minLimit) {
+                return false;
+            }
+
+            stack.push(num);
+        }
+
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool VerifyPreorder(int[] preorder) {
+        int minLimit = int.MinValue;
+        Stack<int> stack = new Stack<int>();
+
+        foreach (int num in preorder) {
+            while (stack.Count > 0 && stack.Peek() < num) {
+                minLimit = stack.Pop();
+            }
+
+            if (num <= minLimit) {
+                return false;
+            }
+
+            stack.Push(num);
+        }
+
+        return true;
+    }
+}
+```
+
 ```go
 func verifyPreorder(preorder []int) bool {
     minLimit := math.MinInt32
@@ -121,7 +171,7 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (num in preorder) {
-            while (stack.isNotEmpty() && stack.last() < num) {
+            while (stack.isNotEmpty() && stack.peekLast() < num) {
                 minLimit = stack.removeLast()
             }
 
@@ -183,6 +233,33 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @return {boolean}
+     */
+    verifyPreorder(preorder: number[]): boolean {
+        let minLimit = -Infinity;
+        const stack: number[] = [];
+
+        for (const num of preorder) {
+            while (stack.length > 0 && stack[stack.length - 1] < num) {
+                minLimit = stack.pop()!;
+            }
+
+            if (num <= minLimit) {
+                return false;
+            }
+
+            stack.push(num);
+        }
+
+        return true;
     }
 }
 ```
@@ -315,6 +392,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool VerifyPreorder(int[] preorder) {
+        int minLimit = int.MinValue;
+        int i = 0;
+
+        foreach (int num in preorder) {
+            while (i > 0 && preorder[i - 1] < num) {
+                minLimit = preorder[i - 1];
+                i--;
+            }
+
+            if (num <= minLimit) {
+                return false;
+            }
+
+            preorder[i] = num;
+            i++;
+        }
+
+        return true;
+    }
+}
+```
+
 ```go
 func verifyPreorder(preorder []int) bool {
     minLimit := math.MinInt32
@@ -365,7 +467,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func verifyPreorder(_ preorder: inout [Int]) -> Bool {
+    func verifyPreorder(_ preorder: [Int]) -> Bool {
+        var preorder = preorder
         var minLimit = Int.min
         var i = 0
 
@@ -411,6 +514,35 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @return {boolean}
+     */
+    verifyPreorder(preorder: number[]): boolean {
+        let minLimit = -Infinity;
+        let i = 0;
+
+        for (let num of preorder) {
+            while (i > 0 && preorder[i - 1] < num) {
+                minLimit = preorder[i - 1];
+                i--;
+            }
+
+            if (num <= minLimit) {
+                return false;
+            }
+
+            preorder[i] = num;
+            i++;
+        }
+
+        return true;
     }
 }
 ```
@@ -517,6 +649,63 @@ public:
 };
 ```
 
+```javascript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @return {boolean}
+     */
+    verifyPreorder(preorder) {
+        let i = 0;
+
+        const helper = (minLimit, maxLimit) => {
+            if (i === preorder.length) {
+                return true;
+            }
+
+            const root = preorder[i];
+            if (root <= minLimit || root >= maxLimit) {
+                return false;
+            }
+
+            i++;
+            const left = helper(minLimit, root);
+            const right = helper(root, maxLimit);
+            return left || right;
+        };
+
+        return helper(-Infinity, Infinity);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int i;
+
+    public bool VerifyPreorder(int[] preorder) {
+        i = 0;
+        return Helper(preorder, int.MinValue, int.MaxValue);
+    }
+
+    private bool Helper(int[] preorder, int minLimit, int maxLimit) {
+        if (i == preorder.Length) {
+            return true;
+        }
+
+        int root = preorder[i];
+        if (root <= minLimit || root >= maxLimit) {
+            return false;
+        }
+
+        i++;
+        bool left = Helper(preorder, minLimit, root);
+        bool right = Helper(preorder, root, maxLimit);
+        return left || right;
+    }
+}
+```
+
 ```go
 func verifyPreorder(preorder []int) bool {
     i := 0
@@ -611,6 +800,36 @@ impl Solution {
 
         let mut i = 0;
         helper(&preorder, &mut i, i32::MIN, i32::MAX)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @return {boolean}
+     */
+    verifyPreorder(preorder: number[]): boolean {
+        let i = 0;
+
+        const helper = (minLimit: number, maxLimit: number): boolean => {
+            if (i === preorder.length) {
+                return true;
+            }
+
+            const root = preorder[i];
+            if (root <= minLimit || root >= maxLimit) {
+                return false;
+            }
+
+            i++;
+            const left = helper(minLimit, root);
+            const right = helper(root, maxLimit);
+            return left || right;
+        };
+
+        return helper(-Infinity, Infinity);
     }
 }
 ```

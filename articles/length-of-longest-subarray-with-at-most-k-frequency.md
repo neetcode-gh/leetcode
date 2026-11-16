@@ -212,6 +212,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxSubarrayLength(nums: number[], k: number): number {
+        let n = nums.length,
+            res = 0;
+
+        for (let i = 0; i < n; i++) {
+            let count = new Map<number, number>();
+            for (let j = i; j < n; j++) {
+                count.set(nums[j], (count.get(nums[j]) || 0) + 1);
+                if (count.get(nums[j])! > k) {
+                    break;
+                }
+                res = Math.max(res, j - i + 1);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -416,6 +442,31 @@ impl Solution {
             res = res.max((r - l + 1) as i32);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxSubarrayLength(nums: number[], k: number): number {
+        let res = 0;
+        let count = new Map<number, number>();
+        let l = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            count.set(nums[r], (count.get(nums[r]) || 0) + 1);
+            while (count.get(nums[r])! > k) {
+                count.set(nums[l], count.get(nums[l])! - 1);
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
     }
 }
 ```
@@ -631,6 +682,31 @@ impl Solution {
             }
         }
         (nums.len() - l) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxSubarrayLength(nums: number[], k: number): number {
+        let count = new Map<number, number>();
+        let l = 0,
+            cnt = 0; // count of numbers with freq > k
+        for (let r = 0; r < nums.length; r++) {
+            count.set(nums[r], (count.get(nums[r]) || 0) + 1);
+            if (count.get(nums[r])! > k) cnt++;
+            if (cnt > 0) {
+                if (count.get(nums[l])! > k) cnt--;
+                count.set(nums[l], count.get(nums[l])! - 1);
+                l++;
+            }
+        }
+        return nums.length - l;
     }
 }
 ```

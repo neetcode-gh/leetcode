@@ -376,6 +376,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} scores
+     * @param {number[]} ages
+     * @return {number}
+     */
+    bestTeamScore(scores: number[], ages: number[]): number {
+        const n = scores.length;
+        const pairs: number[][] = [];
+        for (let i = 0; i < n; i++) {
+            pairs.push([scores[i], ages[i]]);
+        }
+        pairs.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+        const dp: number[][] = Array.from({ length: n }, () => new Array(n + 1).fill(-1));
+
+        const dfs = (i: number, j: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (dp[i][j + 1] !== -1) {
+                return dp[i][j + 1];
+            }
+
+            const [mScore, mAge] = j >= 0 ? pairs[j] : [0, 0];
+            const [score, age] = pairs[i];
+
+            let res = 0;
+            if (!(score > mScore && age < mAge)) {
+                res = dfs(i + 1, i) + score;
+            }
+            dp[i][j + 1] = Math.max(res, dfs(i + 1, j));
+            return dp[i][j + 1];
+        };
+
+        return dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -660,6 +701,41 @@ impl Solution {
         }
 
         *dp.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} scores
+     * @param {number[]} ages
+     * @return {number}
+     */
+    bestTeamScore(scores: number[], ages: number[]): number {
+        const n = scores.length;
+        const pairs: number[][] = [];
+        for (let i = 0; i < n; i++) {
+            pairs.push([scores[i], ages[i]]);
+        }
+        pairs.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+        const dp: number[] = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+            dp[i] = pairs[i][0];
+        }
+
+        for (let i = 0; i < n; i++) {
+            const [mScore, mAge] = pairs[i];
+            for (let j = 0; j < i; j++) {
+                const [score, age] = pairs[j];
+                if (mAge >= age) {
+                    dp[i] = Math.max(dp[i], mScore + dp[j]);
+                }
+            }
+        }
+
+        return Math.max(...dp);
     }
 }
 ```
@@ -1409,6 +1485,118 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: number[];
+
+    /**
+     * @constructor
+     * @param {number} N
+     */
+    constructor(N: number) {
+        this.n = N;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = [];
+        this.build();
+    }
+
+    /**
+     * @return {void}
+     */
+    build(): void {
+        this.tree = new Array(2 * this.n).fill(0);
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     * @return {void}
+     */
+    update(i: number, val: number): void {
+        let pos = this.n + i;
+        this.tree[pos] = Math.max(this.tree[pos], val);
+        pos >>= 1;
+        while (pos >= 1) {
+            this.tree[pos] = Math.max(
+                this.tree[pos << 1],
+                this.tree[(pos << 1) | 1],
+            );
+            pos >>= 1;
+        }
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        let res = 0;
+        l += this.n;
+        r += this.n + 1;
+        while (l < r) {
+            if (l & 1) {
+                res = Math.max(res, this.tree[l]);
+                l++;
+            }
+            if (r & 1) {
+                r--;
+                res = Math.max(res, this.tree[r]);
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+        return res;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} scores
+     * @param {number[]} ages
+     * @return {number}
+     */
+    bestTeamScore(scores: number[], ages: number[]): number {
+        const n = scores.length;
+        const pairs: number[][] = [];
+
+        for (let i = 0; i < n; i++) {
+            pairs.push([scores[i], ages[i]]);
+        }
+        pairs.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+        const dp: number[] = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+            dp[i] = pairs[i][0];
+        }
+
+        const uniqueAges = [...new Set(pairs.map((p) => p[1]))].sort(
+            (a, b) => a - b,
+        );
+        const ageId = new Map<number, number>();
+        uniqueAges.forEach((val, idx) => ageId.set(val, idx));
+
+        const segtree = new SegmentTree(uniqueAges.length);
+
+        let res = 0;
+
+        for (let i = 0; i < n; i++) {
+            const [mScore, mAge] = pairs[i];
+            const idx = ageId.get(mAge)!;
+            const j = segtree.query(0, idx);
+            dp[i] = j + mScore;
+            segtree.update(idx, dp[i]);
+            res = Math.max(res, dp[i]);
+        }
+
+        return res;
     }
 }
 ```

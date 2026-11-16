@@ -194,6 +194,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        let n = nums.length,
+            res = nums[0];
+        for (let i = 0; i < n; i++) {
+            let cur = 0;
+            for (let j = i; j < n; j++) {
+                cur += nums[j];
+                res = Math.max(res, cur);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -407,6 +428,23 @@ impl Solution {
             dfs(nums, i + 1, false).max(nums[i] + dfs(nums, i + 1, true))
         }
         dfs(&nums, 0, false)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        const dfs = (i: number, flag: boolean): number => {
+            if (i === nums.length - 1) return flag ? Math.max(0, nums[i]) : nums[i];
+            if (flag) return Math.max(0, nums[i] + dfs(i + 1, true));
+            return Math.max(dfs(i + 1, false), nums[i] + dfs(i + 1, true));
+        };
+        return dfs(0, false);
     }
 }
 ```
@@ -702,6 +740,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        const memo: (number | null)[][] = Array(nums.length)
+            .fill(null)
+            .map(() => [null, null]);
+
+        const dfs = (i: number, flag: boolean): number => {
+            if (i === nums.length - 1) return flag ? Math.max(0, nums[i]) : nums[i];
+            if (memo[i][+flag] !== null) return memo[i][+flag]!;
+            memo[i][+flag] = flag
+                ? Math.max(0, nums[i] + dfs(i + 1, true))
+                : Math.max(dfs(i + 1, false), nums[i] + dfs(i + 1, true));
+            return memo[i][+flag]!;
+        };
+        return dfs(0, false);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -918,6 +980,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(2).fill(0),
+        );
+
+        dp[n - 1][1] = dp[n - 1][0] = nums[n - 1];
+        for (let i = n - 2; i >= 0; i--) {
+            dp[i][1] = Math.max(nums[i], nums[i] + dp[i + 1][1]);
+            dp[i][0] = Math.max(dp[i + 1][0], dp[i][1]);
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1089,6 +1174,22 @@ impl Solution {
             dp[i] = nums[i].max(nums[i] + dp[i - 1]);
         }
         *dp.iter().max().unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        let dp = [...nums];
+        for (let i = 1; i < nums.length; i++) {
+            dp[i] = Math.max(nums[i], nums[i] + dp[i - 1]);
+        }
+        return Math.max(...dp);
     }
 }
 ```
@@ -1285,6 +1386,27 @@ impl Solution {
             max_sub = max_sub.max(cur_sum);
         }
         max_sub
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        let maxSub = nums[0],
+            curSum = 0;
+        for (const num of nums) {
+            if (curSum < 0) {
+                curSum = 0;
+            }
+            curSum += num;
+            maxSub = Math.max(maxSub, curSum);
+        }
+        return maxSub;
     }
 }
 ```
@@ -1634,6 +1756,42 @@ impl Solution {
                 .max(cross)
         }
         dfs(&nums, 0, nums.len() as isize - 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSubArray(nums: number[]): number {
+        const dfs = (l: number, r: number): number => {
+            if (l > r) {
+                return -Infinity;
+            }
+            let m = (l + r) >> 1;
+            let leftSum = 0,
+                rightSum = 0,
+                curSum = 0;
+            for (let i = m - 1; i >= l; i--) {
+                curSum += nums[i];
+                leftSum = Math.max(leftSum, curSum);
+            }
+
+            curSum = 0;
+            for (let i = m + 1; i <= r; i++) {
+                curSum += nums[i];
+                rightSum = Math.max(rightSum, curSum);
+            }
+            return Math.max(
+                dfs(l, m - 1),
+                Math.max(dfs(m + 1, r), leftSum + nums[m] + rightSum),
+            );
+        };
+
+        return dfs(0, nums.length - 1);
     }
 }
 ```

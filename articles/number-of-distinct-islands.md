@@ -66,7 +66,6 @@ class Solution:
                 if not current_island or not current_island_is_unique():
                     continue
                 unique_islands.append(current_island)
-        print(unique_islands)
         return len(unique_islands)
 ```
 
@@ -140,6 +139,357 @@ class Solution {
 }
 ```
 
+```cpp
+class Solution {
+public:
+    int numDistinctIslands(vector<vector<int>>& grid) {
+        this->grid = &grid;
+        int m = grid.size(), n = grid[0].size();
+        seen.assign(m, vector<bool>(n, false));
+        vector<vector<pair<int, int>>> uniqueIslands;
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                currentIsland.clear();
+                rowOrigin = row;
+                colOrigin = col;
+                dfs(row, col);
+                if (currentIsland.empty() || !isUnique(uniqueIslands)) {
+                    continue;
+                }
+                uniqueIslands.push_back(currentIsland);
+            }
+        }
+        return uniqueIslands.size();
+    }
+
+private:
+    vector<vector<int>>* grid;
+    vector<vector<bool>> seen;
+    vector<pair<int, int>> currentIsland;
+    int rowOrigin, colOrigin;
+
+    bool isUnique(vector<vector<pair<int, int>>>& uniqueIslands) {
+        for (auto& otherIsland : uniqueIslands) {
+            if (otherIsland.size() != currentIsland.size()) {
+                continue;
+            }
+            if (otherIsland == currentIsland) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Do a DFS to find all cells in the current island.
+    void dfs(int row, int col) {
+        auto& g = *grid;
+        if (row < 0 || col < 0 || row >= g.size() || col >= g[0].size()) return;
+        if (seen[row][col] || g[row][col] == 0) return;
+        seen[row][col] = true;
+        currentIsland.push_back({row - rowOrigin, col - colOrigin});
+        dfs(row + 1, col);
+        dfs(row - 1, col);
+        dfs(row, col + 1);
+        dfs(row, col - 1);
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numDistinctIslands(grid) {
+        const m = grid.length,
+            n = grid[0].length;
+        const seen = Array.from({ length: m }, () => Array(n).fill(false));
+        const uniqueIslands = [];
+        let currentIsland = [];
+        let rowOrigin = 0,
+            colOrigin = 0;
+
+        const isUnique = () => {
+            for (const otherIsland of uniqueIslands) {
+                if (otherIsland.length !== currentIsland.length) {
+                    continue;
+                }
+                let same = true;
+                for (let i = 0; i < currentIsland.length; i++) {
+                    if (
+                        otherIsland[i][0] !== currentIsland[i][0] ||
+                        otherIsland[i][1] !== currentIsland[i][1]
+                    ) {
+                        same = false;
+                        break;
+                    }
+                }
+                if (same) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        // Do a DFS to find all cells in the current island.
+        const dfs = (row, col) => {
+            if (row < 0 || col < 0 || row >= m || col >= n) return;
+            if (seen[row][col] || grid[row][col] === 0) return;
+            seen[row][col] = true;
+            currentIsland.push([row - rowOrigin, col - colOrigin]);
+            dfs(row + 1, col);
+            dfs(row - 1, col);
+            dfs(row, col + 1);
+            dfs(row, col - 1);
+        };
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (let row = 0; row < m; row++) {
+            for (let col = 0; col < n; col++) {
+                currentIsland = [];
+                rowOrigin = row;
+                colOrigin = col;
+                dfs(row, col);
+                if (currentIsland.length === 0 || !isUnique()) {
+                    continue;
+                }
+                uniqueIslands.push(currentIsland);
+            }
+        }
+        return uniqueIslands.length;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] grid;
+    private bool[,] seen;
+    private List<(int, int)> currentIsland;
+    private List<List<(int, int)>> uniqueIslands;
+    private int rowOrigin, colOrigin;
+
+    public int NumDistinctIslands(int[][] grid) {
+        this.grid = grid;
+        int m = grid.Length, n = grid[0].Length;
+        seen = new bool[m, n];
+        uniqueIslands = new List<List<(int, int)>>();
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                currentIsland = new List<(int, int)>();
+                rowOrigin = row;
+                colOrigin = col;
+                Dfs(row, col);
+                if (currentIsland.Count == 0 || !IsUnique()) {
+                    continue;
+                }
+                uniqueIslands.Add(currentIsland);
+            }
+        }
+        return uniqueIslands.Count;
+    }
+
+    private bool IsUnique() {
+        foreach (var otherIsland in uniqueIslands) {
+            if (otherIsland.Count != currentIsland.Count) {
+                continue;
+            }
+            if (otherIsland.SequenceEqual(currentIsland)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Do a DFS to find all cells in the current island.
+    private void Dfs(int row, int col) {
+        if (row < 0 || col < 0 || row >= grid.Length || col >= grid[0].Length) return;
+        if (seen[row, col] || grid[row][col] == 0) return;
+        seen[row, col] = true;
+        currentIsland.Add((row - rowOrigin, col - colOrigin));
+        Dfs(row + 1, col);
+        Dfs(row - 1, col);
+        Dfs(row, col + 1);
+        Dfs(row, col - 1);
+    }
+}
+```
+
+```go
+func numDistinctIslands(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    seen := make([][]bool, m)
+    for i := range seen {
+        seen[i] = make([]bool, n)
+    }
+    uniqueIslands := [][][2]int{}
+    currentIsland := [][2]int{}
+    rowOrigin, colOrigin := 0, 0
+
+    isUnique := func() bool {
+        for _, otherIsland := range uniqueIslands {
+            if len(otherIsland) != len(currentIsland) {
+                continue
+            }
+            same := true
+            for i := range currentIsland {
+                if otherIsland[i] != currentIsland[i] {
+                    same = false
+                    break
+                }
+            }
+            if same {
+                return false
+            }
+        }
+        return true
+    }
+
+    // Do a DFS to find all cells in the current island.
+    var dfs func(row, col int)
+    dfs = func(row, col int) {
+        if row < 0 || col < 0 || row >= m || col >= n {
+            return
+        }
+        if seen[row][col] || grid[row][col] == 0 {
+            return
+        }
+        seen[row][col] = true
+        currentIsland = append(currentIsland, [2]int{row - rowOrigin, col - colOrigin})
+        dfs(row+1, col)
+        dfs(row-1, col)
+        dfs(row, col+1)
+        dfs(row, col-1)
+    }
+
+    // Repeatedly start DFS's as long as there are islands remaining.
+    for row := 0; row < m; row++ {
+        for col := 0; col < n; col++ {
+            currentIsland = [][2]int{}
+            rowOrigin, colOrigin = row, col
+            dfs(row, col)
+            if len(currentIsland) == 0 || !isUnique() {
+                continue
+            }
+            uniqueIslands = append(uniqueIslands, currentIsland)
+        }
+    }
+    return len(uniqueIslands)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var grid: Array<IntArray>
+    private lateinit var seen: Array<BooleanArray>
+    private var currentIsland = mutableListOf<Pair<Int, Int>>()
+    private val uniqueIslands = mutableListOf<List<Pair<Int, Int>>>()
+    private var rowOrigin = 0
+    private var colOrigin = 0
+
+    fun numDistinctIslands(grid: Array<IntArray>): Int {
+        this.grid = grid
+        seen = Array(grid.size) { BooleanArray(grid[0].size) }
+        uniqueIslands.clear()
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (row in grid.indices) {
+            for (col in grid[0].indices) {
+                currentIsland = mutableListOf()
+                rowOrigin = row
+                colOrigin = col
+                dfs(row, col)
+                if (currentIsland.isEmpty() || !isUnique()) {
+                    continue
+                }
+                uniqueIslands.add(currentIsland)
+            }
+        }
+        return uniqueIslands.size
+    }
+
+    private fun isUnique(): Boolean {
+        for (otherIsland in uniqueIslands) {
+            if (otherIsland.size != currentIsland.size) {
+                continue
+            }
+            if (otherIsland == currentIsland) {
+                return false
+            }
+        }
+        return true
+    }
+
+    // Do a DFS to find all cells in the current island.
+    private fun dfs(row: Int, col: Int) {
+        if (row < 0 || col < 0 || row >= grid.size || col >= grid[0].size) return
+        if (seen[row][col] || grid[row][col] == 0) return
+        seen[row][col] = true
+        currentIsland.add(Pair(row - rowOrigin, col - colOrigin))
+        dfs(row + 1, col)
+        dfs(row - 1, col)
+        dfs(row, col + 1)
+        dfs(row, col - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numDistinctIslands(_ grid: [[Int]]) -> Int {
+        let m = grid.count, n = grid[0].count
+        var seen = [[Bool]](repeating: [Bool](repeating: false, count: n), count: m)
+        var uniqueIslands = [[[Int]]]()
+        var currentIsland = [[Int]]()
+        var rowOrigin = 0, colOrigin = 0
+
+        func isUnique() -> Bool {
+            for otherIsland in uniqueIslands {
+                if otherIsland.count != currentIsland.count {
+                    continue
+                }
+                if otherIsland == currentIsland {
+                    return false
+                }
+            }
+            return true
+        }
+
+        // Do a DFS to find all cells in the current island.
+        func dfs(_ row: Int, _ col: Int) {
+            if row < 0 || col < 0 || row >= m || col >= n { return }
+            if seen[row][col] || grid[row][col] == 0 { return }
+            seen[row][col] = true
+            currentIsland.append([row - rowOrigin, col - colOrigin])
+            dfs(row + 1, col)
+            dfs(row - 1, col)
+            dfs(row, col + 1)
+            dfs(row, col - 1)
+        }
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for row in 0..<m {
+            for col in 0..<n {
+                currentIsland = []
+                rowOrigin = row
+                colOrigin = col
+                dfs(row, col)
+                if currentIsland.isEmpty || !isUnique() {
+                    continue
+                }
+                uniqueIslands.append(currentIsland)
+            }
+        }
+        return uniqueIslands.count
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn num_distinct_islands(grid: Vec<Vec<i32>>) -> i32 {
@@ -190,6 +540,75 @@ impl Solution {
             }
         }
         unique_islands.len() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numDistinctIslands(grid: number[][]): number {
+        const m = grid.length,
+            n = grid[0].length;
+        const seen: boolean[][] = Array.from({ length: m }, () =>
+            Array(n).fill(false),
+        );
+        const uniqueIslands: number[][][] = [];
+        let currentIsland: number[][] = [];
+        let rowOrigin = 0,
+            colOrigin = 0;
+
+        const isUnique = (): boolean => {
+            for (const otherIsland of uniqueIslands) {
+                if (otherIsland.length !== currentIsland.length) {
+                    continue;
+                }
+                let same = true;
+                for (let i = 0; i < currentIsland.length; i++) {
+                    if (
+                        otherIsland[i][0] !== currentIsland[i][0] ||
+                        otherIsland[i][1] !== currentIsland[i][1]
+                    ) {
+                        same = false;
+                        break;
+                    }
+                }
+                if (same) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        // Do a DFS to find all cells in the current island.
+        const dfs = (row: number, col: number): void => {
+            if (row < 0 || col < 0 || row >= m || col >= n) return;
+            if (seen[row][col] || grid[row][col] === 0) return;
+            seen[row][col] = true;
+            currentIsland.push([row - rowOrigin, col - colOrigin]);
+            dfs(row + 1, col);
+            dfs(row - 1, col);
+            dfs(row, col + 1);
+            dfs(row, col - 1);
+        };
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (let row = 0; row < m; row++) {
+            for (let col = 0; col < n; col++) {
+                currentIsland = [];
+                rowOrigin = row;
+                colOrigin = col;
+                dfs(row, col);
+                if (currentIsland.length === 0 || !isUnique()) {
+                    continue;
+                }
+                uniqueIslands.push(currentIsland);
+            }
+        }
+        return uniqueIslands.length;
     }
 }
 ```
@@ -295,6 +714,269 @@ class Solution {
 }
 ```
 
+```cpp
+class Solution {
+public:
+    int numDistinctIslands(vector<vector<int>>& grid) {
+        this->grid = &grid;
+        int m = grid.size(), n = grid[0].size();
+        seen.assign(m, vector<bool>(n, false));
+        set<set<pair<int, int>>> uniqueIslands;
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                currentIsland.clear();
+                rowOrigin = row;
+                colOrigin = col;
+                dfs(row, col);
+                if (!currentIsland.empty()) {
+                    uniqueIslands.insert(currentIsland);
+                }
+            }
+        }
+        return uniqueIslands.size();
+    }
+
+private:
+    vector<vector<int>>* grid;
+    vector<vector<bool>> seen;
+    set<pair<int, int>> currentIsland;
+    int rowOrigin, colOrigin;
+
+    // Do a DFS to find all cells in the current island.
+    void dfs(int row, int col) {
+        auto& g = *grid;
+        if (row < 0 || col < 0 || row >= g.size() || col >= g[0].size()) return;
+        if (seen[row][col] || g[row][col] == 0) return;
+        seen[row][col] = true;
+        currentIsland.insert({row - rowOrigin, col - colOrigin});
+        dfs(row + 1, col);
+        dfs(row - 1, col);
+        dfs(row, col + 1);
+        dfs(row, col - 1);
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numDistinctIslands(grid) {
+        const m = grid.length,
+            n = grid[0].length;
+        const seen = Array.from({ length: m }, () => Array(n).fill(false));
+        const uniqueIslands = new Set();
+        let currentIsland = new Set();
+        let rowOrigin = 0,
+            colOrigin = 0;
+
+        // Do a DFS to find all cells in the current island.
+        const dfs = (row, col) => {
+            if (row < 0 || col < 0 || row >= m || col >= n) return;
+            if (seen[row][col] || grid[row][col] === 0) return;
+            seen[row][col] = true;
+            currentIsland.add(`${row - rowOrigin},${col - colOrigin}`);
+            dfs(row + 1, col);
+            dfs(row - 1, col);
+            dfs(row, col + 1);
+            dfs(row, col - 1);
+        };
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (let row = 0; row < m; row++) {
+            for (let col = 0; col < n; col++) {
+                currentIsland = new Set();
+                rowOrigin = row;
+                colOrigin = col;
+                dfs(row, col);
+                if (currentIsland.size > 0) {
+                    // A set of cells is hashed by its sorted cell keys.
+                    uniqueIslands.add([...currentIsland].sort().join('|'));
+                }
+            }
+        }
+        return uniqueIslands.size;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] grid;
+    private bool[,] seen;
+    private HashSet<(int, int)> currentIsland;
+    private int rowOrigin, colOrigin;
+
+    public int NumDistinctIslands(int[][] grid) {
+        this.grid = grid;
+        int m = grid.Length, n = grid[0].Length;
+        seen = new bool[m, n];
+        var uniqueIslands = new HashSet<HashSet<(int, int)>>(
+            HashSet<(int, int)>.CreateSetComparer()
+        );
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                currentIsland = new HashSet<(int, int)>();
+                rowOrigin = row;
+                colOrigin = col;
+                Dfs(row, col);
+                if (currentIsland.Count > 0) {
+                    uniqueIslands.Add(currentIsland);
+                }
+            }
+        }
+        return uniqueIslands.Count;
+    }
+
+    // Do a DFS to find all cells in the current island.
+    private void Dfs(int row, int col) {
+        if (row < 0 || col < 0 || row >= grid.Length || col >= grid[0].Length) return;
+        if (seen[row, col] || grid[row][col] == 0) return;
+        seen[row, col] = true;
+        currentIsland.Add((row - rowOrigin, col - colOrigin));
+        Dfs(row + 1, col);
+        Dfs(row - 1, col);
+        Dfs(row, col + 1);
+        Dfs(row, col - 1);
+    }
+}
+```
+
+```go
+func numDistinctIslands(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    seen := make([][]bool, m)
+    for i := range seen {
+        seen[i] = make([]bool, n)
+    }
+    uniqueIslands := make(map[string]bool)
+    var currentIsland map[[2]int]bool
+    rowOrigin, colOrigin := 0, 0
+
+    // Do a DFS to find all cells in the current island.
+    var dfs func(row, col int)
+    dfs = func(row, col int) {
+        if row < 0 || col < 0 || row >= m || col >= n {
+            return
+        }
+        if seen[row][col] || grid[row][col] == 0 {
+            return
+        }
+        seen[row][col] = true
+        currentIsland[[2]int{row - rowOrigin, col - colOrigin}] = true
+        dfs(row+1, col)
+        dfs(row-1, col)
+        dfs(row, col+1)
+        dfs(row, col-1)
+    }
+
+    // Repeatedly start DFS's as long as there are islands remaining.
+    for row := 0; row < m; row++ {
+        for col := 0; col < n; col++ {
+            currentIsland = make(map[[2]int]bool)
+            rowOrigin, colOrigin = row, col
+            dfs(row, col)
+            if len(currentIsland) > 0 {
+                // A set of cells is hashed by its sorted cell keys.
+                keys := make([]string, 0, len(currentIsland))
+                for cell := range currentIsland {
+                    keys = append(keys, strconv.Itoa(cell[0])+","+strconv.Itoa(cell[1]))
+                }
+                sort.Strings(keys)
+                uniqueIslands[strings.Join(keys, "|")] = true
+            }
+        }
+    }
+    return len(uniqueIslands)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var grid: Array<IntArray>
+    private lateinit var seen: Array<BooleanArray>
+    private var currentIsland = HashSet<Pair<Int, Int>>()
+    private var rowOrigin = 0
+    private var colOrigin = 0
+
+    fun numDistinctIslands(grid: Array<IntArray>): Int {
+        this.grid = grid
+        seen = Array(grid.size) { BooleanArray(grid[0].size) }
+        val uniqueIslands = HashSet<Set<Pair<Int, Int>>>()
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (row in grid.indices) {
+            for (col in grid[0].indices) {
+                currentIsland = HashSet()
+                rowOrigin = row
+                colOrigin = col
+                dfs(row, col)
+                if (currentIsland.isNotEmpty()) {
+                    uniqueIslands.add(currentIsland)
+                }
+            }
+        }
+        return uniqueIslands.size
+    }
+
+    // Do a DFS to find all cells in the current island.
+    private fun dfs(row: Int, col: Int) {
+        if (row < 0 || col < 0 || row >= grid.size || col >= grid[0].size) return
+        if (seen[row][col] || grid[row][col] == 0) return
+        seen[row][col] = true
+        currentIsland.add(Pair(row - rowOrigin, col - colOrigin))
+        dfs(row + 1, col)
+        dfs(row - 1, col)
+        dfs(row, col + 1)
+        dfs(row, col - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numDistinctIslands(_ grid: [[Int]]) -> Int {
+        let m = grid.count, n = grid[0].count
+        var seen = [[Bool]](repeating: [Bool](repeating: false, count: n), count: m)
+        var uniqueIslands = Set<Set<[Int]>>()
+        var currentIsland = Set<[Int]>()
+        var rowOrigin = 0, colOrigin = 0
+
+        // Do a DFS to find all cells in the current island.
+        func dfs(_ row: Int, _ col: Int) {
+            if row < 0 || col < 0 || row >= m || col >= n { return }
+            if seen[row][col] || grid[row][col] == 0 { return }
+            seen[row][col] = true
+            currentIsland.insert([row - rowOrigin, col - colOrigin])
+            dfs(row + 1, col)
+            dfs(row - 1, col)
+            dfs(row, col + 1)
+            dfs(row, col - 1)
+        }
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for row in 0..<m {
+            for col in 0..<n {
+                currentIsland = []
+                rowOrigin = row
+                colOrigin = col
+                dfs(row, col)
+                if !currentIsland.isEmpty {
+                    uniqueIslands.insert(currentIsland)
+                }
+            }
+        }
+        return uniqueIslands.count
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn num_distinct_islands(grid: Vec<Vec<i32>>) -> i32 {
@@ -337,6 +1019,53 @@ impl Solution {
             }
         }
         islands.len() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numDistinctIslands(grid: number[][]): number {
+        const m = grid.length,
+            n = grid[0].length;
+        const seen: boolean[][] = Array.from({ length: m }, () =>
+            Array(n).fill(false),
+        );
+        const uniqueIslands = new Set<string>();
+        let currentIsland = new Set<string>();
+        let rowOrigin = 0,
+            colOrigin = 0;
+
+        // Do a DFS to find all cells in the current island.
+        const dfs = (row: number, col: number): void => {
+            if (row < 0 || col < 0 || row >= m || col >= n) return;
+            if (seen[row][col] || grid[row][col] === 0) return;
+            seen[row][col] = true;
+            currentIsland.add(`${row - rowOrigin},${col - colOrigin}`);
+            dfs(row + 1, col);
+            dfs(row - 1, col);
+            dfs(row, col + 1);
+            dfs(row, col - 1);
+        };
+
+        // Repeatedly start DFS's as long as there are islands remaining.
+        for (let row = 0; row < m; row++) {
+            for (let col = 0; col < n; col++) {
+                currentIsland = new Set<string>();
+                rowOrigin = row;
+                colOrigin = col;
+                dfs(row, col);
+                if (currentIsland.size > 0) {
+                    // A set of cells is hashed by its sorted cell keys.
+                    uniqueIslands.add([...currentIsland].sort().join('|'));
+                }
+            }
+        }
+        return uniqueIslands.size;
     }
 }
 ```
@@ -741,6 +1470,59 @@ impl Solution {
             }
         }
         islands.len() as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    private grid: number[][] = [];
+    private visited: boolean[][] = [];
+    private currentIsland: string[] = [];
+
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    numDistinctIslands(grid: number[][]): number {
+        this.grid = grid;
+        this.visited = Array.from({ length: grid.length }, () =>
+            Array(grid[0].length).fill(false),
+        );
+        const islands = new Set<string>();
+
+        for (let row = 0; row < grid.length; row++) {
+            for (let col = 0; col < grid[0].length; col++) {
+                this.currentIsland = [];
+                this.dfs(row, col, '0');
+                if (this.currentIsland.length === 0) {
+                    continue;
+                }
+                islands.add(this.currentIsland.join(''));
+            }
+        }
+        return islands.size;
+    }
+
+    dfs(row: number, col: number, dir: string): void {
+        if (
+            row < 0 ||
+            col < 0 ||
+            row >= this.grid.length ||
+            col >= this.grid[0].length
+        ) {
+            return;
+        }
+        if (this.visited[row][col] || this.grid[row][col] === 0) {
+            return;
+        }
+        this.visited[row][col] = true;
+        this.currentIsland.push(dir);
+        this.dfs(row + 1, col, 'D');
+        this.dfs(row - 1, col, 'U');
+        this.dfs(row, col + 1, 'R');
+        this.dfs(row, col - 1, 'L');
+        this.currentIsland.push('0');
     }
 }
 ```

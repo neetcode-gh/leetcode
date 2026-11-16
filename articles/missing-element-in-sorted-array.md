@@ -188,6 +188,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    missingElement(nums: number[], k: number): number {
+        const n = nums.length;
+
+        for (let i = 1; i < n; i++) {
+            const missedInGap = nums[i] - nums[i - 1] - 1;
+            if (missedInGap >= k) {
+                return nums[i - 1] + k;
+            }
+            k -= missedInGap;
+        }
+
+        return nums[n - 1] + k;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,14 +413,40 @@ impl Solution {
 
         while left < right {
             let mid = right - (right - left) / 2;
-            if nums[mid] - nums[0] - mid as i32 > k {
-                right = mid - 1;
-            } else {
+            if nums[mid] - nums[0] - (mid as i32) < k {
                 left = mid;
+            } else {
+                right = mid - 1;
             }
         }
 
         nums[0] + k + left as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    missingElement(nums: number[], k: number): number {
+        const n = nums.length;
+        let left = 0,
+            right = n - 1;
+
+        while (left < right) {
+            const mid = right - Math.floor((right - left) / 2);
+            if (nums[mid] - nums[0] - mid < k) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return nums[0] + k + left;
     }
 }
 ```

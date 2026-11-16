@@ -290,6 +290,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} val
+     * @return {TreeNode}
+     */
+    insertIntoBST(root: TreeNode | null, val: number): TreeNode | null {
+        if (!root) {
+            return new TreeNode(val);
+        }
+
+        if (val > root.val) {
+            root.right = this.insertIntoBST(root.right, val);
+        } else {
+            root.left = this.insertIntoBST(root.left, val);
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -558,7 +581,7 @@ class Solution {
             return TreeNode(`val`)
         }
 
-        var cur = root
+        var cur: TreeNode = root
         while (true) {
             if (`val` > cur.`val`) {
                 if (cur.right == null) {
@@ -659,6 +682,38 @@ impl Solution {
                 }
                 let next = left.unwrap();
                 cur = next;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} val
+     * @return {TreeNode}
+     */
+    insertIntoBST(root: TreeNode | null, val: number): TreeNode | null {
+        if (!root) {
+            return new TreeNode(val);
+        }
+
+        let cur = root;
+        while (true) {
+            if (val > cur.val) {
+                if (!cur.right) {
+                    cur.right = new TreeNode(val);
+                    return root;
+                }
+                cur = cur.right;
+            } else {
+                if (!cur.left) {
+                    cur.left = new TreeNode(val);
+                    return root;
+                }
+                cur = cur.left;
             }
         }
     }

@@ -184,6 +184,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} limit
+     * @return {number}
+     */
+    distributeCandies(n: number, limit: number): number {
+        let res = 0;
+        for (let a = 0; a <= limit; a++) {
+            for (let b = 0; b <= limit; b++) {
+                for (let c = 0; c <= limit; c++) {
+                    if (a + b + c === n) {
+                        res++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,6 +393,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} limit
+     * @return {number}
+     */
+    distributeCandies(n: number, limit: number): number {
+        let res = 0;
+        const maxA = Math.min(n, limit);
+        for (let a = 0; a <= maxA; a++) {
+            const maxB = Math.min(n - a, limit);
+            for (let b = 0; b <= maxB; b++) {
+                if (n - a - b <= limit) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -542,6 +588,28 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} limit
+     * @return {number}
+     */
+    distributeCandies(n: number, limit: number): number {
+        let res = 0;
+        const aMax = Math.min(n, limit);
+        for (let a = 0; a <= aMax; a++) {
+            const bMax = Math.min(n - a, limit);
+            const bMin = Math.max(0, n - a - limit);
+            if (bMax >= bMin) {
+                res += bMax - bMin + 1;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -729,6 +797,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} limit
+     * @return {number}
+     */
+    distributeCandies(n: number, limit: number): number {
+        let res = 0;
+        const maxA = Math.min(n, limit);
+        for (let a = 0; a <= maxA; a++) {
+            const rem = n - a;
+            if (rem <= 2 * limit) {
+                const hi = Math.min(rem, limit);
+                const lo = Math.max(0, rem - limit);
+                res += hi - lo + 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -912,6 +1003,28 @@ impl Solution {
             res += sign * c3[j] * ways;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} limit
+     * @return {number}
+     */
+    distributeCandies(n: number, limit: number): number {
+        const C3 = [1, 3, 3, 1];
+        let res = 0;
+        for (let j = 0; j < 4; j++) {
+            const m = n - j * (limit + 1);
+            if (m < 0) continue;
+            const ways = ((m + 2) * (m + 1)) / 2;
+            const sign = j % 2 === 0 ? 1 : -1;
+            res += sign * C3[j] * ways;
+        }
+        return res;
     }
 }
 ```

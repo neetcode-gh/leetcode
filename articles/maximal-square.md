@@ -418,6 +418,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} matrix
+     * @return {number}
+     */
+    maximalSquare(matrix: string[][]): number {
+        const m = matrix.length,
+            n = matrix[0].length;
+        let res = 0;
+
+        for (let r = 0; r < m; r++) {
+            for (let c = 0; c < n; c++) {
+                if (matrix[r][c] === '0') {
+                    continue;
+                }
+                let k = 1;
+                while (true) {
+                    if (r + k > m || c + k > n) {
+                        break;
+                    }
+                    let flag = true;
+
+                    for (let i = r; i < r + k; i++) {
+                        if (matrix[i][c + k - 1] === '0') {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    for (let j = c; j < c + k; j++) {
+                        if (matrix[r + k - 1][j] === '0') {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if (!flag) {
+                        break;
+                    }
+                    res = Math.max(res, k * k);
+                    k++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -800,6 +850,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} matrix
+     * @return {number}
+     */
+    maximalSquare(matrix: string[][]): number {
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        const dp: number[][] = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(-1),
+        );
+
+        const dfs = (r: number, c: number): number => {
+            if (r >= ROWS || c >= COLS) {
+                return 0;
+            }
+            if (dp[r][c] !== -1) {
+                return dp[r][c];
+            }
+            const down = dfs(r + 1, c);
+            const right = dfs(r, c + 1);
+            const diag = dfs(r + 1, c + 1);
+            dp[r][c] = 0;
+            if (matrix[r][c] === '1') {
+                dp[r][c] = 1 + Math.min(down, Math.min(right, diag));
+            }
+            return dp[r][c];
+        };
+
+        dfs(0, 0);
+        let maxSquare = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                maxSquare = Math.max(maxSquare, dp[r][c]);
+            }
+        }
+        return maxSquare * maxSquare;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1030,6 +1122,36 @@ impl Solution {
         }
 
         max_square * max_square
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} matrix
+     * @return {number}
+     */
+    maximalSquare(matrix: string[][]): number {
+        const m = matrix.length,
+            n = matrix[0].length;
+        const dp: number[][] = Array.from({ length: m + 1 }, () =>
+            Array(n + 1).fill(0),
+        );
+        let maxSquare = 0;
+
+        for (let r = m - 1; r >= 0; r--) {
+            for (let c = n - 1; c >= 0; c--) {
+                if (matrix[r][c] === '1') {
+                    dp[r][c] =
+                        1 +
+                        Math.min(dp[r + 1][c], dp[r][c + 1], dp[r + 1][c + 1]);
+                    maxSquare = Math.max(maxSquare, dp[r][c]);
+                }
+            }
+        }
+
+        return maxSquare * maxSquare;
     }
 }
 ```
@@ -1305,6 +1427,37 @@ impl Solution {
         }
 
         max_square * max_square
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} matrix
+     * @return {number}
+     */
+    maximalSquare(matrix: string[][]): number {
+        const m = matrix.length,
+            n = matrix[0].length;
+        const dp: number[] = new Array(n + 1).fill(0);
+        let maxSquare = 0;
+        let prev = 0;
+
+        for (let r = m - 1; r >= 0; r--) {
+            for (let c = n - 1; c >= 0; c--) {
+                const temp = dp[c];
+                if (matrix[r][c] === '1') {
+                    dp[c] = 1 + Math.min(dp[c], dp[c + 1], prev);
+                    maxSquare = Math.max(maxSquare, dp[c]);
+                } else {
+                    dp[c] = 0;
+                }
+                prev = temp;
+            }
+        }
+
+        return maxSquare * maxSquare;
     }
 }
 ```

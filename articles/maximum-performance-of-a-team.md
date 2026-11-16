@@ -135,6 +135,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1000000007;
+    private int[] speed, efficiency;
+    private int n;
+    private long res;
+
+    public int MaxPerformance(int n, int[] speed, int[] efficiency, int k) {
+        this.n = n;
+        this.speed = speed;
+        this.efficiency = efficiency;
+        this.res = 0;
+
+        Dfs(0, k, int.MaxValue, 0);
+        return (int)(res % MOD);
+    }
+
+    private void Dfs(int i, int k, int minEff, long speedSum) {
+        res = Math.Max(res, speedSum * minEff);
+        if (i == n || k == 0) return;
+
+        Dfs(i + 1, k, minEff, speedSum);
+        Dfs(i + 1, k - 1, Math.Min(minEff, efficiency[i]), speedSum + speed[i]);
+    }
+}
+```
+
 ```go
 func maxPerformance(n int, speed []int, efficiency []int, k int) int {
     MOD := 1000000007
@@ -238,6 +265,48 @@ impl Solution {
 
         dfs(0, k, i64::MAX, 0, n, &speed, &efficiency, &mut res);
         (res % MOD) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} speed
+     * @param {number[]} efficiency
+     * @param {number} k
+     * @return {number}
+     */
+    maxPerformance(
+        n: number,
+        speed: number[],
+        efficiency: number[],
+        k: number,
+    ): number {
+        const MOD = 1000000007;
+        let res = 0;
+
+        const dfs = (
+            i: number,
+            k: number,
+            minEff: number,
+            speedSum: number,
+        ): void => {
+            res = Math.max(res, minEff === Infinity ? 0 : speedSum * minEff);
+            if (i === n || k === 0) return;
+
+            dfs(i + 1, k, minEff, speedSum);
+            dfs(
+                i + 1,
+                k - 1,
+                Math.min(minEff, efficiency[i]),
+                speedSum + speed[i],
+            );
+        };
+
+        dfs(0, k, Infinity, 0);
+        return res % MOD;
     }
 }
 ```
@@ -382,6 +451,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxPerformance(int n, int[] speed, int[] efficiency, int k) {
+        const int MOD = 1_000_000_007;
+        int[][] engineers = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            engineers[i] = new int[] { efficiency[i], speed[i] };
+        }
+
+        Array.Sort(engineers, (a, b) => b[0].CompareTo(a[0]));
+
+        PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+        long speedSum = 0, res = 0;
+
+        foreach (int[] eng in engineers) {
+            if (minHeap.Count == k) {
+                speedSum -= minHeap.Dequeue();
+            }
+            speedSum += eng[1];
+            minHeap.Enqueue(eng[1], eng[1]);
+            res = Math.Max(res, speedSum * eng[0]);
+        }
+
+        return (int)(res % MOD);
+    }
+}
+```
+
 ```go
 func maxPerformance(n int, speed []int, efficiency []int, k int) int {
     MOD := int64(1000000007)
@@ -505,6 +603,43 @@ impl Solution {
         }
 
         (res % MOD) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[]} speed
+     * @param {number[]} efficiency
+     * @param {number} k
+     * @return {number}
+     */
+    maxPerformance(
+        n: number,
+        speed: number[],
+        efficiency: number[],
+        k: number,
+    ): number {
+        const MOD = BigInt(1e9 + 7);
+        const engineers = efficiency.map((eff, i) => [eff, speed[i]]);
+        engineers.sort((a, b) => b[0] - a[0]);
+
+        const minHeap = new MinPriorityQueue();
+        let speedSum = BigInt(0),
+            res = BigInt(0);
+
+        for (const [eff, spd] of engineers) {
+            if (minHeap.size() === k) {
+                speedSum -= BigInt(minHeap.dequeue());
+            }
+            speedSum += BigInt(spd);
+            minHeap.enqueue(spd);
+            res = res > speedSum * BigInt(eff) ? res : speedSum * BigInt(eff);
+        }
+
+        return Number(res % MOD);
     }
 }
 ```

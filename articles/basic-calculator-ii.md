@@ -347,6 +347,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    calculate(s: string): number {
+        s = s.replace(/\s+/g, '');
+        const stack: number[] = [];
+        let num = 0;
+        let op = '+';
+        for (let i = 0; i < s.length; i++) {
+            const ch = s[i];
+            if (/\d/.test(ch)) {
+                num = num * 10 + (ch.charCodeAt(0) - 48);
+            }
+            if (!/\d/.test(ch) || i === s.length - 1) {
+                if (op === '+') {
+                    stack.push(num);
+                } else if (op === '-') {
+                    stack.push(-num);
+                } else if (op === '*') {
+                    stack.push(stack.pop()! * num);
+                } else {
+                    const prev = stack.pop()!;
+                    stack.push(Math.trunc(prev / num));
+                }
+                op = ch;
+                num = 0;
+            }
+        }
+        return stack.reduce((a, b) => a + b, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -741,6 +777,50 @@ impl Solution {
         }
         total += prev;
         total
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    calculate(s: string): number {
+        let total = 0,
+            prev = 0,
+            num = 0;
+        let op = '+';
+        const n = s.length;
+        let i = 0;
+        while (i <= n) {
+            const ch = i < n ? s[i] : '+';
+            if (ch === ' ') {
+                i++;
+                continue;
+            }
+            if (ch >= '0' && ch <= '9') {
+                num = num * 10 + (ch.charCodeAt(0) - 48);
+            } else {
+                if (op === '+') {
+                    total += prev;
+                    prev = num;
+                } else if (op === '-') {
+                    total += prev;
+                    prev = -num;
+                } else if (op === '*') {
+                    prev = prev * num;
+                } else {
+                    prev = (prev / num) | 0;
+                }
+                op = ch;
+                num = 0;
+            }
+            i++;
+        }
+        total += prev;
+        return total;
     }
 }
 ```

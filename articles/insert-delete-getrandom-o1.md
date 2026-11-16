@@ -309,8 +309,6 @@ class RandomizedSet {
 ```
 
 ```rust
-use rand::Rng;
-
 struct RandomizedSet {
     num_map: HashMap<i32, i32>,
     size: usize,
@@ -345,6 +343,49 @@ impl RandomizedSet {
     fn get_random(&self) -> i32 {
         let idx = rand::thread_rng().gen_range(0..self.size);
         *self.num_map.keys().nth(idx).unwrap()
+    }
+}
+```
+
+```typescript
+class RandomizedSet {
+    private numMap: Map<number, number>;
+    private size: number;
+
+    constructor() {
+        this.numMap = new Map();
+        this.size = 0;
+    }
+
+    /**
+     * @param {number} val
+     * @return {boolean}
+     */
+    insert(val: number): boolean {
+        if (this.numMap.has(val)) return false;
+        this.numMap.set(val, 1);
+        this.size++;
+        return true;
+    }
+
+    /**
+     * @param {number} val
+     * @return {boolean}
+     */
+    remove(val: number): boolean {
+        if (!this.numMap.has(val)) return false;
+        this.numMap.delete(val);
+        this.size--;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    getRandom(): number {
+        const keys = Array.from(this.numMap.keys());
+        const idx = Math.floor(Math.random() * this.size);
+        return keys[idx];
     }
 }
 ```
@@ -667,8 +708,6 @@ class RandomizedSet {
 ```
 
 ```rust
-use rand::Rng;
-
 struct RandomizedSet {
     num_map: HashMap<i32, usize>,
     nums: Vec<i32>,
@@ -707,6 +746,51 @@ impl RandomizedSet {
     fn get_random(&self) -> i32 {
         let idx = rand::thread_rng().gen_range(0..self.nums.len());
         self.nums[idx]
+    }
+}
+```
+
+```typescript
+class RandomizedSet {
+    private numMap: Map<number, number>;
+    private nums: number[];
+
+    constructor() {
+        this.numMap = new Map();
+        this.nums = [];
+    }
+
+    /**
+     * @param {number} val
+     * @return {boolean}
+     */
+    insert(val: number): boolean {
+        if (this.numMap.has(val)) return false;
+        this.numMap.set(val, this.nums.length);
+        this.nums.push(val);
+        return true;
+    }
+
+    /**
+     * @param {number} val
+     * @return {boolean}
+     */
+    remove(val: number): boolean {
+        if (!this.numMap.has(val)) return false;
+        const idx = this.numMap.get(val)!;
+        const last = this.nums[this.nums.length - 1];
+        this.nums[idx] = last;
+        this.numMap.set(last, idx);
+        this.nums.pop();
+        this.numMap.delete(val);
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    getRandom(): number {
+        return this.nums[Math.floor(Math.random() * this.nums.length)];
     }
 }
 ```

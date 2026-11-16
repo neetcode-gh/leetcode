@@ -262,6 +262,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    singleNumber(nums: number[]): number[] {
+        const n = nums.length;
+        const res: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            let flag = true;
+            for (let j = 0; j < n; j++) {
+                if (i !== j && nums[i] === nums[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) {
+                res.push(nums[i]);
+                if (res.length === 2) {
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,6 +491,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    singleNumber(nums: number[]): number[] {
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        const res: number[] = [];
+        for (const [key, value] of count) {
+            if (value === 1) {
+                res.push(key);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -645,6 +701,27 @@ impl Solution {
             }
         }
         seen.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    singleNumber(nums: number[]): number[] {
+        const seen = new Set<number>();
+        for (const num of nums) {
+            if (seen.has(num)) {
+                seen.delete(num);
+            } else {
+                seen.add(num);
+            }
+        }
+
+        return Array.from(seen);
     }
 }
 ```
@@ -851,6 +928,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    singleNumber(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const res: number[] = [];
+        const n = nums.length;
+
+        for (let i = 0; i < n; i++) {
+            if (
+                (i > 0 && nums[i] === nums[i - 1]) ||
+                (i + 1 < n && nums[i] === nums[i + 1])
+            ) {
+                continue;
+            }
+            res.push(nums[i]);
+        }
+
+        return res;
     }
 }
 ```
@@ -1117,6 +1220,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    singleNumber(nums: number[]): number[] {
+        let xor = 0;
+        for (const num of nums) {
+            xor ^= num;
+        }
+
+        let diff_bit = 1;
+        while ((xor & diff_bit) === 0) {
+            diff_bit <<= 1;
+        }
+
+        let a = 0,
+            b = 0;
+        for (const num of nums) {
+            if (num & diff_bit) {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+        return [a, b];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1349,6 +1483,34 @@ impl Solution {
             }
         }
         vec![a, b]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    singleNumber(nums: number[]): number[] {
+        let xor = 0;
+        for (const num of nums) {
+            xor ^= num;
+        }
+
+        let diff_bit = xor & -xor;
+
+        let a = 0,
+            b = 0;
+        for (const num of nums) {
+            if (num & diff_bit) {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+        return [a, b];
     }
 }
 ```

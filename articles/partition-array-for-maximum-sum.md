@@ -256,6 +256,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    maxSumAfterPartitioning(arr: number[], k: number): number {
+        const dfs = (i: number): number => {
+            if (i >= arr.length) {
+                return 0;
+            }
+
+            let cur_max = 0,
+                res = 0;
+            for (let j = i; j < Math.min(arr.length, i + k); j++) {
+                cur_max = Math.max(cur_max, arr[j]);
+                let window_size = j - i + 1;
+                res = Math.max(res, dfs(j + 1) + cur_max * window_size);
+            }
+
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,6 +579,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    maxSumAfterPartitioning(arr: number[], k: number): number {
+        const cache: number[] = new Array(arr.length + 1).fill(-1);
+        cache[arr.length] = 0;
+
+        const dfs = (i: number): number => {
+            if (cache[i] !== -1) {
+                return cache[i];
+            }
+
+            let cur_max = 0,
+                res = 0;
+            for (let j = i; j < Math.min(arr.length, i + k); j++) {
+                cur_max = Math.max(cur_max, arr[j]);
+                let window_size = j - i + 1;
+                res = Math.max(res, dfs(j + 1) + cur_max * window_size);
+            }
+
+            return (cache[i] = res);
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -773,6 +834,31 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    maxSumAfterPartitioning(arr: number[], k: number): number {
+        let n = arr.length;
+        let dp: number[] = new Array(n + 1).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            let cur_max = 0;
+            for (let j = i; j < Math.min(n, i + k); j++) {
+                cur_max = Math.max(cur_max, arr[j]);
+                let window_size = j - i + 1;
+                dp[i] = Math.max(dp[i], dp[j + 1] + cur_max * window_size);
+            }
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1058,6 +1144,37 @@ impl Solution {
         }
 
         dp[(n - 1) % k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @return {number}
+     */
+    maxSumAfterPartitioning(arr: number[], k: number): number {
+        const n = arr.length;
+        const dp: number[] = new Array(k).fill(0);
+        dp[0] = arr[0];
+
+        for (let i = 1; i < n; i++) {
+            let cur_max = 0,
+                max_at_i = 0;
+            for (let j = i; j > i - k; j--) {
+                if (j < 0) break;
+                cur_max = Math.max(cur_max, arr[j]);
+                let window_size = i - j + 1;
+                let cur_sum = cur_max * window_size;
+                let sub_sum = j > 0 ? dp[(j - 1) % k] : 0;
+                max_at_i = Math.max(max_at_i, cur_sum + sub_sum);
+            }
+            dp[i % k] = max_at_i;
+        }
+
+        return dp[(n - 1) % k];
     }
 }
 ```

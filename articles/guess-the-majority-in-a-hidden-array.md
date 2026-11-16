@@ -195,7 +195,7 @@ public class Solution {
 ```
 
 ```go
-func guessMajority(reader *ArrayReader) int {
+func guessMajority(reader ArrayReader) int {
     n := reader.Length()
     cntEqual, cntDiffer, indexDiffer := 1, 0, -1
 
@@ -351,6 +351,49 @@ impl Solution {
         } else {
             -1
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ArrayReader} reader
+     * @return {number}
+     */
+    guessMajority(reader: ArrayReader): number {
+        const n = reader.length();
+        let cntEqual = 1;
+        let cntDiffer = 0;
+        let indexDiffer = -1;
+
+        const f = (equal: boolean, i: number): void => {
+            if (equal) {
+                cntEqual++;
+            } else {
+                cntDiffer++;
+                indexDiffer = i;
+            }
+        };
+
+        const query0123 = reader.query(0, 1, 2, 3);
+        const query1234 = reader.query(1, 2, 3, 4);
+
+        f(reader.query(1, 2, 3, 4) === query0123, 4);
+
+        for (let i = 5; i < n; i++) {
+            f(reader.query(1, 2, 3, i) === query0123, i);
+        }
+
+        f(reader.query(0, 2, 3, 4) === query1234, 1);
+        f(reader.query(0, 1, 3, 4) === query1234, 2);
+        f(reader.query(0, 1, 2, 4) === query1234, 3);
+
+        return cntEqual > cntDiffer
+            ? 0
+            : cntDiffer > cntEqual
+              ? indexDiffer
+              : -1;
     }
 }
 ```

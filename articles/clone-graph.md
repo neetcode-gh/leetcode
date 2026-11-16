@@ -359,7 +359,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn clone_graph(node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
@@ -380,8 +379,8 @@ impl Solution {
             old_to_new.insert(val, copy.clone());
 
             for nei in &node.borrow().neighbors {
-                if let Some(cloned_nei) = dfs(nei.clone(), old_to_new) {
-                    copy.borrow_mut().neighbors.push(Some(cloned_nei));
+                if let Some(cloned_nei) = dfs(Some(nei.clone()), old_to_new) {
+                    copy.borrow_mut().neighbors.push(cloned_nei);
                 }
             }
 
@@ -389,6 +388,43 @@ impl Solution {
         }
 
         dfs(node, &mut old_to_new)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} node
+     * @return {Node}
+     */
+    cloneGraph(node: Node | null): Node | null {
+        const oldToNew = new Map<Node, Node>();
+        return this.dfs(node, oldToNew);
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Map} oldToNew
+     * @return {Node}
+     */
+    dfs(node: Node | null, oldToNew: Map<Node, Node>): Node | null {
+        if (node === null) {
+            return null;
+        }
+
+        if (oldToNew.has(node)) {
+            return oldToNew.get(node)!;
+        }
+
+        const copy = new Node(node.val);
+        oldToNew.set(node, copy);
+
+        for (const nei of node.neighbors) {
+            copy.neighbors.push(this.dfs(nei, oldToNew));
+        }
+
+        return copy;
     }
 }
 ```
@@ -747,7 +783,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn clone_graph(node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
@@ -760,20 +795,46 @@ impl Solution {
 
         while let Some(cur) = queue.pop_front() {
             let cur_val = cur.borrow().val;
-            for nei in &cur.borrow().neighbors {
-                if let Some(nei_rc) = nei {
-                    let nei_val = nei_rc.borrow().val;
-                    if !old_to_new.contains_key(&nei_val) {
-                        old_to_new.insert(nei_val, Rc::new(RefCell::new(Node::new(nei_val))));
-                        queue.push_back(nei_rc.clone());
-                    }
-                    let cloned_nei = old_to_new.get(&nei_val).unwrap().clone();
-                    old_to_new.get(&cur_val).unwrap().borrow_mut().neighbors.push(Some(cloned_nei));
+            for nei_rc in &cur.borrow().neighbors {
+                let nei_val = nei_rc.borrow().val;
+                if !old_to_new.contains_key(&nei_val) {
+                    old_to_new.insert(nei_val, Rc::new(RefCell::new(Node::new(nei_val))));
+                    queue.push_back(nei_rc.clone());
                 }
+                let cloned_nei = old_to_new.get(&nei_val).unwrap().clone();
+                old_to_new.get(&cur_val).unwrap().borrow_mut().neighbors.push(cloned_nei);
             }
         }
 
         old_to_new.get(&val).cloned()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Node} node
+     * @return {Node}
+     */
+    cloneGraph(node: Node | null): Node | null {
+        if (!node) return null;
+        const oldToNew = new Map<Node, Node>();
+        const q = new Queue();
+        oldToNew.set(node, new Node(node.val));
+        q.push(node);
+
+        while (!q.isEmpty()) {
+            const cur: Node = q.pop();
+            for (const nei of cur.neighbors) {
+                if (!oldToNew.has(nei)) {
+                    oldToNew.set(nei, new Node(nei.val));
+                    q.push(nei);
+                }
+                oldToNew.get(cur)!.neighbors.push(oldToNew.get(nei)!);
+            }
+        }
+        return oldToNew.get(node)!;
     }
 }
 ```

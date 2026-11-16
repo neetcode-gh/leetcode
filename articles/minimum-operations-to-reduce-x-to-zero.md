@@ -338,6 +338,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} x
+     * @return {number}
+     */
+    minOperations(nums: number[], x: number): number {
+        const n = nums.length;
+        let res = n + 1,
+            suffixSum = 0,
+            prefixSum = 0;
+
+        for (let i = n - 1; i >= 0; i--) {
+            suffixSum += nums[i];
+            if (suffixSum === x) {
+                res = Math.min(res, n - i);
+            }
+        }
+
+        for (let i = 0; i < n; i++) {
+            prefixSum += nums[i];
+            suffixSum = 0;
+            if (prefixSum === x) {
+                res = Math.min(res, i + 1);
+            }
+
+            for (let j = n - 1; j > i; j--) {
+                suffixSum += nums[j];
+                if (prefixSum + suffixSum === x) {
+                    res = Math.min(res, i + 1 + n - j);
+                }
+            }
+        }
+
+        return res === n + 1 ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -802,6 +842,57 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} x
+     * @return {number}
+     */
+    minOperations(nums: number[], x: number): number {
+        const n = nums.length;
+        const prefixSum: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        if (x > prefixSum[n]) return -1;
+
+        const binarySearch = (target: number, m: number): number => {
+            let l = 1,
+                r = m;
+            let index = n + 1;
+            while (l <= r) {
+                let mid = Math.floor((l + r) / 2);
+                if (prefixSum[mid] >= target) {
+                    if (prefixSum[mid] === target) {
+                        index = mid;
+                    }
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+            return index;
+        };
+
+        let res = binarySearch(x, n);
+        let suffixSum = 0;
+        for (let i = n - 1; i > 0; i--) {
+            suffixSum += nums[i];
+            if (suffixSum === x) {
+                res = Math.min(res, n - i);
+                break;
+            }
+            if (suffixSum > x) break;
+            res = Math.min(res, binarySearch(x - suffixSum, i) + n - i);
+        }
+
+        return res === n + 1 ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1085,6 +1176,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} x
+     * @return {number}
+     */
+    minOperations(nums: number[], x: number): number {
+        const total = nums.reduce((acc, num) => acc + num, 0);
+        if (total === x) return nums.length;
+
+        const target = total - x;
+        if (target < 0) return -1;
+
+        const prefixMap = new Map<number, number>();
+        prefixMap.set(0, -1);
+        let prefixSum = 0,
+            res = -1;
+
+        for (let i = 0; i < nums.length; i++) {
+            prefixSum += nums[i];
+            if (prefixMap.has(prefixSum - target)) {
+                res = Math.max(res, i - prefixMap.get(prefixSum - target)!);
+            }
+            prefixMap.set(prefixSum, i);
+        }
+
+        return res === -1 ? -1 : nums.length - res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1347,6 +1470,37 @@ impl Solution {
         }
 
         if max_window == -1 { -1 } else { nums.len() as i32 - max_window }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} x
+     * @return {number}
+     */
+    minOperations(nums: number[], x: number): number {
+        const target = nums.reduce((acc, num) => acc + num, 0) - x;
+        let curSum = 0,
+            maxWindow = -1,
+            l = 0;
+
+        for (let r = 0; r < nums.length; r++) {
+            curSum += nums[r];
+
+            while (l <= r && curSum > target) {
+                curSum -= nums[l];
+                l++;
+            }
+
+            if (curSum === target) {
+                maxWindow = Math.max(maxWindow, r - l + 1);
+            }
+        }
+
+        return maxWindow === -1 ? -1 : nums.length - maxWindow;
     }
 }
 ```

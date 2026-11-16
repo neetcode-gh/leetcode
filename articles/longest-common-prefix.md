@@ -198,6 +198,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @return {string}
+     */
+    longestCommonPrefix(strs: string[]): string {
+        let prefix = strs[0];
+        for (let i = 1; i < strs.length; i++) {
+            let j = 0;
+            while (j < Math.min(prefix.length, strs[i].length)) {
+                if (prefix[j] !== strs[i][j]) {
+                    break;
+                }
+                j++;
+            }
+            prefix = prefix.slice(0, j);
+        }
+        return prefix;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -358,6 +381,25 @@ impl Solution {
             }
         }
         strs[0].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @return {string}
+     */
+    longestCommonPrefix(strs: string[]): string {
+        for (let i = 0; i < strs[0].length; i++) {
+            for (let s of strs) {
+                if (i === s.length || s[i] !== strs[0][i]) {
+                    return s.slice(0, i);
+                }
+            }
+        }
+        return strs[0];
     }
 }
 ```
@@ -575,6 +617,29 @@ impl Solution {
             }
         }
         strs[0].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @return {string}
+     */
+    longestCommonPrefix(strs: string[]): string {
+        if (strs.length === 1) {
+            return strs[0];
+        }
+
+        strs.sort();
+        let N = Math.min(strs[0].length, strs[strs.length - 1].length);
+        for (let i = 0; i < N; i++) {
+            if (strs[0][i] !== strs[strs.length - 1][i]) {
+                return strs[0].slice(0, i);
+            }
+        }
+        return strs[0];
     }
 }
 ```
@@ -1140,6 +1205,85 @@ impl Solution {
             prefix_len = trie.lcp(s, prefix_len);
         }
         strs[0][..prefix_len].to_string()
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: { [key: string]: TrieNode };
+
+    constructor() {
+        this.children = {};
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    insert(word: string): void {
+        let node = this.root;
+        for (let char of word) {
+            if (!node.children[char]) {
+                node.children[char] = new TrieNode();
+            }
+            node = node.children[char];
+        }
+    }
+
+    /**
+     * @param {string} word
+     * @param {number} prefixLen
+     * @return {number}
+     */
+    lcp(word: string, prefixLen: number): number {
+        let node = this.root;
+        let i = 0;
+        while (i < Math.min(word.length, prefixLen)) {
+            if (!node.children[word[i]]) {
+                return i;
+            }
+            node = node.children[word[i]];
+            i++;
+        }
+        return Math.min(word.length, prefixLen);
+    }
+}
+
+class Solution {
+    /**
+     * @param {string[]} strs
+     * @return {string}
+     */
+    longestCommonPrefix(strs: string[]): string {
+        if (strs.length === 1) {
+            return strs[0];
+        }
+
+        let mini = 0;
+        for (let i = 1; i < strs.length; i++) {
+            if (strs[mini].length > strs[i].length) {
+                mini = i;
+            }
+        }
+
+        const trie = new Trie();
+        trie.insert(strs[mini]);
+        let prefixLen = strs[mini].length;
+
+        for (let i = 0; i < strs.length; i++) {
+            prefixLen = trie.lcp(strs[i], prefixLen);
+        }
+
+        return strs[0].substring(0, prefixLen);
     }
 }
 ```

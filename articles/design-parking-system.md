@@ -188,6 +188,34 @@ impl ParkingSystem {
 }
 ```
 
+```typescript
+class ParkingSystem {
+    private spaces: number[];
+
+    /**
+     * @constructor
+     * @param {number} big
+     * @param {number} medium
+     * @param {number} small
+     */
+    constructor(big: number, medium: number, small: number) {
+        this.spaces = [big, medium, small];
+    }
+
+    /**
+     * @param {number} carType
+     * @return {boolean}
+     */
+    addCar(carType: number): boolean {
+        if (this.spaces[carType - 1] > 0) {
+            this.spaces[carType - 1]--;
+            return true;
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -344,6 +372,30 @@ impl ParkingSystem {
     fn add_car(&mut self, car_type: i32) -> bool {
         self.spaces[(car_type - 1) as usize] -= 1;
         self.spaces[(car_type - 1) as usize] >= 0
+    }
+}
+```
+
+```typescript
+class ParkingSystem {
+    private spaces: number[];
+
+    /**
+     * @constructor
+     * @param {number} big
+     * @param {number} medium
+     * @param {number} small
+     */
+    constructor(big: number, medium: number, small: number) {
+        this.spaces = [big, medium, small];
+    }
+
+    /**
+     * @param {number} carType
+     * @return {boolean}
+     */
+    addCar(carType: number): boolean {
+        return this.spaces[carType - 1]-- > 0;
     }
 }
 ```

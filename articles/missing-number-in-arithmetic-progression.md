@@ -239,6 +239,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    missingNumber(arr: number[]): number {
+        const n = arr.length;
+
+        // Get the difference `difference`.
+        const difference = Math.floor((arr[arr.length - 1] - arr[0]) / n);
+
+        // The expected element equals the starting element.
+        let expected = arr[0];
+
+        for (const val of arr) {
+            // Return the expected value that doesn't match val.
+            if (val !== expected) return expected;
+
+            // Next element will be expected element + `difference`.
+            expected += difference;
+        }
+        return expected;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -546,6 +573,43 @@ impl Solution {
         // Index `lo` will be the position with the first incorrect number.
         // Return the value that was supposed to be at this index.
         arr[0] + difference * lo as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @return {number}
+     */
+    missingNumber(arr: number[]): number {
+        const n = arr.length;
+
+        // Get the difference `difference`.
+        const difference = Math.floor((arr[n - 1] - arr[0]) / n);
+
+        let lo = 0;
+        let hi = n - 1;
+
+        // Basic binary search template.
+        while (lo < hi) {
+            const mid = Math.floor((lo + hi) / 2);
+
+            // All numbers up to `mid` have no missing number, so search on the right side.
+            if (arr[mid] === arr[0] + mid * difference) {
+                lo = mid + 1;
+            }
+
+            // A number is missing before `mid` inclusive of `mid` itself.
+            else {
+                hi = mid;
+            }
+        }
+
+        // Index `lo` will be the position with the first incorrect number.
+        // Return the value that was supposed to be at this index.
+        return arr[0] + difference * lo;
     }
 }
 ```

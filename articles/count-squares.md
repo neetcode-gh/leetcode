@@ -372,6 +372,46 @@ impl CountSquares {
 }
 ```
 
+```typescript
+class CountSquares {
+    private ptsCount: Map<string, number>;
+    private pts: number[][];
+
+    constructor() {
+        this.ptsCount = new Map();
+        this.pts = [];
+    }
+
+    /**
+     * @param {number[]} point
+     * @return {void}
+     */
+    add(point: number[]): void {
+        const p = point.join(',');
+        this.ptsCount.set(p, (this.ptsCount.get(p) || 0) + 1);
+        this.pts.push(point);
+    }
+
+    /**
+     * @param {number[]} point
+     * @return {number}
+     */
+    count(point: number[]): number {
+        let res = 0;
+        const [px, py] = point;
+        for (const [x, y] of this.pts) {
+            if (Math.abs(py - y) !== Math.abs(px - x) || x === px || y === py) {
+                continue;
+            }
+            res +=
+                (this.ptsCount.get(`${x},${py}`) || 0) *
+                (this.ptsCount.get(`${px},${y}`) || 0);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -807,6 +847,58 @@ impl CountSquares {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class CountSquares {
+    private ptsCount: Map<number, Map<number, number>>;
+
+    constructor() {
+        this.ptsCount = new Map();
+    }
+
+    /**
+     * @param {number[]} point
+     * @return {void}
+     */
+    add(point: number[]): void {
+        const [x, y] = point;
+        if (!this.ptsCount.has(x)) this.ptsCount.set(x, new Map());
+        const yCount = this.ptsCount.get(x)!;
+        yCount.set(y, (yCount.get(y) || 0) + 1);
+    }
+
+    /**
+     * @param {number[]} point
+     * @return {number}
+     */
+    count(point: number[]): number {
+        let res = 0;
+        const [x1, y1] = point;
+        if (!this.ptsCount.has(x1)) return res;
+
+        const x1Points = this.ptsCount.get(x1)!;
+        for (const [y2, cnt] of x1Points) {
+            const side = y2 - y1;
+            if (side === 0) continue;
+
+            const x3 = x1 + side;
+            const x4 = x1 - side;
+
+            res +=
+                cnt *
+                (this.ptsCount.get(x3)?.get(y1) || 0) *
+                (this.ptsCount.get(x3)?.get(y2) || 0);
+
+            res +=
+                cnt *
+                (this.ptsCount.get(x4)?.get(y1) || 0) *
+                (this.ptsCount.get(x4)?.get(y2) || 0);
+        }
+
+        return res;
     }
 }
 ```

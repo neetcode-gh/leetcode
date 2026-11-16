@@ -429,6 +429,60 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reorganizeString(s: string): string {
+        const freq: number[] = new Array(26).fill(0);
+        for (const char of s) {
+            freq[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        const maxFreq = Math.max(...freq);
+        if (maxFreq > Math.floor((s.length + 1) / 2)) {
+            return '';
+        }
+
+        const findMaxIndex = (): number => {
+            let maxIdx = 0;
+            for (let i = 1; i < freq.length; i++) {
+                if (freq[i] > freq[maxIdx]) {
+                    maxIdx = i;
+                }
+            }
+            return maxIdx;
+        };
+
+        const res: string[] = [];
+        while (res.length < s.length) {
+            const maxIdx = findMaxIndex();
+            const maxChar = String.fromCharCode(maxIdx + 'a'.charCodeAt(0));
+            res.push(maxChar);
+            freq[maxIdx]--;
+
+            if (freq[maxIdx] === 0) {
+                continue;
+            }
+
+            const tmp = freq[maxIdx];
+            freq[maxIdx] = -Infinity;
+            const nextMaxIdx = findMaxIndex();
+            const nextMaxChar = String.fromCharCode(
+                nextMaxIdx + 'a'.charCodeAt(0),
+            );
+            res.push(nextMaxChar);
+            freq[maxIdx] = tmp;
+            freq[nextMaxIdx]--;
+        }
+
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -579,9 +633,7 @@ class Solution {
             freq[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
         }
 
-        const maxHeap = new MaxPriorityQueue({
-            priority: ([count]) => count,
-        });
+        const maxHeap = new MaxPriorityQueue(([count]) => count);
         for (let i = 0; i < 26; i++) {
             if (freq[i] > 0) {
                 maxHeap.enqueue([
@@ -599,7 +651,7 @@ class Solution {
                 return '';
             }
 
-            const [count, char] = maxHeap.dequeue().element;
+            const [count, char] = maxHeap.dequeue();
             res += char;
 
             if (prev) {
@@ -711,8 +763,6 @@ func reorganizeString(s string) string {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class Solution {
     fun reorganizeString(s: String): String {
         val freq = IntArray(26)
@@ -832,6 +882,55 @@ impl Solution {
         }
 
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reorganizeString(s: string): string {
+        const freq: number[] = new Array(26).fill(0);
+        for (const char of s) {
+            freq[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        const maxHeap = new MaxPriorityQueue(
+            ([count]: [number, string]) => count,
+        );
+        for (let i = 0; i < 26; i++) {
+            if (freq[i] > 0) {
+                maxHeap.enqueue([
+                    freq[i],
+                    String.fromCharCode(i + 'a'.charCodeAt(0)),
+                ]);
+            }
+        }
+
+        let res = '';
+        let prev: [number, string] | null = null;
+
+        while (!maxHeap.isEmpty() || prev) {
+            if (prev && maxHeap.isEmpty()) {
+                return '';
+            }
+
+            const [count, char]: [number, string] = maxHeap.dequeue();
+            res += char;
+
+            if (prev) {
+                maxHeap.enqueue(prev);
+                prev = null;
+            }
+            if (count > 1) {
+                prev = [count - 1, char];
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1247,6 +1346,56 @@ impl Solution {
         }
 
         String::from_utf8(res).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    reorganizeString(s: string): string {
+        const freq: number[] = new Array(26).fill(0);
+        for (const char of s) {
+            freq[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        let maxIdx = 0;
+        for (let i = 1; i < 26; i++) {
+            if (freq[i] > freq[maxIdx]) {
+                maxIdx = i;
+            }
+        }
+
+        const maxFreq = freq[maxIdx];
+        if (maxFreq > Math.floor((s.length + 1) / 2)) {
+            return '';
+        }
+
+        const res: string[] = new Array(s.length).fill('');
+        let idx = 0;
+        const maxChar = String.fromCharCode(maxIdx + 'a'.charCodeAt(0));
+
+        while (freq[maxIdx] > 0) {
+            res[idx] = maxChar;
+            idx += 2;
+            freq[maxIdx]--;
+        }
+
+        for (let i = 0; i < 26; i++) {
+            while (freq[i] > 0) {
+                if (idx >= s.length) {
+                    idx = 1;
+                }
+                res[idx] = String.fromCharCode(i + 'a'.charCodeAt(0));
+                idx += 2;
+                freq[i]--;
+            }
+        }
+
+        return res.join('');
     }
 }
 ```

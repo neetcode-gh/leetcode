@@ -410,6 +410,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[][]}
+     */
+    partition(s: string): string[][] {
+        const res: string[][] = [];
+        const part: string[] = [];
+
+        const dfs = (j: number, i: number): void => {
+            if (i >= s.length) {
+                if (i === j) {
+                    res.push([...part]);
+                }
+                return;
+            }
+
+            if (this.isPali(s, j, i)) {
+                part.push(s.substring(j, i + 1));
+                dfs(i + 1, i + 1);
+                part.pop();
+            }
+
+            dfs(j, i + 1);
+        };
+
+        dfs(0, 0);
+        return res;
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} l
+     * @param {number} r
+     * @return {boolean}
+     */
+    isPali(s: string, l: number, r: number): boolean {
+        while (l < r) {
+            if (s[l] !== s[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -805,6 +855,59 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[][]}
+     */
+    partition(s: string): string[][] {
+        const res: string[][] = [];
+        const part: string[] = [];
+        this.dfs(0, s, part, res);
+        return res;
+    }
+
+    /**
+     * @param {number} i
+     * @param {string} s
+     * @param {string[]} part
+     * @param {string[][]} res
+     * @return {void}
+     */
+    dfs(i: number, s: string, part: string[], res: string[][]): void {
+        if (i >= s.length) {
+            res.push([...part]);
+            return;
+        }
+        for (let j = i; j < s.length; j++) {
+            if (this.isPali(s, i, j)) {
+                part.push(s.substring(i, j + 1));
+                this.dfs(j + 1, s, part, res);
+                part.pop();
+            }
+        }
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} l
+     * @param {number} r
+     * @return {boolean}
+     */
+    isPali(s: string, l: number, r: number): boolean {
+        while (l < r) {
+            if (s[l] !== s[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1178,6 +1281,46 @@ impl Solution {
 
         dfs(s, &dp, 0, &mut part, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[][]}
+     */
+    partition(s: string): string[][] {
+        const n = s.length;
+        const dp: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+        for (let l = 1; l <= n; l++) {
+            for (let i = 0; i <= n - l; i++) {
+                dp[i][i + l - 1] =
+                    s[i] === s[i + l - 1] &&
+                    (i + 1 > i + l - 2 || dp[i + 1][i + l - 2]);
+            }
+        }
+
+        const res: string[][] = [];
+        const part: string[] = [];
+        const dfs = (i: number): void => {
+            if (i >= s.length) {
+                res.push([...part]);
+                return;
+            }
+            for (let j = i; j < s.length; j++) {
+                if (dp[i][j]) {
+                    part.push(s.substring(i, j + 1));
+                    dfs(j + 1);
+                    part.pop();
+                }
+            }
+        };
+        dfs(0);
+        return res;
     }
 }
 ```
@@ -1567,6 +1710,48 @@ impl Solution {
         }
 
         dfs(s, &dp, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string[][]}
+     */
+    partition(s: string): string[][] {
+        const n = s.length;
+        const dp: boolean[][] = Array.from({ length: n }, () =>
+            Array(n).fill(false),
+        );
+        for (let l = 1; l <= n; l++) {
+            for (let i = 0; i <= n - l; i++) {
+                dp[i][i + l - 1] =
+                    s[i] === s[i + l - 1] &&
+                    (i + 1 > i + l - 2 || dp[i + 1][i + l - 2]);
+            }
+        }
+
+        const dfs = (i: number): string[][] => {
+            if (i >= s.length) {
+                return [[]];
+            }
+
+            const ret: string[][] = [];
+            for (let j = i; j < s.length; j++) {
+                if (dp[i][j]) {
+                    const nxt = dfs(j + 1);
+                    for (const part of nxt) {
+                        const cur = [s.slice(i, j + 1), ...part];
+                        ret.push(cur);
+                    }
+                }
+            }
+            return ret;
+        };
+
+        return dfs(0);
     }
 }
 ```

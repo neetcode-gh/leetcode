@@ -292,6 +292,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {Interval[]} intervals
+     * @returns {boolean}
+     */
+    canAttendMeetings(intervals: Interval[]): boolean {
+        const n = intervals.length;
+        for (let i = 0; i < n; i++) {
+            const A = intervals[i];
+            for (let j = i + 1; j < n; j++) {
+                const B = intervals[j];
+                if (Math.min(A.end, B.end) > Math.max(A.start, B.start)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,7 +554,7 @@ class Solution {
 class Solution {
     func canAttendMeetings(_ intervals: [Interval]) -> Bool {
         let sortedIntervals = intervals.sorted { $0.start < $1.start }
-        for i in 1..<sortedIntervals.count {
+        for i in stride(from: 1, to: sortedIntervals.count, by: 1) {
             if sortedIntervals[i - 1].end > sortedIntervals[i].start {
                 return false
             }
@@ -554,6 +576,24 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Interval[]} intervals
+     * @returns {boolean}
+     */
+    canAttendMeetings(intervals: Interval[]): boolean {
+        intervals.sort((a, b) => a.start - b.start);
+        for (let i = 1; i < intervals.length; i++) {
+            if (intervals[i].start < intervals[i - 1].end) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ```

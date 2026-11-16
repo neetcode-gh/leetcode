@@ -263,6 +263,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    numDecodings(s: string): number {
+        const dfs = (i: number): number => {
+            if (i === s.length) return 1;
+            if (s[i] === '0') return 0;
+
+            let res = dfs(i + 1);
+            if (i < s.length - 1) {
+                if (s[i] === '1' || (s[i] === '2' && s[i + 1] < '7')) {
+                    res += dfs(i + 2);
+                }
+            }
+            return res;
+        };
+
+        return dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,6 +594,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    numDecodings(s: string): number {
+        const dp = new Map<number, number>();
+        dp.set(s.length, 1);
+
+        return this.dfs(s, 0, dp);
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} i
+     * @param {Map} dp
+     * @return {number}
+     */
+    dfs(s: string, i: number, dp: Map<number, number>): number {
+        if (dp.has(i)) {
+            return dp.get(i)!;
+        }
+        if (s.charAt(i) === '0') {
+            return 0;
+        }
+
+        let res = this.dfs(s, i + 1, dp);
+        if (
+            i + 1 < s.length &&
+            (s.charAt(i) === '1' ||
+                (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))
+        ) {
+            res += this.dfs(s, i + 2, dp);
+        }
+        dp.set(i, res);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -802,6 +868,34 @@ impl Solution {
             }
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    numDecodings(s: string): number {
+        let dp: number[] = new Array(s.length + 1).fill(0);
+        dp[s.length] = 1;
+        for (let i = s.length - 1; i >= 0; i--) {
+            if (s.charAt(i) === '0') {
+                dp[i] = 0;
+            } else {
+                dp[i] = dp[i + 1];
+                if (
+                    i + 1 < s.length &&
+                    (s.charAt(i) === '1' ||
+                        (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))
+                ) {
+                    dp[i] += dp[i + 2];
+                }
+            }
+        }
+        return dp[0];
     }
 }
 ```
@@ -1068,6 +1162,38 @@ impl Solution {
             dp = 0;
         }
         dp1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    numDecodings(s: string): number {
+        let dp2 = 0,
+            dp = 0;
+        let dp1 = 1;
+        for (let i = s.length - 1; i >= 0; i--) {
+            if (s.charAt(i) === '0') {
+                dp = 0;
+            } else {
+                dp = dp1;
+                if (
+                    i + 1 < s.length &&
+                    (s.charAt(i) === '1' ||
+                        (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))
+                ) {
+                    dp += dp2;
+                }
+            }
+            dp2 = dp1;
+            dp1 = dp;
+            dp = 0;
+        }
+        return dp1;
     }
 }
 ```

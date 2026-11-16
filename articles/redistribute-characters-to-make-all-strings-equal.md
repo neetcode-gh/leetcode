@@ -209,6 +209,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {boolean}
+     */
+    makeEqual(words: string[]): boolean {
+        const charCnt: { [key: string]: number } = {};
+
+        for (let w of words) {
+            for (let c of w) {
+                charCnt[c] = (charCnt[c] || 0) + 1;
+            }
+        }
+
+        for (let count of Object.values(charCnt)) {
+            if (count % words.length !== 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -502,6 +527,40 @@ impl Solution {
         }
 
         flag == 0
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {boolean}
+     */
+    makeEqual(words: string[]): boolean {
+        const freq: number[] = Array(26).fill(0);
+        let flag = 0;
+        const n = words.length;
+
+        for (let w of words) {
+            for (let c of w) {
+                const i = c.charCodeAt(0) - 'a'.charCodeAt(0);
+                if (freq[i] !== 0) {
+                    freq[i]++;
+                    if (freq[i] % n === 0) {
+                        flag++;
+                    }
+                } else {
+                    freq[i]++;
+                    if (freq[i] % n !== 0) {
+                        flag--;
+                    }
+                }
+                freq[i] %= n;
+            }
+        }
+
+        return flag === 0;
     }
 }
 ```

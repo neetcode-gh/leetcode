@@ -262,6 +262,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {TreeNode}
+     */
+    sortedArrayToBST(nums: number[]): TreeNode | null {
+        if (nums.length === 0) {
+            return null;
+        }
+
+        const mid = Math.floor(nums.length / 2);
+        const root = new TreeNode(nums[mid]);
+        root.left = this.sortedArrayToBST(nums.slice(0, mid));
+        root.right = this.sortedArrayToBST(nums.slice(mid + 1));
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -541,6 +561,29 @@ impl Solution {
             Some(Rc::new(RefCell::new(root)))
         }
         helper(&nums, 0, nums.len() as i32 - 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {TreeNode}
+     */
+    sortedArrayToBST(nums: number[]): TreeNode | null {
+        const helper = (l: number, r: number): TreeNode | null => {
+            if (l > r) {
+                return null;
+            }
+            const m = Math.floor((l + r) / 2);
+            const root = new TreeNode(nums[m]);
+            root.left = helper(l, m - 1);
+            root.right = helper(m + 1, r);
+            return root;
+        };
+
+        return helper(0, nums.length - 1);
     }
 }
 ```
@@ -939,6 +982,40 @@ impl Solution {
         }
 
         Some(root)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {TreeNode}
+     */
+    sortedArrayToBST(nums: number[]): TreeNode | null {
+        if (nums.length === 0) {
+            return null;
+        }
+
+        const root = new TreeNode(0);
+        const stack: [TreeNode, number, number][] = [[root, 0, nums.length - 1]];
+
+        while (stack.length) {
+            const [node, l, r] = stack.pop()!;
+            const m = Math.floor((l + r) / 2);
+            node.val = nums[m];
+
+            if (l <= m - 1) {
+                node.left = new TreeNode(0);
+                stack.push([node.left, l, m - 1]);
+            }
+            if (m + 1 <= r) {
+                node.right = new TreeNode(0);
+                stack.push([node.right, m + 1, r]);
+            }
+        }
+
+        return root;
     }
 }
 ```

@@ -281,6 +281,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    splitArraySameAverage(nums: number[]): boolean {
+        const backtrack = (i: number, A: number[], B: number[]): boolean => {
+            if (i === nums.length) {
+                if (A.length === 0 || B.length === 0) return false;
+                const sumA = A.reduce((a, b) => a + b, 0);
+                const sumB = B.reduce((a, b) => a + b, 0);
+                return sumA * B.length === sumB * A.length;
+            }
+
+            A.push(nums[i]);
+            if (backtrack(i + 1, A, B)) return true;
+            A.pop();
+
+            B.push(nums[i]);
+            const res = backtrack(i + 1, A, B);
+            B.pop();
+
+            return res;
+        };
+
+        return backtrack(0, [], []);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -599,6 +630,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    splitArraySameAverage(nums: number[]): boolean {
+        const total = nums.reduce((a, b) => a + b, 0);
+        const n = nums.length;
+        const memo = new Map<string, boolean>();
+
+        const dfs = (i: number, size: number, currSum: number): boolean => {
+            const key = `${i},${size},${currSum}`;
+            if (memo.has(key)) return memo.get(key)!;
+
+            if (
+                size > 0 &&
+                size < n &&
+                currSum * (n - size) === (total - currSum) * size
+            )
+                return true;
+            if (i === n) return false;
+
+            if (
+                dfs(i + 1, size + 1, currSum + nums[i]) ||
+                dfs(i + 1, size, currSum)
+            ) {
+                memo.set(key, true);
+                return true;
+            }
+
+            memo.set(key, false);
+            return false;
+        };
+
+        return dfs(0, 0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -910,19 +981,20 @@ class Solution {
         let n = nums.count
         let total = nums.reduce(0, +)
 
-        var memo = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: -1, count: total + 1), count: n / 2 + 1), count: n + 1)
+        var memo = [Int: Bool]()
 
         func dfs(_ i: Int, _ a: Int, _ s: Int) -> Bool {
             if a == 0 { return s == 0 }
             if i == n || a < 0 || s < 0 { return false }
-            if memo[i][a][s] != -1 { return memo[i][a][s] == 1 }
+            let key = (i * (n / 2 + 1) + a) * (total + 1) + s
+            if let cached = memo[key] { return cached }
 
             let res = dfs(i + 1, a, s) || dfs(i + 1, a - 1, s - nums[i])
-            memo[i][a][s] = res ? 1 : 0
+            memo[key] = res
             return res
         }
 
-        for a in 1...(n / 2) {
+        for a in stride(from: 1, through: n / 2, by: 1) {
             if (total * a) % n == 0 {
                 let target = (total * a) / n
                 if dfs(0, a, target) { return true }
@@ -971,6 +1043,47 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    splitArraySameAverage(nums: number[]): boolean {
+        const n = nums.length,
+            total = nums.reduce((a, b) => a + b, 0);
+
+        // len(A) = a, len(B) = b, let a <= b
+        // avg(A) = avg(B)
+        // sum(A) / a = sum(B) / b = sum(nums) / n
+        // sum(A) / a = avg => sum(A) = a * avg
+        // sum(A) = a * sum(nums) / n
+        // Find if any subset exists with a * sum(nums) / n
+        // a is in the range [1, (n//2)]
+
+        const memo = new Map<string, boolean>();
+
+        const dfs = (i: number, a: number, s: number): boolean => {
+            const key = `${i},${a},${s}`;
+            if (memo.has(key)) return memo.get(key)!;
+            if (a === 0) return s === 0;
+            if (i === n || a < 0) return false;
+            const res = dfs(i + 1, a, s) || dfs(i + 1, a - 1, s - nums[i]);
+            memo.set(key, res);
+            return res;
+        };
+
+        for (let a = 1; a <= Math.floor(n / 2); a++) {
+            if ((total * a) % n === 0) {
+                if (dfs(0, a, Math.floor((total * a) / n))) return true;
+            }
+        }
+
+        return false;
     }
 }
 ```
@@ -1271,7 +1384,7 @@ class Solution {
             }
         }
 
-        for a in 1...(n / 2) {
+        for a in stride(from: 1, through: n / 2, by: 1) {
             if (a * total) % n == 0 && dp[a].contains((a * total) / n) {
                 return true
             }
@@ -1311,6 +1424,49 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    splitArraySameAverage(nums: number[]): boolean {
+        const n = nums.length;
+
+        // len(A) = a, len(B) = b, let a <= b
+        // avg(A) = avg(B)
+        // sum(A) / a = sum(B) / b = sum(nums) / n
+        // sum(A) / a = avg => sum(A) = a * avg
+        // sum(A) = a * sum(nums) / n
+        // Find if any subset exists with a * sum(nums) / n
+        // a is in the range [1, (n//2)]
+
+        const total = nums.reduce((a, b) => a + b, 0);
+        const dp: Set<number>[] = Array.from(
+            { length: Math.floor(n / 2) + 1 },
+            () => new Set<number>(),
+        );
+        dp[0].add(0);
+
+        for (const num of nums) {
+            for (let a = Math.floor(n / 2); a >= 1; a--) {
+                for (const prev of dp[a - 1]) {
+                    dp[a].add(prev + num);
+                }
+            }
+        }
+
+        for (let a = 1; a <= Math.floor(n / 2); a++) {
+            if ((a * total) % n === 0 && dp[a].has((a * total) / n)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ```

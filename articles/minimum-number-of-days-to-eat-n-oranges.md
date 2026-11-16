@@ -245,6 +245,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minDays(n: number): number {
+        const dp = new Map<number, number>();
+
+        const dfs = (n: number): number => {
+            if (n === 0) return 0;
+            if (dp.has(n)) return dp.get(n)!;
+
+            let res = 1 + dfs(n - 1);
+            if (n % 3 === 0) res = Math.min(res, 1 + dfs(n / 3));
+            if (n % 2 === 0) res = Math.min(res, 1 + dfs(n / 2));
+
+            dp.set(n, res);
+            return res;
+        };
+
+        return dfs(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -468,6 +494,32 @@ impl Solution {
 
         dp.insert(n, res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minDays(n: number): number {
+        const dp = new Map<number, number>();
+        dp.set(0, 0);
+        dp.set(1, 1);
+
+        const dfs = (n: number): number => {
+            if (dp.has(n)) return dp.get(n)!;
+
+            let res = 1 + (n % 2) + dfs(Math.floor(n / 2));
+            res = Math.min(res, 1 + (n % 3) + dfs(Math.floor(n / 3)));
+
+            dp.set(n, res);
+            return res;
+        };
+
+        return dfs(n);
     }
 }
 ```
@@ -807,6 +859,44 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    minDays(n: number): number {
+        const q = new Queue([n]);
+        const visit = new Set<number>();
+        let res = 0;
+
+        while (!q.isEmpty()) {
+            res++;
+            for (let i = q.size(); i > 0; i--) {
+                let node: number = q.pop();
+                let nei = node - 1;
+                if (nei === 0) return res;
+                if (!visit.has(nei)) {
+                    visit.add(nei);
+                    q.push(nei);
+                }
+                for (let d = 2; d <= 3; d++) {
+                    if (node % d === 0) {
+                        nei = Math.floor(node / d);
+                        if (nei === 0) return res;
+                        if (!visit.has(nei)) {
+                            visit.add(nei);
+                            q.push(nei);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```

@@ -158,6 +158,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {boolean}
+     */
+    searchMatrix(matrix: number[][], target: number): boolean {
+        for (let r = 0; r < matrix.length; r++) {
+            for (let c = 0; c < matrix[r].length; c++) {
+                if (matrix[r][c] == target) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -376,6 +396,33 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {boolean}
+     */
+    searchMatrix(matrix: number[][], target: number): boolean {
+        const m = matrix.length,
+            n = matrix[0].length;
+        let r = 0,
+            c = n - 1;
+
+        while (r < m && c >= 0) {
+            if (matrix[r][c] > target) {
+                c--;
+            } else if (matrix[r][c] < target) {
+                r++;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ```
@@ -765,6 +812,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {boolean}
+     */
+    searchMatrix(matrix: number[][], target: number): boolean {
+        const ROWS = matrix.length;
+        const COLS = matrix[0].length;
+
+        let top = 0;
+        let bot = ROWS - 1;
+        while (top <= bot) {
+            const row = Math.floor((top + bot) / 2);
+            if (target > matrix[row][COLS - 1]) {
+                top = row + 1;
+            } else if (target < matrix[row][0]) {
+                bot = row - 1;
+            } else {
+                break;
+            }
+        }
+
+        if (!(top <= bot)) {
+            return false;
+        }
+        const row = Math.floor((top + bot) / 2);
+        let l = 0;
+        let r = COLS - 1;
+        while (l <= r) {
+            const m = Math.floor((l + r) / 2);
+            if (target > matrix[row][m]) {
+                l = m + 1;
+            } else if (target < matrix[row][m]) {
+                r = m - 1;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1013,6 +1105,36 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @param {number} target
+     * @return {boolean}
+     */
+    searchMatrix(matrix: number[][], target: number): boolean {
+        let ROWS = matrix.length,
+            COLS = matrix[0].length;
+
+        let l = 0,
+            r = ROWS * COLS - 1;
+        while (l <= r) {
+            let m = l + Math.floor((r - l) / 2);
+            let row = Math.floor(m / COLS),
+                col = m % COLS;
+            if (target > matrix[row][col]) {
+                l = m + 1;
+            } else if (target < matrix[row][col]) {
+                r = m - 1;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ```

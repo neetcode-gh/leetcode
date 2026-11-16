@@ -168,6 +168,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triangle
+     * @return {number}
+     */
+    minimumTotal(triangle: number[][]): number {
+        const dfs = (row: number, col: number): number => {
+            if (row >= triangle.length) {
+                return 0;
+            }
+            return (
+                triangle[row][col] +
+                Math.min(dfs(row + 1, col), dfs(row + 1, col + 1))
+            );
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -429,6 +451,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triangle
+     * @return {number}
+     */
+    minimumTotal(triangle: number[][]): number {
+        const memo: number[][] = Array.from({ length: triangle.length }, (_, r) =>
+            Array(triangle[r].length).fill(Infinity),
+        );
+
+        const dfs = (row: number, col: number): number => {
+            if (row >= triangle.length) {
+                return 0;
+            }
+            if (memo[row][col] !== Infinity) {
+                return memo[row][col];
+            }
+
+            memo[row][col] =
+                triangle[row][col] +
+                Math.min(dfs(row + 1, col), dfs(row + 1, col + 1));
+            return memo[row][col];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -651,6 +703,34 @@ impl Solution {
         }
 
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triangle
+     * @return {number}
+     */
+    minimumTotal(triangle: number[][]): number {
+        const n = triangle.length;
+        const dp: number[][] = Array.from({ length: n }, (_, i) =>
+            Array(triangle[i].length).fill(0),
+        );
+        for (let col = 0; col < triangle[n - 1].length; col++) {
+            dp[n - 1][col] = triangle[n - 1][col];
+        }
+
+        for (let row = n - 2; row >= 0; row--) {
+            for (let col = 0; col < triangle[row].length; col++) {
+                dp[row][col] =
+                    triangle[row][col] +
+                    Math.min(dp[row + 1][col], dp[row + 1][col + 1]);
+            }
+        }
+
+        return dp[0][0];
     }
 }
 ```
@@ -899,6 +979,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triangle
+     * @return {number}
+     */
+    minimumTotal(triangle: number[][]): number {
+        let n = triangle.length;
+        let dp = [...triangle[0]];
+
+        for (let row = 1; row < n; row++) {
+            let nxtDp: number[] = new Array(row + 1).fill(0);
+            nxtDp[0] = dp[0] + triangle[row][0];
+            for (let col = 1; col < row; col++) {
+                nxtDp[col] =
+                    triangle[row][col] + Math.min(dp[col], dp[col - 1]);
+            }
+            nxtDp[row] = dp[row - 1] + triangle[row][row];
+            dp = nxtDp;
+        }
+
+        return Math.min(...dp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1092,6 +1198,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triangle
+     * @return {number}
+     */
+    minimumTotal(triangle: number[][]): number {
+        const n = triangle.length;
+        const dp = [...triangle[n - 1]];
+
+        for (let row = n - 2; row >= 0; row--) {
+            for (let col = 0; col < triangle[row].length; col++) {
+                dp[col] = triangle[row][col] + Math.min(dp[col], dp[col + 1]);
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1244,6 +1371,26 @@ impl Solution {
             }
         }
         triangle[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triangle
+     * @return {number}
+     */
+    minimumTotal(triangle: number[][]): number {
+        for (let row = triangle.length - 2; row >= 0; row--) {
+            for (let col = 0; col < triangle[row].length; col++) {
+                triangle[row][col] += Math.min(
+                    triangle[row + 1][col],
+                    triangle[row + 1][col + 1],
+                );
+            }
+        }
+        return triangle[0][0];
     }
 }
 ```

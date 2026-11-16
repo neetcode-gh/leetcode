@@ -150,6 +150,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number}
+     */
+    countOdds(low: number, high: number): number {
+        let odd = 0;
+        for (let num = low; num <= high; num++) {
+            if (num & 1) {
+                odd++;
+            }
+        }
+        return odd;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +313,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number}
+     */
+    countOdds(low: number, high: number): number {
+        let length = high - low + 1;
+        let count = Math.floor(length / 2);
+        if (length % 2 === 1 && low % 2 === 1) {
+            count++;
+        }
+        return count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,6 +425,19 @@ class Solution {
 impl Solution {
     pub fn count_odds(low: i32, high: i32) -> i32 {
         ((high + 1) >> 1) - (low >> 1)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number}
+     */
+    countOdds(low: number, high: number): number {
+        return ((high + 1) >> 1) - (low >> 1);
     }
 }
 ```

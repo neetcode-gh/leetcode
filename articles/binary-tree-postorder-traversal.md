@@ -282,6 +282,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    postorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+
+        const postorder = (node: TreeNode | null): void => {
+            if (!node) return;
+            postorder(node.left);
+            postorder(node.right);
+            res.push(node.val);
+        };
+
+        postorder(root);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -662,6 +684,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    postorderTraversal(root: TreeNode | null): number[] {
+        const stack: (TreeNode | null)[] = [root];
+        const visit: boolean[] = [false];
+        const res: number[] = [];
+
+        while (stack.length) {
+            const cur = stack.pop();
+            const v = visit.pop();
+
+            if (cur) {
+                if (v) {
+                    res.push(cur.val);
+                } else {
+                    stack.push(cur);
+                    visit.push(true);
+                    stack.push(cur.right);
+                    visit.push(false);
+                    stack.push(cur.left);
+                    visit.push(false);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -994,6 +1050,34 @@ impl Solution {
 
         res.reverse();
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    postorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        const stack: TreeNode[] = [];
+        let cur = root;
+
+        while (cur || stack.length) {
+            if (cur) {
+                res.push(cur.val);
+                stack.push(cur);
+                cur = cur.right;
+            } else {
+                cur = stack.pop()!;
+                cur = cur.left;
+            }
+        }
+
+        res.reverse();
+        return res;
     }
 }
 ```
@@ -1402,6 +1486,43 @@ impl Solution {
 
         res.reverse();
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    postorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        let cur = root;
+
+        while (cur) {
+            if (!cur.right) {
+                res.push(cur.val);
+                cur = cur.left;
+            } else {
+                let prev = cur.right;
+                while (prev.left && prev.left !== cur) {
+                    prev = prev.left;
+                }
+
+                if (!prev.left) {
+                    res.push(cur.val);
+                    prev.left = cur;
+                    cur = cur.right;
+                } else {
+                    prev.left = null;
+                    cur = cur.left;
+                }
+            }
+        }
+
+        res.reverse();
+        return res;
     }
 }
 ```

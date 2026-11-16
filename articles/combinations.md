@@ -254,6 +254,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number[][]}
+     */
+    combine(n: number, k: number): number[][] {
+        const res: number[][] = [];
+
+        const backtrack = (i: number, comb: number[]): void => {
+            if (i > n) {
+                if (comb.length === k) {
+                    res.push([...comb]);
+                }
+                return;
+            }
+
+            comb.push(i);
+            backtrack(i + 1, comb);
+            comb.pop();
+            backtrack(i + 1, comb);
+        };
+
+        backtrack(1, []);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -465,7 +495,7 @@ class Solution {
                 return
             }
 
-            for i in start...n {
+            for i in stride(from: start, through: n, by: 1) {
                 comb.append(i)
                 backtrack(i + 1, &comb)
                 comb.removeLast()
@@ -498,6 +528,35 @@ impl Solution {
 
         backtrack(1, n, k, &mut vec![], &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number[][]}
+     */
+    combine(n: number, k: number): number[][] {
+        const res: number[][] = [];
+
+        const backtrack = (start: number, comb: number[]): void => {
+            if (comb.length === k) {
+                res.push([...comb]);
+                return;
+            }
+
+            for (let i = start; i <= n; i++) {
+                comb.push(i);
+                backtrack(i + 1, comb);
+                comb.pop();
+            }
+        };
+
+        backtrack(1, []);
+        return res;
     }
 }
 ```
@@ -780,6 +839,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number[][]}
+     */
+    combine(n: number, k: number): number[][] {
+        const res: number[][] = [];
+        const comb: number[] = Array(k).fill(0);
+        let i = 0;
+
+        while (i >= 0) {
+            comb[i]++;
+            if (comb[i] > n) {
+                i--;
+                continue;
+            }
+
+            if (i === k - 1) {
+                res.push([...comb]);
+            } else {
+                i++;
+                comb[i] = comb[i - 1];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -985,6 +1076,33 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} k
+     * @return {number[][]}
+     */
+    combine(n: number, k: number): number[][] {
+        const res: number[][] = [];
+        for (let mask = 0; mask < 1 << n; mask++) {
+            if (mask.toString(2).split('1').length - 1 !== k) {
+                continue;
+            }
+
+            const comb: number[] = [];
+            for (let bit = 0; bit < n; bit++) {
+                if (mask & (1 << bit)) {
+                    comb.push(bit + 1);
+                }
+            }
+            res.push(comb);
+        }
+        return res;
     }
 }
 ```

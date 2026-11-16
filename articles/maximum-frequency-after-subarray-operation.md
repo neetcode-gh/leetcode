@@ -291,6 +291,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        const n = nums.length;
+        let cntK = nums.filter((x) => x === k).length;
+        let res = cntK;
+
+        for (let num = 1; num <= 50; num++) {
+            if (num === k) continue;
+            for (let i = 0; i < n; i++) {
+                const tmp = cntK;
+                let cnt = 0;
+                for (let j = i; j < n; j++) {
+                    if (nums[j] === num) {
+                        cnt++;
+                    } else if (nums[j] === k) {
+                        cntK--;
+                    }
+                    res = Math.max(res, cnt + cntK);
+                }
+                cntK = tmp;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -545,6 +578,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        let cntK = 0;
+        for (const num of nums) {
+            if (num === k) cntK++;
+        }
+        let res = 0;
+
+        for (let i = 1; i <= 50; i++) {
+            if (i === k) continue;
+            let cnt = 0;
+            for (const num of nums) {
+                if (num === i) cnt++;
+                if (num === k) cnt--;
+                cnt = Math.max(cnt, 0);
+                res = Math.max(res, cntK + cnt);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,6 +771,26 @@ impl Solution {
             res = res.max(cnt[&num] - cnt.get(&k).unwrap_or(&0));
         }
         *cnt.get(&k).unwrap_or(&0) + res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    maxFrequency(nums: number[], k: number): number {
+        const cnt = new Map<number, number>();
+        let res = 0;
+        for (const num of nums) {
+            const prev = Math.max(cnt.get(num) || 0, cnt.get(k) || 0);
+            cnt.set(num, prev + 1);
+            res = Math.max(res, cnt.get(num)! - (cnt.get(k) || 0));
+        }
+        return (cnt.get(k) || 0) + res;
     }
 }
 ```

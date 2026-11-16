@@ -231,6 +231,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number[]}
+     */
+    findBuildings(heights: number[]): number[] {
+        const n = heights.length;
+        const res: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            let flag = true;
+            for (let j = i + 1; j < n; j++) {
+                if (heights[i] <= heights[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) res.push(i);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -422,6 +448,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number[]}
+     */
+    findBuildings(heights: number[]): number[] {
+        const stack: number[] = [];
+
+        for (let i = 0; i < heights.length; i++) {
+            while (
+                stack.length &&
+                heights[stack[stack.length - 1]] <= heights[i]
+            ) {
+                stack.pop();
+            }
+            stack.push(i);
+        }
+
+        return stack;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -609,6 +659,27 @@ impl Solution {
 
         res.reverse();
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number[]}
+     */
+    findBuildings(heights: number[]): number[] {
+        const n = heights.length;
+        const res: number[] = [n - 1];
+
+        for (let i = n - 2; i >= 0; i--) {
+            if (heights[i] > heights[res[res.length - 1]]) {
+                res.push(i);
+            }
+        }
+
+        return res.reverse();
     }
 }
 ```

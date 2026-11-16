@@ -367,6 +367,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} val
+     * @return {ListNode}
+     */
+    removeElements(head: ListNode | null, val: number): ListNode | null {
+        const arr: number[] = [];
+        let cur = head;
+
+        while (cur) {
+            if (cur.val !== val) {
+                arr.push(cur.val);
+            }
+            cur = cur.next;
+        }
+
+        if (arr.length === 0) {
+            return null;
+        }
+
+        const res = new ListNode(arr[0]);
+        let node: ListNode = res;
+        for (let i = 1; i < arr.length; i++) {
+            const nxt = new ListNode(arr[i]);
+            node.next = nxt;
+            node = node.next;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,6 +604,21 @@ impl Solution {
                 }
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} val
+     * @return {ListNode}
+     */
+    removeElements(head: ListNode | null, val: number): ListNode | null {
+        if (head === null) return null;
+        head.next = this.removeElements(head.next, val);
+        return head.val !== val ? head : head.next;
     }
 }
 ```
@@ -866,6 +916,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} val
+     * @return {ListNode}
+     */
+    removeElements(head: ListNode | null, val: number): ListNode | null {
+        let dummy = new ListNode(0, head);
+        let prev = dummy,
+            curr = head;
+
+        while (curr) {
+            let nxt = curr.next;
+            if (curr.val === val) {
+                prev.next = nxt;
+            } else {
+                prev = curr;
+            }
+            curr = nxt;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1135,6 +1212,30 @@ impl Solution {
         }
 
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @param {number} val
+     * @return {ListNode}
+     */
+    removeElements(head: ListNode | null, val: number): ListNode | null {
+        let dummy = new ListNode(-1, head);
+        let curr = dummy;
+
+        while (curr.next) {
+            if (curr.next.val === val) {
+                curr.next = curr.next.next;
+            } else {
+                curr = curr.next;
+            }
+        }
+
+        return dummy.next;
     }
 }
 ```

@@ -154,6 +154,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[]} s
+     * @return {void} Do not return anything, modify s in-place instead.
+     */
+    reverseString(s: string[]): void {
+        const tmp: string[] = [];
+        for (let i = s.length - 1; i >= 0; i--) {
+            tmp.push(s[i]);
+        }
+        for (let i = 0; i < s.length; i++) {
+            s[i] = tmp[i];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,6 +343,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[]} s
+     * @return {void} Do not return anything, modify s in-place instead.
+     */
+    reverseString(s: string[]): void {
+        const reverse = (l: number, r: number): void => {
+            if (l < r) {
+                reverse(l + 1, r - 1);
+                [s[l], s[r]] = [s[r], s[l]];
+            }
+        };
+        reverse(0, s.length - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -483,6 +519,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[]} s
+     * @return {void} Do not return anything, modify s in-place instead.
+     */
+    reverseString(s: string[]): void {
+        const stack: string[] = [];
+        for (const c of s) {
+            stack.push(c);
+        }
+        let i = 0;
+        while (stack.length) {
+            s[i++] = stack.pop()!;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -586,6 +641,18 @@ class Solution {
 ```rust
 impl Solution {
     pub fn reverse_string(s: &mut Vec<char>) {
+        s.reverse();
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[]} s
+     * @return {void} Do not return anything, modify s in-place instead.
+     */
+    reverseString(s: string[]): void {
         s.reverse();
     }
 }
@@ -740,6 +807,24 @@ impl Solution {
             s.swap(l, r);
             l += 1;
             r -= 1;
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[]} s
+     * @return {void} Do not return anything, modify s in-place instead.
+     */
+    reverseString(s: string[]): void {
+        let l = 0,
+            r = s.length - 1;
+        while (l < r) {
+            [s[l], s[r]] = [s[r], s[l]];
+            l++;
+            r--;
         }
     }
 }

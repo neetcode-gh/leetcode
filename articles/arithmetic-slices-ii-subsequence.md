@@ -367,6 +367,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numberOfArithmeticSlices(nums: number[]): number {
+        const n = nums.length;
+        if (n < 3) return 0;
+
+        const INF = Infinity;
+        const dp = new Map<string, number>();
+
+        const dfs = (i: number, j: number, diff: number, flag: number): number => {
+            if (i === n) {
+                return flag;
+            }
+            const key = `${i},${j},${diff},${flag}`;
+            if (dp.has(key)) {
+                return dp.get(key)!;
+            }
+
+            let res = dfs(i + 1, j, diff, flag);
+            if (j === -1) {
+                res += dfs(i + 1, i, INF, flag);
+            } else {
+                if (diff === INF) {
+                    res += dfs(i + 1, i, nums[i] - nums[j], flag);
+                } else if (diff === nums[i] - nums[j]) {
+                    res += dfs(i + 1, i, diff, 1);
+                }
+            }
+
+            dp.set(key, res);
+            return res;
+        };
+
+        return dfs(0, -1, INF, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +613,30 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numberOfArithmeticSlices(nums: number[]): number {
+        const n = nums.length;
+        let res = 0;
+        const dp: Map<number, number>[] = Array.from({ length: n }, () => new Map());
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < i; j++) {
+                const diff = nums[i] - nums[j];
+                const count = dp[j].get(diff) || 0;
+                dp[i].set(diff, (dp[i].get(diff) || 0) + count + 1);
+                res += count;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -809,6 +875,33 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numberOfArithmeticSlices(nums: number[]): number {
+        let res = 0,
+            n = nums.length;
+        const s = new Set<number>(nums);
+        const dp: Map<number, number>[] = Array.from({ length: n }, () => new Map());
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < i; j++) {
+                const diff = nums[i] - nums[j];
+                const cnt = dp[j].get(diff) || 0;
+                if (s.has(nums[i] + diff)) {
+                    dp[i].set(diff, (dp[i].get(diff) || 0) + cnt + 1);
+                }
+                res += cnt;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1128,6 +1221,42 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numberOfArithmeticSlices(nums: number[]): number {
+        let res = 0;
+        const mpIdx = new Map<number, number[]>();
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n }, () => Array(n).fill(0));
+
+        for (let i = 0; i < n; i++) {
+            if (!mpIdx.has(nums[i])) mpIdx.set(nums[i], []);
+            mpIdx.get(nums[i])!.push(i);
+        }
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < i; j++) {
+                const prev = 2 * nums[j] - nums[i];
+
+                if (mpIdx.has(prev)) {
+                    for (const k of mpIdx.get(prev)!) {
+                        if (k >= j) break;
+                        dp[i][j] += dp[j][k] + 1;
+                    }
+                }
+                res += dp[i][j];
+            }
+        }
+
+        return res;
     }
 }
 ```

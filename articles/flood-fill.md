@@ -196,7 +196,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func floodFill(_ image: inout [[Int]], _ sr: Int, _ sc: Int, _ color: Int) -> [[Int]] {
+    func floodFill(_ image: [[Int]], _ sr: Int, _ sc: Int, _ color: Int) -> [[Int]] {
+        var image = image
         let orig = image[sr][sc]
         if orig == color { return image }
         let m = image.count, n = image[0].count
@@ -218,15 +219,15 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn flood_fill(image: &mut Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> {
+    pub fn flood_fill(mut image: Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> {
         let orig = image[sr as usize][sc as usize];
         if orig == color {
             return image.clone();
         }
         let m = image.len();
         let n = image[0].len();
-        Self::dfs(image, sr as usize, sc as usize, orig, color, m, n);
-        image.clone()
+        Self::dfs(&mut image, sr as usize, sc as usize, orig, color, m, n);
+        image
     }
 
     fn dfs(image: &mut Vec<Vec<i32>>, r: usize, c: usize, orig: i32, color: i32, m: usize, n: usize) {
@@ -238,6 +239,35 @@ impl Solution {
         if r > 0 { Self::dfs(image, r - 1, c, orig, color, m, n); }
         if c + 1 < n { Self::dfs(image, r, c + 1, orig, color, m, n); }
         if c > 0 { Self::dfs(image, r, c - 1, orig, color, m, n); }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} image
+     * @param {number} sr
+     * @param {number} sc
+     * @param {number} color
+     * @return {number[][]}
+     */
+    floodFill(image: number[][], sr: number, sc: number, color: number): number[][] {
+        const orig = image[sr][sc];
+        if (orig === color) return image;
+        const m = image.length,
+            n = image[0].length;
+        const dfs = (r: number, c: number): void => {
+            if (r < 0 || r >= m || c < 0 || c >= n || image[r][c] !== orig)
+                return;
+            image[r][c] = color;
+            dfs(r + 1, c);
+            dfs(r - 1, c);
+            dfs(r, c + 1);
+            dfs(r, c - 1);
+        };
+        dfs(sr, sc);
+        return image;
     }
 }
 ```
@@ -478,7 +508,8 @@ class Solution {
 
 ```swift
 class Solution {
-    func floodFill(_ image: inout [[Int]], _ sr: Int, _ sc: Int, _ color: Int) -> [[Int]] {
+    func floodFill(_ image: [[Int]], _ sr: Int, _ sc: Int, _ color: Int) -> [[Int]] {
+        var image = image
         let orig = image[sr][sc]
         if orig == color { return image }
         let m = image.count, n = image[0].count
@@ -503,7 +534,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn flood_fill(image: &mut Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> {
+    pub fn flood_fill(mut image: Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> {
         let orig = image[sr as usize][sc as usize];
         if orig == color {
             return image.clone();
@@ -529,6 +560,51 @@ impl Solution {
             }
         }
         image.clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} image
+     * @param {number} sr
+     * @param {number} sc
+     * @param {number} color
+     * @return {number[][]}
+     */
+    floodFill(image: number[][], sr: number, sc: number, color: number): number[][] {
+        const orig = image[sr][sc];
+        if (orig === color) return image;
+        const m = image.length,
+            n = image[0].length;
+        const q = new Queue([[sr, sc]]);
+        image[sr][sc] = color;
+        const dirs = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        while (!q.isEmpty()) {
+            const [r, c]: number[] = q.pop();
+            for (const [dr, dc] of dirs) {
+                const nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nr < m &&
+                    nc >= 0 &&
+                    nc < n &&
+                    image[nr][nc] === orig
+                ) {
+                    image[nr][nc] = color;
+                    q.push([nr, nc]);
+                }
+            }
+        }
+        return image;
     }
 }
 ```

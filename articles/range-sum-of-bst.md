@@ -249,6 +249,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} low
+     * @param {number} high
+     * @return {number}
+     */
+    rangeSumBST(root: TreeNode | null, low: number, high: number): number {
+        if (!root) return 0;
+
+        let res = low <= root.val && root.val <= high ? root.val : 0;
+        res += this.rangeSumBST(root.left, low, high);
+        res += this.rangeSumBST(root.right, low, high);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -319,10 +338,10 @@ public class Solution {
         if (root == null) return 0;
 
         if (root.val > high) {
-            return rangeSumBST(root.left, low, high);
+            return this.rangeSumBST(root.left, low, high);
         }
         if (root.val < low) {
-            return rangeSumBST(root.right, low, high);
+            return this.rangeSumBST(root.right, low, high);
         }
 
         return root.val + rangeSumBST(root.left, low, high) +
@@ -383,10 +402,10 @@ class Solution {
         if (!root) return 0;
 
         if (root.val > high) {
-            return rangeSumBST(root.left, low, high);
+            return this.rangeSumBST(root.left, low, high);
         }
         if (root.val < low) {
-            return rangeSumBST(root.right, low, high);
+            return this.rangeSumBST(root.right, low, high);
         }
 
         return (
@@ -532,6 +551,33 @@ impl Solution {
                     + Self::range_sum_bst(node.right.clone(), low, high)
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} low
+     * @param {number} high
+     * @return {number}
+     */
+    rangeSumBST(root: TreeNode | null, low: number, high: number): number {
+        if (!root) return 0;
+
+        if (root.val > high) {
+            return this.rangeSumBST(root.left, low, high);
+        }
+        if (root.val < low) {
+            return this.rangeSumBST(root.right, low, high);
+        }
+
+        return (
+            root.val +
+            this.rangeSumBST(root.left, low, high) +
+            this.rangeSumBST(root.right, low, high)
+        );
     }
 }
 ```
@@ -803,7 +849,7 @@ func rangeSumBST(root *TreeNode, low int, high int) int {
  */
 class Solution {
     fun rangeSumBST(root: TreeNode?, low: Int, high: Int): Int {
-        val stack = ArrayDeque<TreeNode?>()
+        val stack = LinkedList<TreeNode?>()
         stack.addLast(root)
         var res = 0
 
@@ -888,6 +934,38 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} low
+     * @param {number} high
+     * @return {number}
+     */
+    rangeSumBST(root: TreeNode | null, low: number, high: number): number {
+        let res = 0;
+        let stack: (TreeNode | null)[] = [root];
+
+        while (stack.length > 0) {
+            let node = stack.pop();
+            if (!node) continue;
+
+            if (low <= node.val && node.val <= high) {
+                res += node.val;
+            }
+            if (node.val > low) {
+                stack.push(node.left);
+            }
+            if (node.val < high) {
+                stack.push(node.right);
+            }
+        }
+
+        return res;
     }
 }
 ```

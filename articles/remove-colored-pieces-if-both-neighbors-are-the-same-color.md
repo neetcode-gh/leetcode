@@ -213,7 +213,7 @@ class Solution {
         var s = Array(colors)
 
         func removeChar(_ c: Character) -> Bool {
-            for i in 1..<s.count - 1 {
+            for i in stride(from: 1, to: s.count - 1, by: 1) {
                 if s[i] != c { continue }
 
                 if s[i - 1] == c && s[i + 1] == c {
@@ -256,6 +256,35 @@ impl Solution {
         loop {
             if !remove_char(&mut s, b'A') { return false; }
             if !remove_char(&mut s, b'B') { return true; }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @return {boolean}
+     */
+    winnerOfGame(colors: string): boolean {
+        let s = colors.split('');
+
+        const removeChar = (c: string): boolean => {
+            for (let i = 1; i < s.length - 1; i++) {
+                if (s[i] !== c) continue;
+
+                if (s[i - 1] === c && s[i + 1] === c) {
+                    s.splice(i, 1);
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        while (true) {
+            if (!removeChar('A')) return false;
+            if (!removeChar('B')) return true;
         }
     }
 }
@@ -514,6 +543,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @return {boolean}
+     */
+    winnerOfGame(colors: string): boolean {
+        let alice = 0,
+            bob = 0,
+            l = 0;
+
+        for (let r = 0; r < colors.length; r++) {
+            if (colors[l] !== colors[r]) {
+                l = r;
+            }
+
+            let extra = r - l - 1;
+            if (extra > 0) {
+                if (colors[l] === 'A') {
+                    alice++;
+                } else {
+                    bob++;
+                }
+            }
+        }
+
+        return alice > bob;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,7 +752,7 @@ class Solution {
         var alice = 0, bob = 0
         let chars = Array(colors)
 
-        for i in 1..<chars.count - 1 {
+        for i in stride(from: 1, to: chars.count - 1, by: 1) {
             if chars[i - 1] == chars[i] && chars[i] == chars[i + 1] {
                 if chars[i] == "A" {
                     alice += 1
@@ -727,6 +787,32 @@ impl Solution {
         }
 
         alice > bob
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} colors
+     * @return {boolean}
+     */
+    winnerOfGame(colors: string): boolean {
+        let alice = 0,
+            bob = 0;
+
+        for (let i = 1; i < colors.length - 1; i++) {
+            if (colors[i - 1] === colors[i] && colors[i] === colors[i + 1]) {
+                if (colors[i] === 'A') {
+                    alice++;
+                }
+                if (colors[i] === 'B') {
+                    bob++;
+                }
+            }
+        }
+
+        return alice > bob;
     }
 }
 ```

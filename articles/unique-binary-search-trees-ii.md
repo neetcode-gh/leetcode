@@ -352,6 +352,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    generateTrees(n: number): Array<TreeNode | null> {
+        const generate = (left: number, right: number): Array<TreeNode | null> => {
+            if (left > right) return [null];
+
+            let res: Array<TreeNode | null> = [];
+            for (let val = left; val <= right; val++) {
+                let leftTrees = generate(left, val - 1);
+                let rightTrees = generate(val + 1, right);
+
+                for (let leftTree of leftTrees) {
+                    for (let rightTree of rightTrees) {
+                        res.push(new TreeNode(val, leftTree, rightTree));
+                    }
+                }
+            }
+            return res;
+        };
+
+        return generate(1, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -732,6 +761,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    generateTrees(n: number): Array<TreeNode | null> {
+        const dp: (Array<TreeNode | null> | null)[][] = Array.from(
+            { length: n + 1 },
+            () => Array(n + 1).fill(null),
+        );
+
+        const generate = (left: number, right: number): Array<TreeNode | null> => {
+            if (left > right) return [null];
+            if (dp[left][right]) return dp[left][right]!;
+
+            let res: Array<TreeNode | null> = [];
+            for (let val = left; val <= right; val++) {
+                for (let leftTree of generate(left, val - 1)) {
+                    for (let rightTree of generate(val + 1, right)) {
+                        res.push(new TreeNode(val, leftTree, rightTree));
+                    }
+                }
+            }
+            return (dp[left][right] = res);
+        };
+
+        return generate(1, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1103,6 +1164,42 @@ impl Solution {
             }
         }
         dp[1][n].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    generateTrees(n: number): Array<TreeNode | null> {
+        const dp: Array<TreeNode | null>[][] = Array.from(
+            { length: n + 2 },
+            () => Array(n + 2).fill(null),
+        );
+        for (let i = 1; i <= n + 1; i++) {
+            dp[i][i - 1] = [null];
+        }
+
+        for (let length = 1; length <= n; length++) {
+            for (let left = 1; left + length - 1 <= n; left++) {
+                let right = left + length - 1;
+                dp[left][right] = [];
+
+                for (let val = left; val <= right; val++) {
+                    for (let leftTree of dp[left][val - 1]) {
+                        for (let rightTree of dp[val + 1][right]) {
+                            dp[left][right].push(
+                                new TreeNode(val, leftTree, rightTree),
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        return dp[1][n];
     }
 }
 ```
@@ -1521,6 +1618,44 @@ impl Solution {
             dp[length] = trees;
         }
         dp[n].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {TreeNode[]}
+     */
+    generateTrees(n: number): Array<TreeNode | null> {
+        const shift = (node: TreeNode | null, offset: number): TreeNode | null => {
+            if (!node) return null;
+            let root = new TreeNode(node.val + offset);
+            root.left = shift(node.left, offset);
+            root.right = shift(node.right, offset);
+            return root;
+        };
+
+        let dp: Array<TreeNode | null>[] = Array.from(
+            { length: n + 1 },
+            () => [],
+        );
+        dp[0].push(null);
+
+        for (let length = 1; length <= n; length++) {
+            for (let val = 1; val <= length; val++) {
+                for (let leftTree of dp[val - 1]) {
+                    for (let rightTree of dp[length - val]) {
+                        let root = new TreeNode(val);
+                        root.left = leftTree;
+                        root.right = shift(rightTree, val);
+                        dp[length].push(root);
+                    }
+                }
+            }
+        }
+        return dp[n];
     }
 }
 ```

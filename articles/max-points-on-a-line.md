@@ -188,6 +188,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func maxPoints(points [][]int) int {
     n := len(points)
     if n <= 2 {
@@ -307,6 +309,44 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        const n = points.length;
+        if (n <= 2) {
+            return n;
+        }
+
+        let res = 1;
+        const getSlope = (p1: number[], p2: number[]): number => {
+            if (p1[0] === p2[0]) {
+                return Infinity;
+            }
+            return (p2[1] - p1[1]) / (p2[0] - p1[0]);
+        };
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                const slope = getSlope(points[i], points[j]);
+                let cnt = 2;
+                for (let k = j + 1; k < n; k++) {
+                    if (slope === getSlope(points[i], points[k])) {
+                        cnt++;
+                    }
+                }
+                res = Math.max(res, cnt);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -452,6 +492,8 @@ public class Solution {
 ```
 
 ```go
+import "math"
+
 func maxPoints(points [][]int) int {
     res := 1
     for i := 0; i < len(points); i++ {
@@ -543,6 +585,32 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        let res = 1;
+        for (let i = 0; i < points.length; i++) {
+            const p1 = points[i];
+            const count = new Map<number, number>();
+            for (let j = i + 1; j < points.length; j++) {
+                const p2 = points[j];
+                const slope =
+                    p2[0] === p1[0]
+                        ? Infinity
+                        : (p2[1] - p1[1]) / (p2[0] - p1[0]);
+                count.set(slope, (count.get(slope) || 0) + 1);
+                res = Math.max(res, count.get(slope)! + 1);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -853,6 +921,40 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @return {number}
+     */
+    maxPoints(points: number[][]): number {
+        if (points.length <= 2) {
+            return points.length;
+        }
+
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+        let res = 1;
+        for (let i = 0; i < points.length - 1; i++) {
+            const count = new Map<string, number>();
+            for (let j = i + 1; j < points.length; j++) {
+                let dx = points[j][0] - points[i][0];
+                let dy = points[j][1] - points[i][1];
+                const g = gcd(dx, dy);
+                dx /= g;
+                dy /= g;
+                const slope = `${dx}:${dy}`;
+                count.set(slope, (count.get(slope) || 0) + 1);
+            }
+            for (const freq of count.values()) {
+                res = Math.max(res, freq + 1);
+            }
+        }
+        return res;
     }
 }
 ```

@@ -140,25 +140,25 @@ public class Solution {
 
 ```go
 func checkInclusion(s1 string, s2 string) bool {
-	s1Sorted := []rune(s1)
-	sort.Slice(s1Sorted, func(i, j int) bool {
-		return s1Sorted[i] < s1Sorted[j]
-	})
-	s1 = string(s1Sorted)
+    s1Sorted := []rune(s1)
+    sort.Slice(s1Sorted, func(i, j int) bool {
+        return s1Sorted[i] < s1Sorted[j]
+    })
+    s1 = string(s1Sorted)
 
-	for i := 0; i < len(s2); i++ {
-		for j := i; j < len(s2); j++ {
-			subStr := s2[i : j+1]
-			subStrSorted := []rune(subStr)
-			sort.Slice(subStrSorted, func(a, b int) bool {
-				return subStrSorted[a] < subStrSorted[b]
-			})
-			if string(subStrSorted) == s1 {
-				return true
-			}
-		}
-	}
-	return false
+    for i := 0; i < len(s2); i++ {
+        for j := i; j < len(s2); j++ {
+            subStr := s2[i : j+1]
+            subStrSorted := []rune(subStr)
+            sort.Slice(subStrSorted, func(a, b int) bool {
+                return subStrSorted[a] < subStrSorted[b]
+            })
+            if string(subStrSorted) == s1 {
+                return true
+            }
+        }
+    }
+    return false
 }
 ```
 
@@ -216,6 +216,33 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s1
+     * @param {string} s2
+     * @return {boolean}
+     */
+    checkInclusion(s1: string, s2: string): boolean {
+        s1 = s1.split('').sort().join('');
+
+        for (let i = 0; i < s2.length; i++) {
+            for (let j = i; j < s2.length; j++) {
+                let subStr = s2
+                    .slice(i, j + 1)
+                    .split('')
+                    .sort()
+                    .join('');
+                if (subStr === s1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 ```
@@ -427,29 +454,29 @@ public class Solution {
 
 ```go
 func checkInclusion(s1 string, s2 string) bool {
-	count1 := make(map[rune]int)
-	for _, c := range s1 {
-		count1[c]++
-	}
+    count1 := make(map[rune]int)
+    for _, c := range s1 {
+        count1[c]++
+    }
 
-	need := len(count1)
-	for i := 0; i < len(s2); i++ {
-		count2 := make(map[rune]int)
-		cur := 0
-		for j := i; j < len(s2); j++ {
-			count2[rune(s2[j])]++
-			if count1[rune(s2[j])] < count2[rune(s2[j])] {
-				break
-			}
-			if count1[rune(s2[j])] == count2[rune(s2[j])] {
-				cur++
-			}
-			if cur == need {
-				return true
-			}
-		}
-	}
-	return false
+    need := len(count1)
+    for i := 0; i < len(s2); i++ {
+        count2 := make(map[rune]int)
+        cur := 0
+        for j := i; j < len(s2); j++ {
+            count2[rune(s2[j])]++
+            if count1[rune(s2[j])] < count2[rune(s2[j])] {
+                break
+            }
+            if count1[rune(s2[j])] == count2[rune(s2[j])] {
+                cur++
+            }
+            if cur == need {
+                return true
+            }
+        }
+    }
+    return false
 }
 ```
 
@@ -545,6 +572,45 @@ impl Solution {
             }
         }
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s1
+     * @param {string} s2
+     * @return {boolean}
+     */
+    checkInclusion(s1: string, s2: string): boolean {
+        let count1: { [key: string]: number } = {};
+        for (let c of s1) {
+            count1[c] = (count1[c] || 0) + 1;
+        }
+
+        let need = Object.keys(count1).length;
+        for (let i = 0; i < s2.length; i++) {
+            let count2: { [key: string]: number } = {};
+            let cur = 0;
+            for (let j = i; j < s2.length; j++) {
+                let c = s2[j];
+                count2[c] = (count2[c] || 0) + 1;
+
+                if ((count1[c] || 0) < count2[c]) {
+                    break;
+                }
+
+                if ((count1[c] || 0) === count2[c]) {
+                    cur++;
+                }
+
+                if (cur === need) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 ```
@@ -831,48 +897,48 @@ public class Solution {
 
 ```go
 func checkInclusion(s1 string, s2 string) bool {
-	if len(s1) > len(s2) {
-		return false
-	}
+    if len(s1) > len(s2) {
+        return false
+    }
 
-	s1Count := make([]int, 26)
-	s2Count := make([]int, 26)
-	for i := 0; i < len(s1); i++ {
-		s1Count[s1[i]-'a']++
-		s2Count[s2[i]-'a']++
-	}
+    s1Count := make([]int, 26)
+    s2Count := make([]int, 26)
+    for i := 0; i < len(s1); i++ {
+        s1Count[s1[i]-'a']++
+        s2Count[s2[i]-'a']++
+    }
 
-	matches := 0
-	for i := 0; i < 26; i++ {
-		if s1Count[i] == s2Count[i] {
-			matches++
-		}
-	}
+    matches := 0
+    for i := 0; i < 26; i++ {
+        if s1Count[i] == s2Count[i] {
+            matches++
+        }
+    }
 
-	l := 0
-	for r := len(s1); r < len(s2); r++ {
-		if matches == 26 {
-			return true
-		}
+    l := 0
+    for r := len(s1); r < len(s2); r++ {
+        if matches == 26 {
+            return true
+        }
 
-		index := s2[r] - 'a'
-		s2Count[index]++
-		if s1Count[index] == s2Count[index] {
-			matches++
-		} else if s1Count[index]+1 == s2Count[index] {
-			matches--
-		}
+        index := s2[r] - 'a'
+        s2Count[index]++
+        if s1Count[index] == s2Count[index] {
+            matches++
+        } else if s1Count[index]+1 == s2Count[index] {
+            matches--
+        }
 
-		index = s2[l] - 'a'
-		s2Count[index]--
-		if s1Count[index] == s2Count[index] {
-			matches++
-		} else if s1Count[index]-1 == s2Count[index] {
-			matches--
-		}
-		l++
-	}
-	return matches == 26
+        index = s2[l] - 'a'
+        s2Count[index]--
+        if s1Count[index] == s2Count[index] {
+            matches++
+        } else if s1Count[index]-1 == s2Count[index] {
+            matches--
+        }
+        l++
+    }
+    return matches == 26
 }
 ```
 
@@ -1016,6 +1082,60 @@ impl Solution {
             l += 1;
         }
         matches == 26
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s1
+     * @param {string} s2
+     * @return {boolean}
+     */
+    checkInclusion(s1: string, s2: string): boolean {
+        if (s1.length > s2.length) {
+            return false;
+        }
+
+        let s1Count: number[] = new Array(26).fill(0);
+        let s2Count: number[] = new Array(26).fill(0);
+        for (let i = 0; i < s1.length; i++) {
+            s1Count[s1.charCodeAt(i) - 97]++;
+            s2Count[s2.charCodeAt(i) - 97]++;
+        }
+
+        let matches = 0;
+        for (let i = 0; i < 26; i++) {
+            if (s1Count[i] === s2Count[i]) {
+                matches++;
+            }
+        }
+
+        let l = 0;
+        for (let r = s1.length; r < s2.length; r++) {
+            if (matches === 26) {
+                return true;
+            }
+
+            let index = s2.charCodeAt(r) - 97;
+            s2Count[index]++;
+            if (s1Count[index] === s2Count[index]) {
+                matches++;
+            } else if (s1Count[index] + 1 === s2Count[index]) {
+                matches--;
+            }
+
+            index = s2.charCodeAt(l) - 97;
+            s2Count[index]--;
+            if (s1Count[index] === s2Count[index]) {
+                matches++;
+            } else if (s1Count[index] - 1 === s2Count[index]) {
+                matches--;
+            }
+            l++;
+        }
+        return matches === 26;
     }
 }
 ```

@@ -231,7 +231,6 @@ class MyHashSet {
 }
 ```
 
-
 ```rust
 struct MyHashSet {
     data: Vec<i32>,
@@ -256,6 +255,45 @@ impl MyHashSet {
 
     fn contains(&self, key: i32) -> bool {
         self.data.contains(&key)
+    }
+}
+```
+
+```typescript
+class MyHashSet {
+    private data: number[];
+
+    constructor() {
+        this.data = [];
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    add(key: number): void {
+        if (!this.data.includes(key)) {
+            this.data.push(key);
+        }
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        const index = this.data.indexOf(key);
+        if (index !== -1) {
+            this.data.splice(index, 1);
+        }
+    }
+
+    /**
+     * @param {number} key
+     * @return {boolean}
+     */
+    contains(key: number): boolean {
+        return this.data.includes(key);
     }
 }
 ```
@@ -457,7 +495,6 @@ class MyHashSet {
 }
 ```
 
-
 ```rust
 struct MyHashSet {
     data: Vec<bool>,
@@ -478,6 +515,40 @@ impl MyHashSet {
 
     fn contains(&self, key: i32) -> bool {
         self.data[key as usize]
+    }
+}
+```
+
+```typescript
+class MyHashSet {
+    private data: boolean[];
+
+    constructor() {
+        this.data = new Array(1000001).fill(false);
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    add(key: number): void {
+        this.data[key] = true;
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        this.data[key] = false;
+    }
+
+    /**
+     * @param {number} key
+     * @return {boolean}
+     */
+    contains(key: number): boolean {
+        return this.data[key];
     }
 }
 ```
@@ -932,7 +1003,6 @@ class MyHashSet {
 }
 ```
 
-
 ```rust
 struct MyHashSet {
     buckets: Vec<Vec<i32>>,
@@ -966,6 +1036,82 @@ impl MyHashSet {
     fn contains(&self, key: i32) -> bool {
         let idx = Self::hash(key);
         self.buckets[idx].contains(&key)
+    }
+}
+```
+
+```typescript
+class ListNode {
+    key: number;
+    next: ListNode | null;
+
+    /**
+     * @param {number} key
+     */
+    constructor(key: number) {
+        this.key = key;
+        this.next = null;
+    }
+}
+
+class MyHashSet {
+    private set: ListNode[];
+
+    constructor() {
+        this.set = Array.from({ length: 10000 }, () => new ListNode(0));
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    hash(key: number): number {
+        return key % this.set.length;
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    add(key: number): void {
+        let cur = this.set[this.hash(key)];
+        while (cur.next) {
+            if (cur.next.key === key) {
+                return;
+            }
+            cur = cur.next;
+        }
+        cur.next = new ListNode(key);
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        let cur = this.set[this.hash(key)];
+        while (cur.next) {
+            if (cur.next.key === key) {
+                cur.next = cur.next.next;
+                return;
+            }
+            cur = cur.next;
+        }
+    }
+
+    /**
+     * @param {number} key
+     * @return {boolean}
+     */
+    contains(key: number): boolean {
+        let cur = this.set[this.hash(key)];
+        while (cur.next) {
+            if (cur.next.key === key) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
     }
 }
 ```
@@ -1764,7 +1910,6 @@ class MyHashSet {
 }
 ```
 
-
 ```rust
 struct MyHashSet {
     buckets: Vec<BTreeSet<i32>>,
@@ -1796,6 +1941,150 @@ impl MyHashSet {
     fn contains(&self, key: i32) -> bool {
         let idx = self.hash(key);
         self.buckets[idx].contains(&key)
+    }
+}
+```
+
+```typescript
+class TreeNode {
+    key: number;
+    left: TreeNode | null;
+    right: TreeNode | null;
+
+    /**
+     * @param {number} key
+     */
+    constructor(key: number) {
+        this.key = key;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class BST {
+    private root: TreeNode | null;
+
+    constructor() {
+        this.root = null;
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    add(key: number): void {
+        this.root = this._insert(this.root, key);
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number} key
+     * @return {TreeNode}
+     */
+    _insert(node: TreeNode | null, key: number): TreeNode {
+        if (!node) return new TreeNode(key);
+        if (key < node.key) node.left = this._insert(node.left, key);
+        else if (key > node.key) node.right = this._insert(node.right, key);
+        return node;
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        this.root = this._deleteNode(this.root, key);
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number} key
+     * @return {TreeNode}
+     */
+    _deleteNode(node: TreeNode | null, key: number): TreeNode | null {
+        if (!node) return null;
+        if (key < node.key) node.left = this._deleteNode(node.left, key);
+        else if (key > node.key) node.right = this._deleteNode(node.right, key);
+        else {
+            if (!node.left) return node.right;
+            if (!node.right) return node.left;
+            let minNode = this._minValueNode(node.right);
+            node.key = minNode.key;
+            node.right = this._deleteNode(node.right, minNode.key);
+        }
+        return node;
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @return {TreeNode}
+     */
+    _minValueNode(node: TreeNode): TreeNode {
+        while (node.left) node = node.left;
+        return node;
+    }
+
+    /**
+     * @param {number} key
+     * @return {boolean}
+     */
+    contains(key: number): boolean {
+        return this._search(this.root, key);
+    }
+
+    /**
+     * @param {TreeNode} node
+     * @param {number} key
+     * @return {boolean}
+     */
+    _search(node: TreeNode | null, key: number): boolean {
+        if (!node) return false;
+        if (key === node.key) return true;
+        if (key < node.key) return this._search(node.left, key);
+        return this._search(node.right, key);
+    }
+}
+
+class MyHashSet {
+    private size: number;
+    private buckets: BST[];
+
+    constructor() {
+        this.size = 10000;
+        this.buckets = Array.from({ length: this.size }, () => new BST());
+    }
+
+    _hash(key: number): number {
+        return key % this.size;
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    add(key: number): void {
+        const idx = this._hash(key);
+        if (!this.buckets[idx].contains(key)) {
+            this.buckets[idx].add(key);
+        }
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        const idx = this._hash(key);
+        this.buckets[idx].remove(key);
+    }
+
+    /**
+     * @param {number} key
+     * @return {boolean}
+     */
+    contains(key: number): boolean {
+        const idx = this._hash(key);
+        return this.buckets[idx].contains(key);
     }
 }
 ```
@@ -2067,7 +2356,6 @@ class MyHashSet {
 }
 ```
 
-
 ```rust
 struct MyHashSet {
     set: Vec<u32>,
@@ -2094,6 +2382,52 @@ impl MyHashSet {
 
     fn contains(&self, key: i32) -> bool {
         (self.set[key as usize / 32] & Self::get_mask(key)) != 0
+    }
+}
+```
+
+```typescript
+class MyHashSet {
+    private set: number[];
+
+    constructor() {
+        // key is in the range [0, 1000000]
+        // 31251 * 32 = 1000032
+        this.set = new Array(31251).fill(0);
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    add(key: number): void {
+        this.set[Math.floor(key / 32)] |= this.getMask(key);
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        if (this.contains(key)) {
+            this.set[Math.floor(key / 32)] ^= this.getMask(key);
+        }
+    }
+
+    /**
+     * @param {number} key
+     * @return {boolean}
+     */
+    contains(key: number): boolean {
+        return (this.set[Math.floor(key / 32)] & this.getMask(key)) !== 0;
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    getMask(key: number): number {
+        return 1 << key % 32;
     }
 }
 ```

@@ -33,6 +33,42 @@ If at any point we have no available characters to place (the priority queue is 
 
 ::tabs-start
 
+```python
+class Solution:
+    def rearrangeString(self, s: str, k: int) -> str:
+        # Store the frequency for each character.
+        freq = Counter(s)
+
+        # Insert the characters with their frequencies in the max heap.
+        free = [(-cnt, c) for c, cnt in freq.items()]
+        heapq.heapify(free)
+
+        ans = []
+        # This queue stores the characters that cannot be used now.
+        busy = deque()
+        while len(ans) != len(s):
+            index = len(ans)
+
+            # Insert the character that could be used now into the free heap.
+            if busy and index - busy[0][0] >= k:
+                _, c = busy.popleft()
+                heapq.heappush(free, (-freq[c], c))
+
+            # If the free heap is empty, it implies no character can be used at this index.
+            if not free:
+                return ""
+
+            _, curr_char = heapq.heappop(free)
+            ans.append(curr_char)
+
+            # Insert the used character into busy queue with the current index.
+            freq[curr_char] -= 1
+            if freq[curr_char] > 0:
+                busy.append((index, curr_char))
+
+        return "".join(ans)
+```
+
 ```java
 class Solution {
     public String rearrangeString(String s, int k) {
@@ -133,6 +169,62 @@ public:
 };
 ```
 
+```javascript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    rearrangeString(s, k) {
+        const freq = new Array(26).fill(0);
+        // Store the frequency for each character.
+        for (const c of s) {
+            freq[c.charCodeAt(0) - 97]++;
+        }
+
+        // Insert the characters with their frequencies in the max heap.
+        const free = new PriorityQueue((a, b) =>
+            a[0] !== b[0] ? b[0] - a[0] : b[1] - a[1],
+        );
+        for (let i = 0; i < 26; i++) {
+            if (freq[i] > 0) {
+                free.enqueue([freq[i], i]);
+            }
+        }
+
+        const ans = [];
+        // This queue stores the characters that cannot be used now.
+        const busy = new Queue();
+        while (ans.length !== s.length) {
+            const index = ans.length;
+
+            // Insert the character that could be used now into the free heap.
+            if (!busy.isEmpty() && index - busy.front()[0] >= k) {
+                const [, c] = busy.pop();
+                free.enqueue([freq[c], c]);
+            }
+
+            // If the free heap is empty, it implies no character can be used at this index.
+            if (free.isEmpty()) {
+                return '';
+            }
+
+            const [, currChar] = free.dequeue();
+            ans.push(String.fromCharCode(currChar + 97));
+
+            // Insert the used character into busy queue with the current index.
+            freq[currChar]--;
+            if (freq[currChar] > 0) {
+                busy.push([index, currChar]);
+            }
+        }
+
+        return ans.join('');
+    }
+}
+```
+
 ```csharp
 public class Solution {
     public string RearrangeString(string s, int k) {
@@ -174,10 +266,6 @@ public class Solution {
 ```
 
 ```go
-import (
-    "container/heap"
-)
-
 type CharFreq struct {
     freq int
     char int
@@ -241,8 +329,6 @@ func rearrangeString(s string, k int) string {
 ```
 
 ```kotlin
-import java.util.*
-
 class Solution {
     fun rearrangeString(s: String, k: Int): String {
         val freq = mutableMapOf<Char, Int>()
@@ -365,6 +451,62 @@ impl Solution {
         }
 
         ans
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    rearrangeString(s: string, k: number): string {
+        const freq: number[] = new Array(26).fill(0);
+        // Store the frequency for each character.
+        for (const c of s) {
+            freq[c.charCodeAt(0) - 97]++;
+        }
+
+        // Insert the characters with their frequencies in the max heap.
+        const free = new PriorityQueue((a: number[], b: number[]) =>
+            a[0] !== b[0] ? b[0] - a[0] : b[1] - a[1],
+        );
+        for (let i = 0; i < 26; i++) {
+            if (freq[i] > 0) {
+                free.enqueue([freq[i], i]);
+            }
+        }
+
+        const ans: string[] = [];
+        // This queue stores the characters that cannot be used now.
+        const busy = new Queue();
+        while (ans.length !== s.length) {
+            const index = ans.length;
+
+            // Insert the character that could be used now into the free heap.
+            if (!busy.isEmpty() && index - busy.front()[0] >= k) {
+                const [, c]: number[] = busy.pop();
+                free.enqueue([freq[c], c]);
+            }
+
+            // If the free heap is empty, it implies no character can be used at this index.
+            if (free.isEmpty()) {
+                return '';
+            }
+
+            const [, currChar]: number[] = free.dequeue();
+            ans.push(String.fromCharCode(currChar + 97));
+
+            // Insert the used character into busy queue with the current index.
+            freq[currChar]--;
+            if (freq[currChar] > 0) {
+                busy.push([index, currChar]);
+            }
+        }
+
+        return ans.join('');
     }
 }
 ```
@@ -945,6 +1087,81 @@ impl Solution {
         }
 
         segments.iter().map(|seg| seg.iter().collect::<String>()).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {string}
+     */
+    rearrangeString(s: string, k: number): string {
+        const freqs = new Map<string, number>();
+        let maxFreq = 0;
+
+        // Store the frequency and find the highest frequency
+        for (const c of s) {
+            freqs.set(c, (freqs.get(c) || 0) + 1);
+            maxFreq = Math.max(maxFreq, freqs.get(c)!);
+        }
+
+        const mostChars = new Set<string>();
+        const secondChars = new Set<string>();
+
+        // Store all characters with highest and second highest frequency
+        for (const [char, freq] of freqs) {
+            if (freq === maxFreq) {
+                mostChars.add(char);
+            } else if (freq === maxFreq - 1) {
+                secondChars.add(char);
+            }
+        }
+
+        // Create maxFreq number of different strings
+        const segments: string[][] = Array.from({ length: maxFreq }, () => []);
+
+        // Insert one instance of characters with frequency maxFreq & maxFreq - 1 in each segment
+        for (let i = 0; i < maxFreq; i++) {
+            for (const c of mostChars) {
+                segments[i].push(c);
+            }
+
+            // Skip the last segment as the frequency is only maxFreq - 1
+            if (i < maxFreq - 1) {
+                for (const c of secondChars) {
+                    segments[i].push(c);
+                }
+            }
+        }
+
+        let segmentId = 0;
+
+        // Iterate over remaining characters and distribute instances over segments
+        for (const [char, freq] of freqs) {
+            // Skip characters with maxFreq or maxFreq - 1 frequency
+            if (mostChars.has(char) || secondChars.has(char)) {
+                continue;
+            }
+
+            // Distribute instances over segments in round-robin manner
+            for (let f = 0; f < freq; f++) {
+                segments[segmentId].push(char);
+                segmentId = (segmentId + 1) % (maxFreq - 1);
+            }
+        }
+
+        // Each segment except the last should have exactly k elements
+        for (let i = 0; i < maxFreq - 1; i++) {
+            if (segments[i].length < k) {
+                return '';
+            }
+        }
+
+        // Join all segments and return
+        return segments.map((seg) => seg.join('')).join('');
     }
 }
 ```

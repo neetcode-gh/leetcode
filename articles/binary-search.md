@@ -222,6 +222,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    binary_search(l: number, r: number, nums: number[], target: number): number {
+        if (l > r) return -1;
+        let m = l + Math.floor((r - l) / 2);
+
+        if (nums[m] === target) return m;
+        return nums[m] < target
+            ? this.binary_search(m + 1, r, nums, target)
+            : this.binary_search(l, m - 1, nums, target);
+    }
+
+    search(nums: number[], target: number): number {
+        return this.binary_search(0, nums.length - 1, nums, target);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -442,6 +465,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    search(nums: number[], target: number): number {
+        let l = 0;
+        let r = nums.length - 1;
+
+        while (l <= r) {
+            const m = l + Math.floor((r - l) / 2);
+            if (nums[m] > target) {
+                r = m - 1;
+            } else if (nums[m] < target) {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -645,6 +694,30 @@ impl Solution {
         } else {
             -1
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    search(nums: number[], target: number): number {
+        let l = 0,
+            r = nums.length;
+
+        while (l < r) {
+            let m = l + Math.floor((r - l) / 2);
+            if (nums[m] > target) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return l > 0 && nums[l - 1] === target ? l - 1 : -1;
     }
 }
 ```
@@ -858,6 +931,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    search(nums: number[], target: number): number {
+        let l = 0,
+            r = nums.length;
+
+        while (l < r) {
+            let m = l + Math.floor((r - l) / 2);
+            if (nums[m] >= target) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return l < nums.length && nums[l] === target ? l : -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -946,7 +1043,14 @@ class Solution {
 ```swift
 class Solution {
     func search(_ nums: [Int], _ target: Int) -> Int {
-        let index = nums.partitioningIndex { $0 >= target }
+        // Swift's standard library has no built-in binary search, so the
+        // partition point (first index with nums[i] >= target) is found here.
+        var l = 0, r = nums.count
+        while l < r {
+            let m = (l + r) / 2
+            if nums[m] >= target { r = m } else { l = m + 1 }
+        }
+        let index = l
         return (index < nums.count && nums[index] == target) ? index : -1
     }
 }
@@ -959,6 +1063,20 @@ impl Solution {
             Ok(index) => index as i32,
             Err(_) => -1,
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    search(nums: number[], target: number): number {
+        // There is no built in function for TS.
+        return nums.indexOf(target);
     }
 }
 ```

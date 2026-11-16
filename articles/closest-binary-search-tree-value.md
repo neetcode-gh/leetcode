@@ -200,6 +200,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @return {number}
+     */
+    closestValue(root: TreeNode | null, target: number): number {
+        const nums: number[] = [];
+        this.inorder(root, nums);
+        return nums.reduce((closest, val) =>
+            Math.abs(val - target) < Math.abs(closest - target) ? val : closest,
+        );
+    }
+
+    inorder(root: TreeNode | null, nums: number[]): void {
+        if (!root) return;
+        this.inorder(root.left, nums);
+        nums.push(root.val);
+        this.inorder(root.right, nums);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -467,6 +491,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @return {number}
+     */
+    closestValue(root: TreeNode | null, target: number): number {
+        const stack: TreeNode[] = [];
+        let pred = -Infinity;
+
+        while (stack.length > 0 || root !== null) {
+            while (root !== null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop()!;
+
+            if (pred <= target && target < root.val) {
+                return Math.abs(pred - target) <= Math.abs(root.val - target)
+                    ? pred
+                    : root.val;
+            }
+
+            pred = root.val;
+            root = root.right;
+        }
+        return pred;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -670,6 +726,33 @@ impl Solution {
         }
 
         closest
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {number} target
+     * @return {number}
+     */
+    closestValue(root: TreeNode | null, target: number): number {
+        let val: number,
+            closest = root!.val;
+
+        while (root !== null) {
+            val = root.val;
+            closest =
+                Math.abs(val - target) < Math.abs(closest - target) ||
+                (Math.abs(val - target) === Math.abs(closest - target) &&
+                    val < closest)
+                    ? val
+                    : closest;
+            root = target < root.val ? root.left : root.right;
+        }
+
+        return closest;
     }
 }
 ```

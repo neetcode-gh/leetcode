@@ -215,6 +215,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const rec = (i: number, bought: boolean): number => {
+            if (i === prices.length) {
+                return 0;
+            }
+            let res = rec(i + 1, bought);
+            if (bought) {
+                res = Math.max(res, prices[i] + rec(i + 1, false));
+            } else {
+                res = Math.max(res, -prices[i] + rec(i + 1, true));
+            }
+            return res;
+        };
+        return rec(0, false);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,6 +525,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const n = prices.length;
+        const dp: number[][] = Array.from({ length: n }, () => Array(2).fill(-1));
+
+        const rec = (i: number, bought: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (dp[i][bought] !== -1) {
+                return dp[i][bought];
+            }
+            let res = rec(i + 1, bought);
+            if (bought) {
+                res = Math.max(res, prices[i] + rec(i + 1, 0));
+            } else {
+                res = Math.max(res, -prices[i] + rec(i + 1, 1));
+            }
+            dp[i][bought] = res;
+            return res;
+        };
+
+        return rec(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -677,6 +733,26 @@ impl Solution {
         }
 
         dp[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        const n = prices.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => Array(2).fill(0));
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i][0] = Math.max(dp[i + 1][0], -prices[i] + dp[i + 1][1]);
+            dp[i][1] = Math.max(dp[i + 1][1], prices[i] + dp[i + 1][0]);
+        }
+
+        return dp[0][0];
     }
 }
 ```
@@ -887,6 +963,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        let nextBuy = 0,
+            nextSell = 0;
+        let curBuy = 0,
+            curSell = 0;
+
+        for (let i = prices.length - 1; i >= 0; i--) {
+            curBuy = Math.max(nextBuy, -prices[i] + nextSell);
+            curSell = Math.max(nextSell, prices[i] + nextBuy);
+            nextBuy = curBuy;
+            nextSell = curSell;
+        }
+
+        return curBuy;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1037,6 +1137,24 @@ impl Solution {
             }
         }
         profit
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        let profit = 0;
+        for (let i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                profit += prices[i] - prices[i - 1];
+            }
+        }
+        return profit;
     }
 }
 ```

@@ -411,6 +411,60 @@ impl WordFilter {
 }
 ```
 
+```typescript
+class WordFilter {
+    private words: string[];
+
+    /**
+     * @constructor
+     * @param {string[]} words
+     */
+    constructor(words: string[]) {
+        this.words = words;
+    }
+
+    /**
+     * @param {string} pref
+     * @param {string} suff
+     * @return {number}
+     */
+    f(pref: string, suff: string): number {
+        for (let i = this.words.length - 1; i >= 0; i--) {
+            const w = this.words[i];
+            if (w.length < pref.length || w.length < suff.length) {
+                continue;
+            }
+
+            let flag = true;
+            for (let j = 0; j < pref.length; j++) {
+                if (w[j] !== pref[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (!flag) {
+                continue;
+            }
+
+            let j = w.length - suff.length;
+            for (let k = 0; k < suff.length; k++) {
+                if (w[j + k] !== suff[k]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -671,6 +725,40 @@ impl WordFilter {
     fn f(&self, pref: String, suff: String) -> i32 {
         let s = format!("{}${}", pref, suff);
         *self.mp.get(&s).unwrap_or(&-1)
+    }
+}
+```
+
+```typescript
+class WordFilter {
+    private mp: Map<string, number>;
+
+    /**
+     * @constructor
+     * @param {string[]} words
+     */
+    constructor(words: string[]) {
+        this.mp = new Map();
+        for (let i = 0; i < words.length; i++) {
+            const w = words[i];
+            for (let j = 0; j < w.length; j++) {
+                const pref = w.slice(0, j + 1);
+                for (let k = 0; k < w.length; k++) {
+                    const cur = pref + '$' + w.slice(k);
+                    this.mp.set(cur, i);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {string} pref
+     * @param {string} suff
+     * @return {number}
+     */
+    f(pref: string, suff: string): number {
+        const s = pref + '$' + suff;
+        return this.mp.has(s) ? this.mp.get(s)! : -1;
     }
 }
 ```
@@ -1299,6 +1387,93 @@ impl WordFilter {
     fn f(&self, pref: String, suff: String) -> i32 {
         let key = format!("{}{{{}", suff, pref);
         self.trie.search(&key)
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: (TrieNode | null)[];
+    index: number;
+
+    constructor() {
+        this.children = Array(27).fill(null);
+        this.index = -1;
+    }
+}
+
+class Trie {
+    root: TrieNode;
+
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * @param {string} word
+     * @param {number} i
+     * @return {void}
+     */
+    addWord(word: string, i: number): void {
+        let cur = this.root;
+        for (const ch of word) {
+            const c = ch === '{' ? 26 : ch.charCodeAt(0) - 'a'.charCodeAt(0);
+            if (!cur.children[c]) {
+                cur.children[c] = new TrieNode();
+            }
+            cur = cur.children[c]!;
+        }
+        cur.index = i;
+    }
+
+    /**
+     * @param {string} word
+     * @return {number}
+     */
+    search(word: string): number {
+        let cur = this.root;
+        for (const ch of word) {
+            const c = ch === '{' ? 26 : ch.charCodeAt(0) - 'a'.charCodeAt(0);
+            if (!cur.children[c]) {
+                return -1;
+            }
+            cur = cur.children[c]!;
+        }
+        return cur.index;
+    }
+}
+
+class WordFilter {
+    private trie: Trie;
+    private CHAR: string;
+
+    /**
+     * @constructor
+     * @param {string[]} words
+     */
+    constructor(words: string[]) {
+        this.trie = new Trie();
+        this.CHAR = '{';
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            const wLen = word.length;
+            for (let j = 0; j < wLen; j++) {
+                const suffix = word.substring(j);
+                for (let k = 0; k <= wLen; k++) {
+                    const prefix = word.substring(0, k);
+                    this.trie.addWord(suffix + this.CHAR + prefix, i);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {string} pref
+     * @param {string} suff
+     * @return {number}
+     */
+    f(pref: string, suff: string): number {
+        return this.trie.search(suff + this.CHAR + pref);
     }
 }
 ```

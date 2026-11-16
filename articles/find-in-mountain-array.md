@@ -234,7 +234,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn find_in_mountain_array(target: i32, mountain_arr: &MountainArray) -> i32 {
+    pub fn find_in_mountain_array(target: i32, mountain_arr: &dyn MountainArray) -> i32 {
         let n = mountain_arr.length();
 
         for i in 0..n {
@@ -244,6 +244,37 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+/**
+ * // This is the MountainArray's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *     get(index: number): number {}
+ *
+ *     length(): number {}
+ * }
+ */
+
+class Solution {
+    /**
+     * @param {number} target
+     * @param {MountainArray} mountainArr
+     * @return {number}
+     */
+    findInMountainArray(target: number, mountainArr: MountainArray): number {
+        let n = mountainArr.length();
+
+        for (let i = 0; i < n; i++) {
+            if (mountainArr.get(i) === target) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
 ```
@@ -807,7 +838,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn find_in_mountain_array(target: i32, mountain_arr: &MountainArray) -> i32 {
+    pub fn find_in_mountain_array(target: i32, mountain_arr: &dyn MountainArray) -> i32 {
         let length = mountain_arr.length();
 
         // Find Peak
@@ -859,6 +890,80 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+/**
+ * // This is the MountainArray's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *     get(index: number): number {}
+ *
+ *     length(): number {}
+ * }
+ */
+
+class Solution {
+    /**
+     * @param {number} target
+     * @param {MountainArray} mountainArr
+     * @return {number}
+     */
+    findInMountainArray(target: number, mountainArr: MountainArray): number {
+        const length = mountainArr.length();
+
+        // Find Peak
+        let l = 1,
+            r = length - 2,
+            peak = 0;
+        while (l <= r) {
+            const m = Math.floor((l + r) / 2);
+            const left = mountainArr.get(m - 1);
+            const mid = mountainArr.get(m);
+            const right = mountainArr.get(m + 1);
+            if (left < mid && mid < right) {
+                l = m + 1;
+            } else if (left > mid && mid > right) {
+                r = m - 1;
+            } else {
+                peak = m;
+                break;
+            }
+        }
+
+        // Search left portion
+        l = 0;
+        r = peak - 1;
+        while (l <= r) {
+            const m = Math.floor((l + r) / 2);
+            const val = mountainArr.get(m);
+            if (val < target) {
+                l = m + 1;
+            } else if (val > target) {
+                r = m - 1;
+            } else {
+                return m;
+            }
+        }
+
+        // Search right portion
+        l = peak;
+        r = length - 1;
+        while (l <= r) {
+            const m = Math.floor((l + r) / 2);
+            const val = mountainArr.get(m);
+            if (val > target) {
+                l = m + 1;
+            } else if (val < target) {
+                r = m - 1;
+            } else {
+                return m;
+            }
+        }
+
+        return -1;
     }
 }
 ```
@@ -1431,7 +1536,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn find_in_mountain_array(target: i32, mountain_arr: &MountainArray) -> i32 {
+    pub fn find_in_mountain_array(target: i32, mountain_arr: &dyn MountainArray) -> i32 {
         let mut cache = HashMap::new();
         let length = mountain_arr.length() as i32;
 
@@ -1492,6 +1597,81 @@ impl Solution {
 
         // Search right portion
         binary_search(peak, length - 1, false, &mut cache)
+    }
+}
+```
+
+```typescript
+/**
+ * // This is the MountainArray's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *     get(index: number): number {}
+ *
+ *     length(): number {}
+ * }
+ */
+
+class Solution {
+    /**
+     * @param {number} target
+     * @param {MountainArray} mountainArr
+     * @return {number}
+     */
+    findInMountainArray(target: number, mountainArr: MountainArray): number {
+        const cache = new Map<number, number>();
+        const get = (index: number): number => {
+            if (!cache.has(index)) {
+                cache.set(index, mountainArr.get(index));
+            }
+            return cache.get(index)!;
+        };
+
+        const binarySearch = (l: number, r: number, ascending: boolean): number => {
+            while (l <= r) {
+                const m = Math.floor((l + r) / 2);
+                const val = get(m);
+                if (val === target) {
+                    return m;
+                }
+                if (ascending === val < target) {
+                    l = m + 1;
+                } else {
+                    r = m - 1;
+                }
+            }
+            return -1;
+        };
+
+        const length = mountainArr.length();
+
+        // Find Peak
+        let l = 1,
+            r = length - 2,
+            peak = 0;
+        while (l <= r) {
+            const m = Math.floor((l + r) / 2);
+            const left = get(m - 1);
+            const mid = get(m);
+            const right = get(m + 1);
+            if (left < mid && mid < right) {
+                l = m + 1;
+            } else if (left > mid && mid > right) {
+                r = m - 1;
+            } else {
+                peak = m;
+                break;
+            }
+        }
+
+        // Search left portion
+        let res = binarySearch(0, peak, true);
+        if (res !== -1) {
+            return res;
+        }
+
+        // Search right portion
+        return binarySearch(peak, length - 1, false);
     }
 }
 ```

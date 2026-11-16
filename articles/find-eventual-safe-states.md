@@ -54,7 +54,7 @@ class Solution:
 public class Solution {
     private Boolean[] safe;
 
-    public List<Integer> eventualSafeNodes(int[][] graph) {
+    public int[] eventualSafeNodes(int[][] graph) {
         int n = graph.length;
         safe = new Boolean[n];
         List<Integer> res = new ArrayList<>();
@@ -63,7 +63,7 @@ public class Solution {
                 res.add(node);
             }
         }
-        return res;
+        return res.stream().mapToInt(Integer::intValue).toArray();
     }
 
     private boolean dfs(int[][] graph, int node) {
@@ -148,6 +148,39 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private bool?[] safe;
+
+    public int[] EventualSafeNodes(int[][] graph) {
+        int n = graph.Length;
+        safe = new bool?[n];
+        List<int> res = new List<int>();
+        for (int node = 0; node < n; node++) {
+            if (Dfs(graph, node)) {
+                res.Add(node);
+            }
+        }
+        return res.ToArray();
+    }
+
+    private bool Dfs(int[][] graph, int node) {
+        if (safe[node].HasValue) {
+            return safe[node].Value;
+        }
+
+        safe[node] = false;
+        foreach (int nei in graph[node]) {
+            if (!Dfs(graph, nei)) {
+                return false;
+            }
+        }
+        safe[node] = true;
+        return true;
     }
 }
 ```
@@ -277,6 +310,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} graph
+     * @return {number[]}
+     */
+    eventualSafeNodes(graph: number[][]): number[] {
+        const n = graph.length;
+        const safe: (boolean | undefined)[] = Array(n).fill(undefined);
+        const res: number[] = [];
+
+        const dfs = (node: number): boolean => {
+            if (safe[node] !== undefined) {
+                return safe[node]!;
+            }
+            safe[node] = false;
+            for (let nei of graph[node]) {
+                if (!dfs(nei)) {
+                    return false;
+                }
+            }
+            safe[node] = true;
+            return true;
+        };
+
+        for (let node = 0; node < n; node++) {
+            if (dfs(node)) {
+                res.push(node);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -337,7 +405,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public List<Integer> eventualSafeNodes(int[][] graph) {
+    public int[] eventualSafeNodes(int[][] graph) {
         int n = graph.length;
         int[] outdegree = new int[n];
         List<Integer>[] parents = new ArrayList[n];
@@ -373,7 +441,7 @@ public class Solution {
                 res.add(node);
             }
         }
-        return res;
+        return res.stream().mapToInt(Integer::intValue).toArray();
     }
 }
 ```
@@ -462,6 +530,49 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] EventualSafeNodes(int[][] graph) {
+        int n = graph.Length;
+        int[] outdegree = new int[n];
+        List<int>[] parents = new List<int>[n];
+        Queue<int> queue = new Queue<int>();
+
+        for (int i = 0; i < n; i++) {
+            parents[i] = new List<int>();
+        }
+
+        for (int node = 0; node < n; node++) {
+            outdegree[node] = graph[node].Length;
+            if (outdegree[node] == 0) {
+                queue.Enqueue(node);
+            }
+            foreach (int nei in graph[node]) {
+                parents[nei].Add(node);
+            }
+        }
+
+        while (queue.Count > 0) {
+            int node = queue.Dequeue();
+            foreach (int parent in parents[node]) {
+                outdegree[parent]--;
+                if (outdegree[parent] == 0) {
+                    queue.Enqueue(parent);
+                }
+            }
+        }
+
+        List<int> res = new List<int>();
+        for (int node = 0; node < n; node++) {
+            if (outdegree[node] <= 0) {
+                res.Add(node);
+            }
+        }
+        return res.ToArray();
+    }
+}
+```
+
 ```go
 func eventualSafeNodes(graph [][]int) []int {
     n := len(graph)
@@ -470,7 +581,6 @@ func eventualSafeNodes(graph [][]int) []int {
     queue := []int{}
 
     for node := 0; node < n; node++ {
-        parents[node] = []int{}
         outdegree[node] = len(graph[node])
         if outdegree[node] == 0 {
             queue = append(queue, node)
@@ -613,6 +723,49 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} graph
+     * @return {number[]}
+     */
+    eventualSafeNodes(graph: number[][]): number[] {
+        const n = graph.length;
+        const outdegree: number[] = Array(n).fill(0);
+        const parents: number[][] = Array.from({ length: n }, () => []);
+        const queue = new Queue();
+
+        for (let node = 0; node < n; node++) {
+            outdegree[node] = graph[node].length;
+            if (outdegree[node] === 0) {
+                queue.push(node);
+            }
+            for (let nei of graph[node]) {
+                parents[nei].push(node);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            const node: number = queue.pop();
+            for (let parent of parents[node]) {
+                outdegree[parent]--;
+                if (outdegree[parent] === 0) {
+                    queue.push(parent);
+                }
+            }
+        }
+
+        const res: number[] = [];
+        for (let node = 0; node < n; node++) {
+            if (outdegree[node] <= 0) {
+                res.push(node);
+            }
+        }
+        return res;
     }
 }
 ```

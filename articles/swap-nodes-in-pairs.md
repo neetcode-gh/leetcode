@@ -351,6 +351,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    swapPairs(head: ListNode | null): ListNode | null {
+        if (!head) return null;
+
+        let arr: ListNode[] = [];
+        let cur: ListNode | null = head;
+
+        while (cur) {
+            arr.push(cur);
+            cur = cur.next;
+        }
+
+        for (let i = 0; i + 1 < arr.length; i += 2) {
+            [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+        }
+
+        for (let i = 0; i + 1 < arr.length; i++) {
+            arr[i].next = arr[i + 1];
+        }
+
+        arr[arr.length - 1].next = null;
+        return arr[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -598,6 +629,27 @@ impl Solution {
                 }
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    swapPairs(head: ListNode | null): ListNode | null {
+        if (!head || !head.next) {
+            return head;
+        }
+
+        let cur = head;
+        let nxt = head.next;
+        cur.next = this.swapPairs(nxt.next);
+        nxt.next = cur;
+
+        return nxt;
     }
 }
 ```
@@ -924,6 +976,36 @@ impl Solution {
         }
 
         dummy.next
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    swapPairs(head: ListNode | null): ListNode | null {
+        let dummy = new ListNode(0, head);
+        let prev: ListNode = dummy,
+            curr = head;
+
+        while (curr && curr.next) {
+            let nxtPair = curr.next.next;
+            let second = curr.next;
+
+            // Reverse this pair
+            second.next = curr;
+            curr.next = nxtPair;
+            prev.next = second;
+
+            // Update pointers
+            prev = curr;
+            curr = nxtPair;
+        }
+
+        return dummy.next;
     }
 }
 ```

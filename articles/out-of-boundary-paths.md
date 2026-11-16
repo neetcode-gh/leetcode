@@ -220,6 +220,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @param {number} maxMove
+     * @param {number} startRow
+     * @param {number} startColumn
+     * @return {number}
+     */
+    findPaths(
+        m: number,
+        n: number,
+        maxMove: number,
+        startRow: number,
+        startColumn: number,
+    ): number {
+        const MOD = 1_000_000_007;
+
+        const dfs = (r: number, c: number, moves: number): number => {
+            if (r < 0 || r >= m || c < 0 || c >= n) return 1;
+            if (moves === 0) return 0;
+
+            return (
+                (((dfs(r + 1, c, moves - 1) + dfs(r - 1, c, moves - 1)) % MOD) +
+                    ((dfs(r, c + 1, moves - 1) + dfs(r, c - 1, moves - 1)) %
+                        MOD)) %
+                MOD
+            );
+        };
+
+        return dfs(startRow, startColumn, maxMove);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -505,6 +541,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @param {number} maxMove
+     * @param {number} startRow
+     * @param {number} startColumn
+     * @return {number}
+     */
+    findPaths(
+        m: number,
+        n: number,
+        maxMove: number,
+        startRow: number,
+        startColumn: number,
+    ): number {
+        const MOD = 1_000_000_007;
+        const dp: number[][][] = Array.from({ length: m }, () =>
+            Array.from({ length: n }, () => Array(maxMove + 1).fill(-1)),
+        );
+
+        const dfs = (r: number, c: number, moves: number): number => {
+            if (r < 0 || r >= m || c < 0 || c >= n) return 1;
+            if (moves === 0) return 0;
+            if (dp[r][c][moves] !== -1) return dp[r][c][moves];
+
+            dp[r][c][moves] =
+                (((dfs(r + 1, c, moves - 1) + dfs(r - 1, c, moves - 1)) % MOD) +
+                    ((dfs(r, c + 1, moves - 1) + dfs(r, c - 1, moves - 1)) %
+                        MOD)) %
+                MOD;
+            return dp[r][c][moves];
+        };
+
+        return dfs(startRow, startColumn, maxMove);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -727,7 +803,7 @@ class Solution {
         let MOD = 1_000_000_007
         var dp = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: 0, count: maxMove + 1), count: n), count: m)
 
-        for moves in 1...maxMove {
+        for moves in stride(from: 1, through: maxMove, by: 1) {
             for r in 0..<m {
                 for c in 0..<n {
                     let up = (r > 0) ? dp[r - 1][c][moves - 1] : 1
@@ -765,6 +841,46 @@ impl Solution {
         }
 
         dp[start_row as usize][start_column as usize][max_move] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @param {number} maxMove
+     * @param {number} startRow
+     * @param {number} startColumn
+     * @return {number}
+     */
+    findPaths(
+        m: number,
+        n: number,
+        maxMove: number,
+        startRow: number,
+        startColumn: number,
+    ): number {
+        const MOD = 1_000_000_007;
+        const dp: number[][][] = Array.from({ length: m }, () =>
+            Array.from({ length: n }, () => Array(maxMove + 1).fill(0)),
+        );
+
+        for (let moves = 1; moves <= maxMove; moves++) {
+            for (let r = 0; r < m; r++) {
+                for (let c = 0; c < n; c++) {
+                    dp[r][c][moves] =
+                        ((r > 0 ? dp[r - 1][c][moves - 1] : 1) +
+                            (r < m - 1 ? dp[r + 1][c][moves - 1] : 1) +
+                            (c > 0 ? dp[r][c - 1][moves - 1] : 1) +
+                            (c < n - 1 ? dp[r][c + 1][moves - 1] : 1)) %
+                        MOD;
+                }
+            }
+        }
+
+        return dp[startRow][startColumn][maxMove];
     }
 }
 ```
@@ -1089,7 +1205,7 @@ class Solution {
         let MOD = 1_000_000_007
         var dp = [[Int]](repeating: [Int](repeating: 0, count: n), count: m)
 
-        for _ in 1...maxMove {
+        for _ in stride(from: 1, through: maxMove, by: 1) {
             var tmp = [[Int]](repeating: [Int](repeating: 0, count: n), count: m)
             for r in 0..<m {
                 for c in 0..<n {
@@ -1144,6 +1260,62 @@ impl Solution {
         }
 
         dp[start_row as usize][start_column as usize] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @param {number} maxMove
+     * @param {number} startRow
+     * @param {number} startColumn
+     * @return {number}
+     */
+    findPaths(
+        m: number,
+        n: number,
+        maxMove: number,
+        startRow: number,
+        startColumn: number,
+    ): number {
+        const MOD = 1_000_000_007;
+        let dp: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
+
+        for (let moves = 1; moves <= maxMove; moves++) {
+            const tmp: number[][] = Array.from({ length: m }, () =>
+                Array(n).fill(0),
+            );
+            for (let r = 0; r < m; r++) {
+                for (let c = 0; c < n; c++) {
+                    if (r + 1 === m) {
+                        tmp[r][c] = (tmp[r][c] + 1) % MOD;
+                    } else {
+                        tmp[r][c] = (tmp[r][c] + dp[r + 1][c]) % MOD;
+                    }
+                    if (r - 1 < 0) {
+                        tmp[r][c] = (tmp[r][c] + 1) % MOD;
+                    } else {
+                        tmp[r][c] = (tmp[r][c] + dp[r - 1][c]) % MOD;
+                    }
+                    if (c + 1 === n) {
+                        tmp[r][c] = (tmp[r][c] + 1) % MOD;
+                    } else {
+                        tmp[r][c] = (tmp[r][c] + dp[r][c + 1]) % MOD;
+                    }
+                    if (c - 1 < 0) {
+                        tmp[r][c] = (tmp[r][c] + 1) % MOD;
+                    } else {
+                        tmp[r][c] = (tmp[r][c] + dp[r][c - 1]) % MOD;
+                    }
+                }
+            }
+            dp = tmp;
+        }
+
+        return dp[startRow][startColumn];
     }
 }
 ```

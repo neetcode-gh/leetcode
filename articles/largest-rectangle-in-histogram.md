@@ -290,6 +290,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number}
+     */
+    largestRectangleArea(heights: number[]): number {
+        const n = heights.length;
+        let maxArea = 0;
+
+        for (let i = 0; i < n; i++) {
+            let height = heights[i];
+
+            let rightMost = i + 1;
+            while (rightMost < n && heights[rightMost] >= height) {
+                rightMost++;
+            }
+
+            let leftMost = i;
+            while (leftMost >= 0 && heights[leftMost] >= height) {
+                leftMost--;
+            }
+
+            rightMost--;
+            leftMost++;
+            maxArea = Math.max(maxArea, height * (rightMost - leftMost + 1));
+        }
+        return maxArea;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1045,6 +1077,105 @@ impl Solution {
 }
 ```
 
+```typescript
+class MinIdx_Segtree {
+    n: number;
+    INF: number;
+    A: number[];
+    tree: number[];
+
+    /**
+     * @param {number} N
+     * @param {number[]} heights
+     */
+    constructor(N: number, heights: number[]) {
+        this.n = N;
+        this.INF = 1e9;
+        this.A = heights.slice();
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.A.push(this.INF);
+            this.n++;
+        }
+        this.tree = new Array(2 * this.n).fill(0);
+        this.build();
+    }
+
+    build(): void {
+        for (let i = 0; i < this.n; i++) {
+            this.tree[this.n + i] = i;
+        }
+        for (let j = this.n - 1; j >= 1; j--) {
+            let a = this.tree[j << 1];
+            let b = this.tree[(j << 1) + 1];
+            this.tree[j] = this.A[a] <= this.A[b] ? a : b;
+        }
+    }
+
+    /**
+     * @param {number} i
+     * @param {number} val
+     */
+    update(i: number, val: number): void {
+        this.A[i] = val;
+        for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
+            let a = this.tree[j << 1];
+            let b = this.tree[(j << 1) + 1];
+            this.tree[j] = this.A[a] <= this.A[b] ? a : b;
+        }
+    }
+
+    /**
+     * @param {number} ql
+     * @param {number} qh
+     * @return {number}
+     */
+    query(ql: number, qh: number): number {
+        return this._query(1, 0, this.n - 1, ql, qh);
+    }
+
+    _query(node: number, l: number, h: number, ql: number, qh: number): number {
+        if (ql > h || qh < l) return this.INF;
+        if (l >= ql && h <= qh) return this.tree[node];
+        let a = this._query(node << 1, l, (l + h) >> 1, ql, qh);
+        let b = this._query((node << 1) + 1, ((l + h) >> 1) + 1, h, ql, qh);
+        if (a === this.INF) return b;
+        if (b === this.INF) return a;
+        return this.A[a] <= this.A[b] ? a : b;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number}
+     */
+    largestRectangleArea(heights: number[]): number {
+        const n = heights.length;
+        const st = new MinIdx_Segtree(n, heights);
+        return this.getMaxArea(heights, 0, n - 1, st);
+    }
+
+    /**
+     * @param {number[]} heights
+     * @param {number} l
+     * @param {number} r
+     * @param {MinIdx_Segtree} st
+     * @return {number}
+     */
+    getMaxArea(heights: number[], l: number, r: number, st: MinIdx_Segtree): number {
+        if (l > r) return 0;
+        if (l === r) return heights[l];
+
+        const minIdx = st.query(l, r);
+        return Math.max(
+            this.getMaxArea(heights, l, minIdx - 1, st),
+            this.getMaxArea(heights, minIdx + 1, r, st),
+            (r - l + 1) * heights[minIdx],
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1349,11 +1480,11 @@ class Solution {
 
         val leftMost = IntArray(n) { -1 }
         for (i in 0 until n) {
-            while (stack.isNotEmpty() && heights[stack.last()] >= heights[i]) {
+            while (stack.isNotEmpty() && heights[stack.peekLast()] >= heights[i]) {
                 stack.removeLast()
             }
             if (stack.isNotEmpty()) {
-                leftMost[i] = stack.last()
+                leftMost[i] = stack.peekLast()
             }
             stack.addLast(i)
         }
@@ -1361,11 +1492,11 @@ class Solution {
         stack.clear()
         val rightMost = IntArray(n) { n }
         for (i in n - 1 downTo 0) {
-            while (stack.isNotEmpty() && heights[stack.last()] >= heights[i]) {
+            while (stack.isNotEmpty() && heights[stack.peekLast()] >= heights[i]) {
                 stack.removeLast()
             }
             if (stack.isNotEmpty()) {
-                rightMost[i] = stack.last()
+                rightMost[i] = stack.peekLast()
             }
             stack.addLast(i)
         }
@@ -1459,6 +1590,60 @@ impl Solution {
         }
 
         max_area
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number}
+     */
+    largestRectangleArea(heights: number[]): number {
+        const n = heights.length;
+        const leftMost: number[] = Array(n).fill(-1);
+        const rightMost: number[] = Array(n).fill(n);
+        const stack: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            while (
+                stack.length &&
+                heights[stack[stack.length - 1]] >= heights[i]
+            ) {
+                stack.pop();
+            }
+            if (stack.length) {
+                leftMost[i] = stack[stack.length - 1];
+            }
+            stack.push(i);
+        }
+
+        stack.length = 0;
+        for (let i = n - 1; i >= 0; i--) {
+            while (
+                stack.length &&
+                heights[stack[stack.length - 1]] >= heights[i]
+            ) {
+                stack.pop();
+            }
+            if (stack.length) {
+                rightMost[i] = stack[stack.length - 1];
+            }
+            stack.push(i);
+        }
+
+        let maxArea = 0;
+        for (let i = 0; i < n; i++) {
+            leftMost[i] += 1;
+            rightMost[i] -= 1;
+            maxArea = Math.max(
+                maxArea,
+                heights[i] * (rightMost[i] - leftMost[i] + 1),
+            );
+        }
+
+        return maxArea;
     }
 }
 ```
@@ -1683,7 +1868,7 @@ class Solution {
 
         heights.forEachIndexed { i, h ->
             var start = i
-            while (stack.isNotEmpty() && stack.last().second > h) {
+            while (stack.isNotEmpty() && stack.peekLast().second > h) {
                 val (index, height) = stack.removeLast()
                 maxArea = maxOf(maxArea, height * (i - index))
                 start = index
@@ -1752,6 +1937,37 @@ impl Solution {
         }
 
         max_area
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number}
+     */
+    largestRectangleArea(heights: number[]): number {
+        let maxArea = 0;
+        const stack: number[][] = []; // pair: (index, height)
+
+        for (let i = 0; i < heights.length; i++) {
+            let start = i;
+            while (
+                stack.length > 0 &&
+                stack[stack.length - 1][1] > heights[i]
+            ) {
+                const [index, height] = stack.pop()!;
+                maxArea = Math.max(maxArea, height * (i - index));
+                start = index;
+            }
+            stack.push([start, heights[i]]);
+        }
+
+        for (const [index, height] of stack) {
+            maxArea = Math.max(maxArea, height * (heights.length - index));
+        }
+        return maxArea;
     }
 }
 ```
@@ -1948,9 +2164,9 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (i in 0..n) {
-            while (stack.isNotEmpty() && (i == n || heights[stack.last()] >= heights[i])) {
+            while (stack.isNotEmpty() && (i == n || heights[stack.peekLast()] >= heights[i])) {
                 val height = heights[stack.removeLast()]
-                val width = if (stack.isEmpty()) i else i - stack.last() - 1
+                val width = if (stack.isEmpty()) i else i - stack.peekLast() - 1
                 maxArea = maxOf(maxArea, height * width)
             }
             if (i < n) stack.addLast(i)
@@ -2007,6 +2223,34 @@ impl Solution {
         }
 
         max_area
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number}
+     */
+    largestRectangleArea(heights: number[]): number {
+        const n = heights.length;
+        let maxArea = 0;
+        const stack: number[] = [];
+
+        for (let i = 0; i <= n; i++) {
+            while (
+                stack.length &&
+                (i === n || heights[stack[stack.length - 1]] >= heights[i])
+            ) {
+                const height = heights[stack.pop()!];
+                const width =
+                    stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            stack.push(i);
+        }
+        return maxArea;
     }
 }
 ```

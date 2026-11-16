@@ -209,6 +209,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    removeCoveredIntervals(intervals: number[][]): number {
+        let n = intervals.length;
+        let res = n;
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (
+                    i !== j &&
+                    intervals[j][0] <= intervals[i][0] &&
+                    intervals[j][1] >= intervals[i][1]
+                ) {
+                    res--;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -431,6 +458,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    removeCoveredIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
+        let res = 1,
+            [prevL, prevR] = intervals[0];
+        for (const [l, r] of intervals) {
+            if (prevL <= l && prevR >= r) {
+                continue;
+            }
+            res++;
+            prevL = l;
+            prevR = r;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -635,6 +685,30 @@ impl Solution {
             end = end.max(r);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    removeCoveredIntervals(intervals: number[][]): number {
+        intervals.sort((a, b) => a[0] - b[0]);
+        let res = 1,
+            start = intervals[0][0],
+            end = intervals[0][1];
+
+        for (const [l, r] of intervals) {
+            if (start < l && end < r) {
+                start = l;
+                res++;
+            }
+            end = Math.max(end, r);
+        }
+        return res;
     }
 }
 ```

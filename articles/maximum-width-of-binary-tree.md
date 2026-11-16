@@ -209,6 +209,53 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int WidthOfBinaryTree(TreeNode root) {
+        if (root == null) return 0;
+
+        int res = 0;
+        Queue<(TreeNode node, uint num, int level)> queue =
+            new Queue<(TreeNode node, uint num, int level)>();
+        queue.Enqueue((root, 1, 0)); // [node, num, level]
+        int prevLevel = 0;
+        uint prevNum = 1;
+
+        while (queue.Count > 0) {
+            var (node, num, level) = queue.Dequeue();
+
+            if (level > prevLevel) {
+                prevLevel = level;
+                prevNum = num;
+            }
+
+            res = Math.Max(res, (int)(num - prevNum + 1));
+            if (node.left != null) {
+                queue.Enqueue((node.left, 2 * num, level + 1));
+            }
+            if (node.right != null) {
+                queue.Enqueue((node.right, 2 * num + 1, level + 1));
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 /**
  * Definition for a binary tree node.
@@ -331,12 +378,12 @@ class Solution {
                 prevNum = num
             }
 
-            res = max(res, Int(num - prevNum + 1))
+            res = max(res, Int(truncatingIfNeeded: num &- prevNum &+ 1))
             if let left = node.left {
-                queue.append((left, 2 * num, level + 1))
+                queue.append((left, 2 &* num, level + 1))
             }
             if let right = node.right {
-                queue.append((right, 2 * num + 1, level + 1))
+                queue.append((right, 2 &* num &+ 1, level + 1))
             }
         }
 
@@ -384,6 +431,42 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    widthOfBinaryTree(root: TreeNode | null): number {
+        if (!root) return 0;
+
+        let res = 0n;
+        const queue = new Queue([[root, 1n, 0]]); // [node, num, level]
+        let prevLevel = 0,
+            prevNum = 1n;
+
+        while (!queue.isEmpty()) {
+            const [node, num, level]: [TreeNode, bigint, number] = queue.pop();
+
+            if (level > prevLevel) {
+                prevLevel = level;
+                prevNum = num;
+            }
+
+            res = res > num - prevNum + 1n ? res : num - prevNum + 1n;
+            if (node.left) {
+                queue.push([node.left, 2n * num, level + 1]);
+            }
+            if (node.right) {
+                queue.push([node.right, 2n * num + 1n, level + 1]);
+            }
+        }
+
+        return Number(res);
     }
 }
 ```
@@ -568,6 +651,47 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int WidthOfBinaryTree(TreeNode root) {
+        int res = 0;
+        Queue<(TreeNode node, int num)> q = new Queue<(TreeNode node, int num)>();
+        q.Enqueue((root, 0));
+
+        while (q.Count > 0) {
+            int start = q.Peek().num;
+            for (int i = q.Count; i > 0; i--) {
+                var (node, idx) = q.Dequeue();
+                int num = idx - start;
+
+                res = Math.Max(res, num + 1);
+                if (node.left != null) {
+                    q.Enqueue((node.left, 2 * num));
+                }
+                if (node.right != null) {
+                    q.Enqueue((node.right, 2 * num + 1));
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 /**
  * Definition for a binary tree node.
@@ -727,6 +851,37 @@ impl Solution {
         }
 
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    widthOfBinaryTree(root: TreeNode | null): number {
+        let res = 0;
+        const q = new Queue([[root, 0]]);
+
+        while (!q.isEmpty()) {
+            const start: number = q.front()[1];
+
+            for (let i = q.size(); i > 0; i--) {
+                const [node, num]: [TreeNode, number] = q.pop();
+                const curNum = num - start;
+                res = Math.max(res, curNum + 1);
+                if (node.left) {
+                    q.push([node.left, 2 * curNum]);
+                }
+                if (node.right) {
+                    q.push([node.right, 2 * curNum + 1]);
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -904,6 +1059,47 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Dictionary<int, uint> first;
+    private int res;
+
+    public int WidthOfBinaryTree(TreeNode root) {
+        first = new Dictionary<int, uint>();
+        res = 0;
+
+        Dfs(root, 0, 0);
+        return res;
+    }
+
+    private void Dfs(TreeNode node, int level, uint num) {
+        if (node == null) {
+            return;
+        }
+
+        if (!first.ContainsKey(level)) {
+            first[level] = num;
+        }
+        res = Math.Max(res, (int)(num - first[level] + 1));
+        Dfs(node.left, level + 1, 2 * num);
+        Dfs(node.right, level + 1, 2 * num + 1);
+    }
+}
+```
+
 ```go
 /**
  * Definition for a binary tree node.
@@ -1051,6 +1247,34 @@ impl Solution {
 
         dfs(&root, 0, 0, &mut first, &mut res);
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    widthOfBinaryTree(root: TreeNode | null): number {
+        const first = new Map<number, number>();
+        let res = 0;
+
+        const dfs = (node: TreeNode | null, level: number, curNum: number): void => {
+            if (!node) return;
+
+            if (!first.has(level)) {
+                first.set(level, curNum);
+            }
+
+            res = Math.max(res, curNum - first.get(level)! + 1);
+            dfs(node.left, level + 1, 2 * (curNum - first.get(level)!));
+            dfs(node.right, level + 1, 2 * (curNum - first.get(level)!) + 1);
+        };
+
+        dfs(root, 0, 0);
+        return res;
     }
 }
 ```

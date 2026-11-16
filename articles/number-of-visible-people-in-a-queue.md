@@ -207,6 +207,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number[]}
+     */
+    canSeePersonsCount(heights: number[]): number[] {
+        const n = heights.length;
+        const res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            let maxi = 0,
+                cnt = 0;
+            for (let j = i + 1; j < n; j++) {
+                if (Math.min(heights[i], heights[j]) > maxi) {
+                    cnt++;
+                }
+                maxi = Math.max(maxi, heights[j]);
+            }
+            res.push(cnt);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,11 +395,11 @@ class Solution {
 
         for (i in 0 until n) {
             val h = heights[i]
-            while (stack.isNotEmpty() && heights[stack.last()] < h) {
+            while (stack.isNotEmpty() && heights[stack.peekLast()] < h) {
                 res[stack.removeLast()]++
             }
             if (stack.isNotEmpty()) {
-                res[stack.last()]++
+                res[stack.peekLast()]++
             }
             stack.addLast(i)
         }
@@ -424,6 +449,31 @@ impl Solution {
             stack.push(i);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number[]}
+     */
+    canSeePersonsCount(heights: number[]): number[] {
+        const n = heights.length;
+        const res: number[] = Array(n).fill(0);
+        const stack: number[] = [];
+        for (let i = 0; i < n; i++) {
+            const h = heights[i];
+            while (stack.length && heights[stack[stack.length - 1]] < h) {
+                res[stack.pop()!]++;
+            }
+            if (stack.length) {
+                res[stack[stack.length - 1]]++;
+            }
+            stack.push(i);
+        }
+        return res;
     }
 }
 ```
@@ -594,7 +644,7 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (i in n - 1 downTo 0) {
-            while (stack.isNotEmpty() && stack.last() < heights[i]) {
+            while (stack.isNotEmpty() && stack.peekLast() < heights[i]) {
                 stack.removeLast()
                 res[i]++
             }
@@ -649,6 +699,31 @@ impl Solution {
             stack.push(heights[i]);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} heights
+     * @return {number[]}
+     */
+    canSeePersonsCount(heights: number[]): number[] {
+        const n = heights.length;
+        const res: number[] = new Array(n).fill(0);
+        const stack: number[] = [];
+        for (let i = n - 1; i >= 0; i--) {
+            while (stack.length && stack[stack.length - 1] < heights[i]) {
+                stack.pop();
+                res[i]++;
+            }
+            if (stack.length) {
+                res[i]++;
+            }
+            stack.push(heights[i]);
+        }
+        return res;
     }
 }
 ```

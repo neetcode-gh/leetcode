@@ -402,6 +402,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} deadends
+     * @param {string} target
+     * @return {number}
+     */
+    openLock(deadends: string[], target: string): number {
+        const visit = new Set<string>(deadends);
+        if (visit.has('0000')) return -1;
+
+        const children = (lock: string): string[] => {
+            const res: string[] = [];
+            for (let i = 0; i < 4; i++) {
+                const up =
+                    lock.slice(0, i) +
+                    ((+lock[i] + 1) % 10) +
+                    lock.slice(i + 1);
+                const down =
+                    lock.slice(0, i) +
+                    ((+lock[i] - 1 + 10) % 10) +
+                    lock.slice(i + 1);
+                res.push(up, down);
+            }
+            return res;
+        };
+
+        const queue = new Queue([['0000', 0]]);
+        visit.add('0000');
+
+        while (!queue.isEmpty()) {
+            const [lock, turns]: [string, number] = queue.pop();
+            if (lock === target) return turns;
+
+            for (const child of children(lock)) {
+                if (!visit.has(child)) {
+                    visit.add(child);
+                    queue.push([child, turns + 1]);
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -765,6 +811,45 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} deadends
+     * @param {string} target
+     * @return {number}
+     */
+    openLock(deadends: string[], target: string): number {
+        if (target === '0000') return 0;
+
+        const visit = new Set<string>(deadends);
+        if (visit.has('0000')) return -1;
+
+        const q = new Queue(['0000']);
+        visit.add('0000');
+        let steps = 0;
+
+        while (!q.isEmpty()) {
+            steps++;
+            for (let i = q.size(); i > 0; i--) {
+                const lock: string = q.pop();
+                for (let j = 0; j < 4; j++) {
+                    for (let move of [1, -1]) {
+                        const digit = (parseInt(lock[j]) + move + 10) % 10;
+                        const nextLock =
+                            lock.slice(0, j) + digit + lock.slice(j + 1);
+                        if (visit.has(nextLock)) continue;
+                        if (nextLock === target) return steps;
+                        q.push(nextLock);
+                        visit.add(nextLock);
+                    }
+                }
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -1198,6 +1283,51 @@ impl Solution {
             begin = temp;
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} deadends
+     * @param {string} target
+     * @return {number}
+     */
+    openLock(deadends: string[], target: string): number {
+        if (target === '0000') return 0;
+
+        const visit = new Set<string>(deadends);
+        if (visit.has('0000')) return -1;
+
+        let begin = new Set<string>(['0000']);
+        let end = new Set<string>([target]);
+        let steps = 0;
+
+        while (begin.size > 0 && end.size > 0) {
+            if (begin.size > end.size) [begin, end] = [end, begin];
+
+            steps++;
+            const temp = new Set<string>();
+
+            for (const lock of begin) {
+                for (let i = 0; i < 4; i++) {
+                    for (const j of [-1, 1]) {
+                        const digit = (parseInt(lock[i]) + j + 10) % 10;
+                        const nextLock =
+                            lock.slice(0, i) + digit + lock.slice(i + 1);
+
+                        if (end.has(nextLock)) return steps;
+                        if (visit.has(nextLock)) continue;
+
+                        visit.add(nextLock);
+                        temp.add(nextLock);
+                    }
+                }
+            }
+            begin = temp;
+        }
+        return -1;
     }
 }
 ```

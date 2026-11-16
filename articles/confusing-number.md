@@ -258,6 +258,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    confusingNumber(n: number): boolean {
+        // Use 'invertMap' to invert each valid digit.
+        const invertMap: { [key: string]: string } = {
+            0: '0',
+            1: '1',
+            6: '9',
+            8: '8',
+            9: '6',
+        };
+
+        let rotatedNumber = '';
+        // Iterate over each digit of 'n'.
+        for (const ch of String(n)) {
+            if (!(ch in invertMap)) {
+                return false;
+            }
+            // Append the inverted digit of 'ch' to the end of 'rotatedNumber'.
+            rotatedNumber += invertMap[ch];
+        }
+        // Check if the reversed 'rotatedNumber' equals 'n'.
+        rotatedNumber = rotatedNumber.split('').reverse().join('');
+        return parseInt(rotatedNumber) !== n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -531,6 +563,41 @@ impl Solution {
 
         // Check if 'rotated_number' equals 'n'.
         rotated_number != n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {boolean}
+     */
+    confusingNumber(n: number): boolean {
+        // Use 'invertMap' to invert each valid digit. Since we don't want to modify
+        // 'n', we create a copy of it as 'nCopy'.
+        const invertMap: { [key: number]: number } = {
+            0: 0,
+            1: 1,
+            6: 9,
+            8: 8,
+            9: 6,
+        };
+        let nCopy = n;
+        let rotatedNumber = 0;
+
+        // Get every digit of 'nCopy' by taking the remainder of it to 10.
+        while (nCopy > 0) {
+            let res = nCopy % 10;
+            if (!(res in invertMap)) {
+                return false;
+            }
+            // Append the inverted digit of 'res' to the end of 'rotatedNumber'.
+            rotatedNumber = rotatedNumber * 10 + invertMap[res];
+            nCopy = Math.floor(nCopy / 10);
+        }
+        // Check if 'rotatedNumber' equals 'n'.
+        return rotatedNumber !== n;
     }
 }
 ```

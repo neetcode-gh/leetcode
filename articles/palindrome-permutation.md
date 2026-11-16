@@ -176,6 +176,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    canPermutePalindrome(s: string): boolean {
+        let count = 0;
+        for (let i = 0; i < 128 && count <= 1; i++) {
+            let ct = 0;
+            for (let j = 0; j < s.length; j++) {
+                if (s.charCodeAt(j) === i) ct++;
+            }
+            count += ct % 2;
+        }
+        return count <= 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -353,6 +373,26 @@ impl Solution {
         }
         let count: i32 = map.values().map(|v: &i32| v % 2).sum();
         count <= 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    canPermutePalindrome(s: string): boolean {
+        const map = new Map<string, number>();
+        for (let i = 0; i < s.length; i++) {
+            map.set(s.charAt(i), (map.get(s.charAt(i)) || 0) + 1);
+        }
+        let count = 0;
+        for (let key of map.keys()) {
+            count += map.get(key)! % 2;
+        }
+        return count <= 1;
     }
 }
 ```
@@ -549,6 +589,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    canPermutePalindrome(s: string): boolean {
+        const map: number[] = new Array(128).fill(0);
+        for (let i = 0; i < s.length; i++) {
+            map[s.charCodeAt(i)]++;
+        }
+        let count = 0;
+        for (let key = 0; key < map.length && count <= 1; key++) {
+            count += map[key] % 2;
+        }
+        return count <= 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -739,6 +799,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    canPermutePalindrome(s: string): boolean {
+        const map: number[] = new Array(128).fill(0);
+        let count = 0;
+        for (let i = 0; i < s.length; i++) {
+            map[s.charCodeAt(i)]++;
+            if (map[s.charCodeAt(i)] % 2 === 0) count--;
+            else count++;
+        }
+        return count <= 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -913,6 +992,26 @@ impl Solution {
             }
         }
         set.len() <= 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    canPermutePalindrome(s: string): boolean {
+        const set = new Set<string>();
+        for (let i = 0; i < s.length; i++) {
+            if (set.has(s.charAt(i))) {
+                set.delete(s.charAt(i));
+            } else {
+                set.add(s.charAt(i));
+            }
+        }
+        return set.size <= 1;
     }
 }
 ```

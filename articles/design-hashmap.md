@@ -204,7 +204,6 @@ class MyHashMap {
 }
 ```
 
-
 ```rust
 struct MyHashMap {
     map: Vec<i32>,
@@ -225,6 +224,41 @@ impl MyHashMap {
 
     fn remove(&mut self, key: i32) {
         self.map[key as usize] = -1;
+    }
+}
+```
+
+```typescript
+class MyHashMap {
+    private map: number[];
+
+    constructor() {
+        this.map = new Array(1000001).fill(-1);
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @return {void}
+     */
+    put(key: number, value: number): void {
+        this.map[key] = value;
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        return this.map[key];
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        this.map[key] = -1;
     }
 }
 ```
@@ -721,7 +755,6 @@ class MyHashMap {
 }
 ```
 
-
 ```rust
 struct MyHashMap {
     buckets: Vec<Vec<(i32, i32)>>,
@@ -763,6 +796,88 @@ impl MyHashMap {
         let idx = Self::hash(key);
         if let Some(pos) = self.buckets[idx].iter().position(|p| p.0 == key) {
             self.buckets[idx].remove(pos);
+        }
+    }
+}
+```
+
+```typescript
+class ListNode {
+    key: number;
+    val: number;
+    next: ListNode | null;
+
+    /**
+     * @param {number} key
+     * @param {number} val
+     * @param {ListNode} next
+     */
+    constructor(key: number = -1, val: number = -1, next: ListNode | null = null) {
+        this.key = key;
+        this.val = val;
+        this.next = next;
+    }
+}
+
+class MyHashMap {
+    private map: ListNode[];
+
+    constructor() {
+        this.map = Array.from({ length: 1000 }, () => new ListNode());
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    hash(key: number): number {
+        return key % this.map.length;
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @return {void}
+     */
+    put(key: number, value: number): void {
+        let cur = this.map[this.hash(key)];
+        while (cur.next) {
+            if (cur.next.key === key) {
+                cur.next.val = value;
+                return;
+            }
+            cur = cur.next;
+        }
+        cur.next = new ListNode(key, value);
+    }
+
+    /**
+     * @param {number} key
+     * @return {number}
+     */
+    get(key: number): number {
+        let cur = this.map[this.hash(key)].next;
+        while (cur) {
+            if (cur.key === key) {
+                return cur.val;
+            }
+            cur = cur.next;
+        }
+        return -1;
+    }
+
+    /**
+     * @param {number} key
+     * @return {void}
+     */
+    remove(key: number): void {
+        let cur = this.map[this.hash(key)];
+        while (cur.next) {
+            if (cur.next.key === key) {
+                cur.next = cur.next.next;
+                return;
+            }
+            cur = cur.next;
         }
     }
 }

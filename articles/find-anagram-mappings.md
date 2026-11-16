@@ -27,14 +27,14 @@ class Solution:
     def anagramMappings(self, nums1: List[int], nums2: List[int]) -> List[int]:
         # List to store the anagram mappings.
         mappings = [0] * len(nums1)
-        
+
         for i in range(len(nums1)):
             for j in range(len(nums2)):
                 # Store the corresponding index of number in the second list.
                 if nums1[i] == nums2[j]:
                     mappings[i] = j
                     break
-        
+
         return mappings
 ```
 
@@ -43,7 +43,7 @@ class Solution {
     public int[] anagramMappings(int[] nums1, int[] nums2) {
         // List to store the anagram mappings.
         int[] mappings = new int[nums1.length];
-        
+
         for (int i = 0; i < nums1.length; i++) {
             for (int j = 0; j < nums2.length; j++) {
                 // Store the corresponding index of number in the second list.
@@ -64,7 +64,7 @@ public:
     vector<int> anagramMappings(vector<int>& nums1, vector<int>& nums2) {
         // List to store the anagram mappings.
         vector<int> mappings;
-        
+
         for (int num : nums1) {
             for (int i = 0; i < nums2.size(); i++) {
                 // Store the corresponding index of number in the second list.
@@ -94,6 +94,26 @@ class Solution {
             for (let j = 0; j < nums2.length; j++) {
                 // Store the corresponding index of number in the second array.
                 if (nums1[i] === nums2[j]) {
+                    mappings[i] = j;
+                    break;
+                }
+            }
+        }
+        return mappings;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] AnagramMappings(int[] nums1, int[] nums2) {
+        // List to store the anagram mappings.
+        int[] mappings = new int[nums1.Length];
+
+        for (int i = 0; i < nums1.Length; i++) {
+            for (int j = 0; j < nums2.Length; j++) {
+                // Store the corresponding index of number in the second list.
+                if (nums1[i] == nums2[j]) {
                     mappings[i] = j;
                     break;
                 }
@@ -162,7 +182,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn anagram_mappings(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
@@ -177,6 +196,31 @@ impl Solution {
             }
         }
         mappings
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    anagramMappings(nums1: number[], nums2: number[]): number[] {
+        // Array to store the anagram mappings.
+        const mappings: number[] = new Array(nums1.length);
+
+        for (let i = 0; i < nums1.length; i++) {
+            for (let j = 0; j < nums2.length; j++) {
+                // Store the corresponding index of number in the second array.
+                if (nums1[i] === nums2[j]) {
+                    mappings[i] = j;
+                    break;
+                }
+            }
+        }
+        return mappings;
     }
 }
 ```
@@ -252,13 +296,13 @@ public:
         for (int i = 0; i < nums2.size(); i++) {
             valueToPos[nums2[i]] = i;
         }
-        
+
         // List to store the anagram mappings.
         vector<int> mappings;
         for (int num : nums1) {
             mappings.push_back(valueToPos[num]);
         }
-        
+
         return mappings;
     }
 };
@@ -282,6 +326,26 @@ class Solution {
         const mappings = new Array(nums1.length);
         for (let i = 0; i < nums1.length; i++) {
             mappings[i] = valueToPos.get(nums1[i]);
+        }
+
+        return mappings;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] AnagramMappings(int[] nums1, int[] nums2) {
+        // Store the index corresponding to the value in the second list.
+        Dictionary<int, int> valueToPos = new Dictionary<int, int>();
+        for (int i = 0; i < nums2.Length; i++) {
+            valueToPos[nums2[i]] = i;
+        }
+
+        // List to store the anagram mappings.
+        int[] mappings = new int[nums1.Length];
+        for (int i = 0; i < nums1.Length; i++) {
+            mappings[i] = valueToPos[nums1[i]];
         }
 
         return mappings;
@@ -347,7 +411,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn anagram_mappings(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
@@ -362,6 +425,31 @@ impl Solution {
         }
 
         mappings
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    anagramMappings(nums1: number[], nums2: number[]): number[] {
+        // Store the index corresponding to the value in the second list.
+        const valueToPos = new Map<number, number>();
+        for (let i = 0; i < nums2.length; i++) {
+            valueToPos.set(nums2[i], i);
+        }
+
+        // List to store the anagram mappings.
+        const mappings: number[] = new Array(nums1.length);
+        for (let i = 0; i < nums1.length; i++) {
+            mappings[i] = valueToPos.get(nums1[i])!;
+        }
+
+        return mappings;
     }
 }
 ```
@@ -398,23 +486,23 @@ class Solution:
     def anagramMappings(self, nums1: List[int], nums2: List[int]) -> List[int]:
         bitsToShift = 7
         numToGetLastBits = (1 << bitsToShift) - 1
-        
+
         # Store the index within the integer itself.
         for i in range(len(nums1)):
             nums1[i] = (nums1[i] << bitsToShift) + i
             nums2[i] = (nums2[i] << bitsToShift) + i
-        
+
         # Sort both lists so that the original integers end up at the same index.
         nums1.sort()
         nums2.sort()
-        
+
         # List to store the anagram mappings.
         mappings = [0] * len(nums1)
-        
+
         for i in range(len(nums1)):
             # Store the index in the second list corresponding to the integer index in the first list.
             mappings[nums1[i] & numToGetLastBits] = (nums2[i] & numToGetLastBits)
-        
+
         return mappings
 ```
 
@@ -451,18 +539,18 @@ class Solution {
 public:
     const int bitsToShift = 7;
     const int numToGetLastBits = (1 << bitsToShift) - 1;
-    
+
     vector<int> anagramMappings(vector<int>& nums1, vector<int>& nums2) {
         // Store the index within the integer itself.
         for (int i = 0; i < nums1.size(); i++) {
             nums1[i] = (nums1[i] << bitsToShift) + i;
             nums2[i] = (nums2[i] << bitsToShift) + i;
         }
-        
+
         // Sort both lists so that the original integers end up at the same index.
         sort(nums1.begin(), nums1.end());
         sort(nums2.begin(), nums2.end());
-        
+
         // List to store the anagram mappings.
         vector<int> mappings(nums1.size());
         for (int i = 0; i < nums1.size(); i++) {
@@ -502,6 +590,34 @@ class Solution {
         for (let i = 0; i < nums1.length; i++) {
             // Store the index in the second array corresponding to the integer index in the first array.
             mappings[nums1[i] & numToGetLastBits] = (nums2[i] & numToGetLastBits);
+        }
+
+        return mappings;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private const int bitsToShift = 7;
+    private const int numToGetLastBits = (1 << bitsToShift) - 1;
+
+    public int[] AnagramMappings(int[] nums1, int[] nums2) {
+        // Store the index within the integer itself.
+        for (int i = 0; i < nums1.Length; i++) {
+            nums1[i] = (nums1[i] << bitsToShift) + i;
+            nums2[i] = (nums2[i] << bitsToShift) + i;
+        }
+
+        // Sort both lists so that the original integers end up at the same index.
+        Array.Sort(nums1);
+        Array.Sort(nums2);
+
+        // List to store the anagram mappings.
+        int[] mappings = new int[nums1.Length];
+        for (int i = 0; i < nums1.Length; i++) {
+            // Store the index in the second list corresponding to the integer index in the first list.
+            mappings[nums1[i] & numToGetLastBits] = nums2[i] & numToGetLastBits;
         }
 
         return mappings;
@@ -596,7 +712,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn anagram_mappings(mut nums1: Vec<i32>, mut nums2: Vec<i32>) -> Vec<i32> {
@@ -618,6 +733,40 @@ impl Solution {
         }
 
         mappings
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    anagramMappings(nums1: number[], nums2: number[]): number[] {
+        const bitsToShift = 7;
+        const numToGetLastBits = (1 << bitsToShift) - 1;
+
+        // Store the index within the integer itself.
+        for (let i = 0; i < nums1.length; i++) {
+            nums1[i] = (nums1[i] << bitsToShift) + i;
+            nums2[i] = (nums2[i] << bitsToShift) + i;
+        }
+
+        // Sort both arrays so that the original integers end up at the same index.
+        nums1.sort((a, b) => a - b);
+        nums2.sort((a, b) => a - b);
+
+        // Array to store the anagram mappings.
+        const mappings: number[] = new Array(nums1.length);
+
+        for (let i = 0; i < nums1.length; i++) {
+            // Store the index in the second array corresponding to the integer index in the first array.
+            mappings[nums1[i] & numToGetLastBits] = (nums2[i] & numToGetLastBits);
+        }
+
+        return mappings;
     }
 }
 ```

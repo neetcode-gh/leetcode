@@ -69,7 +69,7 @@ class Solution {
      * @param {number} n
      * @return {number[]}
      */
-    shuffle(nums) {
+    shuffle(nums, n) {
         const res = [];
         for (let i = 0; i < n; i++) {
             res.push(nums[i]);
@@ -142,6 +142,24 @@ impl Solution {
             res.push(nums[i + n]);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} n
+     * @return {number[]}
+     */
+    shuffle(nums: number[], n: number): number[] {
+        const res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            res.push(nums[i]);
+            res.push(nums[i + n]);
+        }
+        return res;
     }
 }
 ```
@@ -235,7 +253,7 @@ class Solution {
      * @param {number} n
      * @return {number[]}
      */
-    shuffle(nums) {
+    shuffle(nums, n) {
         const M = Math.max(...nums) + 1;
         for (let i = 0; i < 2 * n; i++) {
             if (i % 2 === 0) {
@@ -347,6 +365,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} n
+     * @return {number[]}
+     */
+    shuffle(nums: number[], n: number): number[] {
+        const M = Math.max(...nums) + 1;
+        for (let i = 0; i < 2 * n; i++) {
+            if (i % 2 === 0) {
+                nums[i] += (nums[i >> 1] % M) * M;
+            } else {
+                nums[i] += (nums[n + (i >> 1)] % M) * M;
+            }
+        }
+        for (let i = 0; i < 2 * n; i++) {
+            nums[i] = Math.floor(nums[i] / M);
+        }
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -442,7 +484,7 @@ class Solution {
      * @param {number} n
      * @return {number[]}
      */
-    shuffle(nums) {
+    shuffle(nums, n) {
         for (let i = 0; i < n; i++) {
             nums[i] = (nums[i] << 10) | nums[i + n]; // Store x, y in nums[i]
         }
@@ -562,6 +604,32 @@ impl Solution {
         }
 
         nums
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} n
+     * @return {number[]}
+     */
+    shuffle(nums: number[], n: number): number[] {
+        for (let i = 0; i < n; i++) {
+            nums[i] = (nums[i] << 10) | nums[i + n]; // Store x, y in nums[i]
+        }
+
+        let j = 2 * n - 1;
+        for (let i = n - 1; i >= 0; i--) {
+            let y = nums[i] & ((1 << 10) - 1);
+            let x = nums[i] >> 10;
+            nums[j] = y;
+            nums[j - 1] = x;
+            j -= 2;
+        }
+
+        return nums;
     }
 }
 ```

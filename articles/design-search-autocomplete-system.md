@@ -315,7 +315,7 @@ public class AutocompleteSystem {
         }
     }
 
-    public IList<string> Input(char c) {
+    public List<string> Input(char c) {
         if (c == '#') {
             AddToTrie(currSentence.ToString(), 1);
             currSentence.Clear();
@@ -634,6 +634,90 @@ impl AutocompleteSystem {
                 .sentences
                 .entry(sentence.to_string())
                 .or_insert(0) += count;
+        }
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: Map<string, TrieNode>;
+    sentences: Map<string, number>;
+
+    constructor() {
+        this.children = new Map();
+        this.sentences = new Map();
+    }
+}
+
+class AutocompleteSystem {
+    private root: TrieNode;
+    private currSentence: string[];
+    private currNode: TrieNode;
+    private dead: TrieNode;
+
+    /**
+     * @param {string[]} sentences
+     * @param {number[]} times
+     */
+    constructor(sentences: string[], times: number[]) {
+        this.root = new TrieNode();
+        for (let i = 0; i < sentences.length; i++) {
+            this.addToTrie(sentences[i], times[i]);
+        }
+        this.currSentence = [];
+        this.currNode = this.root;
+        this.dead = new TrieNode();
+    }
+
+    /**
+     * @param {character} c
+     * @return {string[]}
+     */
+    input(c: string): string[] {
+        if (c === '#') {
+            const currSentenceStr = this.currSentence.join('');
+            this.addToTrie(currSentenceStr, 1);
+            this.currSentence = [];
+            this.currNode = this.root;
+            return [];
+        }
+
+        this.currSentence.push(c);
+        if (!this.currNode.children.has(c)) {
+            this.currNode = this.dead;
+            return [];
+        }
+
+        this.currNode = this.currNode.children.get(c)!;
+        const items: [string, number][] = [];
+        for (const [sentence, count] of this.currNode.sentences) {
+            items.push([sentence, count]);
+        }
+
+        items.sort((a, b) => {
+            if (a[1] !== b[1]) return b[1] - a[1];
+            return a[0].localeCompare(b[0]);
+        });
+
+        const ans: string[] = [];
+        for (let i = 0; i < Math.min(3, items.length); i++) {
+            ans.push(items[i][0]);
+        }
+        return ans;
+    }
+
+    addToTrie(sentence: string, count: number): void {
+        let node = this.root;
+        for (const c of sentence) {
+            if (!node.children.has(c)) {
+                node.children.set(c, new TrieNode());
+            }
+            node = node.children.get(c)!;
+            node.sentences.set(
+                sentence,
+                (node.sentences.get(sentence) || 0) + count,
+            );
         }
     }
 }
@@ -979,7 +1063,7 @@ public class AutocompleteSystem {
         }
     }
 
-    public IList<string> Input(char c) {
+    public List<string> Input(char c) {
         if (c == '#') {
             AddToTrie(currSentence.ToString(), 1);
             currSentence.Clear();
@@ -998,7 +1082,7 @@ public class AutocompleteSystem {
         var pq = new SortedSet<(int count, string sentence)>(
             Comparer<(int count, string sentence)>.Create((a, b) => {
                 if (a.count != b.count) return a.count.CompareTo(b.count);
-                return b.sentence.CompareTo(a.sentence);
+                return string.CompareOrdinal(a.sentence, b.sentence);
             })
         );
 
@@ -1009,7 +1093,7 @@ public class AutocompleteSystem {
             }
         }
 
-        var result = pq.Select(x => x.sentence).Reverse().ToList();
+        var result = pq.Select(x => x.sentence).ToList();
         return result;
     }
 
@@ -1078,11 +1162,6 @@ func (this *AutocompleteSystem) Input(c byte) []string {
 
     this.currNode = this.currNode.children[rune(c)]
 
-    type pair struct {
-        sentence string
-        count    int
-    }
-
     h := &minHeap{}
     heap.Init(h)
 
@@ -1111,20 +1190,22 @@ func (this *AutocompleteSystem) addToTrie(sentence string, count int) {
     }
 }
 
-type minHeap []struct {
+type pair struct {
     sentence string
     count    int
 }
+
+type minHeap []pair
 
 func (h minHeap) Len() int { return len(h) }
 func (h minHeap) Less(i, j int) bool {
     if h[i].count != h[j].count {
         return h[i].count > h[j].count
     }
-    return h[i].sentence < h[j].sentence
+    return h[i].sentence > h[j].sentence
 }
 func (h minHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
-func (h *minHeap) Push(x interface{}) { *h = append(*h, x.(struct{ sentence string; count int })) }
+func (h *minHeap) Push(x interface{}) { *h = append(*h, x.(pair)) }
 func (h *minHeap) Pop() interface{} {
     old := *h
     n := len(old)
@@ -1169,7 +1250,7 @@ class AutocompleteSystem(sentences: Array<String>, times: IntArray) {
         currNode = currNode.children[c]!!
 
         val pq = java.util.PriorityQueue<Pair<String, Int>> { a, b ->
-            if (a.second != b.second) a.second - b.second
+            if (a.second != b.second) b.second - a.second
             else b.first.compareTo(a.first)
         }
 
@@ -1354,6 +1435,98 @@ impl AutocompleteSystem {
                 .sentences
                 .entry(sentence.to_string())
                 .or_insert(0) += count;
+        }
+    }
+}
+```
+
+```typescript
+class TrieNode {
+    children: Map<string, TrieNode>;
+    sentences: Map<string, number>;
+
+    constructor() {
+        this.children = new Map();
+        this.sentences = new Map();
+    }
+}
+
+class AutocompleteSystem {
+    private root: TrieNode;
+    private currSentence: string[];
+    private currNode: TrieNode;
+    private dead: TrieNode;
+
+    /**
+     * @param {string[]} sentences
+     * @param {number[]} times
+     */
+    constructor(sentences: string[], times: number[]) {
+        this.root = new TrieNode();
+        for (let i = 0; i < sentences.length; i++) {
+            this.addToTrie(sentences[i], times[i]);
+        }
+        this.currSentence = [];
+        this.currNode = this.root;
+        this.dead = new TrieNode();
+    }
+
+    /**
+     * @param {character} c
+     * @return {string[]}
+     */
+    input(c: string): string[] {
+        if (c === '#') {
+            const currSentenceStr = this.currSentence.join('');
+            this.addToTrie(currSentenceStr, 1);
+            this.currSentence = [];
+            this.currNode = this.root;
+            return [];
+        }
+
+        this.currSentence.push(c);
+        if (!this.currNode.children.has(c)) {
+            this.currNode = this.dead;
+            return [];
+        }
+
+        this.currNode = this.currNode.children.get(c)!;
+
+        const items: { sentence: string; count: number }[] = [];
+        for (const [sentence, count] of this.currNode.sentences) {
+            items.push({ sentence, count });
+        }
+
+        // Using @datastructures-js/priority-queue
+        const pq = new PriorityQueue(
+            (a: { sentence: string; count: number }, b: { sentence: string; count: number }) => {
+                if (a.count !== b.count) {
+                    return a.count - b.count;
+                }
+                return a.sentence.localeCompare(b.sentence);
+            },
+            items,
+        );
+
+        const ans: string[] = [];
+        while (ans.length < 3 && !pq.isEmpty()) {
+            ans.push(pq.dequeue().sentence);
+        }
+
+        return ans;
+    }
+
+    addToTrie(sentence: string, count: number): void {
+        let node = this.root;
+        for (const c of sentence) {
+            if (!node.children.has(c)) {
+                node.children.set(c, new TrieNode());
+            }
+            node = node.children.get(c)!;
+            node.sentences.set(
+                sentence,
+                (node.sentences.get(sentence) || 0) - count,
+            );
         }
     }
 }

@@ -321,6 +321,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    valid(s: string): boolean {
+        let open = 0;
+        for (const c of s) {
+            open += c === '(' ? 1 : -1;
+            if (open < 0) return false;
+        }
+        return open === 0;
+    }
+
+    /**
+     * @param {string} s
+     * @param {string[]}
+     * @param {number} n
+     */
+    dfs(s: string, res: string[], n: number): void {
+        if (s.length === 2 * n) {
+            if (this.valid(s)) res.push(s);
+            return;
+        }
+        this.dfs(s + '(', res, n);
+        this.dfs(s + ')', res, n);
+    }
+
+    /**
+     * @param {number} n
+     * @return {string[]}
+     */
+    generateParenthesis(n: number): string[] {
+        const res: string[] = [];
+        this.dfs('', res, n);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -622,6 +663,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} openN
+     * @param {number} closeN
+     * @param {number} n
+     * @param {string[]} res
+     * @param {string} stack
+     */
+    backtrack(openN: number, closedN: number, n: number, res: string[], stack: string): void {
+        if (openN === closedN && openN === n) {
+            res.push(stack);
+            return;
+        }
+
+        if (openN < n) {
+            this.backtrack(openN + 1, closedN, n, res, stack + '(');
+        }
+        if (closedN < openN) {
+            this.backtrack(openN, closedN + 1, n, res, stack + ')');
+        }
+    }
+
+    /**
+     * @param {number} n
+     * @return {string[]}
+     */
+    generateParenthesis(n: number): string[] {
+        const res: string[] = [];
+        this.backtrack(0, 0, n, res, '');
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -856,6 +932,31 @@ impl Solution {
         }
 
         res[n].clone()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {string[]}
+     */
+    generateParenthesis(n: number): string[] {
+        const res: string[][] = Array.from({ length: n + 1 }, () => []);
+        res[0] = [''];
+
+        for (let k = 0; k <= n; k++) {
+            for (let i = 0; i < k; i++) {
+                for (const left of res[i]) {
+                    for (const right of res[k - i - 1]) {
+                        res[k].push('(' + left + ')' + right);
+                    }
+                }
+            }
+        }
+
+        return res[n];
     }
 }
 ```

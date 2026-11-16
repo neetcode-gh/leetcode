@@ -124,6 +124,20 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @param {number} k
+     * @return {number[][]}
+     */
+    kClosest(points: number[][], k: number): number[][] {
+        points.sort((a, b) => a[0] ** 2 + a[1] ** 2 - (b[0] ** 2 + b[1] ** 2));
+        return points.slice(0, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,7 +322,7 @@ func kClosest(points [][]int, k int) [][]int {
 
 ```kotlin
 class Solution {
-    fun kClosest(points: Array<IntArray>, k: Int): List<IntArray> {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
         val minHeap = PriorityQueue(compareBy<IntArray> { it[0] * it[0] + it[1] * it[1] })
 
         for (point in points) {
@@ -320,7 +334,7 @@ class Solution {
             res.add(minHeap.poll())
         }
 
-        return res
+        return res.toTypedArray()
     }
 }
 ```
@@ -373,6 +387,32 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @param {number} k
+     * @return {number[][]}
+     */
+    kClosest(points: number[][], k: number): number[][] {
+        const minHeap = new MinPriorityQueue((point: number[]) => point[0]);
+
+        for (const [x, y] of points) {
+            const dist = x ** 2 + y ** 2;
+            minHeap.enqueue([dist, x, y]);
+        }
+
+        const res: number[][] = [];
+        for (let i = 0; i < k; i++) {
+            const [_, x, y]: number[] = minHeap.dequeue();
+            res.push([x, y]);
+        }
+
+        return res;
     }
 }
 ```
@@ -643,6 +683,34 @@ impl Solution {
             }
         }
         heap.into_iter().map(|(_, x, y)| vec![x, y]).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @param {number} k
+     * @return {number[][]}
+     */
+    kClosest(points: number[][], k: number): number[][] {
+        const maxHeap = new PriorityQueue((a: number[], b: number[]) => b[0] - a[0]);
+
+        for (const [x, y] of points) {
+            const dist = x ** 2 + y ** 2;
+            maxHeap.push([dist, x, y]);
+            if (maxHeap.size() > k) {
+                maxHeap.pop();
+            }
+        }
+
+        const res: number[][] = [];
+        while (maxHeap.size() > 0) {
+            let tmp: number[] = maxHeap.pop();
+            res.push([tmp[1], tmp[2]]);
+        }
+        return res;
     }
 }
 ```
@@ -1045,6 +1113,59 @@ impl Solution {
         }
         points.swap(i, r);
         i
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} points
+     * @param {number} k
+     * @return {number[][]}
+     */
+    kClosest(points: number[][], k: number): number[][] {
+        let L = 0,
+            R = points.length - 1,
+            pivot = points.length;
+
+        while (pivot !== k) {
+            pivot = this.partition(points, L, R);
+            if (pivot < k) {
+                L = pivot + 1;
+            } else {
+                R = pivot - 1;
+            }
+        }
+        return points.slice(0, k);
+    }
+
+    /**
+     * @param {number[][]} points
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    partition(points: number[][], l: number, r: number): number {
+        const pivotIdx = r;
+        const pivotDist = this.euclidean(points[pivotIdx]);
+        let i = l;
+        for (let j = l; j < r; j++) {
+            if (this.euclidean(points[j]) <= pivotDist) {
+                [points[i], points[j]] = [points[j], points[i]];
+                i++;
+            }
+        }
+        [points[i], points[r]] = [points[r], points[i]];
+        return i;
+    }
+
+    /**
+     * @param {number[]} point
+     * @return {number}
+     */
+    euclidean(point: number[]): number {
+        return point[0] ** 2 + point[1] ** 2;
     }
 }
 ```

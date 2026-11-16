@@ -248,6 +248,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {string}
+     */
+    largestNumber(nums: number[]): string {
+        let arr = nums.map(String);
+
+        let res: string[] = [];
+        while (arr.length > 0) {
+            let maxi = 0;
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] + arr[maxi] > arr[maxi] + arr[i]) {
+                    maxi = i;
+                }
+            }
+            res.push(arr[maxi]);
+            arr.splice(maxi, 1);
+        }
+
+        let result = res.join('');
+        return result[0] === '0' ? '0' : result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +304,9 @@ This approach is more efficient because sorting is faster than repeatedly findin
 ::tabs-start
 
 ```python
+from functools import cmp_to_key
+
+
 class Solution:
     def largestNumber(self, nums: List[int]) -> str:
         for i, num in enumerate(nums):
@@ -417,6 +447,21 @@ impl Solution {
 
         let res: String = arr.join("");
         if res.starts_with('0') { "0".to_string() } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {string}
+     */
+    largestNumber(nums: number[]): string {
+        let arr = nums.map(String);
+        arr.sort((a, b) => Number(b + a) - Number(a + b));
+        let res = arr.join('');
+        return res[0] === '0' ? '0' : res;
     }
 }
 ```

@@ -586,6 +586,80 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} num1
+     * @param {string} num2
+     * @return {string}
+     */
+    multiply(num1: string, num2: string): string {
+        if (num1 === '0' || num2 === '0') return '0';
+
+        if (num1.length < num2.length) {
+            return this.multiply(num2, num1);
+        }
+
+        let res = '';
+        let zero = 0;
+        for (let i = num2.length - 1; i >= 0; i--) {
+            const cur = this.mul(num1, num2[i], zero);
+            res = this.add(res, cur);
+            zero++;
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {string} s
+     * @param {Character} d
+     * @param {number} zero
+     * @return {string}
+     */
+    mul(s: string, d: string, zero: number): string {
+        let i = s.length - 1;
+        let carry = 0;
+        const digit = Number(d);
+        let cur = '';
+
+        while (i >= 0 || carry) {
+            const n = i >= 0 ? Number(s[i]) : 0;
+            const prod = n * digit + carry;
+            cur = (prod % 10) + cur;
+            carry = Math.floor(prod / 10);
+            i--;
+        }
+
+        return cur + '0'.repeat(zero);
+    }
+
+    /**
+     * @param {string} num1
+     * @param {string} num2
+     * @return {string}
+     */
+    add(num1: string, num2: string): string {
+        let i = num1.length - 1,
+            j = num2.length - 1,
+            carry = 0;
+        let res = '';
+
+        while (i >= 0 || j >= 0 || carry) {
+            const n1 = i >= 0 ? Number(num1[i]) : 0;
+            const n2 = j >= 0 ? Number(num2[j]) : 0;
+            const total = n1 + n2 + carry;
+            res = (total % 10) + res;
+            carry = Math.floor(total / 10);
+            i--;
+            j--;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -906,6 +980,43 @@ impl Solution {
             i -= 1;
         }
         result
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} num1
+     * @param {string} num2
+     * @return {string}
+     */
+    multiply(num1: string, num2: string): string {
+        if (num1 === '0' || num2 === '0') {
+            return '0';
+        }
+
+        const res: number[] = new Array(num1.length + num2.length).fill(0);
+        num1 = num1.split('').reverse().join('');
+        num2 = num2.split('').reverse().join('');
+        for (let i1 = 0; i1 < num1.length; i1++) {
+            for (let i2 = 0; i2 < num2.length; i2++) {
+                const digit = parseInt(num1[i1]) * parseInt(num2[i2]);
+                res[i1 + i2] += digit;
+                res[i1 + i2 + 1] += Math.floor(res[i1 + i2] / 10);
+                res[i1 + i2] %= 10;
+            }
+        }
+
+        let result = '';
+        let i = res.length - 1;
+        while (i >= 0 && res[i] === 0) {
+            i--;
+        }
+        while (i >= 0) {
+            result += res[i--];
+        }
+        return result;
     }
 }
 ```

@@ -226,6 +226,24 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    middleNode(head: ListNode | null): ListNode | null {
+        let arr: ListNode[] = [];
+        let cur = head;
+        while (cur) {
+            arr.push(cur);
+            cur = cur.next;
+        }
+        return arr[Math.floor(arr.length / 2)];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,6 +526,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    middleNode(head: ListNode | null): ListNode | null {
+        let n = 0;
+        let cur = head;
+        while (cur) {
+            cur = cur.next;
+            n++;
+        }
+
+        n = Math.floor(n / 2);
+        cur = head;
+        while (n) {
+            n--;
+            cur = cur!.next;
+        }
+        return cur;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -731,6 +774,25 @@ impl Solution {
             cur = cur.unwrap().next;
         }
         cur
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    middleNode(head: ListNode | null): ListNode | null {
+        let slow = head,
+            fast = head;
+
+        while (fast && fast.next) {
+            slow = slow!.next;
+            fast = fast.next.next;
+        }
+        return slow;
     }
 }
 ```

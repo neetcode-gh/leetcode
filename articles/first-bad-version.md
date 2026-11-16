@@ -173,6 +173,26 @@ impl Solution {
 }
 ```
 
+```typescript
+// The isBadVersion API is already defined in the VersionControl class.
+// isBadVersion(version: number): boolean
+
+class Solution extends VersionControl {
+    /**
+     * @param {number} n Total versions
+     * @return {number} The first bad version
+     */
+    firstBadVersion(n: number): number {
+        for (let i = 1; i < n; i++) {
+            if (this.isBadVersion(i)) {
+                return i;
+            }
+        }
+        return n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -410,6 +430,32 @@ impl Solution {
 }
 ```
 
+```typescript
+// The isBadVersion API is already defined in the VersionControl class.
+// isBadVersion(version: number): boolean
+
+class Solution extends VersionControl {
+    /**
+     * @param {number} n Total versions
+     * @return {number} The first bad version
+     */
+    firstBadVersion(n: number): number {
+        const helper = (l: number, r: number): number => {
+            if (l > r) {
+                return l;
+            }
+            const m = Math.floor(l + (r - l) / 2);
+            if (this.isBadVersion(m)) {
+                return helper(l, m - 1);
+            } else {
+                return helper(m + 1, r);
+            }
+        };
+        return helper(1, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -638,6 +684,33 @@ impl Solution {
 }
 ```
 
+```typescript
+// The isBadVersion API is already defined in the VersionControl class.
+// isBadVersion(version: number): boolean
+
+class Solution extends VersionControl {
+    /**
+     * @param {number} n Total versions
+     * @return {number} The first bad version
+     */
+    firstBadVersion(n: number): number {
+        let l = 1,
+            r = n,
+            res = -1;
+        while (l <= r) {
+            const m = Math.floor(l + (r - l) / 2);
+            if (this.isBadVersion(m)) {
+                res = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,6 +922,31 @@ impl Solution {
             }
         }
         r
+    }
+}
+```
+
+```typescript
+// The isBadVersion API is already defined in the VersionControl class.
+// isBadVersion(version: number): boolean
+
+class Solution extends VersionControl {
+    /**
+     * @param {number} n Total versions
+     * @return {number} The first bad version
+     */
+    firstBadVersion(n: number): number {
+        let l = 1,
+            r = n;
+        while (l < r) {
+            const m = Math.floor(l + (r - l) / 2);
+            if (this.isBadVersion(m)) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return r;
     }
 }
 ```

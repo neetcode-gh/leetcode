@@ -340,6 +340,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    smallestFromLeaf(root: TreeNode | null): string {
+        const min = (a: string | undefined, b: string | undefined) => {
+            if (!a) return b;
+            if (!b) return a;
+            return a < b ? a : b;
+        };
+
+        const dfs = (node: TreeNode | null, cur: string): string | undefined => {
+            if (!node) return;
+
+            cur = String.fromCharCode(97 + node.val) + cur;
+
+            if (node.left && node.right) {
+                return min(dfs(node.left, cur), dfs(node.right, cur));
+            }
+            if (node.left) return dfs(node.left, cur);
+            if (node.right) return dfs(node.right, cur);
+            return cur;
+        };
+
+        return dfs(root, '')!;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -511,6 +542,148 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public string SmallestFromLeaf(TreeNode root) {
+        Queue<(TreeNode node, string cur)> q = new Queue<(TreeNode node, string cur)>();
+        q.Enqueue((root, ""));
+        string res = null;
+
+        while (q.Count > 0) {
+            var (node, prev) = q.Dequeue();
+            string cur = (char)('a' + node.val) + prev;
+
+            if (node.left == null && node.right == null) {
+                if (res == null || string.CompareOrdinal(cur, res) < 0) {
+                    res = cur;
+                }
+            }
+
+            if (node.left != null) q.Enqueue((node.left, cur));
+            if (node.right != null) q.Enqueue((node.right, cur));
+        }
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func smallestFromLeaf(root *TreeNode) string {
+    type pair struct {
+        node *TreeNode
+        cur  string
+    }
+    q := []pair{{root, ""}}
+    res := ""
+    found := false
+
+    for len(q) > 0 {
+        p := q[0]
+        q = q[1:]
+        node := p.node
+        cur := string(rune('a'+node.Val)) + p.cur
+
+        if node.Left == nil && node.Right == nil {
+            if !found || cur < res {
+                res = cur
+                found = true
+            }
+        }
+
+        if node.Left != nil {
+            q = append(q, pair{node.Left, cur})
+        }
+        if node.Right != nil {
+            q = append(q, pair{node.Right, cur})
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun smallestFromLeaf(root: TreeNode?): String {
+        val q = ArrayDeque<Pair<TreeNode, String>>()
+        q.add(Pair(root!!, ""))
+        var res: String? = null
+
+        while (q.isNotEmpty()) {
+            val (node, prev) = q.removeFirst()
+            val cur = ('a' + node.`val`) + prev
+
+            if (node.left == null && node.right == null) {
+                if (res == null || cur < res) {
+                    res = cur
+                }
+            }
+
+            node.left?.let { q.add(Pair(it, cur)) }
+            node.right?.let { q.add(Pair(it, cur)) }
+        }
+        return res!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestFromLeaf(_ root: TreeNode?) -> String {
+        guard let root = root else { return "" }
+        var q: [(TreeNode, String)] = [(root, "")]
+        var head = 0
+        var res: String? = nil
+
+        while head < q.count {
+            let (node, prev) = q[head]
+            head += 1
+            let cur = String(Character(UnicodeScalar(97 + node.val)!)) + prev
+
+            if node.left == nil && node.right == nil {
+                if res == nil || cur < res! {
+                    res = cur
+                }
+            }
+
+            if let left = node.left { q.append((left, cur)) }
+            if let right = node.right { q.append((right, cur)) }
+        }
+        return res!
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn smallest_from_leaf(root: Option<Rc<RefCell<TreeNode>>>) -> String {
@@ -538,6 +711,34 @@ impl Solution {
         }
 
         res.unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    smallestFromLeaf(root: TreeNode | null): string {
+        const q = new Queue();
+        q.push([root, '']);
+        let res: string | null = null;
+
+        while (!q.isEmpty()) {
+            const [node, cur]: [TreeNode, string] = q.pop();
+            const newCur = String.fromCharCode(97 + node.val) + cur;
+
+            if (!node.left && !node.right) {
+                res = res === null || newCur < res ? newCur : res;
+            }
+
+            if (node.left) q.push([node.left, newCur]);
+            if (node.right) q.push([node.right, newCur]);
+        }
+
+        return res!;
     }
 }
 ```
@@ -711,6 +912,146 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public string SmallestFromLeaf(TreeNode root) {
+        Stack<(TreeNode node, string cur)> stack = new Stack<(TreeNode node, string cur)>();
+        stack.Push((root, ""));
+        string res = null;
+
+        while (stack.Count > 0) {
+            var (node, prev) = stack.Pop();
+            string cur = (char)('a' + node.val) + prev;
+
+            if (node.left == null && node.right == null) {
+                if (res == null || string.CompareOrdinal(cur, res) < 0) {
+                    res = cur;
+                }
+            }
+
+            if (node.right != null) stack.Push((node.right, cur));
+            if (node.left != null) stack.Push((node.left, cur));
+        }
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func smallestFromLeaf(root *TreeNode) string {
+    type pair struct {
+        node *TreeNode
+        cur  string
+    }
+    stack := []pair{{root, ""}}
+    res := ""
+    found := false
+
+    for len(stack) > 0 {
+        p := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        node := p.node
+        cur := string(rune('a'+node.Val)) + p.cur
+
+        if node.Left == nil && node.Right == nil {
+            if !found || cur < res {
+                res = cur
+                found = true
+            }
+        }
+
+        if node.Right != nil {
+            stack = append(stack, pair{node.Right, cur})
+        }
+        if node.Left != nil {
+            stack = append(stack, pair{node.Left, cur})
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun smallestFromLeaf(root: TreeNode?): String {
+        val stack = ArrayDeque<Pair<TreeNode, String>>()
+        stack.addLast(Pair(root!!, ""))
+        var res: String? = null
+
+        while (stack.isNotEmpty()) {
+            val (node, prev) = stack.removeLast()
+            val cur = ('a' + node.`val`) + prev
+
+            if (node.left == null && node.right == null) {
+                if (res == null || cur < res) {
+                    res = cur
+                }
+            }
+
+            node.right?.let { stack.addLast(Pair(it, cur)) }
+            node.left?.let { stack.addLast(Pair(it, cur)) }
+        }
+        return res!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestFromLeaf(_ root: TreeNode?) -> String {
+        guard let root = root else { return "" }
+        var stack: [(TreeNode, String)] = [(root, "")]
+        var res: String? = nil
+
+        while !stack.isEmpty {
+            let (node, prev) = stack.removeLast()
+            let cur = String(Character(UnicodeScalar(97 + node.val)!)) + prev
+
+            if node.left == nil && node.right == nil {
+                if res == nil || cur < res! {
+                    res = cur
+                }
+            }
+
+            if let right = node.right { stack.append((right, cur)) }
+            if let left = node.left { stack.append((left, cur)) }
+        }
+        return res!
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn smallest_from_leaf(root: Option<Rc<RefCell<TreeNode>>>) -> String {
@@ -737,6 +1078,33 @@ impl Solution {
         }
 
         res.unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {string}
+     */
+    smallestFromLeaf(root: TreeNode | null): string {
+        const stack: [TreeNode, string][] = [[root!, '']];
+        let res: string | null = null;
+
+        while (stack.length) {
+            const [node, cur] = stack.pop()!;
+            const newCur = String.fromCharCode(97 + node.val) + cur;
+
+            if (!node.left && !node.right) {
+                res = res === null || newCur < res ? newCur : res;
+            }
+
+            if (node.right) stack.push([node.right, newCur]);
+            if (node.left) stack.push([node.left, newCur]);
+        }
+
+        return res!;
     }
 }
 ```

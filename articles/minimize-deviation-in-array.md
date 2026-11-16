@@ -437,6 +437,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minimumDeviation(nums: number[]): number {
+        let n = nums.length;
+        let arr: number[][] = [];
+
+        for (let i = 0; i < n; i++) {
+            let num = nums[i];
+            if (num % 2 === 1) {
+                arr.push([num, i]);
+                arr.push([num * 2, i]);
+            } else {
+                while (num % 2 === 0) {
+                    arr.push([num, i]);
+                    num /= 2;
+                }
+                arr.push([num, i]);
+            }
+        }
+
+        arr.sort((a, b) => a[0] - b[0]);
+        let res = Infinity;
+
+        let seen: number[] = new Array(n).fill(0);
+        let count = 0,
+            i = 0;
+
+        for (let j = 0; j < arr.length; j++) {
+            seen[arr[j][1]]++;
+            if (seen[arr[j][1]] === 1) {
+                count++;
+                while (count === n) {
+                    res = Math.min(res, arr[j][0] - arr[i][0]);
+                    seen[arr[i][1]]--;
+                    if (seen[arr[i][1]] === 0) {
+                        count--;
+                    }
+                    i++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -633,8 +683,6 @@ public class Solution {
 ```
 
 ```go
-import "container/heap"
-
 type MinHeap [][]int
 
 func (h MinHeap) Len() int           { return len(h) }
@@ -838,6 +886,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minimumDeviation(nums: number[]): number {
+        const minHeap = new MinPriorityQueue((x: number[]) => x[0]);
+        let heapMax = 0;
+
+        for (let num of nums) {
+            let tmp = num;
+            while (num % 2 === 0) {
+                num /= 2;
+            }
+            minHeap.enqueue([num, Math.max(tmp, num * 2)]);
+            heapMax = Math.max(heapMax, num);
+        }
+
+        let res = Infinity;
+
+        while (minHeap.size() === nums.length) {
+            let [n, nMax]: number[] = minHeap.dequeue();
+            res = Math.min(res, heapMax - n);
+
+            if (n < nMax) {
+                minHeap.enqueue([n * 2, nMax]);
+                heapMax = Math.max(heapMax, n * 2);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1024,8 +1108,6 @@ public class Solution {
 ```
 
 ```go
-import "container/heap"
-
 type MaxHeap []int
 
 func (h MaxHeap) Len() int           { return len(h) }
@@ -1214,6 +1296,40 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    minimumDeviation(nums: number[]): number {
+        const maxHeap = new MaxPriorityQueue();
+        let minVal = Infinity;
+
+        for (let num of nums) {
+            if (num % 2 === 1) num *= 2;
+            maxHeap.enqueue(num);
+            minVal = Math.min(minVal, num);
+        }
+
+        let res = Infinity;
+
+        while (!maxHeap.isEmpty()) {
+            let maxVal: number = maxHeap.dequeue();
+            res = Math.min(res, maxVal - minVal);
+
+            if (maxVal % 2 === 1) break;
+
+            let nextVal = maxVal / 2;
+            maxHeap.enqueue(nextVal);
+            minVal = Math.min(minVal, nextVal);
+        }
+
+        return res;
     }
 }
 ```

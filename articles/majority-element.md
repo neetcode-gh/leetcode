@@ -190,6 +190,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    majorityElement(nums: number[]): number {
+        let n = nums.length;
+        for (let num of nums) {
+            let count = nums.reduce(
+                (acc, val) => acc + (val === num ? 1 : 0),
+                0,
+            );
+            if (count > Math.floor(n / 2)) {
+                return num;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -387,6 +409,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    majorityElement(nums: number[]): number {
+        const count = new Map<number, number>();
+        let res = 0,
+            maxCount = 0;
+
+        for (let num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+            if (count.get(num)! > maxCount) {
+                res = num;
+                maxCount = count.get(num)!;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -488,6 +533,19 @@ impl Solution {
         let mut nums = nums;
         nums.sort();
         nums[nums.len() / 2]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    majorityElement(nums: number[]): number {
+        nums.sort();
+        return nums[Math.floor(nums.length / 2)];
     }
 }
 ```
@@ -645,7 +703,11 @@ func majorityElement(nums []int) int {
     res := 0
     for i := 0; i < 32; i++ {
         if bit[i] > n/2 {
-            res |= (1 << i)
+            if i == 31 {
+                res -= (1 << i)
+            } else {
+                res |= (1 << i)
+            }
         }
     }
     return res
@@ -690,7 +752,11 @@ class Solution {
         var res = 0
         for i in 0..<32 {
             if bit[i] > n / 2 {
-                res |= (1 << i)
+                if i == 31 {
+                    res -= (1 << i)
+                } else {
+                    res |= (1 << i)
+                }
             }
         }
         return res
@@ -715,6 +781,32 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    majorityElement(nums: number[]): number {
+        const n = nums.length;
+        const bit: number[] = Array(32).fill(0);
+        for (let num of nums) {
+            for (let i = 0; i < 32; i++) {
+                bit[i] += (num >> i) & 1;
+            }
+        }
+
+        let res = 0;
+        for (let i = 0; i < 32; i++) {
+            if (bit[i] > Math.floor(n / 2)) {
+                res |= 1 << i;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -898,6 +990,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    majorityElement(nums: number[]): number {
+        let res = 0,
+            count = 0;
+
+        for (let num of nums) {
+            if (count === 0) {
+                res = num;
+            }
+            count += num === res ? 1 : -1;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -923,6 +1036,9 @@ Since the majority element appears more than `n/2` times, any random pick has gr
 ::tabs-start
 
 ```python
+import random
+
+
 class Solution:
     def majorityElement(self, nums):
         n = len(nums)
@@ -1088,6 +1204,30 @@ impl Solution {
             let candidate = nums[rand::random::<usize>() % n];
             let count = nums.iter().filter(|&&x| x == candidate).count();
             if count > n / 2 {
+                return candidate;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    majorityElement(nums: number[]): number {
+        const n = nums.length;
+        while (true) {
+            const candidate = nums[Math.floor(Math.random() * n)];
+            let count = 0;
+            for (const num of nums) {
+                if (num === candidate) {
+                    count++;
+                }
+            }
+            if (count > Math.floor(n / 2)) {
                 return candidate;
             }
         }

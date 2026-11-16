@@ -154,6 +154,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] nums1, nums2;
+    private int n;
+
+    public long MaxScore(int[] nums1, int[] nums2, int k) {
+        this.nums1 = nums1;
+        this.nums2 = nums2;
+        this.n = nums1.Length;
+        return Dfs(0, k, int.MaxValue, 0);
+    }
+
+    private long Dfs(int i, int k, int minVal, long curSum) {
+        if (k == 0) {
+            return curSum * minVal;
+        }
+        if (i == n || (n - i) < k) {
+            return int.MinValue;
+        }
+        if (minVal == 0) {
+            return 0;
+        }
+
+        long res = Dfs(i + 1, k, minVal, curSum);
+        res = Math.Max(
+            res,
+            Dfs(i + 1, k - 1, Math.Min(minVal, nums2[i]), curSum + nums1[i])
+        );
+        return res;
+    }
+}
+```
+
 ```go
 func maxScore(nums1 []int, nums2 []int, k int) int64 {
     n := len(nums1)
@@ -270,6 +303,51 @@ impl Solution {
         }
 
         dfs(0, k, i32::MAX, 0, &nums1, &nums2, n)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @param {number} k
+     * @return {number}
+     */
+    maxScore(nums1: number[], nums2: number[], k: number): number {
+        const n = nums1.length;
+
+        const dfs = (
+            i: number,
+            k: number,
+            minVal: number,
+            curSum: number,
+        ): number => {
+            if (k === 0) {
+                return curSum * minVal;
+            }
+            if (i === n || n - i < k) {
+                return -Infinity;
+            }
+            if (minVal === 0) {
+                return 0;
+            }
+
+            let res = dfs(i + 1, k, minVal, curSum);
+            res = Math.max(
+                res,
+                dfs(
+                    i + 1,
+                    k - 1,
+                    Math.min(minVal, nums2[i]),
+                    curSum + nums1[i],
+                ),
+            );
+            return res;
+        };
+
+        return dfs(0, k, Infinity, 0);
     }
 }
 ```
@@ -429,6 +507,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long MaxScore(int[] nums1, int[] nums2, int k) {
+        int n = nums1.Length;
+        int[][] pairs = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            pairs[i] = new int[] { nums1[i], nums2[i] };
+        }
+
+        Array.Sort(pairs, (a, b) => b[1].CompareTo(a[1]));
+
+        PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+        long n1Sum = 0, res = 0;
+
+        foreach (int[] pair in pairs) {
+            n1Sum += pair[0];
+            minHeap.Enqueue(pair[0], pair[0]);
+
+            if (minHeap.Count > k) {
+                n1Sum -= minHeap.Dequeue();
+            }
+
+            if (minHeap.Count == k) {
+                res = Math.Max(res, n1Sum * pair[1]);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxScore(nums1 []int, nums2 []int, k int) int64 {
     n := len(nums1)
@@ -564,6 +675,40 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @param {number} k
+     * @return {number}
+     */
+    maxScore(nums1: number[], nums2: number[], k: number): number {
+        let pairs = nums1.map((n1, i) => [n1, nums2[i]]);
+        pairs.sort((a, b) => b[1] - a[1]);
+
+        let minHeap = new MinPriorityQueue();
+        let n1Sum = 0,
+            res = 0;
+
+        for (let [n1, n2] of pairs) {
+            n1Sum += n1;
+            minHeap.enqueue(n1);
+
+            if (minHeap.size() > k) {
+                n1Sum -= minHeap.dequeue();
+            }
+
+            if (minHeap.size() === k) {
+                res = Math.max(res, n1Sum * n2);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -725,6 +870,38 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long MaxScore(int[] nums1, int[] nums2, int k) {
+        int n = nums1.Length;
+        long[] arr = new long[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = ((long)nums2[i] << 30) | (long)nums1[i];
+        }
+
+        Array.Sort(arr);
+        PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+        long n1Sum = 0, res = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            int n1 = (int)(arr[i] & ((1L << 30) - 1));
+            int n2 = (int)(arr[i] >> 30);
+            n1Sum += n1;
+            minHeap.Enqueue(n1, n1);
+
+            if (minHeap.Count > k) {
+                n1Sum -= minHeap.Dequeue();
+            }
+            if (minHeap.Count == k) {
+                res = Math.Max(res, n1Sum * (long)n2);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxScore(nums1 []int, nums2 []int, k int) int64 {
     n := len(nums1)
@@ -868,6 +1045,45 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @param {number} k
+     * @return {number}
+     */
+    maxScore(nums1: number[], nums2: number[], k: number): number {
+        const n = nums1.length;
+        const arr: bigint[] = [];
+        for (let i = 0; i < n; i++) {
+            arr.push((BigInt(nums2[i]) << BigInt(30)) | BigInt(nums1[i]));
+        }
+
+        arr.sort((a, b) => Number(b - a));
+        const minHeap = new MinPriorityQueue();
+        let n1Sum = 0n,
+            res = 0n;
+
+        for (let num of arr) {
+            let n1 = Number(num & ((1n << 30n) - 1n));
+            let n2 = Number(num >> 30n);
+            n1Sum += BigInt(n1);
+            minHeap.enqueue(n1);
+
+            if (minHeap.size() > k) {
+                n1Sum -= BigInt(minHeap.dequeue());
+            }
+            if (minHeap.size() === k) {
+                res = BigInt(Math.max(Number(res), Number(n1Sum * BigInt(n2))));
+            }
+        }
+
+        return Number(res);
     }
 }
 ```

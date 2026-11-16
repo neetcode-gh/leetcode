@@ -176,6 +176,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        let res = 0;
+        for (let i = 0; i < prices.length; i++) {
+            let buy = prices[i];
+            for (let j = i + 1; j < prices.length; j++) {
+                let sell = prices[j];
+                res = Math.max(res, sell - buy);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -397,6 +417,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        let l = 0,
+            r = 1;
+        let maxP = 0;
+
+        while (r < prices.length) {
+            if (prices[l] < prices[r]) {
+                let profit = prices[r] - prices[l];
+                maxP = Math.max(maxP, profit);
+            } else {
+                l = r;
+            }
+            r++;
+        }
+        return maxP;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -573,6 +618,25 @@ impl Solution {
             min_buy = min_buy.min(sell);
         }
         max_p
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    maxProfit(prices: number[]): number {
+        let maxP = 0;
+        let minBuy = prices[0];
+
+        for (let sell of prices) {
+            maxP = Math.max(maxP, sell - minBuy);
+            minBuy = Math.min(minBuy, sell);
+        }
+        return maxP;
     }
 }
 ```

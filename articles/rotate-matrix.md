@@ -140,23 +140,23 @@ public class Solution {
 
 ```go
 func rotate(matrix [][]int) {
-	n := len(matrix)
-	rotated := make([][]int, n)
-	for i := range rotated {
-		rotated[i] = make([]int, n)
-	}
+    n := len(matrix)
+    rotated := make([][]int, n)
+    for i := range rotated {
+        rotated[i] = make([]int, n)
+    }
 
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
-			rotated[j][n-1-i] = matrix[i][j]
-		}
-	}
+    for i := 0; i < n; i++ {
+        for j := 0; j < n; j++ {
+            rotated[j][n-1-i] = matrix[i][j]
+        }
+    }
 
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
-			matrix[i][j] = rotated[i][j]
-		}
-	}
+    for i := 0; i < n; i++ {
+        for j := 0; j < n; j++ {
+            matrix[i][j] = rotated[i][j]
+        }
+    }
 }
 ```
 
@@ -214,6 +214,33 @@ impl Solution {
         }
         for i in 0..n {
             for j in 0..n {
+                matrix[i][j] = rotated[i][j];
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {void}
+     */
+    rotate(matrix: number[][]): void {
+        const n = matrix.length;
+        const rotated: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(0),
+        );
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                rotated[j][n - 1 - i] = matrix[i][j];
+            }
+        }
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
                 matrix[i][j] = rotated[i][j];
             }
         }
@@ -442,29 +469,29 @@ public class Solution {
 
 ```go
 func rotate(matrix [][]int) {
-	l, r := 0, len(matrix)-1
-	for l < r {
-		for i := 0; i < r-l; i++ {
-			top, bottom := l, r
+    l, r := 0, len(matrix)-1
+    for l < r {
+        for i := 0; i < r-l; i++ {
+            top, bottom := l, r
 
-			// save the topleft
-			topLeft := matrix[top][l+i]
+            // save the topleft
+            topLeft := matrix[top][l+i]
 
-			// move bottom left into top left
-			matrix[top][l+i] = matrix[bottom-i][l]
+            // move bottom left into top left
+            matrix[top][l+i] = matrix[bottom-i][l]
 
-			// move bottom right into bottom left
-			matrix[bottom-i][l] = matrix[bottom][r-i]
+            // move bottom right into bottom left
+            matrix[bottom-i][l] = matrix[bottom][r-i]
 
-			// move top right into bottom right
-			matrix[bottom][r-i] = matrix[top+i][r]
+            // move top right into bottom right
+            matrix[bottom][r-i] = matrix[top+i][r]
 
-			// move top left into top right
-			matrix[top+i][r] = topLeft
-		}
-		r--
-		l++
-	}
+            // move top left into top right
+            matrix[top+i][r] = topLeft
+        }
+        r--
+        l++
+    }
 }
 ```
 
@@ -549,6 +576,43 @@ impl Solution {
             }
             r -= 1;
             l += 1;
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {void}
+     */
+    rotate(matrix: number[][]): void {
+        let l = 0;
+        let r = matrix.length - 1;
+
+        while (l < r) {
+            for (let i = 0; i < r - l; i++) {
+                const top = l;
+                const bottom = r;
+
+                // save the topleft
+                const topLeft = matrix[top][l + i];
+
+                // move bottom left into top left
+                matrix[top][l + i] = matrix[bottom - i][l];
+
+                // move bottom right into bottom left
+                matrix[bottom - i][l] = matrix[bottom][r - i];
+
+                // move top right into bottom right
+                matrix[bottom][r - i] = matrix[top + i][r];
+
+                // move top left into top right
+                matrix[top + i][r] = topLeft;
+            }
+            r--;
+            l++;
         }
     }
 }
@@ -687,17 +751,17 @@ public class Solution {
 
 ```go
 func rotate(matrix [][]int) {
-	// Reverse the matrix vertically
-	for i, j := 0, len(matrix)-1; i < j; i, j = i+1, j-1 {
-		matrix[i], matrix[j] = matrix[j], matrix[i]
-	}
+    // Reverse the matrix vertically
+    for i, j := 0, len(matrix)-1; i < j; i, j = i+1, j-1 {
+        matrix[i], matrix[j] = matrix[j], matrix[i]
+    }
 
-	// Transpose the matrix
-	for i := 0; i < len(matrix); i++ {
-		for j := i + 1; j < len(matrix); j++ {
-			matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
-		}
-	}
+    // Transpose the matrix
+    for i := 0; i < len(matrix); i++ {
+        for j := i + 1; j < len(matrix); j++ {
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        }
+    }
 }
 ```
 
@@ -747,6 +811,26 @@ impl Solution {
                 let tmp = matrix[i][j];
                 matrix[i][j] = matrix[j][i];
                 matrix[j][i] = tmp;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} matrix
+     * @return {void}
+     */
+    rotate(matrix: number[][]): void {
+        // Reverse the matrix vertically
+        matrix.reverse();
+
+        // Transpose the matrix
+        for (let i = 0; i < matrix.length; i++) {
+            for (let j = i; j < matrix[i].length; j++) {
+                [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];
             }
         }
     }

@@ -124,6 +124,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        List<int>[] adj = new List<int>[n];
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+        }
+        for (int i = 0; i < n; i++) {
+            if (i != headID) {
+                adj[manager[i]].Add(i);
+            }
+        }
+
+        return Dfs(headID, adj, informTime);
+    }
+
+    private int Dfs(int node, List<int>[] adj, int[] informTime) {
+        int res = 0;
+        foreach (int child in adj[node]) {
+            res = Math.Max(res, informTime[node] + Dfs(child, adj, informTime));
+        }
+        return res;
+    }
+}
+```
+
 ```go
 func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
     adj := make([][]int, n)
@@ -223,6 +249,41 @@ impl Solution {
         }
 
         dfs(head, &adj, &inform_time)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} headID
+     * @param {number[]} manager
+     * @param {number[]} informTime
+     * @return {number}
+     */
+    numOfMinutes(
+        n: number,
+        headID: number,
+        manager: number[],
+        informTime: number[],
+    ): number {
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (let i = 0; i < n; i++) {
+            if (i !== headID) {
+                adj[manager[i]].push(i);
+            }
+        }
+
+        const dfs = (node: number): number => {
+            let res = 0;
+            for (const child of adj[node]) {
+                res = Math.max(res, informTime[node] + dfs(child));
+            }
+            return res;
+        };
+
+        return dfs(headID);
     }
 }
 ```
@@ -361,6 +422,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        Dictionary<int, List<int>> adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < n; i++) {
+            if (!adj.ContainsKey(manager[i])) {
+                adj[manager[i]] = new List<int>();
+            }
+            adj[manager[i]].Add(i);
+        }
+
+        Queue<int[]> queue = new Queue<int[]>();
+        queue.Enqueue(new int[] { headID, 0 });
+        int res = 0;
+
+        while (queue.Count > 0) {
+            int[] curr = queue.Dequeue();
+            int id = curr[0], time = curr[1];
+            res = Math.Max(res, time);
+            if (adj.ContainsKey(id)) {
+                foreach (int emp in adj[id]) {
+                    queue.Enqueue(new int[] { emp, time + informTime[id] });
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
     adj := make(map[int][]int)
@@ -461,6 +553,45 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} headID
+     * @param {number[]} manager
+     * @param {number[]} informTime
+     * @return {number}
+     */
+    numOfMinutes(
+        n: number,
+        headID: number,
+        manager: number[],
+        informTime: number[],
+    ): number {
+        const adj = new Map<number, number[]>();
+        for (let i = 0; i < n; i++) {
+            if (!adj.has(manager[i])) adj.set(manager[i], []);
+            adj.get(manager[i])!.push(i);
+        }
+
+        const queue = new Queue([[headID, 0]]); // [id, time]
+        let res = 0;
+
+        while (!queue.isEmpty()) {
+            const [id, time]: number[] = queue.pop();
+            res = Math.max(res, time);
+            if (adj.has(id)) {
+                for (const emp of adj.get(id)!) {
+                    queue.push([emp, time + informTime[id]]);
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -637,6 +768,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        int[] indegree = new int[n];
+        int[] time = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            if (manager[i] != -1) {
+                indegree[manager[i]]++;
+            }
+        }
+
+        Queue<int> queue = new Queue<int>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                queue.Enqueue(i);
+            }
+        }
+
+        while (queue.Count > 0) {
+            int node = queue.Dequeue();
+            time[node] += informTime[node];
+            if (manager[node] != -1) {
+                time[manager[node]] = Math.Max(time[manager[node]], time[node]);
+                indegree[manager[node]]--;
+                if (indegree[manager[node]] == 0) {
+                    queue.Enqueue(manager[node]);
+                }
+            }
+        }
+
+        return time[headID];
+    }
+}
+```
+
 ```go
 func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
     indegree := make([]int, n)
@@ -783,6 +950,54 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} headID
+     * @param {number[]} manager
+     * @param {number[]} informTime
+     * @return {number}
+     */
+    numOfMinutes(
+        n: number,
+        headID: number,
+        manager: number[],
+        informTime: number[],
+    ): number {
+        const indegree: number[] = Array(n).fill(0);
+        const time: number[] = Array(n).fill(0);
+
+        for (let i = 0; i < n; i++) {
+            if (manager[i] !== -1) {
+                indegree[manager[i]]++;
+            }
+        }
+
+        const queue = new Queue();
+        for (let i = 0; i < n; i++) {
+            if (indegree[i] === 0) {
+                queue.push(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            const node: number = queue.pop();
+            time[node] += informTime[node];
+            if (manager[node] !== -1) {
+                time[manager[node]] = Math.max(time[manager[node]], time[node]);
+                indegree[manager[node]]--;
+                if (indegree[manager[node]] === 0) {
+                    queue.push(manager[node]);
+                }
+            }
+        }
+
+        return time[headID];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -894,6 +1109,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        int res = 0;
+        for (int node = 0; node < n; node++) {
+            res = Math.Max(res, Dfs(node, manager, informTime));
+        }
+        return res;
+    }
+
+    private int Dfs(int node, int[] manager, int[] informTime) {
+        if (manager[node] != -1) {
+            informTime[node] += Dfs(manager[node], manager, informTime);
+            manager[node] = -1;
+        }
+        return informTime[node];
+    }
+}
+```
+
 ```go
 func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
     var dfs func(node int) int
@@ -979,6 +1214,38 @@ impl Solution {
             res = res.max(dfs(node, &mut manager, &mut inform_time));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} headID
+     * @param {number[]} manager
+     * @param {number[]} informTime
+     * @return {number}
+     */
+    numOfMinutes(
+        n: number,
+        headID: number,
+        manager: number[],
+        informTime: number[],
+    ): number {
+        const dfs = (node: number): number => {
+            if (manager[node] !== -1) {
+                informTime[node] += dfs(manager[node]);
+                manager[node] = -1;
+            }
+            return informTime[node];
+        };
+
+        let res = 0;
+        for (let node = 0; node < n; node++) {
+            res = Math.max(res, dfs(node));
+        }
+        return res;
     }
 }
 ```

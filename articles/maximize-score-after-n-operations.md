@@ -49,7 +49,7 @@ class Solution:
                     if visit[j]:
                         continue
                     visit[j] = True
-                    g = gcd(nums[i], nums[j])
+                    g = math.gcd(nums[i], nums[j])
                     res = max(res, n * g + dfs(n + 1))
                     visit[j] = False
                 visit[i] = False
@@ -356,6 +356,46 @@ impl Solution {
         let n = nums.len();
         let mut visit = vec![false; n];
         dfs(1, &nums, &mut visit, 0)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxScore(nums: number[]): number {
+        const N = nums.length;
+        const visit: boolean[] = new Array(N).fill(false);
+
+        const gcd = (a: number, b: number): number => {
+            return b === 0 ? a : gcd(b, a % b);
+        };
+        const dfs = (n: number): number => {
+            if (n > N / 2) {
+                return 0;
+            }
+
+            let res = 0;
+            for (let i = 0; i < N; i++) {
+                if (visit[i]) continue;
+                visit[i] = true;
+                for (let j = i + 1; j < N; j++) {
+                    if (visit[j]) continue;
+                    visit[j] = true;
+                    let g = gcd(nums[i], nums[j]);
+                    res = Math.max(res, n * g + dfs(n + 1));
+                    visit[j] = false;
+                }
+                visit[i] = false;
+            }
+
+            return res;
+        };
+
+        return dfs(1);
     }
 }
 ```
@@ -705,6 +745,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxScore(nums: number[]): number {
+        const cache = new Map<number, number>();
+
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+        const dfs = (mask: number, op: number): number => {
+            if (cache.has(mask)) {
+                return cache.get(mask)!;
+            }
+
+            let maxScore = 0;
+            const n = nums.length;
+            for (let i = 0; i < n; i++) {
+                if ((mask & (1 << i)) !== 0) continue;
+                for (let j = i + 1; j < n; j++) {
+                    if ((mask & (1 << j)) !== 0) continue;
+                    let newMask = mask | (1 << i) | (1 << j);
+                    let score =
+                        op * gcd(nums[i], nums[j]) + dfs(newMask, op + 1);
+                    maxScore = Math.max(maxScore, score);
+                }
+            }
+
+            cache.set(mask, maxScore);
+            return maxScore;
+        };
+
+        return dfs(0, 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -741,7 +819,7 @@ class Solution:
         GCD = [[0] * n for _ in range(n)]
         for i in range(n):
             for j in range(i + 1, n):
-                GCD[i][j] = gcd(nums[i], nums[j])
+                GCD[i][j] = math.gcd(nums[i], nums[j])
 
         dp = [-1] * (1 << n)
         def dfs(mask, op):
@@ -1121,6 +1199,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxScore(nums: number[]): number {
+        const n = nums.length;
+        const GCD: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(0),
+        );
+        const dp: number[] = Array(1 << n).fill(-1);
+
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                GCD[i][j] = gcd(nums[i], nums[j]);
+            }
+        }
+
+        const dfs = (mask: number, op: number): number => {
+            if (dp[mask] !== -1) return dp[mask];
+
+            let maxScore = 0;
+            for (let i = 0; i < n; i++) {
+                if (mask & (1 << i)) continue;
+                for (let j = i + 1; j < n; j++) {
+                    if (mask & (1 << j)) continue;
+                    const newMask = mask | (1 << i) | (1 << j);
+                    maxScore = Math.max(
+                        maxScore,
+                        op * GCD[i][j] + dfs(newMask, op + 1),
+                    );
+                }
+            }
+            return (dp[mask] = maxScore);
+        };
+
+        return dfs(0, 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1162,7 +1283,7 @@ class Solution:
         GCD = [[0] * n for _ in range(n)]
         for i in range(n):
             for j in range(i + 1, n):
-                GCD[i][j] = gcd(nums[i], nums[j])
+                GCD[i][j] = math.gcd(nums[i], nums[j])
 
         dp = [0] * N
         for mask in range(N - 1, -1, -1):
@@ -1505,6 +1626,46 @@ impl Solution {
             }
         }
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxScore(nums: number[]): number {
+        const n = nums.length;
+        const N = 1 << n;
+        const GCD: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(0),
+        );
+
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                GCD[i][j] = gcd(nums[i], nums[j]);
+            }
+        }
+
+        const dp: number[] = Array(N).fill(0);
+        for (let mask = N - 1; mask >= 0; mask--) {
+            let bits = mask.toString(2).split('0').join('').length;
+            if (bits % 2 === 1) continue;
+            let op = bits / 2 + 1;
+
+            for (let i = 0; i < n; i++) {
+                if ((mask & (1 << i)) !== 0) continue;
+                for (let j = i + 1; j < n; j++) {
+                    if ((mask & (1 << j)) !== 0) continue;
+                    let newMask = mask | (1 << i) | (1 << j);
+                    dp[mask] = Math.max(dp[mask], op * GCD[i][j] + dp[newMask]);
+                }
+            }
+        }
+        return dp[0];
     }
 }
 ```

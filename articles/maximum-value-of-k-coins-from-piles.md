@@ -49,20 +49,20 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
-        int n = piles.size();
+    public int maxValueOfCoins(int[][] piles, int k) {
+        int n = piles.length;
         return dfs(0, k, piles);
     }
 
-    private int dfs(int i, int coins, List<List<Integer>> piles) {
-        if (i == piles.size()) {
+    private int dfs(int i, int coins, int[][] piles) {
+        if (i == piles.length) {
             return 0;
         }
 
         int res = dfs(i + 1, coins, piles);  // skip current pile
         int curPile = 0;
-        for (int j = 0; j < Math.min(coins, piles.get(i).size()); j++) {
-            curPile += piles.get(i).get(j);
+        for (int j = 0; j < Math.min(coins, piles[i].length); j++) {
+            curPile += piles[i][j];
             res = Math.max(res, curPile + dfs(i + 1, coins - (j + 1), piles));
         }
         return res;
@@ -122,6 +122,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxValueOfCoins(int[][] piles, int k) {
+        return Dfs(0, k, piles);
+    }
+
+    private int Dfs(int i, int coins, int[][] piles) {
+        if (i == piles.Length) {
+            return 0;
+        }
+
+        int res = Dfs(i + 1, coins, piles);  // skip current pile
+        int curPile = 0;
+        for (int j = 0; j < Math.Min(coins, piles[i].Length); j++) {
+            curPile += piles[i][j];
+            res = Math.Max(res, curPile + Dfs(i + 1, coins - (j + 1), piles));
+        }
+        return res;
+    }
+}
+```
+
 ```go
 func maxValueOfCoins(piles [][]int, k int) int {
     n := len(piles)
@@ -161,7 +183,7 @@ func max(a, b int) int {
 
 ```kotlin
 class Solution {
-    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+    fun maxValueOfCoins(piles: Array<IntArray>, k: Int): Int {
         val n = piles.size
 
         fun dfs(i: Int, coins: Int): Int {
@@ -228,6 +250,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} piles
+     * @param {number} k
+     * @return {number}
+     */
+    maxValueOfCoins(piles: number[][], k: number): number {
+        const n = piles.length;
+
+        const dfs = (i: number, coins: number): number => {
+            if (i === n) return 0;
+
+            let res = dfs(i + 1, coins); // skip current pile
+            let curPile = 0;
+            for (let j = 0; j < Math.min(coins, piles[i].length); j++) {
+                curPile += piles[i][j];
+                res = Math.max(res, curPile + dfs(i + 1, coins - (j + 1)));
+            }
+            return res;
+        };
+
+        return dfs(0, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -281,8 +330,8 @@ class Solution:
 public class Solution {
     private int[][] dp;
 
-    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
-        int n = piles.size();
+    public int maxValueOfCoins(int[][] piles, int k) {
+        int n = piles.length;
         dp = new int[n][k + 1];
         for (int[] row : dp) {
             Arrays.fill(row, -1);
@@ -290,8 +339,8 @@ public class Solution {
         return dfs(0, k, piles);
     }
 
-    private int dfs(int i, int coins, List<List<Integer>> piles) {
-        if (i == piles.size()) {
+    private int dfs(int i, int coins, int[][] piles) {
+        if (i == piles.length) {
             return 0;
         }
         if (dp[i][coins] != -1) {
@@ -300,8 +349,8 @@ public class Solution {
 
         dp[i][coins] = dfs(i + 1, coins, piles);  // skip current pile
         int curPile = 0;
-        for (int j = 0; j < Math.min(coins, piles.get(i).size()); j++) {
-            curPile += piles.get(i).get(j);
+        for (int j = 0; j < Math.min(coins, piles[i].length); j++) {
+            curPile += piles[i][j];
             dp[i][coins] = Math.max(dp[i][coins], curPile + dfs(i + 1, coins - (j + 1), piles));
         }
         return dp[i][coins];
@@ -372,6 +421,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int MaxValueOfCoins(int[][] piles, int k) {
+        int n = piles.Length;
+        dp = new int[n, k + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, k, piles);
+    }
+
+    private int Dfs(int i, int coins, int[][] piles) {
+        if (i == piles.Length) {
+            return 0;
+        }
+        if (dp[i, coins] != -1) {
+            return dp[i, coins];
+        }
+
+        dp[i, coins] = Dfs(i + 1, coins, piles);  // skip current pile
+        int curPile = 0;
+        for (int j = 0; j < Math.Min(coins, piles[i].Length); j++) {
+            curPile += piles[i][j];
+            dp[i, coins] = Math.Max(dp[i, coins], curPile + Dfs(i + 1, coins - (j + 1), piles));
+        }
+        return dp[i, coins];
+    }
+}
+```
+
 ```go
 func maxValueOfCoins(piles [][]int, k int) int {
     n := len(piles)
@@ -422,10 +505,10 @@ func max(a, b int) int {
 ```kotlin
 class Solution {
     private lateinit var dp: Array<IntArray>
-    private lateinit var piles: List<List<Int>>
+    private lateinit var piles: Array<IntArray>
     private var n = 0
 
-    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+    fun maxValueOfCoins(piles: Array<IntArray>, k: Int): Int {
         this.piles = piles
         n = piles.size
         dp = Array(n) { IntArray(k + 1) { -1 } }
@@ -508,6 +591,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} piles
+     * @param {number} k
+     * @return {number}
+     */
+    maxValueOfCoins(piles: number[][], k: number): number {
+        const n = piles.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(k + 1).fill(-1),
+        );
+
+        const dfs = (i: number, coins: number): number => {
+            if (i === n) return 0;
+            if (dp[i][coins] !== -1) return dp[i][coins];
+
+            dp[i][coins] = dfs(i + 1, coins); // skip current pile
+            let curPile = 0;
+            for (let j = 0; j < Math.min(coins, piles[i].length); j++) {
+                curPile += piles[i][j];
+                dp[i][coins] = Math.max(
+                    dp[i][coins],
+                    curPile + dfs(i + 1, coins - (j + 1)),
+                );
+            }
+            return dp[i][coins];
+        };
+
+        return dfs(0, k);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,8 +678,8 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
-        int n = piles.size();
+    public int maxValueOfCoins(int[][] piles, int k) {
+        int n = piles.length;
         int[][] dp = new int[n + 1][k + 1];
 
         for (int i = n - 1; i >= 0; i--) {
@@ -570,8 +687,8 @@ public class Solution {
                 dp[i][coins] = dp[i + 1][coins];
 
                 int curPile = 0;
-                for (int j = 0; j < Math.min(coins, piles.get(i).size()); j++) {
-                    curPile += piles.get(i).get(j);
+                for (int j = 0; j < Math.min(coins, piles[i].length); j++) {
+                    curPile += piles[i][j];
                     dp[i][coins] = Math.max(
                         dp[i][coins],
                         curPile + dp[i + 1][coins - (j + 1)]
@@ -643,6 +760,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxValueOfCoins(int[][] piles, int k) {
+        int n = piles.Length;
+        int[,] dp = new int[n + 1, k + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int coins = 0; coins <= k; coins++) {
+                dp[i, coins] = dp[i + 1, coins];
+
+                int curPile = 0;
+                for (int j = 0; j < Math.Min(coins, piles[i].Length); j++) {
+                    curPile += piles[i][j];
+                    dp[i, coins] = Math.Max(
+                        dp[i, coins],
+                        curPile + dp[i + 1, coins - (j + 1)]
+                    );
+                }
+            }
+        }
+
+        return dp[0, k];
+    }
+}
+```
+
 ```go
 func maxValueOfCoins(piles [][]int, k int) int {
     n := len(piles)
@@ -683,7 +826,7 @@ func max(a, b int) int {
 
 ```kotlin
 class Solution {
-    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+    fun maxValueOfCoins(piles: Array<IntArray>, k: Int): Int {
         val n = piles.size
         val dp = Array(n + 1) { IntArray(k + 1) }
 
@@ -752,6 +895,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} piles
+     * @param {number} k
+     * @return {number}
+     */
+    maxValueOfCoins(piles: number[][], k: number): number {
+        const n = piles.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(0),
+        );
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let coins = 0; coins <= k; coins++) {
+                dp[i][coins] = dp[i + 1][coins];
+
+                let curPile = 0;
+                for (let j = 0; j < Math.min(coins, piles[i].length); j++) {
+                    curPile += piles[i][j];
+                    dp[i][coins] = Math.max(
+                        dp[i][coins],
+                        curPile + dp[i + 1][coins - (j + 1)],
+                    );
+                }
+            }
+        }
+
+        return dp[0][k];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -798,14 +974,14 @@ class Solution:
 
 ```java
 public class Solution {
-    public int maxValueOfCoins(List<List<Integer>> piles, int k) {
+    public int maxValueOfCoins(int[][] piles, int k) {
         int[] dp = new int[k + 1];
 
-        for (List<Integer> pile : piles) {
+        for (int[] pile : piles) {
             for (int coins = k; coins >= 1; coins--) {
                 int curPile = 0;
-                for (int j = 0; j < Math.min(coins, pile.size()); j++) {
-                    curPile += pile.get(j);
+                for (int j = 0; j < Math.min(coins, pile.length); j++) {
+                    curPile += pile[j];
                     dp[coins] = Math.max(dp[coins], dp[coins - (j + 1)] + curPile);
                 }
             }
@@ -865,6 +1041,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxValueOfCoins(int[][] piles, int k) {
+        int[] dp = new int[k + 1];
+
+        foreach (int[] pile in piles) {
+            for (int coins = k; coins >= 1; coins--) {
+                int curPile = 0;
+                for (int j = 0; j < Math.Min(coins, pile.Length); j++) {
+                    curPile += pile[j];
+                    dp[coins] = Math.Max(dp[coins], dp[coins - (j + 1)] + curPile);
+                }
+            }
+        }
+
+        return dp[k];
+    }
+}
+```
+
 ```go
 func maxValueOfCoins(piles [][]int, k int) int {
     dp := make([]int, k+1)
@@ -899,7 +1095,7 @@ func max(a, b int) int {
 
 ```kotlin
 class Solution {
-    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+    fun maxValueOfCoins(piles: Array<IntArray>, k: Int): Int {
         val dp = IntArray(k + 1)
 
         for (pile in piles) {
@@ -954,6 +1150,34 @@ impl Solution {
         }
 
         dp[k]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} piles
+     * @param {number} k
+     * @return {number}
+     */
+    maxValueOfCoins(piles: number[][], k: number): number {
+        let dp: number[] = Array(k + 1).fill(0);
+
+        for (const pile of piles) {
+            for (let coins = k; coins >= 1; coins--) {
+                let curPile = 0;
+                for (let j = 0; j < Math.min(coins, pile.length); j++) {
+                    curPile += pile[j];
+                    dp[coins] = Math.max(
+                        dp[coins],
+                        dp[coins - (j + 1)] + curPile,
+                    );
+                }
+            }
+        }
+
+        return dp[k];
     }
 }
 ```

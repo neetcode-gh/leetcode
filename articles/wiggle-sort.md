@@ -213,6 +213,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    wiggleSort(nums: number[]): void {
+        const maxHeap = new PriorityQueue((a: number, b: number) => b - a);
+        nums.forEach((num) => maxHeap.enqueue(num));
+
+        for (let i = 1; i < nums.length; i += 2) {
+            nums[i] = maxHeap.dequeue();
+        }
+        for (let i = 0; i < nums.length; i += 2) {
+            nums[i] = maxHeap.dequeue();
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +367,21 @@ impl Solution {
         while i < nums.len() - 1 {
             nums.swap(i, i + 1);
             i += 2;
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    wiggleSort(nums: number[]): void {
+        nums.sort((a, b) => a - b);
+        for (let i = 1; i < nums.length - 1; i += 2) {
+            [nums[i], nums[i + 1]] = [nums[i + 1], nums[i]];
         }
     }
 }
@@ -506,6 +541,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    wiggleSort(nums: number[]): void {
+        for (let i = 1; i < nums.length; i++) {
+            if (
+                (i % 2 == 1 && nums[i] < nums[i - 1]) ||
+                (i % 2 == 0 && nums[i] > nums[i - 1])
+            ) {
+                [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -648,6 +702,22 @@ impl Solution {
             let cmp = if nums[i] > nums[i - 1] { 1 } else { 0 };
             if (i % 2) ^ cmp != 0 {
                 nums.swap(i, i - 1);
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    wiggleSort(nums: number[]): void {
+        for (let i = 1; i < nums.length; i++) {
+            if ((i % 2) ^ Number(nums[i] > nums[i - 1])) {
+                [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
             }
         }
     }

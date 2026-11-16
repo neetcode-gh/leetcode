@@ -270,7 +270,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn add_binary(a: String, b: String) -> String {
@@ -297,6 +296,40 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} a
+     * @param {string} b
+     * @return {string}
+     */
+    addBinary(a: string, b: string): string {
+        let res: string[] = [];
+        let carry = 0;
+
+        a = a.split('').reverse().join('');
+        b = b.split('').reverse().join('');
+
+        for (let i = 0; i < Math.max(a.length, b.length); i++) {
+            const digitA = i < a.length ? Number(a[i]) : 0;
+            const digitB = i < b.length ? Number(b[i]) : 0;
+
+            const total = digitA + digitB + carry;
+            const char = (total % 2).toString();
+            res.push(char);
+            carry = Math.floor(total / 2);
+        }
+
+        if (carry) {
+            res.push('1');
+        }
+        res.reverse();
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -541,7 +574,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn add_binary(a: String, b: String) -> String {
@@ -570,6 +602,37 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} a
+     * @param {string} b
+     * @return {string}
+     */
+    addBinary(a: string, b: string): string {
+        let res: number[] = [];
+        let carry = 0;
+
+        let i = a.length - 1,
+            j = b.length - 1;
+        while (i >= 0 || j >= 0 || carry > 0) {
+            const digitA = i >= 0 ? Number(a[i]) : 0;
+            const digitB = j >= 0 ? Number(b[j]) : 0;
+
+            const total = digitA + digitB + carry;
+            res.push(total % 2);
+            carry = Math.floor(total / 2);
+
+            i--;
+            j--;
+        }
+        res.reverse();
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

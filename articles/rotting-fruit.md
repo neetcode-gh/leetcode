@@ -176,7 +176,7 @@ class Solution {
      * @return {number}
      */
     orangesRotting(grid) {
-        const q = [];
+        const q = new Queue();
         let fresh = 0;
         let time = 0;
 
@@ -197,10 +197,10 @@ class Solution {
             [1, 0],
             [-1, 0],
         ];
-        while (fresh > 0 && q.length > 0) {
-            const length = q.length;
+        while (fresh > 0 && !q.isEmpty()) {
+            const length = q.size();
             for (let i = 0; i < length; i++) {
-                const [currR, currC] = q.shift();
+                const [currR, currC] = q.pop();
 
                 for (const [dr, dc] of directions) {
                     const row = currR + dr;
@@ -471,6 +471,62 @@ impl Solution {
             time += 1;
         }
         if fresh == 0 { time } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    orangesRotting(grid: number[][]): number {
+        const q = new Queue();
+        let fresh = 0;
+        let time = 0;
+
+        for (let r = 0; r < grid.length; r++) {
+            for (let c = 0; c < grid[0].length; c++) {
+                if (grid[r][c] === 1) {
+                    fresh++;
+                }
+                if (grid[r][c] === 2) {
+                    q.push([r, c]);
+                }
+            }
+        }
+
+        const directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        while (fresh > 0 && !q.isEmpty()) {
+            const length = q.size();
+            for (let i = 0; i < length; i++) {
+                const [currR, currC]: number[] = q.pop();
+
+                for (const [dr, dc] of directions) {
+                    const row = currR + dr;
+                    const col = currC + dc;
+                    if (
+                        row >= 0 &&
+                        row < grid.length &&
+                        col >= 0 &&
+                        col < grid[0].length &&
+                        grid[row][col] === 1
+                    ) {
+                        grid[row][col] = 2;
+                        q.push([row, col]);
+                        fresh--;
+                    }
+                }
+            }
+            time++;
+        }
+        return fresh === 0 ? time : -1;
     }
 }
 ```
@@ -1000,6 +1056,71 @@ impl Solution {
         }
 
         time
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    orangesRotting(grid: number[][]): number {
+        let ROWS = grid.length,
+            COLS = grid[0].length;
+        let fresh = 0,
+            time = 0;
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (grid[r][c] === 1) fresh++;
+            }
+        }
+
+        let directions: number[][] = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+
+        while (fresh > 0) {
+            let flag = false;
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (grid[r][c] === 2) {
+                        for (let [dr, dc] of directions) {
+                            let row = r + dr,
+                                col = c + dc;
+                            if (
+                                row >= 0 &&
+                                col >= 0 &&
+                                row < ROWS &&
+                                col < COLS &&
+                                grid[row][col] === 1
+                            ) {
+                                grid[row][col] = 3;
+                                fresh--;
+                                flag = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!flag) return -1;
+
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (grid[r][c] === 3) grid[r][c] = 2;
+                }
+            }
+
+            time++;
+        }
+
+        return time;
     }
 }
 ```

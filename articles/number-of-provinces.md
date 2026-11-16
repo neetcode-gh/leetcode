@@ -272,6 +272,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} isConnected
+     * @return {number}
+     */
+    findCircleNum(isConnected: number[][]): number {
+        const n = isConnected.length;
+        const visited: boolean[] = new Array(n).fill(false);
+        let res = 0;
+
+        const dfs = (node: number): void => {
+            visited[node] = true;
+            for (let nei = 0; nei < n; nei++) {
+                if (isConnected[node][nei] === 1 && !visited[nei]) {
+                    dfs(nei);
+                }
+            }
+        };
+
+        for (let i = 0; i < n; i++) {
+            if (!visited[i]) {
+                dfs(i);
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,6 +568,41 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} isConnected
+     * @return {number}
+     */
+    findCircleNum(isConnected: number[][]): number {
+        const n = isConnected.length;
+        let res = 0;
+
+        const dfs = (node: number): void => {
+            isConnected[node][node] = 0;
+            for (let nei = 0; nei < n; nei++) {
+                if (
+                    node !== nei &&
+                    isConnected[node][nei] === 1 &&
+                    isConnected[nei][nei] === 1
+                ) {
+                    dfs(nei);
+                }
+            }
+        };
+
+        for (let i = 0; i < n; i++) {
+            if (isConnected[i][i] === 1) {
+                dfs(i);
+                res++;
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -822,6 +889,39 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} isConnected
+     * @return {number}
+     */
+    findCircleNum(isConnected: number[][]): number {
+        const n = isConnected.length;
+        const visited: boolean[] = new Array(n).fill(false);
+        const q = new Queue();
+        let res = 0;
+
+        for (let i = 0; i < n; i++) {
+            if (!visited[i]) {
+                res++;
+                visited[i] = true;
+                q.enqueue(i);
+                while (!q.isEmpty()) {
+                    const node: number = q.dequeue();
+                    for (let nei = 0; nei < n; nei++) {
+                        if (isConnected[node][nei] && !visited[nei]) {
+                            visited[nei] = true;
+                            q.enqueue(nei);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1342,6 +1442,83 @@ impl Solution {
             }
         }
         dsu.components
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+    private components: number;
+
+    constructor(n: number) {
+        this.Parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+        this.components = n;
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+
+        this.components--;
+        if (this.Size[pu] >= this.Size[pv]) {
+            this.Size[pu] += this.Size[pv];
+            this.Parent[pv] = pu;
+        } else {
+            this.Size[pv] += this.Size[pu];
+            this.Parent[pu] = pv;
+        }
+        return true;
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    numOfComps(): number {
+        return this.components;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} isConnected
+     * @return {number}
+     */
+    findCircleNum(isConnected: number[][]): number {
+        const n = isConnected.length;
+        const dsu = new DSU(n);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (isConnected[i][j]) {
+                    dsu.union(i, j);
+                }
+            }
+        }
+        return dsu.numOfComps();
     }
 }
 ```

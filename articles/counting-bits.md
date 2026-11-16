@@ -188,6 +188,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[]}
+     */
+    countBits(n: number): number[] {
+        let res: number[] = [];
+        for (let num = 0; num <= n; num++) {
+            let one = 0;
+            for (let i = 0; i < 32; i++) {
+                if ((num & (1 << i)) != 0) {
+                    one++;
+                }
+            }
+            res.push(one);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +389,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[]}
+     */
+    countBits(n: number): number[] {
+        let res: number[] = new Array(n + 1).fill(0);
+        for (let i = 1; i <= n; i++) {
+            let num = i;
+            while (num !== 0) {
+                res[i]++;
+                num &= num - 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,6 +538,22 @@ class Solution {
 impl Solution {
     pub fn count_bits(n: i32) -> Vec<i32> {
         (0..=n).map(|i| i.count_ones() as i32).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[]}
+     */
+    countBits(n: number): number[] {
+        let res: number[] = [];
+        for (let i = 0; i <= n; i++) {
+            res.push(i.toString(2).split('1').length - 1);
+        }
+        return res;
     }
 }
 ```
@@ -701,6 +759,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[]}
+     */
+    countBits(n: number): number[] {
+        const dp: number[] = new Array(n + 1).fill(0);
+        let offset = 1;
+
+        for (let i = 1; i <= n; i++) {
+            if (offset * 2 == i) {
+                offset = i;
+            }
+            dp[i] = 1 + dp[i - offset];
+        }
+        return dp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -850,6 +929,22 @@ impl Solution {
             dp[i] = dp[i >> 1] + (i as i32 & 1);
         }
         dp
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[]}
+     */
+    countBits(n: number): number[] {
+        let dp: number[] = new Array(n + 1).fill(0);
+        for (let i = 1; i <= n; i++) {
+            dp[i] = dp[i >> 1] + (i & 1);
+        }
+        return dp;
     }
 }
 ```

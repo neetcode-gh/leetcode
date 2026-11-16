@@ -320,6 +320,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private res: Set<string>;
+
+    constructor() {
+        this.res = new Set();
+    }
+
+    /**
+     * @param {number[]} candidates
+     * @param {number} target
+     * @return {number[][]}
+     */
+    combinationSum2(candidates: number[], target: number): number[][] {
+        this.res.clear();
+        candidates.sort((a, b) => a - b);
+        this.generateSubsets(candidates, target, 0, [], 0);
+        return Array.from(this.res, (subset) => JSON.parse(subset));
+    }
+
+    /**
+     * @param {number[]} candidates
+     * @param {number} target
+     * @param {number} i
+     * @param {number[]} cur
+     * @param {number} total
+     * @return {void}
+     */
+    generateSubsets(candidates: number[], target: number, i: number, cur: number[], total: number): void {
+        if (total === target) {
+            this.res.add(JSON.stringify([...cur]));
+            return;
+        }
+        if (total > target || i === candidates.length) {
+            return;
+        }
+
+        cur.push(candidates[i]);
+        this.generateSubsets(
+            candidates,
+            target,
+            i + 1,
+            cur,
+            total + candidates[i],
+        );
+        cur.pop();
+
+        this.generateSubsets(candidates, target, i + 1, cur, total);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,6 +718,58 @@ impl Solution {
 
         dfs(&candidates, target, 0, &mut vec![], 0, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    private res: number[][];
+
+    constructor() {
+        this.res = [];
+    }
+
+    /**
+     * @param {number[]} candidates
+     * @param {number} target
+     * @return {number[][]}
+     */
+    combinationSum2(candidates: number[], target: number): number[][] {
+        this.res = [];
+        candidates.sort((a, b) => a - b);
+        this.dfs(candidates, target, 0, [], 0);
+        return this.res;
+    }
+
+    /**
+     * @param {number[]} candidates
+     * @param {number} target
+     * @param {number} i
+     * @param {number[]} cur
+     * @param {number} total
+     * @return {void}
+     */
+    dfs(candidates: number[], target: number, i: number, cur: number[], total: number): void {
+        if (total === target) {
+            this.res.push([...cur]);
+            return;
+        }
+        if (total > target || i === candidates.length) {
+            return;
+        }
+
+        cur.push(candidates[i]);
+        this.dfs(candidates, target, i + 1, cur, total + candidates[i]);
+        cur.pop();
+
+        while (
+            i + 1 < candidates.length &&
+            candidates[i] === candidates[i + 1]
+        ) {
+            i++;
+        }
+        this.dfs(candidates, target, i + 1, cur, total);
     }
 }
 ```
@@ -1102,6 +1206,64 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private res: number[][];
+    private count: Map<number, number>;
+
+    constructor() {
+        this.res = [];
+        this.count = new Map();
+    }
+
+    /**
+     * @param {number[]} candidates
+     * @param {number} target
+     * @return {number[][]}
+     */
+    combinationSum2(nums: number[], target: number): number[][] {
+        const cur: number[] = [];
+        const A: number[] = [];
+
+        for (const num of nums) {
+            if (!this.count.has(num)) {
+                A.push(num);
+            }
+            this.count.set(num, (this.count.get(num) || 0) + 1);
+        }
+        this.backtrack(A, target, cur, 0);
+        return this.res;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @param {number[]} cur
+     * @param {number} i
+     * @return {void}
+     */
+    backtrack(nums: number[], target: number, cur: number[], i: number): void {
+        if (target === 0) {
+            this.res.push([...cur]);
+            return;
+        }
+        if (target < 0 || i >= nums.length) {
+            return;
+        }
+
+        if (this.count.get(nums[i])! > 0) {
+            cur.push(nums[i]);
+            this.count.set(nums[i], this.count.get(nums[i])! - 1);
+            this.backtrack(nums, target - nums[i], cur, i);
+            this.count.set(nums[i], this.count.get(nums[i])! + 1);
+            cur.pop();
+        }
+
+        this.backtrack(nums, target, cur, i + 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1434,6 +1596,48 @@ impl Solution {
 
         dfs(&candidates, target, 0, &mut vec![], 0, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    private res: number[][];
+
+    constructor() {
+        this.res = [];
+    }
+
+    /**
+     * @param {number[]} candidates
+     * @param {number} target
+     * @return {number[][]}
+     */
+    combinationSum2(candidates: number[], target: number): number[][] {
+        this.res = [];
+        candidates.sort((a, b) => a - b);
+
+        const dfs = (idx: number, path: number[], cur: number): void => {
+            if (cur === target) {
+                this.res.push([...path]);
+                return;
+            }
+            for (let i = idx; i < candidates.length; i++) {
+                if (i > idx && candidates[i] === candidates[i - 1]) {
+                    continue;
+                }
+                if (cur + candidates[i] > target) {
+                    break;
+                }
+
+                path.push(candidates[i]);
+                dfs(i + 1, path, cur + candidates[i]);
+                path.pop();
+            }
+        };
+
+        dfs(0, [], 0);
+        return this.res;
     }
 }
 ```

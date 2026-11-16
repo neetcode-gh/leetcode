@@ -189,6 +189,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isSubsequence(s: string, t: string): boolean {
+        const rec = (i: number, j: number): boolean => {
+            if (i === s.length) return true;
+            if (j === t.length) return false;
+            if (s[i] === t[j]) return rec(i + 1, j + 1);
+            return rec(i, j + 1);
+        };
+        return rec(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,6 +483,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isSubsequence(s: string, t: string): boolean {
+        const n = s.length,
+            m = t.length;
+        const memo: number[][] = Array.from({ length: n }, () => Array(m).fill(-1));
+
+        const rec = (i: number, j: number): boolean => {
+            if (i === n) return true;
+            if (j === m) return false;
+            if (memo[i][j] !== -1) return memo[i][j] === 1;
+            if (s[i] === t[j]) {
+                memo[i][j] = rec(i + 1, j + 1) ? 1 : 0;
+            } else {
+                memo[i][j] = rec(i, j + 1) ? 1 : 0;
+            }
+            return memo[i][j] === 1;
+        };
+
+        return rec(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -726,6 +774,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isSubsequence(s: string, t: string): boolean {
+        const n = s.length,
+            m = t.length;
+        const dp: boolean[][] = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(false),
+        );
+
+        for (let j = 0; j <= m; j++) {
+            dp[n][j] = true;
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let j = m - 1; j >= 0; j--) {
+                if (s[i] === t[j]) {
+                    dp[i][j] = dp[i + 1][j + 1];
+                } else {
+                    dp[i][j] = dp[i][j + 1];
+                }
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -890,6 +971,27 @@ impl Solution {
             j += 1;
         }
         i == s.len()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isSubsequence(s: string, t: string): boolean {
+        let i = 0,
+            j = 0;
+        while (i < s.length && j < t.length) {
+            if (s.charAt(i) == t.charAt(j)) {
+                i++;
+            }
+            j++;
+        }
+        return i == s.length;
     }
 }
 ```
@@ -1190,6 +1292,39 @@ impl Solution {
         }
 
         i == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {boolean}
+     */
+    isSubsequence(s: string, t: string): boolean {
+        const n = s.length,
+            m = t.length;
+        if (m === 0) return n === 0;
+
+        const store: number[][] = Array.from({ length: m }, () => Array(26).fill(m + 1));
+        store[m - 1][t.charCodeAt(m - 1) - 'a'.charCodeAt(0)] = m - 1;
+
+        for (let i = m - 2; i >= 0; i--) {
+            store[i] = [...store[i + 1]];
+            store[i][t.charCodeAt(i) - 'a'.charCodeAt(0)] = i;
+        }
+
+        let i = 0,
+            j = 0;
+        while (i < n && j < m) {
+            j = store[j][s.charCodeAt(i) - 'a'.charCodeAt(0)] + 1;
+            if (j > m) return false;
+            i++;
+        }
+
+        return i === n;
     }
 }
 ```

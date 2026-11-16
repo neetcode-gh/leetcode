@@ -168,6 +168,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNonDuplicate(nums: number[]): number {
+        const n = nums.length;
+        for (let i = 0; i < n; i++) {
+            if (
+                (i > 0 && nums[i] === nums[i - 1]) ||
+                (i < n - 1 && nums[i] === nums[i + 1])
+            ) {
+                continue;
+            }
+            return nums[i];
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,6 +317,22 @@ impl Solution {
             xorr ^= num;
         }
         xorr
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNonDuplicate(nums: number[]): number {
+        let xorr = 0;
+        for (const num of nums) {
+            xorr ^= num;
+        }
+        return xorr;
     }
 }
 ```
@@ -563,6 +601,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNonDuplicate(nums: number[]): number {
+        let l = 0,
+            r = nums.length - 1;
+
+        while (l <= r) {
+            let m = l + Math.floor((r - l) / 2);
+            if (
+                (m - 1 < 0 || nums[m - 1] !== nums[m]) &&
+                (m + 1 === nums.length || nums[m] !== nums[m + 1])
+            ) {
+                return nums[m];
+            }
+
+            let leftSize = m - 1 >= 0 && nums[m - 1] === nums[m] ? m - 1 : m;
+            if (leftSize % 2 === 1) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -787,6 +856,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNonDuplicate(nums: number[]): number {
+        let l = 0,
+            r = nums.length - 1;
+
+        while (l < r) {
+            let m = Math.floor(l + (r - l) / 2);
+            if (m & 1) {
+                m--;
+            }
+            if (nums[m] !== nums[m + 1]) {
+                r = m;
+            } else {
+                l = m + 2;
+            }
+        }
+
+        return nums[l];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -981,6 +1077,30 @@ impl Solution {
         }
 
         nums[l]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    singleNonDuplicate(nums: number[]): number {
+        let l = 0,
+            r = nums.length - 1;
+
+        while (l < r) {
+            let m = (l + r) >> 1;
+            if (nums[m] !== nums[m ^ 1]) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return nums[l];
     }
 }
 ```

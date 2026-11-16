@@ -301,6 +301,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {Interval[]} intervals
+     * @returns {number}
+     */
+    minMeetingRooms(intervals: Interval[]): number {
+        intervals.sort((a, b) => a.start - b.start);
+        const minHeap = new MinPriorityQueue();
+        for (const interval of intervals) {
+            if (!minHeap.isEmpty() && minHeap.front() <= interval.start) {
+                minHeap.pop();
+            }
+            minHeap.push(interval.end);
+        }
+        return minHeap.size();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -601,6 +621,30 @@ impl Solution {
             res = res.max(prev);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Interval[]} intervals
+     * @returns {number}
+     */
+    minMeetingRooms(intervals: Interval[]): number {
+        const mp = new Map<number, number>();
+        for (const i of intervals) {
+            mp.set(i.start, (mp.get(i.start) || 0) + 1);
+            mp.set(i.end, (mp.get(i.end) || 0) - 1);
+        }
+        const sortedKeys = Array.from(mp.keys()).sort((a, b) => a - b);
+        let prev = 0,
+            res = 0;
+        for (const key of sortedKeys) {
+            prev += mp.get(key)!;
+            res = Math.max(res, prev);
+        }
+        return res;
     }
 }
 ```
@@ -984,6 +1028,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {Interval[]} intervals
+     * @returns {number}
+     */
+    minMeetingRooms(intervals: Interval[]): number {
+        const start = intervals.map((i) => i.start).sort((a, b) => a - b);
+        const end = intervals.map((i) => i.end).sort((a, b) => a - b);
+
+        let res = 0,
+            count = 0,
+            s = 0,
+            e = 0;
+        while (s < intervals.length) {
+            if (start[s] < end[e]) {
+                s++;
+                count++;
+            } else {
+                e++;
+                count--;
+            }
+            res = Math.max(res, count);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1208,27 +1281,27 @@ public class Solution {
  */
 
 func minMeetingRooms(intervals []Interval) int {
-	var time [][]int
-	for _, i := range intervals {
-		time = append(time, []int{i.start, 1})
-		time = append(time, []int{i.end, -1})
-	}
+    var time [][]int
+    for _, i := range intervals {
+        time = append(time, []int{i.start, 1})
+        time = append(time, []int{i.end, -1})
+    }
 
-	sort.Slice(time, func(i, j int) bool {
-		if time[i][0] == time[j][0] {
-			return time[i][1] < time[j][1]
-		}
-		return time[i][0] < time[j][0]
-	})
+    sort.Slice(time, func(i, j int) bool {
+        if time[i][0] == time[j][0] {
+            return time[i][1] < time[j][1]
+        }
+        return time[i][0] < time[j][0]
+    })
 
-	res, count := 0, 0
-	for _, t := range time {
-		count += t[1]
-		if count > res {
-			res = count
-		}
-	}
-	return res
+    res, count := 0, 0
+    for _, t := range time {
+        count += t[1]
+        if count > res {
+            res = count
+        }
+    }
+    return res
 }
 ```
 
@@ -1322,6 +1395,32 @@ impl Solution {
             res = res.max(count);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {Interval[]} intervals
+     * @returns {number}
+     */
+    minMeetingRooms(intervals: Interval[]): number {
+        const time: number[][] = [];
+        for (const i of intervals) {
+            time.push([i.start, 1]);
+            time.push([i.end, -1]);
+        }
+
+        time.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+        let res = 0,
+            count = 0;
+        for (const t of time) {
+            count += t[1];
+            res = Math.max(res, count);
+        }
+        return res;
     }
 }
 ```

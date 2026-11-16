@@ -381,7 +381,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -423,6 +422,53 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} l1
+     * @param {ListNode} l2
+     * @param {number} carry
+     * @return {ListNode}
+     */
+    add(l1: ListNode | null, l2: ListNode | null, carry: number): ListNode | null {
+        if (!l1 && !l2 && carry === 0) {
+            return null;
+        }
+
+        let v1 = 0;
+        let v2 = 0;
+        if (l1) {
+            v1 = l1.val;
+        }
+        if (l2) {
+            v2 = l2.val;
+        }
+
+        let sum = v1 + v2 + carry;
+        let newCarry = Math.floor(sum / 10);
+        let nodeValue = sum % 10;
+
+        let nextNode = this.add(
+            l1 ? l1.next : null,
+            l2 ? l2.next : null,
+            newCarry,
+        );
+
+        return new ListNode(nodeValue, nextNode);
+    }
+
+    /**
+     * @param {ListNode} l1
+     * @param {ListNode} l2
+     * @return {ListNode}
+     */
+    addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+        return this.add(l1, l2, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -776,7 +822,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -812,6 +857,38 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {ListNode} l1
+     * @param {ListNode} l2
+     * @return {ListNode}
+     */
+    addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+        const dummy = new ListNode();
+        let cur = dummy;
+
+        let carry = 0;
+        while (l1 || l2 || carry) {
+            const v1 = l1 ? l1.val : 0;
+            const v2 = l2 ? l2.val : 0;
+
+            let val = v1 + v2 + carry;
+            carry = Math.floor(val / 10);
+            val = val % 10;
+            cur.next = new ListNode(val);
+
+            cur = cur.next;
+            l1 = l1 ? l1.next : null;
+            l2 = l2 ? l2.next : null;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

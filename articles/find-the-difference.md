@@ -194,6 +194,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {character}
+     */
+    findTheDifference(s: string, t: string): string {
+        let countS: number[] = Array(26).fill(0);
+        let countT: number[] = Array(26).fill(0);
+
+        for (let char of s) countS[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        for (let char of t) countT[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+
+        for (let i = 0; i < 26; i++) {
+            if (countT[i] > countS[i]) {
+                return String.fromCharCode(i + 'a'.charCodeAt(0));
+            }
+        }
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +410,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {character}
+     */
+    findTheDifference(s: string, t: string): string {
+        let count: number[] = Array(26).fill(0);
+
+        for (let char of t) count[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        for (let char of s) count[char.charCodeAt(0) - 'a'.charCodeAt(0)]--;
+
+        for (let i = 0; i < 26; i++) {
+            if (count[i] === 1) {
+                return String.fromCharCode(i + 'a'.charCodeAt(0));
+            }
+        }
+        return '';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +604,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {character}
+     */
+    findTheDifference(s: string, t: string): string {
+        const sArr = s.split('').sort();
+        const tArr = t.split('').sort();
+        for (let i = 0; i < sArr.length; i++) {
+            if (sArr[i] !== tArr[i]) {
+                return tArr[i];
+            }
+        }
+        return tArr[tArr.length - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,6 +776,27 @@ impl Solution {
         let sum_s: i32 = s.bytes().map(|b| b as i32).sum();
         let sum_t: i32 = t.bytes().map(|b| b as i32).sum();
         (sum_t - sum_s) as u8 as char
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {character}
+     */
+    findTheDifference(s: string, t: string): string {
+        let sumS = 0,
+            sumT = 0;
+        for (let char of s) {
+            sumS += char.charCodeAt(0);
+        }
+        for (let char of t) {
+            sumT += char.charCodeAt(0);
+        }
+        return String.fromCharCode(sumT - sumS);
     }
 }
 ```
@@ -868,6 +956,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {character}
+     */
+    findTheDifference(s: string, t: string): string {
+        let res = 0;
+        for (let char of s) {
+            res -= char.charCodeAt(0);
+        }
+        for (let char of t) {
+            res += char.charCodeAt(0);
+        }
+        return String.fromCharCode(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1019,6 +1127,26 @@ impl Solution {
         for b in s.bytes() { res ^= b; }
         for b in t.bytes() { res ^= b; }
         res as char
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {character}
+     */
+    findTheDifference(s: string, t: string): string {
+        let res = 0;
+        for (let char of s) {
+            res ^= char.charCodeAt(0);
+        }
+        for (let char of t) {
+            res ^= char.charCodeAt(0);
+        }
+        return String.fromCharCode(res);
     }
 }
 ```

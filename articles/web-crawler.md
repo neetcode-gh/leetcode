@@ -150,6 +150,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private string startHostname;
+    private HashSet<string> visited = new HashSet<string>();
+
+    private string GetHostname(string url) {
+        // split url by slashes
+        // for instance, "http://example.org/foo/bar" will be split into
+        // "http:", "", "example.org", "foo", "bar"
+        // the hostname is the 2-nd (0-indexed) element
+        return url.Split('/')[2];
+    }
+
+    private void Dfs(string url, HtmlParser htmlParser) {
+        visited.Add(url);
+        foreach (string nextUrl in htmlParser.GetUrls(url)) {
+            if (GetHostname(nextUrl) == startHostname && !visited.Contains(nextUrl)) {
+                Dfs(nextUrl, htmlParser);
+            }
+        }
+    }
+
+    public IList<string> Crawl(string startUrl, HtmlParser htmlParser) {
+        startHostname = GetHostname(startUrl);
+        Dfs(startUrl, htmlParser);
+        return new List<string>(visited);
+    }
+}
+```
+
 ```go
 /**
  * // This is HtmlParser's API interface.
@@ -267,7 +297,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn crawl(start_url: String, html_parser: HtmlParser) -> Vec<String> {
+    pub fn crawl(start_url: String, html_parser: &HtmlParser) -> Vec<String> {
         fn get_hostname(url: &str) -> &str {
             url.split('/').nth(2).unwrap()
         }
@@ -284,8 +314,47 @@ impl Solution {
             }
         }
 
-        dfs(start_url, &start_hostname, &html_parser, &mut visited);
+        dfs(start_url, &start_hostname, html_parser, &mut visited);
         visited.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} startUrl
+     * @param {HtmlParser} htmlParser
+     * @return {string[]}
+     */
+    crawl(startUrl: string, htmlParser: HtmlParser): string[] {
+        function getHostname(url: string): string {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split('/')[2];
+        }
+
+        const startHostname = getHostname(startUrl);
+        const visited = new Set<string>();
+
+        function dfs(url: string): void {
+            visited.add(url);
+
+            for (const nextUrl of htmlParser.getUrls(url)) {
+                if (
+                    getHostname(nextUrl) === startHostname &&
+                    !visited.has(nextUrl)
+                ) {
+                    dfs(nextUrl);
+                }
+            }
+        }
+
+        dfs(startUrl);
+
+        return Array.from(visited);
     }
 }
 ```
@@ -419,10 +488,10 @@ class Solution {
 
         const startHostname = getHostname(startUrl);
         const visited = new Set([startUrl]);
-        const queue = [startUrl];
+        const queue = new Queue([startUrl]);
 
-        while (queue.length > 0) {
-            const url = queue.shift();
+        while (!queue.isEmpty()) {
+            const url = queue.pop();
             for (const nextUrl of htmlParser.getUrls(url)) {
                 if (
                     getHostname(nextUrl) === startHostname &&
@@ -599,7 +668,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn crawl(start_url: String, html_parser: HtmlParser) -> Vec<String> {
+    pub fn crawl(start_url: String, html_parser: &HtmlParser) -> Vec<String> {
         fn get_hostname(url: &str) -> &str {
             url.split('/').nth(2).unwrap()
         }
@@ -620,6 +689,44 @@ impl Solution {
         }
 
         visited.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} startUrl
+     * @param {HtmlParser} htmlParser
+     * @return {string[]}
+     */
+    crawl(startUrl: string, htmlParser: HtmlParser): string[] {
+        function getHostname(url: string): string {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split('/')[2];
+        }
+
+        const startHostname = getHostname(startUrl);
+        const visited = new Set<string>([startUrl]);
+        const queue = new Queue([startUrl]);
+
+        while (!queue.isEmpty()) {
+            const url: string = queue.pop();
+            for (const nextUrl of htmlParser.getUrls(url)) {
+                if (
+                    getHostname(nextUrl) === startHostname &&
+                    !visited.has(nextUrl)
+                ) {
+                    queue.push(nextUrl);
+                    visited.add(nextUrl);
+                }
+            }
+        }
+
+        return Array.from(visited);
     }
 }
 ```

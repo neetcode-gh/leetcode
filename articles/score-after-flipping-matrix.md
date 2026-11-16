@@ -350,6 +350,48 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    matrixScore(grid: number[][]): number {
+        let ROWS = grid.length,
+            COLS = grid[0].length;
+
+        for (let r = 0; r < ROWS; r++) {
+            if (grid[r][0] === 0) {
+                for (let c = 0; c < COLS; c++) {
+                    grid[r][c] ^= 1;
+                }
+            }
+        }
+
+        for (let c = 0; c < COLS; c++) {
+            let oneCnt = 0;
+            for (let r = 0; r < ROWS; r++) {
+                oneCnt += grid[r][c];
+            }
+            if (oneCnt < ROWS - oneCnt) {
+                for (let r = 0; r < ROWS; r++) {
+                    grid[r][c] ^= 1;
+                }
+            }
+        }
+
+        let res = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                res += grid[r][c] << (COLS - c - 1);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,6 +611,32 @@ impl Solution {
             res += cnt * (1 << (cols - c - 1));
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    matrixScore(grid: number[][]): number {
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        let res = ROWS * (1 << (COLS - 1));
+
+        for (let c = 1; c < COLS; c++) {
+            let cnt = 0;
+            for (let r = 0; r < ROWS; r++) {
+                if (grid[r][c] !== grid[r][0]) {
+                    cnt++;
+                }
+            }
+            cnt = Math.max(cnt, ROWS - cnt);
+            res += cnt * (1 << (COLS - c - 1));
+        }
+        return res;
     }
 }
 ```

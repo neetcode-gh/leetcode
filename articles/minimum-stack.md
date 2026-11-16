@@ -285,15 +285,15 @@ class MinStack() {
     }
 
     fun top(): Int {
-        return stack.last()
+        return stack.peekLast()
     }
 
     fun getMin(): Int {
         val tmp = ArrayDeque<Int>()
-        var min = stack.last()
+        var min = stack.peekLast()
 
         while (stack.isNotEmpty()) {
-            min = minOf(min, stack.last())
+            min = minOf(min, stack.peekLast())
             tmp.addLast(stack.removeLast())
         }
 
@@ -378,6 +378,57 @@ impl MinStack {
         }
 
         mini
+    }
+}
+```
+
+```typescript
+class MinStack {
+    private stack: number[];
+
+    constructor() {
+        this.stack = [];
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        this.stack.push(val);
+    }
+
+    /**
+     * @return {void}
+     */
+    pop(): void {
+        this.stack.pop();
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        return this.stack[this.stack.length - 1];
+    }
+
+    /**
+     * @return {number}
+     */
+    getMin(): number {
+        const tmp: number[] = [];
+        let mini = this.stack[this.stack.length - 1];
+
+        while (this.stack.length > 0) {
+            mini = Math.min(mini, this.stack[this.stack.length - 1]);
+            tmp.push(this.stack.pop()!);
+        }
+
+        while (tmp.length > 0) {
+            this.stack.push(tmp.pop()!);
+        }
+
+        return mini;
     }
 }
 ```
@@ -627,7 +678,7 @@ class MinStack() {
 
     fun push(`val`: Int) {
         stack.addLast(`val`)
-        val minVal = if (minStack.isNotEmpty()) minOf(`val`, minStack.last()) else `val`
+        val minVal = if (minStack.isNotEmpty()) minOf(`val`, minStack.peekLast()) else `val`
         minStack.addLast(minVal)
     }
 
@@ -637,11 +688,11 @@ class MinStack() {
     }
 
     fun top(): Int {
-        return stack.last()
+        return stack.peekLast()
     }
 
     fun getMin(): Int {
-        return minStack.last()
+        return minStack.peekLast()
     }
 }
 ```
@@ -709,6 +760,55 @@ impl MinStack {
 
     fn get_min(&self) -> i32 {
         *self.min_stack.last().unwrap()
+    }
+}
+```
+
+```typescript
+class MinStack {
+    private stack: number[];
+    private minStack: number[];
+
+    constructor() {
+        this.stack = [];
+        this.minStack = [];
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        this.stack.push(val);
+        val = Math.min(
+            val,
+            this.minStack.length === 0
+                ? val
+                : this.minStack[this.minStack.length - 1],
+        );
+        this.minStack.push(val);
+    }
+
+    /**
+     * @return {void}
+     */
+    pop(): void {
+        this.stack.pop();
+        this.minStack.pop();
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        return this.stack[this.stack.length - 1];
+    }
+
+    /**
+     * @return {number}
+     */
+    getMin(): number {
+        return this.minStack[this.minStack.length - 1];
     }
 }
 ```
@@ -1035,7 +1135,7 @@ class MinStack() {
     }
 
     fun top(): Int {
-        val top = stack.last()
+        val top = stack.peekLast()
         return if (top > 0) (top + min).toInt() else min.toInt()
     }
 
@@ -1129,6 +1229,58 @@ impl MinStack {
 
     fn get_min(&self) -> i32 {
         self.min_val as i32
+    }
+}
+```
+
+```typescript
+class MinStack {
+    private min: number;
+    private stack: number[];
+
+    constructor() {
+        this.min = Infinity;
+        this.stack = [];
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        if (this.stack.length === 0) {
+            this.stack.push(0);
+            this.min = val;
+        } else {
+            this.stack.push(val - this.min);
+            if (val < this.min) this.min = val;
+        }
+    }
+
+    /**
+     * @return {void}
+     */
+    pop(): void {
+        if (this.stack.length === 0) return;
+
+        const pop = this.stack.pop()!;
+
+        if (pop < 0) this.min -= pop;
+    }
+
+    /**
+     * @return {number}
+     */
+    top(): number {
+        const top = this.stack[this.stack.length - 1];
+        return top > 0 ? top + this.min : this.min;
+    }
+
+    /**
+     * @return {number}
+     */
+    getMin(): number {
+        return this.min;
     }
 }
 ```

@@ -309,13 +309,13 @@ class Solution {
         var val = 1
 
         while left <= right {
-            for c in left...right {
+            for c in stride(from: left, through: right, by: 1) {
                 mat[top][c] = val
                 val += 1
             }
             top += 1
 
-            for r in top...bottom {
+            for r in stride(from: top, through: bottom, by: 1) {
                 mat[r][right] = val
                 val += 1
             }
@@ -375,6 +375,53 @@ impl Solution {
         }
 
         mat
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[][]}
+     */
+    generateMatrix(n: number): number[][] {
+        const mat: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(0),
+        );
+        let left = 0,
+            right = n - 1,
+            top = 0,
+            bottom = n - 1,
+            val = 1;
+
+        while (left <= right) {
+            // Fill every val in top row
+            for (let c = left; c <= right; c++) {
+                mat[top][c] = val++;
+            }
+            top++;
+
+            // Fill every val in right col
+            for (let r = top; r <= bottom; r++) {
+                mat[r][right] = val++;
+            }
+            right--;
+
+            // Fill every val in bottom row (reverse order)
+            for (let c = right; c >= left; c--) {
+                mat[bottom][c] = val++;
+            }
+            bottom--;
+
+            // Fill every val in the left col (reverse order)
+            for (let r = bottom; r >= top; r--) {
+                mat[r][left] = val++;
+            }
+            left++;
+        }
+
+        return mat;
     }
 }
 ```
@@ -714,13 +761,13 @@ class Solution {
 
             var l = left, r = right, t = top, b = bottom, v = val
 
-            for c in l...r {
+            for c in stride(from: l, through: r, by: 1) {
                 mat[t][c] = v
                 v += 1
             }
             t += 1
 
-            for row in t...b {
+            for row in stride(from: t, through: b, by: 1) {
                 mat[row][r] = v
                 v += 1
             }
@@ -789,6 +836,60 @@ impl Solution {
 
         fill(&mut mat, 0, n as i32 - 1, 0, n as i32 - 1, 1);
         mat
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[][]}
+     */
+    generateMatrix(n: number): number[][] {
+        const mat: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(0),
+        );
+
+        const fill = (
+            left: number,
+            right: number,
+            top: number,
+            bottom: number,
+            val: number,
+        ): void => {
+            if (left > right || top > bottom) return;
+
+            // Fill every val in top row
+            for (let c = left; c <= right; c++) {
+                mat[top][c] = val++;
+            }
+            top++;
+
+            // Fill every val in right col
+            for (let r = top; r <= bottom; r++) {
+                mat[r][right] = val++;
+            }
+            right--;
+
+            // Fill every val in bottom row (reverse order)
+            for (let c = right; c >= left; c--) {
+                mat[bottom][c] = val++;
+            }
+            bottom--;
+
+            // Fill every val in the left col (reverse order)
+            for (let r = bottom; r >= top; r--) {
+                mat[r][left] = val++;
+            }
+            left++;
+
+            // Recur for the inner layer
+            fill(left, right, top, bottom, val);
+        };
+
+        fill(0, n - 1, 0, n - 1, 1);
+        return mat;
     }
 }
 ```
@@ -1042,6 +1143,39 @@ impl Solution {
         }
 
         mat
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[][]}
+     */
+    generateMatrix(n: number): number[][] {
+        const mat: number[][] = Array.from({ length: n }, () =>
+            Array(n).fill(0),
+        );
+        let r = 0,
+            c = 0,
+            dr = 0,
+            dc = 1;
+
+        for (let val = 0; val < n * n; val++) {
+            mat[r][c] = val + 1;
+            let nextR = (r + dr) % n,
+                nextC = (c + dc) % n;
+            if (nextR < 0) nextR += n;
+            if (nextC < 0) nextC += n;
+            if (mat[nextR][nextC] !== 0) {
+                [dr, dc] = [dc, -dr];
+            }
+            r += dr;
+            c += dc;
+        }
+
+        return mat;
     }
 }
 ```

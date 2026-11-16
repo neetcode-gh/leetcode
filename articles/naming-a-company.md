@@ -249,6 +249,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} ideas
+     * @return {number}
+     */
+    distinctNames(ideas: string[]): number {
+        let n = ideas.length;
+        let res = new Set<string>();
+        let ideasSet = new Set<string>(ideas);
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                let A = ideas[j][0] + ideas[i].slice(1);
+                let B = ideas[i][0] + ideas[j].slice(1);
+
+                if (!ideasSet.has(A) && !ideasSet.has(B)) {
+                    res.add(A + ' ' + B);
+                    res.add(B + ' ' + A);
+                }
+            }
+        }
+
+        return res.size;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -570,6 +598,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} ideas
+     * @return {number}
+     */
+    distinctNames(ideas: string[]): number {
+        const wordMap = new Map<string, Set<string>>();
+        for (let word of ideas) {
+            let key = word[0];
+            if (!wordMap.has(key)) {
+                wordMap.set(key, new Set());
+            }
+            wordMap.get(key)!.add(word.slice(1));
+        }
+
+        let res = 0;
+        for (let [char1, set1] of wordMap) {
+            for (let [char2, set2] of wordMap) {
+                if (char1 === char2) continue;
+
+                let intersect = 0;
+                for (let w of set1) {
+                    if (set2.has(w)) {
+                        intersect++;
+                    }
+                }
+
+                let distinct1 = set1.size - intersect;
+                let distinct2 = set2.size - intersect;
+                res += distinct1 * distinct2;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -827,6 +894,41 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} ideas
+     * @return {number}
+     */
+    distinctNames(ideas: string[]): number {
+        const suffixes: Set<string>[] = Array.from(
+            { length: 26 },
+            () => new Set<string>(),
+        );
+        for (let w of ideas) {
+            suffixes[w.charCodeAt(0) - 97].add(w.slice(1));
+        }
+
+        let res = 0;
+        for (let i = 0; i < 26; i++) {
+            for (let j = i + 1; j < 26; j++) {
+                let intersect = 0;
+                for (let s of suffixes[i]) {
+                    if (suffixes[j].has(s)) {
+                        intersect++;
+                    }
+                }
+                res +=
+                    2 *
+                    (suffixes[i].size - intersect) *
+                    (suffixes[j].size - intersect);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -1139,6 +1241,43 @@ impl Solution {
             }
         }
         2 * res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} ideas
+     * @return {number}
+     */
+    distinctNames(ideas: string[]): number {
+        const mp = new Map<string, boolean[]>();
+        const count: number[][] = Array.from({ length: 26 }, () =>
+            Array(26).fill(0),
+        );
+        let res = 0;
+
+        for (const s of ideas) {
+            const firstChar = s.charCodeAt(0) - 97;
+            const suffix = s.slice(1);
+            if (!mp.has(suffix)) mp.set(suffix, new Array(26).fill(false));
+            mp.get(suffix)![firstChar] = true;
+        }
+
+        for (const arr of mp.values()) {
+            for (let i = 0; i < 26; i++) {
+                if (arr[i]) {
+                    for (let j = 0; j < 26; j++) {
+                        if (!arr[j]) {
+                            count[i][j]++;
+                            res += count[j][i];
+                        }
+                    }
+                }
+            }
+        }
+        return 2 * res;
     }
 }
 ```

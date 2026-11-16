@@ -430,6 +430,61 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private maxval: number;
+
+    constructor() {
+        this.maxval = 0;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    longestConsecutive(root: TreeNode | null): number {
+        this.maxval = 0;
+        this.longestPath(root);
+        return this.maxval;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    longestPath(root: TreeNode | null): number[] {
+        if (root === null) {
+            return [0, 0];
+        }
+
+        let inr = 1,
+            dcr = 1;
+
+        if (root.left !== null) {
+            let left = this.longestPath(root.left);
+            if (root.val === root.left.val + 1) {
+                dcr = left[1] + 1;
+            } else if (root.val === root.left.val - 1) {
+                inr = left[0] + 1;
+            }
+        }
+
+        if (root.right !== null) {
+            let right = this.longestPath(root.right);
+            if (root.val === root.right.val + 1) {
+                dcr = Math.max(dcr, right[1] + 1);
+            } else if (root.val === root.right.val - 1) {
+                inr = Math.max(inr, right[0] + 1);
+            }
+        }
+
+        this.maxval = Math.max(this.maxval, dcr + inr - 1);
+
+        return [inr, dcr];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -228,6 +228,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    lengthOfLastWord(s: string): number {
+        let length = 0,
+            i = 0;
+        while (i < s.length) {
+            if (s[i] === ' ') {
+                while (i < s.length && s[i] === ' ') {
+                    i++;
+                }
+                if (i === s.length) {
+                    return length;
+                }
+                length = 0;
+            } else {
+                length++;
+                i++;
+            }
+        }
+        return length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +427,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    lengthOfLastWord(s: string): number {
+        let n = s.length;
+        let i = n - 1,
+            length = 0;
+        while (s.charAt(i) === ' ') {
+            i--;
+        }
+        while (i >= 0 && s.charAt(i) !== ' ') {
+            i--;
+            length++;
+        }
+        return length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -497,6 +547,18 @@ impl Solution {
     pub fn length_of_last_word(s: String) -> i32 {
         let s = s.trim_end();
         (s.len() - s.rfind(' ').map_or(0, |i| i + 1)) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    lengthOfLastWord(s: string): number {
+        return s.trim().split(' ').pop()!.length;
     }
 }
 ```

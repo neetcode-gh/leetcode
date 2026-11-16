@@ -220,6 +220,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @return {string}
+     */
+    largestGoodInteger(num: string): string {
+        let res = '';
+        let val = 0;
+
+        for (let i = 0; i < num.length - 2; i++) {
+            if (num[i] === num[i + 1] && num[i] === num[i + 2]) {
+                const tmp = num.slice(i, i + 3);
+                if (val <= parseInt(tmp)) {
+                    val = parseInt(tmp);
+                    res = tmp;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -411,6 +436,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @return {string}
+     */
+    largestGoodInteger(num: string): string {
+        let res = '0';
+
+        for (let i = 0; i < num.length - 2; i++) {
+            if (num[i] === num[i + 1] && num[i] === num[i + 2]) {
+                res = res > num.slice(i, i + 3) ? res : num.slice(i, i + 3);
+            }
+        }
+
+        return res === '0' ? '' : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +635,26 @@ impl Solution {
                 .take(3)
                 .collect()
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @return {string}
+     */
+    largestGoodInteger(num: string): string {
+        let res = -1;
+
+        for (let i = 0; i < num.length - 2; i++) {
+            if (num[i] === num[i + 1] && num[i] === num[i + 2]) {
+                res = Math.max(res, Number(num[i]));
+            }
+        }
+
+        return res !== -1 ? String(res).repeat(3) : '';
     }
 }
 ```

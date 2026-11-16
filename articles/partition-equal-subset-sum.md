@@ -291,6 +291,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        let sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % 2 !== 0) {
+            return false;
+        }
+
+        return this.dfs(nums, 0, sum / 2);
+    }
+
+    /**
+     * @params {number[]} nums
+     * @params {number} i
+     * @params {number} target
+     * @return {boolean}
+     */
+    dfs(nums: number[], i: number, target: number): boolean {
+        if (i === nums.length) {
+            return target === 0;
+        }
+        if (target < 0) {
+            return false;
+        }
+
+        return (
+            this.dfs(nums, i + 1, target) ||
+            this.dfs(nums, i + 1, target - nums[i])
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -654,6 +691,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private memo: (boolean | null)[][] = [];
+
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        let sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % 2 !== 0) {
+            return false;
+        }
+        const n = nums.length;
+        this.memo = Array.from(Array(n + 1), () =>
+            Array(sum / 2 + 1).fill(null),
+        );
+
+        return this.dfs(nums, 0, sum / 2);
+    }
+
+    /**
+     * @params {number[]} nums
+     * @params {number} i
+     * @params {number} target
+     * @return {boolean}
+     */
+    dfs(nums: number[], i: number, target: number): boolean {
+        if (i === nums.length) {
+            return target === 0;
+        }
+        if (target < 0) {
+            return false;
+        }
+        if (this.memo[i][target] != null) {
+            return this.memo[i][target]!;
+        }
+
+        this.memo[i][target] =
+            this.dfs(nums, i + 1, target) ||
+            this.dfs(nums, i + 1, target - nums[i]);
+        return this.memo[i][target]!;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -999,6 +1082,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        let sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % 2 !== 0) {
+            return false;
+        }
+        const target = sum / 2;
+        const n = nums.length;
+
+        const dp: boolean[][] = Array.from(Array(n + 1), () =>
+            Array(target + 1).fill(false),
+        );
+
+        for (let i = 0; i <= n; i++) {
+            dp[i][0] = true;
+        }
+
+        for (let i = 1; i <= n; i++) {
+            for (let j = 1; j <= target; j++) {
+                if (nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+
+        return dp[n][target];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1326,6 +1446,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        if (nums.reduce((a, b) => a + b, 0) % 2) {
+            return false;
+        }
+
+        const target = nums.reduce((a, b) => a + b, 0) / 2;
+        let dp: boolean[] = Array(target + 1).fill(false);
+        let nextDp: boolean[] = Array(target + 1).fill(false);
+
+        dp[0] = true;
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = 1; j <= target; j++) {
+                if (j >= nums[i]) {
+                    nextDp[j] = dp[j] || dp[j - nums[i]];
+                } else {
+                    nextDp[j] = dp[j];
+                }
+            }
+            [dp, nextDp] = [nextDp, dp];
+        }
+
+        return dp[target];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1618,6 +1770,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        const sum = nums.reduce((acc, num) => acc + num, 0);
+        if (sum % 2 !== 0) {
+            return false;
+        }
+
+        let dp = new Set<number>();
+        dp.add(0);
+        const target = sum / 2;
+
+        for (let i = nums.length - 1; i >= 0; i--) {
+            const nextDP = new Set<number>();
+            for (const t of dp) {
+                if (t + nums[i] === target) {
+                    return true;
+                }
+                nextDP.add(t + nums[i]);
+                nextDP.add(t);
+            }
+            dp = nextDP;
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1887,6 +2071,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        if (nums.reduce((a, b) => a + b, 0) % 2) {
+            return false;
+        }
+
+        const target = nums.reduce((a, b) => a + b, 0) / 2;
+        const dp: boolean[] = Array(target + 1).fill(false);
+
+        dp[0] = true;
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = target; j >= nums[i]; j--) {
+                dp[j] = dp[j] || dp[j - nums[i]];
+            }
+        }
+
+        return dp[target];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1918,6 +2128,29 @@ class Solution:
         return (dp & (1 << target)) != 0
 ```
 
+```java
+public class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum % 2 != 0) {
+            return false;
+        }
+
+        int target = sum / 2;
+        java.math.BigInteger dp = java.math.BigInteger.ONE;
+
+        for (int num : nums) {
+            dp = dp.or(dp.shiftLeft(num));
+        }
+
+        return dp.testBit(target);
+    }
+}
+```
+
 ```cpp
 class Solution {
 public:
@@ -1941,6 +2174,201 @@ public:
         return dp[target];
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums) {
+        const sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % 2 !== 0) {
+            return false;
+        }
+
+        const target = sum / 2;
+        let dp = BigInt(1);
+
+        for (const num of nums) {
+            dp |= dp << BigInt(num);
+        }
+
+        return ((dp >> BigInt(target)) & BigInt(1)) === BigInt(1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanPartition(int[] nums) {
+        int sum = nums.Sum();
+        if (sum % 2 != 0) {
+            return false;
+        }
+
+        int target = sum / 2;
+        // dp is a bitset stored in 64-bit words
+        int words = sum / 64 + 1;
+        ulong[] dp = new ulong[words];
+        dp[0] = 1;
+
+        foreach (int num in nums) {
+            int q = num / 64, r = num % 64;
+            // dp |= dp << num (from high words to low so we read old values)
+            for (int i = words - 1; i >= q; i--) {
+                ulong shifted = dp[i - q] << r;
+                if (r > 0 && i - q - 1 >= 0) {
+                    shifted |= dp[i - q - 1] >> (64 - r);
+                }
+                dp[i] |= shifted;
+            }
+        }
+
+        return ((dp[target / 64] >> (target % 64)) & 1UL) == 1UL;
+    }
+}
+```
+
+```go
+func canPartition(nums []int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%2 != 0 {
+        return false
+    }
+
+    target := sum / 2
+    // dp is a bitset stored in 64-bit words
+    words := sum/64 + 1
+    dp := make([]uint64, words)
+    dp[0] = 1
+
+    for _, num := range nums {
+        q, r := num/64, uint(num%64)
+        // dp |= dp << num (from high words to low so we read old values)
+        for i := words - 1; i >= q; i-- {
+            shifted := dp[i-q] << r
+            if r > 0 && i-q-1 >= 0 {
+                shifted |= dp[i-q-1] >> (64 - r)
+            }
+            dp[i] |= shifted
+        }
+    }
+
+    return (dp[target/64]>>(uint(target%64)))&1 == 1
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val sum = nums.sum()
+        if (sum % 2 != 0) {
+            return false
+        }
+
+        val target = sum / 2
+        var dp = java.math.BigInteger.ONE
+
+        for (num in nums) {
+            dp = dp.or(dp.shiftLeft(num))
+        }
+
+        return dp.testBit(target)
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        let sum = nums.reduce(0, +)
+        if sum % 2 != 0 {
+            return false
+        }
+
+        let target = sum / 2
+        // dp is a bitset stored in 64-bit words
+        let words = sum / 64 + 1
+        var dp = [UInt64](repeating: 0, count: words)
+        dp[0] = 1
+
+        for num in nums {
+            let q = num / 64, r = UInt64(num % 64)
+            // dp |= dp << num (from high words to low so we read old values)
+            var i = words - 1
+            while i >= q {
+                var shifted = dp[i - q] << r
+                if r > 0 && i - q - 1 >= 0 {
+                    shifted |= dp[i - q - 1] >> (64 - r)
+                }
+                dp[i] |= shifted
+                i -= 1
+            }
+        }
+
+        return (dp[target / 64] >> UInt64(target % 64)) & 1 == 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_partition(nums: Vec<i32>) -> bool {
+        let sum: usize = nums.iter().map(|&x| x as usize).sum();
+        if sum % 2 != 0 {
+            return false;
+        }
+
+        let target = sum / 2;
+        // dp is a bitset stored in 64-bit words
+        let words = sum / 64 + 1;
+        let mut dp = vec![0u64; words];
+        dp[0] = 1;
+
+        for &num in &nums {
+            let (q, r) = (num as usize / 64, num as u32 % 64);
+            // dp |= dp << num (from high words to low so we read old values)
+            for i in (q..words).rev() {
+                let mut shifted = dp[i - q] << r;
+                if r > 0 && i >= q + 1 {
+                    shifted |= dp[i - q - 1] >> (64 - r);
+                }
+                dp[i] |= shifted;
+            }
+        }
+
+        (dp[target / 64] >> (target % 64)) & 1 == 1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    canPartition(nums: number[]): boolean {
+        const sum = nums.reduce((a, b) => a + b, 0);
+        if (sum % 2 !== 0) {
+            return false;
+        }
+
+        const target = sum / 2;
+        let dp = BigInt(1);
+
+        for (const num of nums) {
+            dp |= dp << BigInt(num);
+        }
+
+        return ((dp >> BigInt(target)) & BigInt(1)) === BigInt(1);
+    }
+}
 ```
 
 ::tabs-end

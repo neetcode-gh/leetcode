@@ -196,6 +196,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    medianSlidingWindow(nums: number[], k: number): number[] {
+        const res: number[] = [];
+        for (let i = 0; i <= nums.length - k; i++) {
+            const tmp = nums.slice(i, i + k).sort((a, b) => a - b);
+            if (k % 2 === 1) {
+                res.push(tmp[Math.floor(k / 2)]);
+            } else {
+                res.push(
+                    (tmp[Math.floor(k / 2)] + tmp[Math.floor((k - 1) / 2)]) / 2,
+                );
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,8 +410,8 @@ class Solution {
      * @return {number[]}
      */
     medianSlidingWindow(nums, k) {
-        const small = new MaxPriorityQueue({ compare: (a, b) => b - a });
-        const large = new MinPriorityQueue({ compare: (a, b) => a - b });
+        const small = new MaxPriorityQueue();
+        const large = new MinPriorityQueue();
         const d = new Map();
 
         for (let i = 0; i < k; i++) {
@@ -662,6 +686,70 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    medianSlidingWindow(nums: number[], k: number): number[] {
+        const small = new MaxPriorityQueue();
+        const large = new MinPriorityQueue();
+        const d = new Map<number, number>();
+
+        for (let i = 0; i < k; i++) {
+            small.enqueue(nums[i]);
+        }
+        for (let i = 0; i < Math.floor(k / 2); i++) {
+            large.enqueue(small.dequeue());
+        }
+
+        const res: number[] = [
+            k % 2 === 1 ? small.front() : (large.front() + small.front()) / 2,
+        ];
+        for (let i = k; i < nums.length; i++) {
+            const toRemove = nums[i - k];
+            d.set(toRemove, (d.get(toRemove) || 0) + 1);
+            let balance =
+                small.size() > 0 && toRemove <= small.front() ? -1 : 1;
+
+            if (nums[i] <= small.front()) {
+                small.enqueue(nums[i]);
+                balance++;
+            } else {
+                large.enqueue(nums[i]);
+                balance--;
+            }
+
+            if (balance > 0) {
+                large.enqueue(small.dequeue());
+            }
+            if (balance < 0) {
+                small.enqueue(large.dequeue());
+            }
+
+            while (small.size() > 0 && d.get(small.front())! > 0) {
+                d.set(small.front(), d.get(small.front())! - 1);
+                small.dequeue();
+            }
+            while (large.size() > 0 && d.get(large.front())! > 0) {
+                d.set(large.front(), d.get(large.front())! - 1);
+                large.dequeue();
+            }
+
+            res.push(
+                k % 2 === 1
+                    ? small.front()
+                    : (large.front() + small.front()) / 2,
+            );
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -694,6 +782,9 @@ Using two balanced multisets (or sorted lists) instead of heaps gives us direct 
 ::tabs-start
 
 ```python
+from sortedcontainers import SortedList
+
+
 class Solution:
     def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:
         small, large = SortedList(), SortedList()
@@ -777,6 +868,112 @@ public:
         return res;
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    medianSlidingWindow(nums, k) {
+        // JavaScript has no built-in multiset, so each one is modeled with
+        // an ascending array that is binary searched on insert and remove.
+        const lowerBound = (arr, x) => {
+            let l = 0,
+                r = arr.length;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (arr[m] < x) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+        const add = (arr, x) => arr.splice(lowerBound(arr, x), 0, x);
+        const remove = (arr, x) => {
+            const i = lowerBound(arr, x);
+            if (i < arr.length && arr[i] === x) {
+                arr.splice(i, 1);
+                return true;
+            }
+            return false;
+        };
+
+        const small = [],
+            large = [];
+        const res = [];
+        for (let i = 0; i < nums.length; i++) {
+            if (small.length === 0 || nums[i] <= small[small.length - 1]) {
+                add(small, nums[i]);
+            } else {
+                add(large, nums[i]);
+            }
+
+            if (i >= k) {
+                if (!remove(small, nums[i - k])) {
+                    remove(large, nums[i - k]);
+                }
+            }
+
+            while (small.length > large.length + 1) {
+                add(large, small.pop());
+            }
+            while (large.length > small.length) {
+                add(small, large.shift());
+            }
+
+            if (i >= k - 1) {
+                res.push(
+                    k % 2 === 1
+                        ? small[small.length - 1]
+                        : (small[small.length - 1] + large[0]) / 2,
+                );
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double[] MedianSlidingWindow(int[] nums, int k) {
+        var cmp = Comparer<int>.Create((a, b) =>
+            nums[a] != nums[b] ? nums[a].CompareTo(nums[b]) : a.CompareTo(b)
+        );
+        SortedSet<int> small = new SortedSet<int>(cmp);
+        SortedSet<int> large = new SortedSet<int>(cmp);
+        double[] res = new double[nums.Length - k + 1];
+
+        for (int i = 0; i < nums.Length; i++) {
+            if (small.Count == 0 || nums[i] <= nums[small.Max]) small.Add(i);
+            else large.Add(i);
+
+            if (i >= k) {
+                if (small.Contains(i - k)) small.Remove(i - k);
+                else large.Remove(i - k);
+            }
+
+            while (small.Count > large.Count + 1) {
+                int idx = small.Max;
+                small.Remove(idx);
+                large.Add(idx);
+            }
+            while (large.Count > small.Count) {
+                int idx = large.Min;
+                large.Remove(idx);
+                small.Add(idx);
+            }
+
+            if (i >= k - 1) {
+                res[i - k + 1] = k % 2 == 1 ? nums[small.Max] :
+                                 ((long)nums[small.Max] + nums[large.Min]) / 2.0;
+            }
+        }
+        return res;
+    }
+}
 ```
 
 ```go
@@ -1063,6 +1260,74 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    medianSlidingWindow(nums: number[], k: number): number[] {
+        // TypeScript has no built-in multiset, so each one is modeled with
+        // an ascending array that is binary searched on insert and remove.
+        const lowerBound = (arr: number[], x: number): number => {
+            let l = 0,
+                r = arr.length;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (arr[m] < x) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+        const add = (arr: number[], x: number): void => {
+            arr.splice(lowerBound(arr, x), 0, x);
+        };
+        const remove = (arr: number[], x: number): boolean => {
+            const i = lowerBound(arr, x);
+            if (i < arr.length && arr[i] === x) {
+                arr.splice(i, 1);
+                return true;
+            }
+            return false;
+        };
+
+        const small: number[] = [],
+            large: number[] = [];
+        const res: number[] = [];
+        for (let i = 0; i < nums.length; i++) {
+            if (small.length === 0 || nums[i] <= small[small.length - 1]) {
+                add(small, nums[i]);
+            } else {
+                add(large, nums[i]);
+            }
+
+            if (i >= k) {
+                if (!remove(small, nums[i - k])) {
+                    remove(large, nums[i - k]);
+                }
+            }
+
+            while (small.length > large.length + 1) {
+                add(large, small.pop()!);
+            }
+            while (large.length > small.length) {
+                add(small, large.shift()!);
+            }
+
+            if (i >= k - 1) {
+                res.push(
+                    k % 2 === 1
+                        ? small[small.length - 1]
+                        : (small[small.length - 1] + large[0]) / 2,
+                );
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1097,6 +1362,9 @@ A single sorted data structure can track all k elements directly. By maintaining
 ::tabs-start
 
 ```python
+from sortedcontainers import SortedList
+
+
 class Solution:
     def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:
         window = SortedList()
@@ -1111,6 +1379,53 @@ class Solution:
                 else:
                     res.append((window[k // 2 - 1] + window[k // 2]) / 2)
         return res
+```
+
+```java
+public class Solution {
+    private TreeMap<Integer, Integer> window = new TreeMap<>();
+
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        window.clear();
+        for (int i = 0; i < k; i++) add(nums[i]);
+
+        double[] res = new double[nums.length - k + 1];
+
+        for (int i = k; i <= nums.length; i++) {
+            if (k % 2 == 1) {
+                res[i - k] = getKth((k + 1) / 2);
+            } else {
+                res[i - k] = ((long) getKth(k / 2) + getKth(k / 2 + 1)) / 2.0;
+            }
+
+            if (i < nums.length) {
+                remove(nums[i - k]);
+                add(nums[i]);
+            }
+        }
+
+        return res;
+    }
+
+    private void add(int num) {
+        window.put(num, window.getOrDefault(num, 0) + 1);
+    }
+
+    private void remove(int num) {
+        int count = window.get(num);
+        if (count == 1) window.remove(num);
+        else window.put(num, count - 1);
+    }
+
+    private int getKth(int kth) {
+        int count = 0;
+        for (Map.Entry<Integer, Integer> entry : window.entrySet()) {
+            count += entry.getValue();
+            if (count >= kth) return entry.getKey();
+        }
+        return 0;
+    }
+}
 ```
 
 ```cpp
@@ -1137,6 +1452,91 @@ public:
         }
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    medianSlidingWindow(nums, k) {
+        // JavaScript has no built-in multiset, so the window is an ascending
+        // array that is binary searched on insert and remove.
+        const lowerBound = (x) => {
+            let l = 0,
+                r = window.length;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (window[m] < x) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+
+        const window = nums.slice(0, k).sort((a, b) => a - b);
+        const getMedian = () =>
+            k % 2 === 1
+                ? window[k >> 1]
+                : (window[(k >> 1) - 1] + window[k >> 1]) / 2;
+
+        const res = [getMedian()];
+        for (let i = k; i < nums.length; i++) {
+            window.splice(lowerBound(nums[i - k]), 1);
+            window.splice(lowerBound(nums[i]), 0, nums[i]);
+            res.push(getMedian());
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private SortedDictionary<int, int> window = new SortedDictionary<int, int>();
+
+    public double[] MedianSlidingWindow(int[] nums, int k) {
+        window.Clear();
+        for (int i = 0; i < k; i++) Add(nums[i]);
+
+        double[] res = new double[nums.Length - k + 1];
+
+        for (int i = k; i <= nums.Length; i++) {
+            if (k % 2 == 1) {
+                res[i - k] = GetKth((k + 1) / 2);
+            } else {
+                res[i - k] = ((long)GetKth(k / 2) + GetKth(k / 2 + 1)) / 2.0;
+            }
+
+            if (i < nums.Length) {
+                Remove(nums[i - k]);
+                Add(nums[i]);
+            }
+        }
+
+        return res;
+    }
+
+    private void Add(int num) {
+        window[num] = window.GetValueOrDefault(num, 0) + 1;
+    }
+
+    private void Remove(int num) {
+        int count = window[num];
+        if (count == 1) window.Remove(num);
+        else window[num] = count - 1;
+    }
+
+    private int GetKth(int kth) {
+        int count = 0;
+        foreach (var entry in window) {
+            count += entry.Value;
+            if (count >= kth) return entry.Key;
+        }
+        return 0;
+    }
+}
 ```
 
 ```go
@@ -1288,6 +1688,44 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    medianSlidingWindow(nums: number[], k: number): number[] {
+        // TypeScript has no built-in multiset, so the window is an ascending
+        // array that is binary searched on insert and remove.
+        const lowerBound = (x: number): number => {
+            let l = 0,
+                r = window.length;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (window[m] < x) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+
+        const window: number[] = nums.slice(0, k).sort((a, b) => a - b);
+        const getMedian = (): number =>
+            k % 2 === 1
+                ? window[k >> 1]
+                : (window[(k >> 1) - 1] + window[k >> 1]) / 2;
+
+        const res: number[] = [getMedian()];
+        for (let i = k; i < nums.length; i++) {
+            window.splice(lowerBound(nums[i - k]), 1);
+            window.splice(lowerBound(nums[i]), 0, nums[i]);
+            res.push(getMedian());
+        }
+        return res;
     }
 }
 ```

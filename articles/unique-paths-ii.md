@@ -276,6 +276,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    uniquePathsWithObstacles(grid: number[][]): number {
+        const M = grid.length,
+            N = grid[0].length;
+        const dp: number[][] = Array.from({ length: M }, () =>
+            Array(N).fill(-1),
+        );
+
+        const dfs = (r: number, c: number): number => {
+            if (r === M || c === N || grid[r][c] === 1) {
+                return 0;
+            }
+            if (r === M - 1 && c === N - 1) {
+                return 1;
+            }
+            if (dp[r][c] !== -1) {
+                return dp[r][c];
+            }
+            dp[r][c] = dfs(r + 1, c) + dfs(r, c + 1);
+            return dp[r][c];
+        };
+
+        return dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,6 +587,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    uniquePathsWithObstacles(grid: number[][]): number {
+        const M = grid.length,
+            N = grid[0].length;
+        if (grid[0][0] === 1 || grid[M - 1][N - 1] === 1) {
+            return 0;
+        }
+
+        const dp: number[][] = Array.from({ length: M + 1 }, () =>
+            Array(N + 1).fill(0),
+        );
+        dp[M - 1][N - 1] = 1;
+
+        for (let r = M - 1; r >= 0; r--) {
+            for (let c = N - 1; c >= 0; c--) {
+                if (grid[r][c] === 1) {
+                    dp[r][c] = 0;
+                } else {
+                    dp[r][c] += dp[r + 1][c];
+                    dp[r][c] += dp[r][c + 1];
+                }
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -782,6 +848,33 @@ impl Solution {
         }
 
         dp[0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    uniquePathsWithObstacles(grid: number[][]): number {
+        const M = grid.length,
+            N = grid[0].length;
+        const dp: number[] = new Array(N + 1).fill(0);
+        dp[N - 1] = 1;
+
+        for (let r = M - 1; r >= 0; r--) {
+            for (let c = N - 1; c >= 0; c--) {
+                if (grid[r][c] === 1) {
+                    dp[c] = 0;
+                } else {
+                    dp[c] += dp[c + 1];
+                }
+            }
+        }
+
+        return dp[0];
     }
 }
 ```
@@ -1098,6 +1191,42 @@ impl Solution {
         }
 
         obstacle_grid[0][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    uniquePathsWithObstacles(grid: number[][]): number {
+        const M = grid.length,
+            N = grid[0].length;
+        if (grid[0][0] === 1 || grid[M - 1][N - 1] === 1) {
+            return 0;
+        }
+
+        grid[M - 1][N - 1] = 1;
+
+        for (let r = M - 1; r >= 0; r--) {
+            for (let c = N - 1; c >= 0; c--) {
+                if (r === M - 1 && c === N - 1) {
+                    continue;
+                }
+
+                if (grid[r][c] === 1) {
+                    grid[r][c] = 0;
+                } else {
+                    const down = r + 1 < M ? grid[r + 1][c] : 0;
+                    const right = c + 1 < N ? grid[r][c + 1] : 0;
+                    grid[r][c] = down + right;
+                }
+            }
+        }
+
+        return grid[0][0];
     }
 }
 ```

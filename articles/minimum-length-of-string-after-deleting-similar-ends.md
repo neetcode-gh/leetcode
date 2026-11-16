@@ -202,6 +202,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    minimumLength(s: string): number {
+        let l = 0,
+            r = s.length - 1;
+
+        while (l < r && s[l] === s[r]) {
+            const tmp = s[l];
+            while (l <= r && s[l] === tmp) {
+                l++;
+            }
+            while (l <= r && s[r] === tmp) {
+                r--;
+            }
+        }
+        return r - l + 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

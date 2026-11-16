@@ -308,6 +308,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permuteUnique(nums: number[]): number[][] {
+        const res = new Set<string>();
+        const perm: number[] = [];
+
+        const backtrack = (): void => {
+            if (perm.length === nums.length) {
+                res.add(JSON.stringify(perm));
+                return;
+            }
+
+            for (let i = 0; i < nums.length; i++) {
+                if (nums[i] !== -Infinity) {
+                    let temp = nums[i];
+                    perm.push(nums[i]);
+                    nums[i] = -Infinity;
+                    backtrack();
+                    nums[i] = temp;
+                    perm.pop();
+                }
+            }
+        };
+
+        backtrack();
+        return Array.from(res).map((s) => JSON.parse(s));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -641,6 +675,44 @@ impl Solution {
         }
         dfs(&keys, &mut count, &mut perm, n, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permuteUnique(nums: number[]): number[][] {
+        const res: number[][] = [];
+        const perm: number[] = [];
+        const count: { [key: string]: number } = {};
+
+        for (const num of nums) {
+            count[num] = (count[num] || 0) + 1;
+        }
+
+        const dfs = (): void => {
+            if (perm.length === nums.length) {
+                res.push([...perm]);
+                return;
+            }
+
+            for (const num in count) {
+                if (count[num] > 0) {
+                    perm.push(+num);
+                    count[num]--;
+                    dfs();
+                    count[num]++;
+                    perm.pop();
+                }
+            }
+        };
+
+        dfs();
+        return res;
     }
 }
 ```
@@ -986,6 +1058,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permuteUnique(nums: number[]): number[][] {
+        const res: number[][] = [];
+        const visit: boolean[] = new Array(nums.length).fill(false);
+        const perm: number[] = [];
+        nums.sort((a, b) => a - b);
+
+        const dfs = (): void => {
+            if (perm.length === nums.length) {
+                res.push([...perm]);
+                return;
+            }
+
+            for (let i = 0; i < nums.length; i++) {
+                if (
+                    visit[i] ||
+                    (i > 0 && nums[i] === nums[i - 1] && !visit[i - 1])
+                )
+                    continue;
+
+                visit[i] = true;
+                perm.push(nums[i]);
+                dfs();
+                visit[i] = false;
+                perm.pop();
+            }
+        };
+
+        dfs();
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1293,6 +1404,39 @@ impl Solution {
         }
         dfs(0, &mut nums, n, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permuteUnique(nums: number[]): number[][] {
+        const res: number[][] = [];
+        nums.sort((a, b) => a - b);
+
+        const dfs = (i: number): void => {
+            if (i === nums.length) {
+                res.push([...nums]);
+                return;
+            }
+
+            for (let j = i; j < nums.length; j++) {
+                if (j > i && nums[j] === nums[i]) continue;
+                [nums[i], nums[j]] = [nums[j], nums[i]];
+                dfs(i + 1);
+            }
+
+            for (let j = nums.length - 1; j > i; j--) {
+                [nums[i], nums[j]] = [nums[j], nums[i]];
+            }
+        };
+
+        dfs(0);
+        return res;
     }
 }
 ```
@@ -1654,6 +1798,44 @@ impl Solution {
             res.push(nums.clone());
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permuteUnique(nums: number[]): number[][] {
+        const n = nums.length;
+        nums.sort((a, b) => a - b);
+        const res: number[][] = [nums.slice()];
+
+        while (true) {
+            let i = n - 2;
+            while (i >= 0 && nums[i] >= nums[i + 1]) i--;
+
+            if (i < 0) break;
+
+            let j = n - 1;
+            while (nums[j] <= nums[i]) j--;
+
+            [nums[i], nums[j]] = [nums[j], nums[i]];
+
+            let l = i + 1,
+                r = n - 1;
+            while (l < r) {
+                [nums[l], nums[r]] = [nums[r], nums[l]];
+                l++;
+                r--;
+            }
+
+            res.push(nums.slice());
+        }
+
+        return res;
     }
 }
 ```

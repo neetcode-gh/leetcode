@@ -242,6 +242,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} minProfit
+     * @param {number[]} group
+     * @param {number[]} profit
+     * @return {number}
+     */
+    profitableSchemes(
+        n: number,
+        minProfit: number,
+        group: number[],
+        profit: number[],
+    ): number {
+        const MOD = 1e9 + 7;
+
+        const dfs = (i: number, n: number, p: number): number => {
+            if (i === group.length) {
+                return p >= minProfit ? 1 : 0;
+            }
+
+            let res = dfs(i + 1, n, p);
+            if (n - group[i] >= 0) {
+                res = (res + dfs(i + 1, n - group[i], p + profit[i])) % MOD;
+            }
+
+            return res;
+        };
+
+        return dfs(0, n, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -574,6 +609,49 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} minProfit
+     * @param {number[]} group
+     * @param {number[]} profit
+     * @return {number}
+     */
+    profitableSchemes(
+        n: number,
+        minProfit: number,
+        group: number[],
+        profit: number[],
+    ): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][][] = Array.from({ length: group.length }, () =>
+            Array.from({ length: n + 1 }, () => Array(minProfit + 1).fill(-1)),
+        );
+
+        const dfs = (i: number, n: number, p: number): number => {
+            if (i === group.length) {
+                return p >= minProfit ? 1 : 0;
+            }
+            if (dp[i][n][p] !== -1) {
+                return dp[i][n][p];
+            }
+
+            let res = dfs(i + 1, n, p);
+            if (n >= group[i]) {
+                const nxtP = Math.min(p + profit[i], minProfit);
+                res = (res + dfs(i + 1, n - group[i], nxtP)) % MOD;
+            }
+
+            dp[i][n][p] = res;
+            return res;
+        };
+
+        return dfs(0, n, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -886,6 +964,50 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} minProfit
+     * @param {number[]} group
+     * @param {number[]} profit
+     * @return {number}
+     */
+    profitableSchemes(
+        n: number,
+        minProfit: number,
+        group: number[],
+        profit: number[],
+    ): number {
+        const MOD = 1e9 + 7;
+        const N = group.length;
+
+        const dp: number[][][] = Array.from({ length: N + 1 }, () =>
+            Array.from({ length: n + 2 }, () => Array(minProfit + 1).fill(0)),
+        );
+
+        for (let j = 0; j <= n; j++) {
+            dp[N][j][minProfit] = 1;
+        }
+
+        for (let i = N - 1; i >= 0; i--) {
+            for (let j = 0; j <= n; j++) {
+                for (let p = 0; p <= minProfit; p++) {
+                    let res = dp[i + 1][j][p];
+                    if (j >= group[i]) {
+                        const nxtP = Math.min(profit[i] + p, minProfit);
+                        res = (res + dp[i + 1][j - group[i]][nxtP]) % MOD;
+                    }
+                    dp[i][j][p] = res;
+                }
+            }
+        }
+
+        return dp[0][n][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1192,6 +1314,50 @@ impl Solution {
         }
 
         dp[n][0]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} minProfit
+     * @param {number[]} group
+     * @param {number[]} profit
+     * @return {number}
+     */
+    profitableSchemes(
+        n: number,
+        minProfit: number,
+        group: number[],
+        profit: number[],
+    ): number {
+        const MOD = 1e9 + 7;
+        const N = group.length;
+
+        const dp: number[][] = Array.from({ length: n + 2 }, () =>
+            Array(minProfit + 1).fill(0),
+        );
+
+        for (let j = 0; j <= n; j++) {
+            dp[j][minProfit] = 1;
+        }
+
+        for (let i = N - 1; i >= 0; i--) {
+            for (let j = n; j >= 0; j--) {
+                for (let p = 0; p <= minProfit; p++) {
+                    let res = dp[j][p];
+                    if (j >= group[i]) {
+                        const nxtP = Math.min(profit[i] + p, minProfit);
+                        res = (res + dp[j - group[i]][nxtP]) % MOD;
+                    }
+                    dp[j][p] = res;
+                }
+            }
+        }
+
+        return dp[n][0];
     }
 }
 ```

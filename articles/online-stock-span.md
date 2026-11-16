@@ -193,6 +193,29 @@ impl StockSpanner {
 }
 ```
 
+```typescript
+class StockSpanner {
+    private arr: number[];
+
+    constructor() {
+        this.arr = [];
+    }
+
+    /**
+     * @param {number} price
+     * @return {number}
+     */
+    next(price: number): number {
+        this.arr.push(price);
+        let i = this.arr.length - 2;
+        while (i >= 0 && this.arr[i] <= price) {
+            i--;
+        }
+        return this.arr.length - i - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -348,7 +371,7 @@ class StockSpanner() {
 
     fun next(price: Int): Int {
         var span = 1
-        while (stack.isNotEmpty() && stack.last()[0] <= price) {
+        while (stack.isNotEmpty() && stack.peekLast()[0] <= price) {
             span += stack.removeLast()[1]
         }
         stack.addLast(intArrayOf(price, span))
@@ -398,6 +421,32 @@ impl StockSpanner {
         }
         self.stack.push((price, span));
         span
+    }
+}
+```
+
+```typescript
+class StockSpanner {
+    private stack: number[][];
+
+    constructor() {
+        this.stack = []; // pair: [price, span]
+    }
+
+    /**
+     * @param {number} price
+     * @return {number}
+     */
+    next(price: number): number {
+        let span = 1;
+        while (
+            this.stack.length &&
+            this.stack[this.stack.length - 1][0] <= price
+        ) {
+            span += this.stack.pop()![1];
+        }
+        this.stack.push([price, span]);
+        return span;
     }
 }
 ```

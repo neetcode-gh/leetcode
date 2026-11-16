@@ -422,6 +422,56 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {number} maxWidth
+     * @return {string[]}
+     */
+    fullJustify(words: string[], maxWidth: number): string[] {
+        let res: string[] = [];
+        let line: string[] = [],
+            length = 0,
+            i = 0;
+
+        while (i < words.length) {
+            if (length + words[i].length + line.length <= maxWidth) {
+                line.push(words[i]);
+                length += words[i].length;
+                i++;
+            } else {
+                // Line complete
+                let extra_space = maxWidth - length;
+                let remainder = extra_space % Math.max(1, line.length - 1);
+                let space = Math.floor(
+                    extra_space / Math.max(1, line.length - 1),
+                );
+
+                for (let j = 0; j < Math.max(1, line.length - 1); j++) {
+                    line[j] += ' '.repeat(space);
+                    if (remainder > 0) {
+                        line[j] += ' ';
+                        remainder--;
+                    }
+                }
+
+                res.push(line.join(''));
+                line = [];
+                length = 0;
+            }
+        }
+
+        // Handling last line
+        let last_line = line.join(' ');
+        let trail_space = maxWidth - last_line.length;
+        res.push(last_line + ' '.repeat(trail_space));
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

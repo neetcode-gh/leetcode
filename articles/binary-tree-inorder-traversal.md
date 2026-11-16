@@ -280,6 +280,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    inorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+
+        const inorder = (node: TreeNode | null): void => {
+            if (!node) return;
+            inorder(node.left);
+            res.push(node.val);
+            inorder(node.right);
+        };
+
+        inorder(root);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -456,7 +478,7 @@ class Solution {
  * }
  */
 public class Solution {
-    public IList<int> InorderTraversal(TreeNode root) {
+    public List<int> InorderTraversal(TreeNode root) {
         List<int> res = new List<int>();
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode cur = root;
@@ -592,6 +614,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    inorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        const stack: TreeNode[] = [];
+        let cur = root;
+
+        while (cur || stack.length > 0) {
+            while (cur) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop()!;
+            res.push(cur.val);
+            cur = cur.right;
+        }
+
+        return res;
     }
 }
 ```
@@ -987,6 +1035,42 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[]}
+     */
+    inorderTraversal(root: TreeNode | null): number[] {
+        const res: number[] = [];
+        let cur = root;
+
+        while (cur) {
+            if (!cur.left) {
+                res.push(cur.val);
+                cur = cur.right;
+            } else {
+                let prev = cur.left;
+                while (prev.right && prev.right !== cur) {
+                    prev = prev.right;
+                }
+
+                if (!prev.right) {
+                    prev.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    res.push(cur.val);
+                    cur = cur.right;
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```

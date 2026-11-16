@@ -186,6 +186,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    intersection(nums1: number[], nums2: number[]): number[] {
+        const res = new Set<number>();
+        for (const i of nums1) {
+            for (const j of nums2) {
+                if (i === j) {
+                    res.add(i);
+                    break;
+                }
+            }
+        }
+        return Array.from(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,6 +503,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    intersection(nums1: number[], nums2: number[]): number[] {
+        nums1.sort((a, b) => a - b);
+        nums2.sort((a, b) => a - b);
+
+        const res: number[] = [];
+        let i = 0,
+            j = 0;
+
+        while (i < nums1.length && j < nums2.length) {
+            while (j < nums2.length && nums2[j] < nums1[i]) {
+                j++;
+            }
+            if (j < nums2.length) {
+                if (nums1[i] === nums2[j]) {
+                    res.push(nums1[i]);
+                }
+                i++;
+                while (i < nums1.length && nums1[i] === nums1[i - 1]) {
+                    i++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -673,6 +730,28 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    intersection(nums1: number[], nums2: number[]): number[] {
+        const set1 = new Set<number>(nums1);
+        const set2 = new Set<number>(nums2);
+
+        const res: number[] = [];
+        for (const num of set1) {
+            if (set2.has(num)) {
+                res.push(num);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -885,6 +964,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    intersection(nums1: number[], nums2: number[]): number[] {
+        const seen: { [key: number]: number } = {};
+        for (const num of nums1) {
+            seen[num] = 1;
+        }
+
+        const res: number[] = [];
+        for (const num of nums2) {
+            if (seen[num] === 1) {
+                seen[num] = 0;
+                res.push(num);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1072,6 +1176,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    intersection(nums1: number[], nums2: number[]): number[] {
+        const seen = new Set<number>(nums1);
+        const res: number[] = [];
+
+        for (const num of nums2) {
+            if (seen.has(num)) {
+                res.push(num);
+                seen.delete(num);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1213,6 +1339,20 @@ impl Solution {
         let set1: HashSet<i32> = nums1.into_iter().collect();
         let set2: HashSet<i32> = nums2.into_iter().collect();
         set1.intersection(&set2).copied().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums1
+     * @param {number[]} nums2
+     * @return {number[]}
+     */
+    intersection(nums1: number[], nums2: number[]): number[] {
+        const set2 = new Set<number>(nums2);
+        return [...new Set(nums1)].filter((num) => set2.has(num));
     }
 }
 ```

@@ -198,6 +198,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    appendCharacters(s: string, t: string): number {
+        let i = 0,
+            j = 0;
+
+        while (i < s.length && j < t.length) {
+            if (s[i] === t[j]) {
+                i++;
+                j++;
+            } else {
+                i++;
+            }
+        }
+        return t.length - j;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,6 +517,39 @@ impl Solution {
         }
 
         (m - j) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {number}
+     */
+    appendCharacters(s: string, t: string): number {
+        const n = s.length,
+            m = t.length;
+        const store: number[][] = Array.from({ length: n }, () => Array(26).fill(n + 1));
+        store[n - 1][s.charCodeAt(n - 1) - 97] = n - 1;
+
+        for (let i = n - 2; i >= 0; i--) {
+            store[i] = store[i + 1].slice();
+            store[i][s.charCodeAt(i) - 97] = i;
+        }
+
+        let i = 0,
+            j = 0;
+        while (i < n && j < m) {
+            if (store[i][t.charCodeAt(j) - 97] === n + 1) {
+                break;
+            }
+            i = store[i][t.charCodeAt(j) - 97] + 1;
+            j++;
+        }
+
+        return m - j;
     }
 }
 ```

@@ -318,6 +318,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} word
+     * @param {string} abbr
+     * @return {boolean}
+     */
+    validWordAbbreviation(word: string, abbr: string): boolean {
+        let n = word.length,
+            m = abbr.length;
+        let i = 0,
+            j = 0;
+
+        while (i < n && j < m) {
+            if (abbr[j] === '0') return false;
+
+            if (isNaN(Number(abbr[j]))) {
+                if (word[i] === abbr[j]) {
+                    i++;
+                    j++;
+                } else {
+                    return false;
+                }
+            } else {
+                let subLen = 0;
+                while (j < m && !isNaN(Number(abbr[j])) && abbr[j] !== ' ') {
+                    subLen = subLen * 10 + parseInt(abbr[j]);
+                    j++;
+                }
+                i += subLen;
+            }
+        }
+
+        return i === n && j === m;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

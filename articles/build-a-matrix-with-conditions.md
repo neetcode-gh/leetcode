@@ -646,6 +646,82 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} k
+     * @param {number[][]} rowConditions
+     * @param {number[][]} colConditions
+     * @return {number[][]}
+     */
+    buildMatrix(k: number, rowConditions: number[][], colConditions: number[][]): number[][] {
+        const rowOrder = this.topoSort(k, rowConditions);
+        if (!rowOrder) return [];
+        const colOrder = this.topoSort(k, colConditions);
+        if (!colOrder) return [];
+
+        const valToRow: { [key: number]: number } = {};
+        rowOrder.forEach((num, i) => {
+            valToRow[num] = i;
+        });
+
+        const valToCol: { [key: number]: number } = {};
+        colOrder.forEach((num, i) => {
+            valToCol[num] = i;
+        });
+
+        const res: number[][] = Array.from({ length: k }, () => Array(k).fill(0));
+        for (let num = 1; num <= k; num++) {
+            const r = valToRow[num];
+            const c = valToCol[num];
+            res[r][c] = num;
+        }
+        return res;
+    }
+
+    /**
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    topoSort(k: number, edges: number[][]): number[] | null {
+        const adj: number[][] = Array.from({ length: k + 1 }, () => []);
+        edges.forEach(([src, dst]) => {
+            adj[src].push(dst);
+        });
+
+        const visit = new Set<number>();
+        const path = new Set<number>();
+        const order: number[] = [];
+
+        const dfs = (src: number): boolean => {
+            if (path.has(src)) return false;
+            if (visit.has(src)) return true;
+
+            visit.add(src);
+            path.add(src);
+            for (const nei of adj[src]) {
+                if (!dfs(nei)) {
+                    return false;
+                }
+            }
+            path.delete(src);
+            order.push(src);
+            return true;
+        };
+
+        for (let src = 1; src <= k; src++) {
+            if (!visit.has(src)) {
+                if (!dfs(src)) {
+                    return null;
+                }
+            }
+        }
+        return order.reverse();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1187,6 +1263,74 @@ impl Solution {
         }
 
         if order.len() == k { Some(order) } else { None }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} k
+     * @param {number[][]} rowConditions
+     * @param {number[][]} colConditions
+     * @return {number[][]}
+     */
+    buildMatrix(k: number, rowConditions: number[][], colConditions: number[][]): number[][] {
+        const rowOrder = this.topoSort(k, rowConditions);
+        if (rowOrder.length !== k) return [];
+
+        const colOrder = this.topoSort(k, colConditions);
+        if (colOrder.length !== k) return [];
+
+        const res: number[][] = Array.from({ length: k }, () => Array(k).fill(0));
+        const colIndex: number[] = Array(k + 1).fill(0);
+
+        for (let i = 0; i < k; i++) {
+            colIndex[colOrder[i]] = i;
+        }
+
+        for (let i = 0; i < k; i++) {
+            res[i][colIndex[rowOrder[i]]] = rowOrder[i];
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {number} k
+     * @param {number[][]} edges
+     * @return {number[]}
+     */
+    topoSort(k: number, edges: number[][]): number[] {
+        const indegree: number[] = Array(k + 1).fill(0);
+        const adj: number[][] = Array.from({ length: k + 1 }, () => []);
+
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            indegree[v]++;
+        }
+
+        const queue = new Queue();
+        const order: number[] = [];
+
+        for (let i = 1; i <= k; i++) {
+            if (indegree[i] === 0) {
+                queue.push(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            const node: number = queue.pop();
+            order.push(node);
+            for (const nei of adj[node]) {
+                indegree[nei]--;
+                if (indegree[nei] === 0) {
+                    queue.push(nei);
+                }
+            }
+        }
+
+        return order.length === k ? order : [];
     }
 }
 ```

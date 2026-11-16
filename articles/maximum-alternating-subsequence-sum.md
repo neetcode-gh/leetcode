@@ -98,6 +98,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long MaxAlternatingSum(int[] nums) {
+        return Dfs(nums, 0, true);
+    }
+
+    private long Dfs(int[] nums, int i, bool even) {
+        if (i == nums.Length) {
+            return 0;
+        }
+        long total = even ? nums[i] : -nums[i];
+        return Math.Max(total + Dfs(nums, i + 1, !even), Dfs(nums, i + 1, even));
+    }
+}
+```
+
 ```go
 func maxAlternatingSum(nums []int) int64 {
     var dfs func(i int, even bool) int64
@@ -161,6 +177,27 @@ impl Solution {
             (total + dfs(i + 1, !even, nums)).max(dfs(i + 1, even, nums))
         }
         dfs(0, true, &nums)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxAlternatingSum(nums: number[]): number {
+        const dfs = (i: number, even: boolean): number => {
+            if (i === nums.length) {
+                return 0;
+            }
+
+            const total = even ? nums[i] : -nums[i];
+            return Math.max(total + dfs(i + 1, !even), dfs(i + 1, even));
+        };
+
+        return dfs(0, true);
     }
 }
 ```
@@ -295,6 +332,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private long[,] dp;
+
+    public long MaxAlternatingSum(int[] nums) {
+        int n = nums.Length;
+        dp = new long[n, 2];
+        for (int i = 0; i < n; i++) {
+            dp[i, 0] = -1;
+            dp[i, 1] = -1;
+        }
+        return Dfs(nums, 0, 1);
+    }
+
+    private long Dfs(int[] nums, int i, int even) {
+        if (i == nums.Length) {
+            return 0;
+        }
+        if (dp[i, even] != -1) {
+            return dp[i, even];
+        }
+
+        long total = even == 1 ? nums[i] : -nums[i];
+        dp[i, even] = Math.Max(total + Dfs(nums, i + 1, 1 - even), Dfs(nums, i + 1, even));
+        return dp[i, even];
+    }
+}
+```
+
 ```go
 func maxAlternatingSum(nums []int) int64 {
     n := len(nums)
@@ -393,6 +459,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxAlternatingSum(nums: number[]): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n }, () =>
+            Array(2).fill(-1),
+        );
+
+        const dfs = (i: number, even: number): number => {
+            if (i === n) {
+                return 0;
+            }
+            if (dp[i][even] !== -1) {
+                return dp[i][even];
+            }
+
+            const total = even === 1 ? nums[i] : -nums[i];
+            dp[i][even] = Math.max(
+                total + dfs(i + 1, 1 - even),
+                dfs(i + 1, even),
+            );
+            return dp[i][even];
+        };
+
+        return dfs(0, 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -486,6 +585,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long MaxAlternatingSum(int[] nums) {
+        int n = nums.Length;
+        long[,] dp = new long[n + 1, 2]; // dp[i,0] -> odd, dp[i,1] -> even
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i, 1] = Math.Max(nums[i] + dp[i + 1, 0], dp[i + 1, 1]); // even
+            dp[i, 0] = Math.Max(-nums[i] + dp[i + 1, 1], dp[i + 1, 0]); // odd
+        }
+
+        return dp[0, 1];
+    }
+}
+```
+
 ```go
 func maxAlternatingSum(nums []int) int64 {
     n := len(nums)
@@ -551,6 +666,26 @@ impl Solution {
         }
 
         dp[0][1]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxAlternatingSum(nums: number[]): number {
+        const n = nums.length;
+        const dp: number[][] = Array.from({ length: n + 1 }, () => [0, 0]); // dp[i][0] -> odd, dp[i][1] -> even
+
+        for (let i = n - 1; i >= 0; i--) {
+            dp[i][1] = Math.max(nums[i] + dp[i + 1][0], dp[i + 1][1]); // even
+            dp[i][0] = Math.max(-nums[i] + dp[i + 1][1], dp[i + 1][0]); // odd
+        }
+
+        return dp[0][1]; // Result starts with even index
     }
 }
 ```
@@ -653,6 +788,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long MaxAlternatingSum(int[] nums) {
+        long sumEven = 0, sumOdd = 0;
+
+        for (int i = nums.Length - 1; i >= 0; i--) {
+            long tmpEven = Math.Max(nums[i] + sumOdd, sumEven);
+            long tmpOdd = Math.Max(-nums[i] + sumEven, sumOdd);
+            sumEven = tmpEven;
+            sumOdd = tmpOdd;
+        }
+
+        return sumEven;
+    }
+}
+```
+
 ```go
 func maxAlternatingSum(nums []int) int64 {
     var sumEven, sumOdd int64 = 0, 0
@@ -721,6 +873,28 @@ impl Solution {
         }
 
         sum_even
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxAlternatingSum(nums: number[]): number {
+        let sumEven = 0,
+            sumOdd = 0;
+
+        for (let i = nums.length - 1; i >= 0; i--) {
+            let tmpEven = Math.max(nums[i] + sumOdd, sumEven);
+            let tmpOdd = Math.max(-nums[i] + sumEven, sumOdd);
+            sumEven = tmpEven;
+            sumOdd = tmpOdd;
+        }
+
+        return sumEven;
     }
 }
 ```

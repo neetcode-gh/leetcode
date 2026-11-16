@@ -320,6 +320,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} digits
+     * @return {string[]}
+     */
+    letterCombinations(digits: string): string[] {
+        let res: string[] = [];
+        if (digits.length === 0) return res;
+        const digitToChar: { [key: string]: string } = {
+            2: 'abc',
+            3: 'def',
+            4: 'ghi',
+            5: 'jkl',
+            6: 'mno',
+            7: 'qprs',
+            8: 'tuv',
+            9: 'wxyz',
+        };
+
+        const backtrack = (i: number, curStr: string): void => {
+            if (curStr.length === digits.length) {
+                res.push(curStr);
+                return;
+            }
+            for (const c of digitToChar[digits[i]]) {
+                backtrack(i + 1, curStr + c);
+            }
+        };
+        backtrack(0, '');
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -622,6 +657,41 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} digits
+     * @return {string[]}
+     */
+    letterCombinations(digits: string): string[] {
+        if (digits.length === 0) return [];
+
+        let res: string[] = [''];
+        const digitToChar: { [key: string]: string } = {
+            2: 'abc',
+            3: 'def',
+            4: 'ghi',
+            5: 'jkl',
+            6: 'mno',
+            7: 'qprs',
+            8: 'tuv',
+            9: 'wxyz',
+        };
+
+        for (const digit of digits) {
+            const tmp: string[] = [];
+            for (const curStr of res) {
+                for (const c of digitToChar[digit]) {
+                    tmp.push(curStr + c);
+                }
+            }
+            res = tmp;
+        }
+        return res;
     }
 }
 ```

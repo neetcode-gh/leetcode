@@ -415,6 +415,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maxPathSum(root: TreeNode | null): number {
+        let res = -Infinity;
+
+        function getMax(root: TreeNode | null): number {
+            if (!root) return 0;
+            let left = getMax(root.left);
+            let right = getMax(root.right);
+            let path = root.val + Math.max(left, right);
+            return Math.max(0, path);
+        }
+
+        function dfs(root: TreeNode | null): void {
+            if (!root) return;
+            let left = getMax(root.left);
+            let right = getMax(root.right);
+            res = Math.max(res, root.val + left + right);
+            dfs(root.left);
+            dfs(root.right);
+        }
+
+        dfs(root);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -794,6 +826,37 @@ impl Solution {
                 node.val + left_max.max(right_max)
             }
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    maxPathSum(root: TreeNode | null): number {
+        const res = [root!.val];
+        this.dfs(root, res);
+        return res[0];
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @param {number[]} res
+     * @return {number}
+     */
+    dfs(root: TreeNode | null, res: number[]): number {
+        if (root === null) {
+            return 0;
+        }
+
+        const leftMax = Math.max(this.dfs(root.left, res), 0);
+        const rightMax = Math.max(this.dfs(root.right, res), 0);
+
+        res[0] = Math.max(res[0], root.val + leftMax + rightMax);
+        return root.val + Math.max(leftMax, rightMax);
     }
 }
 ```

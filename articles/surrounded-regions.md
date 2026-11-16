@@ -467,6 +467,53 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @return {void} Do not return anything, modify board in-place instead.
+     */
+    solve(board: string[][]): void {
+        let ROWS = board.length,
+            COLS = board[0].length;
+
+        const capture = (r: number, c: number): void => {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r == ROWS ||
+                c == COLS ||
+                board[r][c] !== 'O'
+            ) {
+                return;
+            }
+            board[r][c] = 'T';
+            capture(r + 1, c);
+            capture(r - 1, c);
+            capture(r, c + 1);
+            capture(r, c - 1);
+        };
+
+        for (let r = 0; r < ROWS; r++) {
+            if (board[r][0] === 'O') capture(r, 0);
+            if (board[r][COLS - 1] === 'O') capture(r, COLS - 1);
+        }
+
+        for (let c = 0; c < COLS; c++) {
+            if (board[0][c] === 'O') capture(0, c);
+            if (board[ROWS - 1][c] === 'O') capture(ROWS - 1, c);
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (board[r][c] === 'O') board[r][c] = 'X';
+                else if (board[r][c] === 'T') board[r][c] = 'O';
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -939,6 +986,63 @@ impl Solution {
                 } else if board[r][c] == 'T' {
                     board[r][c] = 'O';
                 }
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @return {void} Do not return anything, modify board in-place instead.
+     */
+    solve(board: string[][]): void {
+        let ROWS = board.length,
+            COLS = board[0].length;
+        let directions: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        const capture = (): void => {
+            let q = new Queue();
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (
+                        (r === 0 ||
+                            r === ROWS - 1 ||
+                            c === 0 ||
+                            c === COLS - 1) &&
+                        board[r][c] === 'O'
+                    ) {
+                        q.push([r, c]);
+                    }
+                }
+            }
+            while (!q.isEmpty()) {
+                let [r, c]: number[] = q.pop();
+                if (board[r][c] === 'O') {
+                    board[r][c] = 'T';
+                    for (let [dr, dc] of directions) {
+                        let nr = r + dr,
+                            nc = c + dc;
+                        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+                            q.push([nr, nc]);
+                        }
+                    }
+                }
+            }
+        };
+
+        capture();
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (board[r][c] === 'O') board[r][c] = 'X';
+                else if (board[r][c] === 'T') board[r][c] = 'O';
             }
         }
     }
@@ -1654,6 +1758,100 @@ impl Solution {
         for r in 0..rows {
             for c in 0..cols {
                 if !dsu.connected(dummy, r * cols + c) {
+                    board[r][c] = 'X';
+                }
+            }
+        }
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] >= this.Size[pv]) {
+            this.Size[pu] += this.Size[pv];
+            this.Parent[pv] = pu;
+        } else {
+            this.Size[pv] += this.Size[pu];
+            this.Parent[pu] = pv;
+        }
+        return true;
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    connected(u: number, v: number): boolean {
+        return this.find(u) === this.find(v);
+    }
+}
+
+class Solution {
+    /**
+     * @param {character[][]} board
+     * @return {void} Do not return anything, modify board in-place instead.
+     */
+    solve(board: string[][]): void {
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const dsu = new DSU(ROWS * COLS + 1);
+        const directions: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (board[r][c] !== 'O') continue;
+                if (r === 0 || c === 0 || r === ROWS - 1 || c === COLS - 1) {
+                    dsu.union(ROWS * COLS, r * COLS + c);
+                } else {
+                    for (let [dx, dy] of directions) {
+                        const nr = r + dx,
+                            nc = c + dy;
+                        if (board[nr][nc] === 'O') {
+                            dsu.union(r * COLS + c, nr * COLS + nc);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (!dsu.connected(ROWS * COLS, r * COLS + c)) {
                     board[r][c] = 'X';
                 }
             }

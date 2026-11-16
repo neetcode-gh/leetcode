@@ -103,6 +103,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSumMinProduct(int[] nums) {
+        long res = 0, MOD = 1000000007;
+        for (int i = 0; i < nums.Length; i++) {
+            long totalSum = 0, mini = long.MaxValue;
+            for (int j = i; j < nums.Length; j++) {
+                mini = Math.Min(mini, nums[j]);
+                totalSum += nums[j];
+                long cur = (mini * totalSum) % MOD;
+                res = Math.Max(res, cur);
+            }
+        }
+        return (int)res;
+    }
+}
+```
+
 ```go
 func maxSumMinProduct(nums []int) int {
     res := int64(0)
@@ -184,6 +202,30 @@ impl Solution {
             }
         }
         res as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSumMinProduct(nums: number[]): number {
+        let res = 0,
+            MOD = 1000000007;
+        for (let i = 0; i < nums.length; i++) {
+            let totalSum = 0,
+                mini = Infinity;
+            for (let j = i; j < nums.length; j++) {
+                mini = Math.min(mini, nums[j]);
+                totalSum += nums[j];
+                let cur = (mini * totalSum) % MOD;
+                res = Math.max(res, cur);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -333,6 +375,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSumMinProduct(int[] nums) {
+        int MOD = 1_000_000_007;
+        return (int)(Rec(nums, 0, nums.Length - 1) % MOD);
+    }
+
+    private long Rec(int[] nums, int l, int r) {
+        if (l > r) return 0;
+
+        int minIdx = l;
+        long totalSum = 0;
+        for (int i = l; i <= r; i++) {
+            totalSum += nums[i];
+            if (nums[i] < nums[minIdx]) {
+                minIdx = i;
+            }
+        }
+
+        long cur = totalSum * nums[minIdx];
+        long left = Rec(nums, l, minIdx - 1);
+        long right = Rec(nums, minIdx + 1, r);
+
+        return Math.Max(cur, Math.Max(left, right));
+    }
+}
+```
+
 ```go
 func maxSumMinProduct(nums []int) int {
     MOD := int64(1e9 + 7)
@@ -450,6 +520,41 @@ impl Solution {
         }
 
         (rec(&nums, 0, nums.len() as isize - 1) % modv) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSumMinProduct(nums: number[]): number {
+        const MOD = 1_000_000_007;
+
+        const rec = (l: number, r: number): bigint => {
+            if (l > r) return 0n;
+
+            let minIdx = l;
+            let totalSum = 0n;
+            for (let i = l; i <= r; i++) {
+                totalSum += BigInt(nums[i]);
+                if (nums[i] < nums[minIdx]) {
+                    minIdx = i;
+                }
+            }
+
+            let cur = totalSum * BigInt(nums[minIdx]);
+            let left = rec(l, minIdx - 1);
+            let right = rec(minIdx + 1, r);
+
+            if (cur < left) cur = left;
+            if (cur < right) cur = right;
+            return cur;
+        };
+
+        return Number(rec(0, nums.length - 1) % BigInt(MOD));
     }
 }
 ```
@@ -757,6 +862,291 @@ class Solution {
 }
 ```
 
+```csharp
+public class SegmentTree {
+    private int n;
+    private long[][] tree;
+
+    public SegmentTree(int n, int[] nums) {
+        this.n = n;
+        while ((this.n & (this.n - 1)) != 0) {
+            this.n++;
+        }
+        Build(n, nums);
+    }
+
+    private void Build(int n, int[] nums) {
+        tree = new long[2 * this.n][];
+        for (int i = 0; i < 2 * this.n; i++) {
+            tree[i] = new long[] { -1, long.MaxValue };
+        }
+        for (int i = 0; i < n; i++) {
+            tree[this.n + i] = new long[] { i, nums[i] };
+        }
+        for (int i = this.n - 1; i > 0; i--) {
+            tree[i] = Merge(tree[i << 1], tree[i << 1 | 1]);
+        }
+    }
+
+    private long[] Merge(long[] a, long[] b) {
+        return a[1] < b[1] ? a : b;
+    }
+
+    public int Query(int l, int r) {
+        long[] res = new long[] { -1, long.MaxValue };
+        l += this.n;
+        r += this.n + 1;
+        while (l < r) {
+            if ((l & 1) == 1) res = Merge(res, tree[l++]);
+            if ((r & 1) == 1) res = Merge(res, tree[--r]);
+            l >>= 1;
+            r >>= 1;
+        }
+        return (int)res[0];
+    }
+}
+
+public class Solution {
+    public int MaxSumMinProduct(int[] nums) {
+        int MOD = 1_000_000_007;
+        SegmentTree segTree = new SegmentTree(nums.Length, nums);
+        long[] prefixSum = new long[nums.Length + 1];
+        for (int i = 0; i < nums.Length; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        return (int)(Rec(0, nums.Length - 1, nums, prefixSum, segTree) % MOD);
+    }
+
+    private long Rec(int l, int r, int[] nums, long[] prefixSum, SegmentTree segTree) {
+        if (l > r) return 0;
+        int minIdx = segTree.Query(l, r);
+        long totalSum = prefixSum[r + 1] - prefixSum[l];
+        long cur = totalSum * nums[minIdx];
+        long left = Rec(l, minIdx - 1, nums, prefixSum, segTree);
+        long right = Rec(minIdx + 1, r, nums, prefixSum, segTree);
+        return Math.Max(cur, Math.Max(left, right));
+    }
+}
+```
+
+```go
+type SegmentTree struct {
+    n    int
+    tree [][2]int
+}
+
+func NewSegmentTree(n int, nums []int) *SegmentTree {
+    st := &SegmentTree{n: n}
+    for (st.n & (st.n - 1)) != 0 {
+        st.n++
+    }
+    st.build(n, nums)
+    return st
+}
+
+func (st *SegmentTree) build(n int, nums []int) {
+    st.tree = make([][2]int, 2*st.n)
+    for i := range st.tree {
+        st.tree[i] = [2]int{-1, math.MaxInt64}
+    }
+    for i := 0; i < n; i++ {
+        st.tree[st.n+i] = [2]int{i, nums[i]}
+    }
+    for i := st.n - 1; i > 0; i-- {
+        st.tree[i] = st.merge(st.tree[i<<1], st.tree[i<<1|1])
+    }
+}
+
+func (st *SegmentTree) merge(a, b [2]int) [2]int {
+    if a[1] < b[1] {
+        return a
+    }
+    return b
+}
+
+func (st *SegmentTree) query(l, r int) int {
+    res := [2]int{-1, math.MaxInt64}
+    l += st.n
+    r += st.n + 1
+    for l < r {
+        if l&1 == 1 {
+            res = st.merge(res, st.tree[l])
+            l++
+        }
+        if r&1 == 1 {
+            r--
+            res = st.merge(res, st.tree[r])
+        }
+        l >>= 1
+        r >>= 1
+    }
+    return res[0]
+}
+
+func maxSumMinProduct(nums []int) int {
+    MOD := 1_000_000_007
+    segTree := NewSegmentTree(len(nums), nums)
+    prefixSum := make([]int, len(nums)+1)
+    for i := 0; i < len(nums); i++ {
+        prefixSum[i+1] = prefixSum[i] + nums[i]
+    }
+
+    var rec func(l, r int) int
+    rec = func(l, r int) int {
+        if l > r {
+            return 0
+        }
+        minIdx := segTree.query(l, r)
+        totalSum := prefixSum[r+1] - prefixSum[l]
+        cur := totalSum * nums[minIdx]
+        left := rec(l, minIdx-1)
+        right := rec(minIdx+1, r)
+        return max(cur, max(left, right))
+    }
+
+    return rec(0, len(nums)-1) % MOD
+}
+```
+
+```kotlin
+class SegmentTree(n: Int, nums: IntArray) {
+    private var n = n
+    private lateinit var tree: Array<LongArray>
+
+    init {
+        while ((this.n and (this.n - 1)) != 0) {
+            this.n++
+        }
+        build(n, nums)
+    }
+
+    private fun build(n: Int, nums: IntArray) {
+        tree = Array(2 * this.n) { longArrayOf(-1, Long.MAX_VALUE) }
+        for (i in 0 until n) {
+            tree[this.n + i] = longArrayOf(i.toLong(), nums[i].toLong())
+        }
+        for (i in this.n - 1 downTo 1) {
+            tree[i] = merge(tree[i shl 1], tree[i shl 1 or 1])
+        }
+    }
+
+    private fun merge(a: LongArray, b: LongArray): LongArray {
+        return if (a[1] < b[1]) a else b
+    }
+
+    fun query(l: Int, r: Int): Int {
+        var res = longArrayOf(-1, Long.MAX_VALUE)
+        var l = l + this.n
+        var r = r + this.n + 1
+        while (l < r) {
+            if ((l and 1) == 1) res = merge(res, tree[l++])
+            if ((r and 1) == 1) res = merge(res, tree[--r])
+            l = l shr 1
+            r = r shr 1
+        }
+        return res[0].toInt()
+    }
+}
+
+class Solution {
+    fun maxSumMinProduct(nums: IntArray): Int {
+        val MOD = 1_000_000_007
+        val segTree = SegmentTree(nums.size, nums)
+        val prefixSum = LongArray(nums.size + 1)
+        for (i in nums.indices) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        return (rec(0, nums.size - 1, nums, prefixSum, segTree) % MOD).toInt()
+    }
+
+    private fun rec(l: Int, r: Int, nums: IntArray, prefixSum: LongArray, segTree: SegmentTree): Long {
+        if (l > r) return 0
+        val minIdx = segTree.query(l, r)
+        val totalSum = prefixSum[r + 1] - prefixSum[l]
+        val cur = totalSum * nums[minIdx]
+        val left = rec(l, minIdx - 1, nums, prefixSum, segTree)
+        val right = rec(minIdx + 1, r, nums, prefixSum, segTree)
+        return maxOf(cur, maxOf(left, right))
+    }
+}
+```
+
+```swift
+class SegmentTree {
+    private var n: Int
+    private var tree: [(Int, Int)]
+
+    init(_ n: Int, _ nums: [Int]) {
+        self.n = n
+        while (self.n & (self.n - 1)) != 0 {
+            self.n += 1
+        }
+        self.tree = []
+        build(n, nums)
+    }
+
+    private func build(_ n: Int, _ nums: [Int]) {
+        tree = [(Int, Int)](repeating: (-1, Int.max), count: 2 * self.n)
+        for i in 0..<n {
+            tree[self.n + i] = (i, nums[i])
+        }
+        var i = self.n - 1
+        while i > 0 {
+            tree[i] = merge(tree[i << 1], tree[i << 1 | 1])
+            i -= 1
+        }
+    }
+
+    private func merge(_ a: (Int, Int), _ b: (Int, Int)) -> (Int, Int) {
+        return a.1 < b.1 ? a : b
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        var res = (-1, Int.max)
+        var l = l + self.n
+        var r = r + self.n + 1
+        while l < r {
+            if l & 1 == 1 {
+                res = merge(res, tree[l])
+                l += 1
+            }
+            if r & 1 == 1 {
+                r -= 1
+                res = merge(res, tree[r])
+            }
+            l >>= 1
+            r >>= 1
+        }
+        return res.0
+    }
+}
+
+class Solution {
+    func maxSumMinProduct(_ nums: [Int]) -> Int {
+        let MOD = 1_000_000_007
+        let segTree = SegmentTree(nums.count, nums)
+        var prefixSum = [Int](repeating: 0, count: nums.count + 1)
+        for i in 0..<nums.count {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        func rec(_ l: Int, _ r: Int) -> Int {
+            if l > r { return 0 }
+            let minIdx = segTree.query(l, r)
+            let totalSum = prefixSum[r + 1] - prefixSum[l]
+            let cur = totalSum * nums[minIdx]
+            let left = rec(l, minIdx - 1)
+            let right = rec(minIdx + 1, r)
+            return max(cur, max(left, right))
+        }
+
+        return rec(0, nums.count - 1) % MOD
+    }
+}
+```
+
 ```rust
 struct SegmentTree {
     n: usize,
@@ -816,6 +1206,105 @@ impl Solution {
         }
 
         (rec(0, n as isize - 1, &nums, &prefix_sum, &seg_tree) % modv) as i32
+    }
+}
+```
+
+```typescript
+class SegmentTree {
+    private n: number;
+    private tree: bigint[][];
+
+    /**
+     * @constructor
+     * @param {number} n
+     * @param {number[]} nums
+     */
+    constructor(n: number, nums: number[]) {
+        this.n = n;
+        while ((this.n & (this.n - 1)) !== 0) {
+            this.n++;
+        }
+        this.tree = [];
+        this.build(n, nums);
+    }
+
+    /**
+     * @param {number} n
+     * @param {number[]} nums
+     * @return {void}
+     */
+    build(n: number, nums: number[]): void {
+        this.tree = Array(2 * this.n).fill([
+            BigInt(-1),
+            BigInt(Number.MAX_SAFE_INTEGER),
+        ]);
+        for (let i = 0; i < n; i++) {
+            this.tree[this.n + i] = [BigInt(i), BigInt(nums[i])];
+        }
+        for (let i = this.n - 1; i > 0; i--) {
+            this.tree[i] = this._merge(
+                this.tree[i << 1],
+                this.tree[(i << 1) | 1],
+            );
+        }
+    }
+
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @return {number}
+     */
+    _merge(a: bigint[], b: bigint[]): bigint[] {
+        return a[1] < b[1] ? a : b;
+    }
+
+    /**
+     * @param {number} l
+     * @param {number} r
+     * @return {number}
+     */
+    query(l: number, r: number): number {
+        let res = [BigInt(-1), BigInt(Number.MAX_SAFE_INTEGER)];
+        l += this.n;
+        r += this.n + 1;
+        while (l < r) {
+            if (l & 1) res = this._merge(res, this.tree[l++]);
+            if (r & 1) res = this._merge(res, this.tree[--r]);
+            l >>= 1;
+            r >>= 1;
+        }
+        return Number(res[0]);
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSumMinProduct(nums: number[]): number {
+        const MOD = BigInt(1_000_000_007);
+        const segTree = new SegmentTree(nums.length, nums);
+        const prefixSum: bigint[] = Array(nums.length + 1).fill(BigInt(0));
+        for (let i = 0; i < nums.length; i++) {
+            prefixSum[i + 1] = prefixSum[i] + BigInt(nums[i]);
+        }
+
+        const rec = (l: number, r: number): bigint => {
+            if (l > r) return BigInt(0);
+            const minIdx = segTree.query(l, r);
+            const totalSum = prefixSum[r + 1] - prefixSum[l];
+            let cur = totalSum * BigInt(nums[minIdx]);
+            let left = rec(l, minIdx - 1);
+            let right = rec(minIdx + 1, r);
+
+            if (cur < left) cur = left;
+            if (cur < right) cur = right;
+            return cur;
+        };
+
+        return Number(rec(0, nums.length - 1) % MOD);
     }
 }
 ```
@@ -1035,6 +1524,55 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSumMinProduct(int[] nums) {
+        int n = nums.Length;
+        long[] prefixSum = new long[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        int[] prevMin = new int[n];
+        int[] nxtMin = new int[n];
+        Array.Fill(prevMin, -1);
+        Array.Fill(nxtMin, n);
+
+        Stack<int> stack = new Stack<int>();
+        for (int i = 0; i < n; i++) {
+            while (stack.Count > 0 && nums[stack.Peek()] >= nums[i]) {
+                stack.Pop();
+            }
+            if (stack.Count > 0) {
+                prevMin[i] = stack.Peek();
+            }
+            stack.Push(i);
+        }
+
+        stack.Clear();
+        for (int i = n - 1; i >= 0; i--) {
+            while (stack.Count > 0 && nums[stack.Peek()] >= nums[i]) {
+                stack.Pop();
+            }
+            if (stack.Count > 0) {
+                nxtMin[i] = stack.Peek();
+            }
+            stack.Push(i);
+        }
+
+        long res = 0;
+        int MOD = 1_000_000_007;
+        for (int i = 0; i < n; i++) {
+            int l = prevMin[i] + 1, r = nxtMin[i] - 1;
+            long totalSum = prefixSum[r + 1] - prefixSum[l];
+            res = Math.Max(res, nums[i] * totalSum);
+        }
+
+        return (int)(res % MOD);
+    }
+}
+```
+
 ```go
 func maxSumMinProduct(nums []int) int {
     n := len(nums)
@@ -1102,22 +1640,22 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (i in 0 until n) {
-            while (stack.isNotEmpty() && nums[stack.last()] >= nums[i]) {
+            while (stack.isNotEmpty() && nums[stack.peekLast()] >= nums[i]) {
                 stack.removeLast()
             }
             if (stack.isNotEmpty()) {
-                prevMin[i] = stack.last()
+                prevMin[i] = stack.peekLast()
             }
             stack.addLast(i)
         }
 
         stack.clear()
         for (i in n - 1 downTo 0) {
-            while (stack.isNotEmpty() && nums[stack.last()] >= nums[i]) {
+            while (stack.isNotEmpty() && nums[stack.peekLast()] >= nums[i]) {
                 stack.removeLast()
             }
             if (stack.isNotEmpty()) {
-                nxtMin[i] = stack.last()
+                nxtMin[i] = stack.peekLast()
             }
             stack.addLast(i)
         }
@@ -1231,6 +1769,59 @@ impl Solution {
         }
 
         (res % modv) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSumMinProduct(nums: number[]): number {
+        const n = nums.length;
+        const prefixSum: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        const prevMin: number[] = new Array(n).fill(-1);
+        const nxtMin: number[] = new Array(n).fill(n);
+        const stack: number[] = [];
+
+        for (let i = 0; i < n; i++) {
+            while (stack.length && nums[stack[stack.length - 1]] >= nums[i]) {
+                stack.pop();
+            }
+            if (stack.length) {
+                prevMin[i] = stack[stack.length - 1];
+            }
+            stack.push(i);
+        }
+
+        stack.length = 0;
+        for (let i = n - 1; i >= 0; i--) {
+            while (stack.length && nums[stack[stack.length - 1]] >= nums[i]) {
+                stack.pop();
+            }
+            if (stack.length) {
+                nxtMin[i] = stack[stack.length - 1];
+            }
+            stack.push(i);
+        }
+
+        let res = 0n;
+        const MOD = 10n ** 9n + 7n;
+        for (let i = 0; i < n; i++) {
+            const l = prevMin[i] + 1;
+            const r = nxtMin[i] - 1;
+            const totalSum = BigInt(prefixSum[r + 1] - prefixSum[l]);
+            const tmp = BigInt(nums[i]) * totalSum;
+            if (tmp > res) res = tmp;
+        }
+
+        return Number(res % MOD);
     }
 }
 ```
@@ -1402,6 +1993,41 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSumMinProduct(int[] nums) {
+        int n = nums.Length;
+        long[] prefix = new long[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        long res = 0;
+        Stack<int[]> stack = new Stack<int[]>();
+        for (int i = 0; i < n; i++) {
+            int newStart = i;
+            while (stack.Count > 0 && stack.Peek()[1] > nums[i]) {
+                int[] top = stack.Pop();
+                int start = top[0], val = top[1];
+                long total = prefix[i] - prefix[start];
+                res = Math.Max(res, val * total);
+                newStart = start;
+            }
+            stack.Push(new int[] { newStart, nums[i] });
+        }
+
+        while (stack.Count > 0) {
+            int[] top = stack.Pop();
+            int start = top[0], val = top[1];
+            long total = prefix[n] - prefix[start];
+            res = Math.Max(res, val * total);
+        }
+
+        return (int)(res % 1_000_000_007);
+    }
+}
+```
+
 ```go
 func maxSumMinProduct(nums []int) int {
     n := len(nums)
@@ -1456,7 +2082,7 @@ class Solution {
 
         for (i in 0 until n) {
             var newStart = i
-            while (stack.isNotEmpty() && stack.last()[1] > nums[i]) {
+            while (stack.isNotEmpty() && stack.peekLast()[1] > nums[i]) {
                 val top = stack.removeLast()
                 val start = top[0]
                 val value = top[1]
@@ -1549,6 +2175,47 @@ impl Solution {
         }
 
         (res % 1_000_000_007) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSumMinProduct(nums: number[]): number {
+        const n = nums.length;
+        const prefix: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        let res = 0n;
+        const MOD = 10n ** 9n + 7n;
+        const stack: number[][] = [];
+
+        for (let i = 0; i < n; i++) {
+            let newStart = i;
+            while (stack.length && stack[stack.length - 1][1] > nums[i]) {
+                const [start, val] = stack.pop()!;
+                const total = BigInt(prefix[i] - prefix[start]);
+                const tmp = BigInt(val) * total;
+                if (tmp > res) res = tmp;
+                newStart = start;
+            }
+            stack.push([newStart, nums[i]]);
+        }
+
+        while (stack.length) {
+            const [start, val] = stack.pop()!;
+            const total = BigInt(prefix[n] - prefix[start]);
+            const tmp = BigInt(val) * total;
+            if (tmp > res) res = tmp;
+        }
+
+        return Number(res % MOD);
     }
 }
 ```
@@ -1691,6 +2358,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSumMinProduct(int[] nums) {
+        int n = nums.Length;
+        long[] prefixSum = new long[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        long res = 0;
+        int mod = 1_000_000_007;
+        Stack<int> stack = new Stack<int>();
+        for (int i = 0; i <= n; i++) {
+            while (stack.Count > 0 && (i == n || nums[i] < nums[stack.Peek()])) {
+                int j = stack.Pop();
+                int start = stack.Count == 0 ? 0 : stack.Peek() + 1;
+                res = Math.Max(res, (long)nums[j] * (prefixSum[i] - prefixSum[start]));
+            }
+            stack.Push(i);
+        }
+
+        return (int)(res % mod);
+    }
+}
+```
+
 ```go
 func maxSumMinProduct(nums []int) int {
     n := len(nums)
@@ -1738,9 +2431,9 @@ class Solution {
         val stack = ArrayDeque<Int>()
 
         for (i in 0..n) {
-            while (stack.isNotEmpty() && (i == n || nums[i] < nums[stack.last()])) {
+            while (stack.isNotEmpty() && (i == n || nums[i] < nums[stack.peekLast()])) {
                 val j = stack.removeLast()
-                val start = if (stack.isEmpty()) 0 else stack.last() + 1
+                val start = if (stack.isEmpty()) 0 else stack.peekLast() + 1
                 val total = prefixSum[i] - prefixSum[start]
                 val tmp = nums[j].toLong() * total
                 if (tmp > res) res = tmp
@@ -1810,6 +2503,42 @@ impl Solution {
         }
 
         (res % modv) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    maxSumMinProduct(nums: number[]): number {
+        const n = nums.length;
+        const prefixSum: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        let res = 0n;
+        const MOD = 10n ** 9n + 7n;
+        const stack: number[] = [];
+        for (let i = 0; i <= n; i++) {
+            while (
+                stack.length &&
+                (i === n || nums[i] < nums[stack[stack.length - 1]])
+            ) {
+                const j = stack.pop()!;
+                const start =
+                    stack.length === 0 ? 0 : stack[stack.length - 1] + 1;
+                const total = BigInt(prefixSum[i] - prefixSum[start]);
+                const tmp = BigInt(nums[j]) * total;
+                if (tmp > res) res = tmp;
+            }
+            stack.push(i);
+        }
+
+        return Number(res % MOD);
     }
 }
 ```

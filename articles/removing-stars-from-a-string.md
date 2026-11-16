@@ -176,7 +176,7 @@ class Solution {
         while true {
             var flag = false
             var arr = Array(str)
-            for i in 1..<arr.count {
+            for i in stride(from: 1, to: arr.count, by: 1) {
                 if arr[i] == "*" && arr[i - 1] != "*" {
                     arr.remove(at: i)
                     arr.remove(at: i - 1)

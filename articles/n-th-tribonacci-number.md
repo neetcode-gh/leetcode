@@ -127,6 +127,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    tribonacci(n: number): number {
+        if (n <= 2) {
+            return n === 0 ? 0 : 1;
+        }
+        return (
+            this.tribonacci(n - 1) +
+            this.tribonacci(n - 2) +
+            this.tribonacci(n - 3)
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,6 +341,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    private dp: Map<number, number>;
+
+    /**
+     * @constructor
+     */
+    constructor() {
+        this.dp = new Map();
+    }
+
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    tribonacci(n: number): number {
+        if (n <= 2) {
+            return n === 0 ? 0 : 1;
+        }
+        if (this.dp.has(n)) {
+            return this.dp.get(n)!;
+        }
+        const result =
+            this.tribonacci(n - 1) +
+            this.tribonacci(n - 2) +
+            this.tribonacci(n - 3);
+        this.dp.set(n, result);
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -504,6 +555,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    tribonacci(n: number): number {
+        if (n <= 2) {
+            return n === 0 ? 0 : 1;
+        }
+
+        const dp: number[] = new Array(n + 1).fill(0);
+        dp[1] = dp[2] = 1;
+        for (let i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -658,6 +730,24 @@ impl Solution {
             t[i % 3] = t[0] + t[1] + t[2];
         }
         t[n as usize % 3]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    tribonacci(n: number): number {
+        const t = [0, 1, 1];
+        if (n < 3) return t[n];
+
+        for (let i = 3; i <= n; ++i) {
+            t[i % 3] = t[0] + t[1] + t[2];
+        }
+        return t[n % 3];
     }
 }
 ```

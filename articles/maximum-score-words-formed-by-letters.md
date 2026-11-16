@@ -238,6 +238,62 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] letterCnt;
+    private int[] score;
+
+    public int MaxScoreWords(string[] words, char[] letters, int[] score) {
+        this.score = score;
+        this.letterCnt = new int[26];
+
+        foreach (char c in letters) {
+            letterCnt[c - 'a']++;
+        }
+
+        return Backtrack(0, words);
+    }
+
+    private int CanFormWord(string word) {
+        int[] wordCnt = new int[26];
+        foreach (char c in word) {
+            wordCnt[c - 'a']++;
+            if (wordCnt[c - 'a'] > letterCnt[c - 'a']) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    private int GetScore(string word) {
+        int res = 0;
+        foreach (char c in word) {
+            res += score[c - 'a'];
+        }
+        return res;
+    }
+
+    private int Backtrack(int i, string[] words) {
+        if (i == words.Length) {
+            return 0;
+        }
+
+        int res = Backtrack(i + 1, words);  // skip
+        if (CanFormWord(words[i]) == 1) {  // include (when possible)
+            foreach (char c in words[i]) {
+                letterCnt[c - 'a']--;
+            }
+            res = Math.Max(res, GetScore(words[i]) + Backtrack(i + 1, words));
+            foreach (char c in words[i]) {
+                letterCnt[c - 'a']++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxScoreWords(words []string, letters []byte, score []int) int {
     letterCnt := make([]int, 26)
@@ -453,6 +509,66 @@ impl Solution {
         }
 
         backtrack(0, &words, &mut letter_cnt, &score)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string[]} letters
+     * @param {number[]} score
+     * @return {number}
+     */
+    maxScoreWords(words: string[], letters: string[], score: number[]): number {
+        const canFormWord = (w: string, letterCnt: number[]): boolean => {
+            let wordCnt: number[] = new Array(26).fill(0);
+            for (let c of w) {
+                let idx = c.charCodeAt(0) - 'a'.charCodeAt(0);
+                wordCnt[idx]++;
+                if (wordCnt[idx] > letterCnt[idx]) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        const getScore = (w: string): number => {
+            let res = 0;
+            for (let c of w) {
+                res += score[c.charCodeAt(0) - 'a'.charCodeAt(0)];
+            }
+            return res;
+        };
+
+        let letterCnt: number[] = new Array(26).fill(0);
+        for (let c of letters) {
+            letterCnt[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        const backtrack = (i: number): number => {
+            if (i === words.length) {
+                return 0;
+            }
+
+            let res = backtrack(i + 1); // skip
+
+            if (canFormWord(words[i], letterCnt)) {
+                // include (when possible)
+                for (let c of words[i]) {
+                    letterCnt[c.charCodeAt(0) - 'a'.charCodeAt(0)]--;
+                }
+                res = Math.max(res, getScore(words[i]) + backtrack(i + 1));
+                for (let c of words[i]) {
+                    letterCnt[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+                }
+            }
+
+            return res;
+        };
+
+        return backtrack(0);
     }
 }
 ```
@@ -701,6 +817,65 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] letterCnt = new int[26];
+    private int[] wordScores;
+    private int[][] wordFreqs;
+    private int n;
+
+    public int MaxScoreWords(string[] words, char[] letters, int[] score) {
+        Array.Fill(letterCnt, 0);
+        foreach (char c in letters) {
+            letterCnt[c - 'a']++;
+        }
+
+        n = words.Length;
+        wordScores = new int[n];
+        wordFreqs = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            wordFreqs[i] = new int[26];
+            foreach (char c in words[i]) {
+                int idx = c - 'a';
+                wordFreqs[i][idx]++;
+                wordScores[i] += score[idx];
+            }
+        }
+
+        return Backtrack(0, words);
+    }
+
+    private int Backtrack(int i, string[] words) {
+        if (i == n) {
+            return 0;
+        }
+
+        int res = Backtrack(i + 1, words); // skip
+        bool canInclude = true;
+
+        for (int j = 0; j < 26; j++) {
+            if (wordFreqs[i][j] > letterCnt[j]) {
+                canInclude = false;
+                break;
+            }
+        }
+
+        if (canInclude) {  // include (when possible)
+            for (int j = 0; j < 26; j++) {
+                letterCnt[j] -= wordFreqs[i][j];
+            }
+            res = Math.Max(res, wordScores[i] + Backtrack(i + 1, words));
+            for (int j = 0; j < 26; j++) {
+                letterCnt[j] += wordFreqs[i][j];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxScoreWords(words []string, letters []byte, score []int) int {
     letterCnt := make([]int, 26)
@@ -916,6 +1091,68 @@ impl Solution {
         }
 
         backtrack(0, n, &mut letter_cnt, &word_freqs, &word_scores)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string[]} letters
+     * @param {number[]} score
+     * @return {number}
+     */
+    maxScoreWords(words: string[], letters: string[], score: number[]): number {
+        let letterCnt: number[] = new Array(26).fill(0);
+        for (let c of letters) {
+            letterCnt[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        let n = words.length;
+        let wordScores: number[] = new Array(n).fill(0);
+        let wordFreqs: number[][] = Array.from({ length: n }, () =>
+            new Array(26).fill(0),
+        );
+
+        for (let i = 0; i < n; i++) {
+            for (let c of words[i]) {
+                let idx = c.charCodeAt(0) - 'a'.charCodeAt(0);
+                wordFreqs[i][idx]++;
+                wordScores[i] += score[idx];
+            }
+        }
+
+        const backtrack = (i: number): number => {
+            if (i === n) {
+                return 0;
+            }
+
+            let res = backtrack(i + 1); // skip
+            let canInclude = true;
+
+            for (let j = 0; j < 26; j++) {
+                if (wordFreqs[i][j] > letterCnt[j]) {
+                    canInclude = false;
+                    break;
+                }
+            }
+
+            if (canInclude) {
+                // include (when possible)
+                for (let j = 0; j < 26; j++) {
+                    letterCnt[j] -= wordFreqs[i][j];
+                }
+                res = Math.max(res, wordScores[i] + backtrack(i + 1));
+                for (let j = 0; j < 26; j++) {
+                    letterCnt[j] += wordFreqs[i][j];
+                }
+            }
+
+            return res;
+        };
+
+        return backtrack(0);
     }
 }
 ```
@@ -1164,6 +1401,61 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxScoreWords(string[] words, char[] letters, int[] score) {
+        int[] letterCnt = new int[26];
+        foreach (char c in letters) {
+            letterCnt[c - 'a']++;
+        }
+
+        int n = words.Length;
+        int[] wordScores = new int[n];
+        int[][] wordFreqs = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            wordFreqs[i] = new int[26];
+            foreach (char c in words[i]) {
+                int idx = c - 'a';
+                wordFreqs[i][idx]++;
+                wordScores[i] += score[idx];
+            }
+        }
+
+        int res = 0;
+        for (int mask = 0; mask < (1 << n); mask++) {
+            int curScore = 0;
+            int[] curLetterCnt = (int[])letterCnt.Clone();
+            bool valid = true;
+
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) {
+                    for (int j = 0; j < 26; j++) {
+                        if (wordFreqs[i][j] > curLetterCnt[j]) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (!valid) break;
+
+                    for (int j = 0; j < 26; j++) {
+                        curLetterCnt[j] -= wordFreqs[i][j];
+                    }
+
+                    curScore += wordScores[i];
+                }
+            }
+
+            if (valid) {
+                res = Math.Max(res, curScore);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func maxScoreWords(words []string, letters []byte, score []int) int {
     letterCnt := make([]int, 26)
@@ -1374,6 +1666,68 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {string[]} letters
+     * @param {number[]} score
+     * @return {number}
+     */
+    maxScoreWords(words: string[], letters: string[], score: number[]): number {
+        let letterCnt: number[] = new Array(26).fill(0);
+        for (let c of letters) {
+            letterCnt[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+        }
+
+        let n = words.length;
+        let wordScores: number[] = new Array(n).fill(0);
+        let wordFreqs: number[][] = Array.from({ length: n }, () =>
+            new Array(26).fill(0),
+        );
+
+        for (let i = 0; i < n; i++) {
+            for (let c of words[i]) {
+                let idx = c.charCodeAt(0) - 'a'.charCodeAt(0);
+                wordFreqs[i][idx]++;
+                wordScores[i] += score[idx];
+            }
+        }
+
+        let res = 0;
+        for (let mask = 0; mask < 1 << n; mask++) {
+            let curScore = 0;
+            let curLetterCnt = [...letterCnt];
+            let valid = true;
+
+            for (let i = 0; i < n; i++) {
+                if ((mask & (1 << i)) !== 0) {
+                    for (let j = 0; j < 26; j++) {
+                        if (wordFreqs[i][j] > curLetterCnt[j]) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (!valid) break;
+
+                    for (let j = 0; j < 26; j++) {
+                        curLetterCnt[j] -= wordFreqs[i][j];
+                    }
+
+                    curScore += wordScores[i];
+                }
+            }
+
+            if (valid) {
+                res = Math.max(res, curScore);
+            }
+        }
+
+        return res;
     }
 }
 ```

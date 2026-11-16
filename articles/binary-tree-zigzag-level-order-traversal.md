@@ -385,6 +385,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    zigzagLevelOrder(root: TreeNode | null): number[][] {
+        const res: number[][] = [];
+        if (!root) return res;
+
+        const queue = new Queue([root]);
+
+        while (!queue.isEmpty()) {
+            const level: number[] = [];
+            for (let i = queue.size(); i > 0; i--) {
+                const node: TreeNode = queue.pop();
+                level.push(node.val);
+                if (node.left) queue.push(node.left);
+                if (node.right) queue.push(node.right);
+            }
+            if (res.length % 2 !== 0) level.reverse();
+            res.push(level);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -767,6 +795,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    zigzagLevelOrder(root: TreeNode | null): number[][] {
+        const res: number[][] = [];
+        if (!root) return res;
+
+        const q = new Queue([root]);
+
+        while (!q.isEmpty()) {
+            const size = q.size();
+            const level: number[] = Array(size).fill(0);
+
+            for (let i = 0; i < size; i++) {
+                const node: TreeNode = q.pop();
+                const idx = res.length % 2 === 0 ? i : size - i - 1;
+                level[idx] = node.val;
+                if (node.left) q.push(node.left);
+                if (node.right) q.push(node.right);
+            }
+            res.push(level);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1133,6 +1191,31 @@ impl Solution {
             Self::dfs(&n.left, depth + 1, res);
             Self::dfs(&n.right, depth + 1, res);
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    zigzagLevelOrder(root: TreeNode | null): number[][] {
+        const res: number[][] = [];
+        const dfs = (node: TreeNode | null, depth: number): void => {
+            if (!node) return;
+            if (depth === res.length) res.push([]);
+            res[depth].push(node.val);
+            dfs(node.left, depth + 1);
+            dfs(node.right, depth + 1);
+        };
+
+        dfs(root, 0);
+        for (let i = 0; i < res.length; i++) {
+            if (i % 2 === 1) res[i].reverse();
+        }
+        return res;
     }
 }
 ```
@@ -1572,6 +1655,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {number[][]}
+     */
+    zigzagLevelOrder(root: TreeNode | null): number[][] {
+        if (!root) return [];
+
+        const res: number[][] = [];
+        const stack: [TreeNode, number][] = [[root, 0]];
+
+        while (stack.length) {
+            const [node, depth] = stack.pop()!;
+
+            if (depth === res.length) res.push([]);
+            res[depth].push(node.val);
+
+            if (node.right) stack.push([node.right, depth + 1]);
+            if (node.left) stack.push([node.left, depth + 1]);
+        }
+
+        for (let i = 0; i < res.length; i++) {
+            if (i % 2 === 1) res[i].reverse();
+        }
+
+        return res;
     }
 }
 ```

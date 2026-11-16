@@ -190,6 +190,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findMaxConsecutiveOnes(nums: number[]): number {
+        const n = nums.length;
+        let res = 0;
+        for (let i = 0; i < n; i++) {
+            let cnt = 0;
+            for (let j = i; j < n; j++) {
+                if (nums[j] === 0) break;
+                cnt++;
+            }
+            res = Math.max(res, cnt);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +399,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findMaxConsecutiveOnes(nums: number[]): number {
+        let res = 0,
+            cnt = 0;
+        for (const num of nums) {
+            if (num === 0) {
+                res = Math.max(res, cnt);
+                cnt = 0;
+            } else {
+                cnt++;
+            }
+        }
+        return Math.max(res, cnt);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -526,6 +570,24 @@ impl Solution {
             res = res.max(cnt);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    findMaxConsecutiveOnes(nums: number[]): number {
+        let res = 0,
+            cnt = 0;
+        for (const num of nums) {
+            cnt = num === 1 ? cnt + 1 : 0;
+            res = Math.max(res, cnt);
+        }
+        return res;
     }
 }
 ```

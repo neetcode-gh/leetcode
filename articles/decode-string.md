@@ -360,6 +360,45 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    decodeString(s: string): string {
+        let i = 0;
+
+        const helper = (): string => {
+            let res = '';
+            let k = 0;
+
+            while (i < s.length) {
+                const c = s[i];
+
+                if (!isNaN(Number(c))) {
+                    k = k * 10 + parseInt(c, 10);
+                } else if (c === '[') {
+                    i++;
+                    res += helper().repeat(k);
+                    k = 0;
+                } else if (c === ']') {
+                    return res;
+                } else {
+                    res += c;
+                }
+
+                i++;
+            }
+
+            return res;
+        };
+
+        return helper();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,6 +720,40 @@ impl Solution {
         }
 
         stack.join("")
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    decodeString(s: string): string {
+        const stack: string[] = [];
+
+        for (let i = 0; i < s.length; i++) {
+            const char = s[i];
+
+            if (char !== ']') {
+                stack.push(char);
+            } else {
+                let substr = '';
+                while (stack[stack.length - 1] !== '[') {
+                    substr = stack.pop() + substr;
+                }
+                stack.pop();
+
+                let k = '';
+                while (stack.length > 0 && !isNaN(Number(stack[stack.length - 1]))) {
+                    k = stack.pop() + k;
+                }
+                stack.push(substr.repeat(parseInt(k, 10)));
+            }
+        }
+
+        return stack.join('');
     }
 }
 ```
@@ -1007,6 +1080,41 @@ impl Solution {
         }
 
         cur
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    decodeString(s: string): string {
+        const stringStack: string[] = [];
+        const countStack: number[] = [];
+        let cur = '';
+        let k = 0;
+
+        for (const c of s) {
+            if (!isNaN(Number(c))) {
+                k = k * 10 + parseInt(c, 10);
+            } else if (c === '[') {
+                stringStack.push(cur);
+                countStack.push(k);
+                cur = '';
+                k = 0;
+            } else if (c === ']') {
+                const temp = cur;
+                cur = stringStack.pop()!;
+                const count = countStack.pop()!;
+                cur += temp.repeat(count);
+            } else {
+                cur += c;
+            }
+        }
+
+        return cur;
     }
 }
 ```

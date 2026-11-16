@@ -362,6 +362,58 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestPathBinaryMatrix(grid: number[][]): number {
+        const N = grid.length;
+        if (grid[0][0] === 1 || grid[N - 1][N - 1] === 1) return -1;
+
+        const directions: number[][] = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+            [1, 1],
+            [-1, -1],
+            [1, -1],
+            [-1, 1],
+        ];
+        const visit: boolean[][] = Array.from({ length: N }, () =>
+            Array(N).fill(false),
+        );
+
+        const q = new Queue([[0, 0, 1]]);
+        visit[0][0] = true;
+
+        while (!q.isEmpty()) {
+            const [r, c, length]: number[] = q.pop();
+            if (r === N - 1 && c === N - 1) return length;
+
+            for (const [dr, dc] of directions) {
+                const nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nc >= 0 &&
+                    nr < N &&
+                    nc < N &&
+                    grid[nr][nc] === 0 &&
+                    !visit[nr][nc]
+                ) {
+                    q.push([nr, nc, length + 1]);
+                    visit[nr][nc] = true;
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -504,11 +556,11 @@ class Solution {
 
         if (grid[0][0] || grid[N - 1][N - 1]) return -1;
 
-        let q = [[0, 0]];
+        let q = new Queue([[0, 0]]);
         grid[0][0] = 1;
 
-        while (q.length) {
-            let [r, c] = q.shift();
+        while (!q.isEmpty()) {
+            let [r, c] = q.pop();
             let dist = grid[r][c];
 
             if (r === N - 1 && c === N - 1) return dist;
@@ -715,6 +767,49 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestPathBinaryMatrix(grid: number[][]): number {
+        const N = grid.length;
+        const direct = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
+
+        if (grid[0][0] || grid[N - 1][N - 1]) return -1;
+
+        let q = new Queue([[0, 0]]);
+        grid[0][0] = 1;
+
+        while (!q.isEmpty()) {
+            let [r, c]: number[] = q.pop();
+            let dist = grid[r][c];
+
+            if (r === N - 1 && c === N - 1) return dist;
+
+            for (let d = 0; d < 9; d++) {
+                let nr = r + direct[d],
+                    nc = c + direct[d + 1];
+
+                if (
+                    nr >= 0 &&
+                    nc >= 0 &&
+                    nr < N &&
+                    nc < N &&
+                    grid[nr][nc] === 0
+                ) {
+                    grid[nr][nc] = dist + 1;
+                    q.push([nr, nc]);
+                }
+            }
+        }
+
+        return -1;
     }
 }
 ```
@@ -1170,6 +1265,51 @@ impl Solution {
             res += 1;
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    shortestPathBinaryMatrix(grid: number[][]): number {
+        const N = grid.length;
+        if (grid[0][0] || grid[N - 1][N - 1]) return -1;
+        if (N === 1) return 1;
+
+        const direct = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
+        let q1 = new Queue([[0, 0]]);
+        let q2 = new Queue([[N - 1, N - 1]]);
+        grid[0][0] = -1;
+        grid[N - 1][N - 1] = -2;
+
+        let res = 2,
+            start = -1,
+            end = -2;
+        while (!q1.isEmpty() && !q2.isEmpty()) {
+            for (let i = q1.size(); i > 0; i--) {
+                const [r, c]: number[] = q1.pop();
+                for (let d = 0; d < 9; d++) {
+                    let nr = r + direct[d],
+                        nc = c + direct[d + 1];
+                    if (nr >= 0 && nc >= 0 && nr < N && nc < N) {
+                        if (grid[nr][nc] === end) return res;
+                        if (grid[nr][nc] === 0) {
+                            grid[nr][nc] = start;
+                            q1.push([nr, nc]);
+                        }
+                    }
+                }
+            }
+            [q1, q2] = [q2, q1];
+            [start, end] = [end, start];
+            res++;
+        }
+
+        return -1;
     }
 }
 ```

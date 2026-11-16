@@ -223,6 +223,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    smallestCommonElement(mat: number[][]): number {
+        const count: number[] = new Array(10001).fill(0);
+        const n = mat.length,
+            m = mat[0].length;
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < m; j++) {
+                count[mat[i][j]]++;
+            }
+        }
+
+        for (let k = 1; k <= 10000; k++) {
+            if (count[k] === n) {
+                return k;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ## 1. Count Elements (Improved)
@@ -416,6 +444,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    smallestCommonElement(mat: number[][]): number {
+        const count: number[] = new Array(10001).fill(0);
+        const n = mat.length,
+            m = mat[0].length;
+
+        for (let j = 0; j < m; j++) {
+            for (let i = 0; i < n; i++) {
+                count[mat[i][j]]++;
+                if (count[mat[i][j]] === n) {
+                    return mat[i][j];
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ## Handling Duplicates
@@ -503,6 +556,7 @@ class Solution {
 
 ```cpp
 class Solution {
+public:
     int smallestCommonElement(vector<vector<int>>& mat) {
         int n = mat.size(), m = mat[0].size();
         for (int j = 0; j < m; ++j) {
@@ -701,6 +755,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    smallestCommonElement(mat: number[][]): number {
+        const n = mat.length,
+            m = mat[0].length;
+
+        for (let j = 0; j < m; j++) {
+            let found = true;
+            for (let i = 1; i < n && found; i++) {
+                found = this.binarySearch(mat[i], mat[0][j]) >= 0;
+            }
+            if (found) {
+                return mat[0][j];
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * @param {number[]} arr
+     * @param {number} target
+     * @return {number}
+     */
+    binarySearch(arr: number[], target: number): number {
+        let left = 0,
+            right = arr.length - 1;
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (arr[mid] === target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ## 2. Binary Search (Improved)
@@ -786,6 +886,7 @@ class Solution {
 
 ```cpp
 class Solution {
+public:
     int smallestCommonElement(vector<vector<int>>& mat) {
         int n = mat.size(), m = mat[0].size();
         vector<int> pos(n);
@@ -1055,6 +1156,62 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    smallestCommonElement(mat: number[][]): number {
+        const n = mat.length,
+            m = mat[0].length;
+        const pos: number[] = new Array(n).fill(0);
+
+        for (let j = 0; j < m; j++) {
+            let found = true;
+            for (let i = 1; i < n && found; i++) {
+                pos[i] = this.binarySearch(mat[i], pos[i], m, mat[0][j]);
+                if (pos[i] < 0) {
+                    found = false;
+                    pos[i] = -pos[i] - 1;
+                    if (pos[i] >= m) {
+                        return -1;
+                    }
+                }
+            }
+            if (found) {
+                return mat[0][j];
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * @param {number[]} arr
+     * @param {number} fromIndex
+     * @param {number} toIndex
+     * @param {number} target
+     * @return {number}
+     */
+    binarySearch(arr: number[], fromIndex: number, toIndex: number, target: number): number {
+        let left = fromIndex,
+            right = toIndex - 1;
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (arr[mid] === target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -(left + 1);
     }
 }
 ```
@@ -1345,6 +1502,42 @@ impl Solution {
                 } else {
                     cnt += 1;
                     if cnt == n as i32 {
+                        return cur_max;
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} mat
+     * @return {number}
+     */
+    smallestCommonElement(mat: number[][]): number {
+        const n = mat.length,
+            m = mat[0].length;
+        const pos: number[] = new Array(n).fill(0);
+        let cur_max = 0,
+            cnt = 0;
+
+        while (true) {
+            for (let i = 0; i < n; i++) {
+                while (pos[i] < m && mat[i][pos[i]] < cur_max) {
+                    pos[i]++;
+                }
+                if (pos[i] >= m) {
+                    return -1;
+                }
+                if (mat[i][pos[i]] !== cur_max) {
+                    cnt = 1;
+                    cur_max = mat[i][pos[i]];
+                } else {
+                    cnt++;
+                    if (cnt === n) {
                         return cur_max;
                     }
                 }

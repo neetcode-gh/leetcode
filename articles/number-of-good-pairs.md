@@ -164,6 +164,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numIdenticalPairs(nums: number[]): number {
+        let res = 0;
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = i + 1; j < nums.length; j++) {
+                if (nums[i] == nums[j]) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +349,26 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numIdenticalPairs(nums: number[]): number {
+        const count: { [key: number]: number } = {};
+        let res = 0;
+        for (const num of nums) {
+            count[num] = (count[num] || 0) + 1;
+        }
+        for (const c of Object.values(count)) {
+            res += (c * (c - 1)) / 2;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -480,6 +520,24 @@ impl Solution {
             *count.entry(num).or_insert(0) += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    numIdenticalPairs(nums: number[]): number {
+        const count: { [key: number]: number } = {};
+        let res = 0;
+        for (const num of nums) {
+            res += count[num] || 0;
+            count[num] = (count[num] || 0) + 1;
+        }
+        return res;
     }
 }
 ```

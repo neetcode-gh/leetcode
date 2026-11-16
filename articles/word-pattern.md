@@ -297,6 +297,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} pattern
+     * @param {string} s
+     * @return {boolean}
+     */
+    wordPattern(pattern: string, s: string): boolean {
+        const words = s.split(' ');
+        if (pattern.length !== words.length) {
+            return false;
+        }
+
+        const charToWord = new Map<string, string>();
+        const wordToChar = new Map<string, string>();
+
+        for (let i = 0; i < pattern.length; i++) {
+            const c = pattern[i];
+            const w = words[i];
+
+            if (charToWord.has(c) && charToWord.get(c) !== w) {
+                return false;
+            }
+            if (wordToChar.has(w) && wordToChar.get(w) !== c) {
+                return false;
+            }
+
+            charToWord.set(c, w);
+            wordToChar.set(w, c);
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -563,6 +598,39 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} pattern
+     * @param {string} s
+     * @return {boolean}
+     */
+    wordPattern(pattern: string, s: string): boolean {
+        const charToWord = new Map<string, number>();
+        const wordToChar = new Map<string, number>();
+        const words = s.split(' ');
+
+        if (pattern.length !== words.length) {
+            return false;
+        }
+
+        for (let i = 0; i < words.length; i++) {
+            const c = pattern[i];
+            const word = words[i];
+
+            if ((charToWord.get(c) || 0) !== (wordToChar.get(word) || 0)) {
+                return false;
+            }
+
+            charToWord.set(c, i + 1);
+            wordToChar.set(word, i + 1);
+        }
+
+        return true;
     }
 }
 ```
@@ -871,6 +939,39 @@ impl Solution {
         }
 
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} pattern
+     * @param {string} s
+     * @return {boolean}
+     */
+    wordPattern(pattern: string, s: string): boolean {
+        const charToWord = new Map<string, number>();
+        const wordToChar = new Map<string, number>();
+        const words = s.split(' ');
+
+        if (pattern.length !== words.length) {
+            return false;
+        }
+
+        for (let i = 0; i < words.length; i++) {
+            const c = pattern[i];
+            const word = words[i];
+
+            if ((charToWord.get(c) || 0) !== (wordToChar.get(word) || 0)) {
+                return false;
+            }
+
+            charToWord.set(c, i + 1);
+            wordToChar.set(word, i + 1);
+        }
+
+        return true;
     }
 }
 ```
@@ -1186,6 +1287,43 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} pattern
+     * @param {string} s
+     * @return {boolean}
+     */
+    wordPattern(pattern: string, s: string): boolean {
+        const words = s.split(' ');
+        if (pattern.length !== words.length) {
+            return false;
+        }
+
+        const charToWord = new Map<string, number>();
+        for (let i = 0; i < pattern.length; i++) {
+            const c = pattern[i];
+            const w = words[i];
+
+            if (charToWord.has(c)) {
+                if (words[charToWord.get(c)!] !== w) {
+                    return false;
+                }
+            } else {
+                for (const [key, index] of charToWord.entries()) {
+                    if (words[index] === w) {
+                        return false;
+                    }
+                }
+                charToWord.set(c, i);
+            }
+        }
+
+        return true;
     }
 }
 ```

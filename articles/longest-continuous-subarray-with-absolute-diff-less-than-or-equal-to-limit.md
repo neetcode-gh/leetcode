@@ -247,6 +247,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} limit
+     * @return {number}
+     */
+    longestSubarray(nums: number[], limit: number): number {
+        const n = nums.length;
+        let res = 1;
+
+        for (let i = 0; i < n; i++) {
+            let mini = nums[i],
+                maxi = nums[i];
+            for (let j = i + 1; j < n; j++) {
+                mini = Math.min(mini, nums[j]);
+                maxi = Math.max(maxi, nums[j]);
+                if (maxi - mini > limit) {
+                    break;
+                }
+                res = Math.max(res, j - i + 1);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -588,6 +617,40 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} limit
+     * @return {number}
+     */
+    longestSubarray(nums: number[], limit: number): number {
+        const maxHeap = new PriorityQueue((a: number[], b: number[]) => b[0] - a[0]);
+        const minHeap = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]);
+        let j = 0,
+            res = 0;
+
+        for (let i = 0; i < nums.length; ++i) {
+            const v = nums[i];
+            maxHeap.push([v, i]);
+            minHeap.push([v, i]);
+
+            while (maxHeap.front()[0] - minHeap.front()[0] > limit) {
+                ++j;
+                while (!maxHeap.isEmpty() && maxHeap.front()[1] < j)
+                    maxHeap.pop();
+                while (!minHeap.isEmpty() && minHeap.front()[1] < j)
+                    minHeap.pop();
+            }
+
+            res = Math.max(res, i - j + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -632,6 +695,9 @@ If the difference between these two values becomes greater than the limit, we sh
 ::tabs-start
 
 ```python
+from sortedcontainers import SortedDict
+
+
 class Solution:
     def longestSubarray(self, nums: List[int], limit: int) -> int:
         tree = SortedDict()
@@ -685,6 +751,60 @@ public:
         return res;
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} limit
+     * @return {number}
+     */
+    longestSubarray(nums, limit) {
+        // JavaScript has no built-in sorted dict, so it is modeled with a
+        // count map plus an ascending array of the distinct values in the window.
+        const counts = new Map();
+        const keys = [];
+
+        const lowerBound = (x) => {
+            let l = 0,
+                r = keys.length;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (keys[m] < x) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+
+        const put = (x) => {
+            counts.set(x, (counts.get(x) || 0) + 1);
+            if (counts.get(x) === 1) {
+                keys.splice(lowerBound(x), 0, x);
+            }
+        };
+
+        const remove = (x) => {
+            counts.set(x, counts.get(x) - 1);
+            if (counts.get(x) === 0) {
+                counts.delete(x);
+                keys.splice(lowerBound(x), 1);
+            }
+        };
+
+        let l = 0,
+            res = 0;
+        for (let r = 0; r < nums.length; r++) {
+            put(nums[r]);
+            while (keys[keys.length - 1] - keys[0] > limit) {
+                remove(nums[l]);
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
+    }
+}
 ```
 
 ```csharp
@@ -834,6 +954,60 @@ impl Solution {
             res = res.max((r - l + 1) as i32);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} limit
+     * @return {number}
+     */
+    longestSubarray(nums: number[], limit: number): number {
+        // TypeScript has no built-in sorted dict, so it is modeled with a
+        // count map plus an ascending array of the distinct values in the window.
+        const counts = new Map<number, number>();
+        const keys: number[] = [];
+
+        const lowerBound = (x: number): number => {
+            let l = 0,
+                r = keys.length;
+            while (l < r) {
+                const m = (l + r) >> 1;
+                if (keys[m] < x) l = m + 1;
+                else r = m;
+            }
+            return l;
+        };
+
+        const put = (x: number): void => {
+            counts.set(x, (counts.get(x) || 0) + 1);
+            if (counts.get(x) === 1) {
+                keys.splice(lowerBound(x), 0, x);
+            }
+        };
+
+        const remove = (x: number): void => {
+            counts.set(x, counts.get(x)! - 1);
+            if (counts.get(x) === 0) {
+                counts.delete(x);
+                keys.splice(lowerBound(x), 1);
+            }
+        };
+
+        let l = 0,
+            res = 0;
+        for (let r = 0; r < nums.length; r++) {
+            put(nums[r]);
+            while (keys[keys.length - 1] - keys[0] > limit) {
+                remove(nums[l]);
+                l++;
+            }
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
     }
 }
 ```
@@ -1087,10 +1261,10 @@ class Solution {
         var res = 0
 
         for (r in nums.indices) {
-            while (minQ.isNotEmpty() && nums[r] < minQ.last()) {
+            while (minQ.isNotEmpty() && nums[r] < minQ.peekLast()) {
                 minQ.removeLast()
             }
-            while (maxQ.isNotEmpty() && nums[r] > maxQ.last()) {
+            while (maxQ.isNotEmpty() && nums[r] > maxQ.peekLast()) {
                 maxQ.removeLast()
             }
             minQ.addLast(nums[r])
@@ -1176,6 +1350,47 @@ impl Solution {
             res = res.max((r - l + 1) as i32);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} limit
+     * @return {number}
+     */
+    longestSubarray(nums: number[], limit: number): number {
+        const minQ = new Deque();
+        const maxQ = new Deque();
+        let l = 0,
+            res = 0;
+        for (let r = 0; r < nums.length; r++) {
+            while (!minQ.isEmpty() && nums[r] < minQ.back()) {
+                minQ.popBack();
+            }
+            while (!maxQ.isEmpty() && nums[r] > maxQ.back()) {
+                maxQ.popBack();
+            }
+
+            minQ.pushBack(nums[r]);
+            maxQ.pushBack(nums[r]);
+
+            while (maxQ.front() - minQ.front() > limit) {
+                if (nums[l] === maxQ.front()) {
+                    maxQ.popFront();
+                }
+                if (nums[l] === minQ.front()) {
+                    minQ.popFront();
+                }
+                l++;
+            }
+
+            res = Math.max(res, r - l + 1);
+        }
+
+        return res;
     }
 }
 ```
@@ -1437,10 +1652,10 @@ class Solution {
         var j = 0
 
         for (i in 1 until nums.size) {
-            while (inc.isNotEmpty() && inc.last() > nums[i]) {
+            while (inc.isNotEmpty() && inc.peekLast() > nums[i]) {
                 inc.removeLast()
             }
-            while (dec.isNotEmpty() && dec.last() < nums[i]) {
+            while (dec.isNotEmpty() && dec.peekLast() < nums[i]) {
                 dec.removeLast()
             }
 
@@ -1528,6 +1743,45 @@ impl Solution {
         }
 
         (nums.len() - j) as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} limit
+     * @return {number}
+     */
+    longestSubarray(nums: number[], limit: number): number {
+        const inc = new Deque([nums[0]]);
+        const dec = new Deque([nums[0]]);
+        let res = 1,
+            j = 0;
+
+        for (let i = 1; i < nums.length; i++) {
+            while (!inc.isEmpty() && inc.back() > nums[i]) {
+                inc.popBack();
+            }
+            while (!dec.isEmpty() && dec.back() < nums[i]) {
+                dec.popBack();
+            }
+
+            inc.pushBack(nums[i]);
+            dec.pushBack(nums[i]);
+            if (dec.front() - inc.front() > limit) {
+                if (dec.front() === nums[j]) {
+                    dec.popFront();
+                }
+                if (inc.front() === nums[j]) {
+                    inc.popFront();
+                }
+                j++;
+            }
+        }
+
+        return nums.length - j;
     }
 }
 ```

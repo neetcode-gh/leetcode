@@ -298,6 +298,41 @@ impl FreqStack {
 }
 ```
 
+```typescript
+class FreqStack {
+    private cnt: Map<number, number>;
+    private stack: number[];
+
+    constructor() {
+        this.cnt = new Map();
+        this.stack = [];
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        this.stack.push(val);
+        this.cnt.set(val, (this.cnt.get(val) || 0) + 1);
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        const maxCnt = Math.max(...this.cnt.values());
+        let i = this.stack.length - 1;
+        while (this.cnt.get(this.stack[i]) !== maxCnt) {
+            i--;
+        }
+        const val = this.stack.splice(i, 1)[0];
+        this.cnt.set(val, this.cnt.get(val)! - 1);
+        return val;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -400,9 +435,9 @@ public:
 ```javascript
 class FreqStack {
     constructor() {
-        this.heap = new MaxPriorityQueue({
-            priority: (element) => element[0] * 100000 + element[1],
-        });
+        this.heap = new MaxPriorityQueue(
+            (element) => element[0] * 100000 + element[1],
+        );
         this.cnt = new Map();
         this.index = 0;
     }
@@ -420,7 +455,7 @@ class FreqStack {
      * @return {number}
      */
     pop() {
-        const [, , val] = this.heap.dequeue().element;
+        const [, , val] = this.heap.dequeue();
         this.cnt.set(val, this.cnt.get(val) - 1);
         return val;
     }
@@ -526,8 +561,6 @@ func (this *FreqStack) Pop() int {
 ```
 
 ```kotlin
-import java.util.PriorityQueue
-
 class FreqStack() {
     private val cnt = mutableMapOf<Int, Int>()
     private val heap = PriorityQueue<IntArray> { a, b ->
@@ -602,6 +635,40 @@ impl FreqStack {
         let (_, _, val) = self.heap.pop().unwrap();
         *self.cnt.get_mut(&val).unwrap() -= 1;
         val
+    }
+}
+```
+
+```typescript
+class FreqStack {
+    private heap: any;
+    private cnt: Map<number, number>;
+    private index: number;
+
+    constructor() {
+        this.heap = new MaxPriorityQueue(
+            (element: number[]) => element[0] * 100000 + element[1],
+        );
+        this.cnt = new Map();
+        this.index = 0;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        this.cnt.set(val, (this.cnt.get(val) || 0) + 1);
+        this.heap.enqueue([this.cnt.get(val), this.index++, val]);
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        const [, , val]: number[] = this.heap.dequeue();
+        this.cnt.set(val, this.cnt.get(val)! - 1);
+        return val;
     }
 }
 ```
@@ -934,6 +1001,48 @@ impl FreqStack {
 }
 ```
 
+```typescript
+class FreqStack {
+    private cnt: Map<number, number>;
+    private stacks: Map<number, number[]>;
+    private maxCnt: number;
+
+    constructor() {
+        this.cnt = new Map();
+        this.stacks = new Map();
+        this.maxCnt = 0;
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        const valCnt = (this.cnt.get(val) || 0) + 1;
+        this.cnt.set(val, valCnt);
+        if (valCnt > this.maxCnt) {
+            this.maxCnt = valCnt;
+            if (!this.stacks.has(valCnt)) {
+                this.stacks.set(valCnt, []);
+            }
+        }
+        this.stacks.get(valCnt)!.push(val);
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        const res = this.stacks.get(this.maxCnt)!.pop()!;
+        this.cnt.set(res, this.cnt.get(res)! - 1);
+        if (this.stacks.get(this.maxCnt)!.length === 0) {
+            this.maxCnt--;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1240,6 +1349,44 @@ impl FreqStack {
             self.stacks.pop();
         }
         res
+    }
+}
+```
+
+```typescript
+class FreqStack {
+    private cnt: Map<number, number>;
+    private stacks: number[][];
+
+    constructor() {
+        this.cnt = new Map();
+        this.stacks = [[]];
+    }
+
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    push(val: number): void {
+        const valCnt = (this.cnt.get(val) || 0) + 1;
+        this.cnt.set(val, valCnt);
+        if (valCnt === this.stacks.length) {
+            this.stacks.push([]);
+        }
+        this.stacks[valCnt].push(val);
+    }
+
+    /**
+     * @return {number}
+     */
+    pop(): number {
+        const topStack = this.stacks[this.stacks.length - 1];
+        const res = topStack.pop()!;
+        this.cnt.set(res, this.cnt.get(res)! - 1);
+        if (topStack.length === 0) {
+            this.stacks.pop();
+        }
+        return res;
     }
 }
 ```

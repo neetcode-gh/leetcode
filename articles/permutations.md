@@ -226,6 +226,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permute(nums: number[]): number[][] {
+        if (nums.length === 0) {
+            return [[]];
+        }
+
+        let perms = this.permute(nums.slice(1));
+        let res: number[][] = [];
+        for (let p of perms) {
+            for (let i = 0; i <= p.length; i++) {
+                let p_copy = p.slice();
+                p_copy.splice(i, 0, nums[0]);
+                res.push(p_copy);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,6 +476,30 @@ impl Solution {
             perms = new_perms;
         }
         perms
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permute(nums: number[]): number[][] {
+        let perms: number[][] = [[]];
+        for (let num of nums) {
+            let new_perms: number[][] = [];
+            for (let p of perms) {
+                for (let i = 0; i <= p.length; i++) {
+                    let p_copy = p.slice();
+                    p_copy.splice(i, 0, num);
+                    new_perms.push(p_copy);
+                }
+            }
+            perms = new_perms;
+        }
+        return perms;
     }
 }
 ```
@@ -740,6 +789,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permute(nums: number[]): number[][] {
+        let res: number[][] = [];
+        backtrack([], nums, new Array(nums.length).fill(false));
+        return res;
+
+        function backtrack(perm: number[], nums: number[], pick: boolean[]): void {
+            if (perm.length === nums.length) {
+                res.push([...perm]);
+                return;
+            }
+            for (let i = 0; i < nums.length; i++) {
+                if (!pick[i]) {
+                    perm.push(nums[i]);
+                    pick[i] = true;
+                    backtrack(perm, nums, pick);
+                    perm.pop();
+                    pick[i] = false;
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1003,6 +1082,41 @@ impl Solution {
         }
         backtrack(&nums, &mut perm, 0, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permute(nums: number[]): number[][] {
+        let res: number[][] = [];
+        this.backtrack([], nums, 0, res);
+        return res;
+    }
+
+    /**
+     * @param {number[]} perm
+     * @param {number[]} nums
+     * @param {number} mask
+     * @param {number[][]} res
+     * @return {void}
+     */
+    backtrack(perm: number[], nums: number[], mask: number, res: number[][]): void {
+        if (perm.length === nums.length) {
+            res.push([...perm]);
+            return;
+        }
+        for (let i = 0; i < nums.length; i++) {
+            if (!(mask & (1 << i))) {
+                perm.push(nums[i]);
+                this.backtrack(perm, nums, mask | (1 << i), res);
+                perm.pop();
+            }
+        }
     }
 }
 ```
@@ -1276,6 +1390,42 @@ impl Solution {
         }
         backtrack(0, &mut nums, n, &mut res);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    private res: number[][];
+
+    constructor() {
+        this.res = [];
+    }
+
+    /**
+     * @param {number[]} nums
+     * @return {number[][]}
+     */
+    permute(nums: number[]): number[][] {
+        this.backtrack(nums, 0);
+        return this.res;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} idx
+     * @return {void}
+     */
+    backtrack(nums: number[], idx: number): void {
+        if (idx === nums.length) {
+            this.res.push([...nums]);
+            return;
+        }
+        for (let i = idx; i < nums.length; i++) {
+            [nums[idx], nums[i]] = [nums[i], nums[idx]];
+            this.backtrack(nums, idx + 1);
+            [nums[idx], nums[i]] = [nums[i], nums[idx]];
+        }
     }
 }
 ```

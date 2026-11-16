@@ -490,6 +490,71 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLongestSubstringKDistinct(s: string, k: number): number {
+        let n = s.length;
+        if (k >= n) {
+            return n;
+        }
+
+        let left = k,
+            right = n;
+        while (left < right) {
+            let mid = Math.floor((left + right + 1) / 2);
+
+            if (this.isValid(s, mid, k)) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return left;
+    }
+
+    /**
+     * @param {string} s
+     * @param {number} size
+     * @param {number} k
+     * @return {boolean}
+     */
+    isValid(s: string, size: number, k: number): boolean {
+        let n = s.length;
+        let counter = new Map<string, number>();
+
+        for (let i = 0; i < size; i++) {
+            let c = s.charAt(i);
+            counter.set(c, (counter.get(c) || 0) + 1);
+        }
+
+        if (counter.size <= k) {
+            return true;
+        }
+
+        for (let i = size; i < n; i++) {
+            let c1 = s.charAt(i);
+            counter.set(c1, (counter.get(c1) || 0) + 1);
+            let c2 = s.charAt(i - size);
+            counter.set(c2, (counter.get(c2) || 0) - 1);
+            if (counter.get(c2) === 0) {
+                counter.delete(c2);
+            }
+            if (counter.size <= k) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -772,6 +837,41 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLongestSubstringKDistinct(s: string, k: number): number {
+        let n = s.length;
+        let maxSize = 0;
+        let counter = new Map<string, number>();
+
+        let left = 0;
+        for (let right = 0; right < n; right++) {
+            counter.set(
+                s.charAt(right),
+                (counter.get(s.charAt(right)) || 0) + 1,
+            );
+
+            while (counter.size > k) {
+                counter.set(s.charAt(left), counter.get(s.charAt(left))! - 1);
+                if (counter.get(s.charAt(left)) === 0) {
+                    counter.delete(s.charAt(left));
+                }
+                left++;
+            }
+
+            maxSize = Math.max(maxSize, right - left + 1);
+        }
+
+        return maxSize;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1026,6 +1126,41 @@ impl Solution {
             }
         }
         max_size as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    lengthOfLongestSubstringKDistinct(s: string, k: number): number {
+        let n = s.length;
+        let maxSize = 0;
+        let counter = new Map<string, number>();
+
+        for (let right = 0; right < n; right++) {
+            counter.set(
+                s.charAt(right),
+                (counter.get(s.charAt(right)) || 0) + 1,
+            );
+
+            if (counter.size <= k) {
+                maxSize++;
+            } else {
+                counter.set(
+                    s.charAt(right - maxSize),
+                    counter.get(s.charAt(right - maxSize))! - 1,
+                );
+                if (counter.get(s.charAt(right - maxSize)) === 0) {
+                    counter.delete(s.charAt(right - maxSize));
+                }
+            }
+        }
+        return maxSize;
     }
 }
 ```

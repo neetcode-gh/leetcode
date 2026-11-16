@@ -293,6 +293,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number[]}
+     */
+    findPermutation(s: string): number[] {
+        const n = s.length;
+        const res: number[] = new Array(n + 1);
+        const stack: number[] = [];
+        let j = 0;
+
+        for (let i = 1; i <= n; i++) {
+            if (s[i - 1] === 'I') {
+                stack.push(i);
+                while (stack.length > 0) {
+                    res[j++] = stack.pop()!;
+                }
+            } else {
+                stack.push(i);
+            }
+        }
+
+        stack.push(n + 1);
+        while (stack.length > 0) {
+            res[j++] = stack.pop()!;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -619,6 +652,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number[]}
+     */
+    findPermutation(s: string): number[] {
+        const n = s.length;
+        const res: number[] = new Array(n + 1);
+
+        for (let i = 0; i < res.length; i++) {
+            res[i] = i + 1;
+        }
+
+        let i = 1;
+
+        while (i <= n) {
+            let j = i;
+
+            while (i <= n && s[i - 1] === 'D') {
+                i++;
+            }
+
+            this.reverse(res, j - 1, i);
+            i++;
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {number[]} a
+     * @param {number} start
+     * @param {number} end
+     */
+    reverse(a: number[], start: number, end: number): void {
+        for (let i = 0; i < Math.floor((end - start) / 2); i++) {
+            let temp = a[i + start];
+            a[i + start] = a[end - i - 1];
+            a[end - i - 1] = temp;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -925,6 +1003,40 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number[]}
+     */
+    findPermutation(s: string): number[] {
+        const n = s.length;
+        const res: number[] = new Array(n + 1);
+        res[0] = 1;
+        let i = 1;
+
+        while (i <= n) {
+            res[i] = i + 1;
+            let j = i;
+
+            if (s[i - 1] === 'D') {
+                while (i <= n && s[i - 1] === 'D') {
+                    i++;
+                }
+
+                for (let k = j - 1, c = i; k <= i - 1; k++, c--) {
+                    res[k] = c;
+                }
+            } else {
+                i++;
+            }
+        }
+
+        return res;
     }
 }
 ```

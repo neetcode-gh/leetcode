@@ -218,6 +218,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triplets
+     * @param {number[]} target
+     * @return {boolean}
+     */
+    mergeTriplets(triplets: number[][], target: number[]): boolean {
+        const good = new Set<number>();
+
+        for (const t of triplets) {
+            if (t[0] > target[0] || t[1] > target[1] || t[2] > target[2]) {
+                continue;
+            }
+            for (let i = 0; i < t.length; i++) {
+                if (t[i] === target[i]) {
+                    good.add(i);
+                }
+            }
+        }
+        return good.size === 3;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +455,28 @@ impl Solution {
         }
 
         false
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} triplets
+     * @param {number[]} target
+     * @return {boolean}
+     */
+    mergeTriplets(triplets: number[][], target: number[]): boolean {
+        let x = false,
+            y = false,
+            z = false;
+        for (let t of triplets) {
+            x ||= t[0] === target[0] && t[1] <= target[1] && t[2] <= target[2];
+            y ||= t[0] <= target[0] && t[1] === target[1] && t[2] <= target[2];
+            z ||= t[0] <= target[0] && t[1] <= target[1] && t[2] === target[2];
+            if (x && y && z) return true;
+        }
+        return false;
     }
 }
 ```

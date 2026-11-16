@@ -228,7 +228,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
@@ -255,6 +254,43 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[][]}
+     */
+    fourSum(nums: number[], target: number): number[][] {
+        let n = nums.length;
+        nums.sort((a, b) => a - b);
+        let res = new Set<string>();
+
+        for (let a = 0; a < n; a++) {
+            for (let b = a + 1; b < n; b++) {
+                for (let c = b + 1; c < n; c++) {
+                    for (let d = c + 1; d < n; d++) {
+                        if (nums[a] + nums[b] + nums[c] + nums[d] === target) {
+                            res.add(
+                                JSON.stringify([
+                                    nums[a],
+                                    nums[b],
+                                    nums[c],
+                                    nums[d],
+                                ]),
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        return Array.from(res).map((s) => JSON.parse(s));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -647,7 +683,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
@@ -695,6 +730,55 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[][]}
+     */
+    fourSum(nums: number[], target: number): number[][] {
+        nums.sort((a, b) => a - b);
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+        const res: number[][] = [];
+
+        for (let i = 0; i < nums.length; i++) {
+            count.set(nums[i], count.get(nums[i])! - 1);
+            if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+            for (let j = i + 1; j < nums.length; j++) {
+                count.set(nums[j], count.get(nums[j])! - 1);
+                if (j > i + 1 && nums[j] === nums[j - 1]) continue;
+
+                for (let k = j + 1; k < nums.length; k++) {
+                    count.set(nums[k], count.get(nums[k])! - 1);
+                    if (k > j + 1 && nums[k] === nums[k - 1]) continue;
+
+                    const fourth = target - (nums[i] + nums[j] + nums[k]);
+                    if ((count.get(fourth) || 0) > 0) {
+                        res.push([nums[i], nums[j], nums[k], fourth]);
+                    }
+                }
+
+                for (let k = j + 1; k < nums.length; k++) {
+                    count.set(nums[k], count.get(nums[k])! + 1);
+                }
+            }
+
+            for (let j = i + 1; j < nums.length; j++) {
+                count.set(nums[j], count.get(nums[j])! + 1);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1027,7 +1111,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
@@ -1071,6 +1154,51 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[][]}
+     */
+    fourSum(nums: number[], target: number): number[][] {
+        nums.sort((a, b) => a - b);
+        const res: number[][] = [];
+        const n = nums.length;
+
+        for (let i = 0; i < n; i++) {
+            if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+            for (let j = i + 1; j < n; j++) {
+                if (j > i + 1 && nums[j] === nums[j - 1]) continue;
+
+                let left = j + 1,
+                    right = n - 1;
+                while (left < right) {
+                    const sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum === target) {
+                        res.push([nums[i], nums[j], nums[left], nums[right]]);
+                        left++;
+                        right--;
+                        while (left < right && nums[left] === nums[left - 1])
+                            left++;
+                        while (left < right && nums[right] === nums[right + 1])
+                            right--;
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1448,7 +1576,7 @@ class Solution {
             return
         }
 
-        for i in start...(nums.count - k) {
+        for i in stride(from: start, through: nums.count - k, by: 1) {
             if i > start && nums[i] == nums[i - 1] { continue }
             quad.append(nums[i])
             kSum(nums, k - 1, i + 1, target - nums[i])
@@ -1457,7 +1585,6 @@ class Solution {
     }
 }
 ```
-
 
 ```rust
 impl Solution {
@@ -1507,6 +1634,54 @@ impl Solution {
     }
 }
 ```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number[][]}
+     */
+    fourSum(nums: number[], target: number): number[][] {
+        nums.sort((a, b) => a - b);
+        const res: number[][] = [];
+        const quad: number[] = [];
+
+        const kSum = (k: number, start: number, target: number): void => {
+            if (k === 2) {
+                let l = start,
+                    r = nums.length - 1;
+                while (l < r) {
+                    const sum = nums[l] + nums[r];
+                    if (sum < target) {
+                        l++;
+                    } else if (sum > target) {
+                        r--;
+                    } else {
+                        res.push([...quad, nums[l], nums[r]]);
+                        l++;
+                        r--;
+                        while (l < r && nums[l] === nums[l - 1]) l++;
+                        while (l < r && nums[r] === nums[r + 1]) r--;
+                    }
+                }
+                return;
+            }
+
+            for (let i = start; i < nums.length - k + 1; i++) {
+                if (i > start && nums[i] === nums[i - 1]) continue;
+                quad.push(nums[i]);
+                kSum(k - 1, i + 1, target - nums[i]);
+                quad.pop();
+            }
+        };
+
+        kSum(4, 0, target);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

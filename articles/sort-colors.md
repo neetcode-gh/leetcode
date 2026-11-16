@@ -97,6 +97,18 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    sortColors(nums: number[]): void {
+        nums.sort((a, b) => a - b);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -287,6 +299,28 @@ impl Solution {
                 count[i] -= 1;
                 nums[index] = i as i32;
                 index += 1;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    sortColors(nums: number[]): void {
+        const count = new Int32Array(3);
+        for (let num of nums) {
+            count[num]++;
+        }
+
+        let index = 0;
+        for (let i = 0; i < 3; i++) {
+            while (count[i]-- > 0) {
+                nums[index++] = i;
             }
         }
     }
@@ -512,6 +546,31 @@ impl Solution {
                 i -= 1;
             }
             i += 1;
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    sortColors(nums: number[]): void {
+        let i = 0,
+            l = 0,
+            r = nums.length - 1;
+        while (i <= r) {
+            if (nums[i] == 0) {
+                [nums[l], nums[i]] = [nums[i], nums[l]];
+                l++;
+            } else if (nums[i] == 2) {
+                [nums[i], nums[r]] = [nums[r], nums[i]];
+                r--;
+                i--;
+            }
+            i++;
         }
     }
 }
@@ -753,6 +812,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    sortColors(nums: number[]): void {
+        let zero = 0,
+            one = 0,
+            two = 0;
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                nums[two++] = 2;
+                nums[one++] = 1;
+                nums[zero++] = 0;
+            } else if (nums[i] == 1) {
+                nums[two++] = 2;
+                nums[one++] = 1;
+            } else {
+                nums[two++] = 2;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -947,6 +1032,29 @@ impl Solution {
             if tmp < 1 {
                 nums[zero] = 0;
                 zero += 1;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {void} Do not return anything, modify nums in-place instead.
+     */
+    sortColors(nums: number[]): void {
+        let zero = 0,
+            one = 0;
+        for (let two = 0; two < nums.length; two++) {
+            let tmp = nums[two];
+            nums[two] = 2;
+            if (tmp < 2) {
+                nums[one++] = 1;
+            }
+            if (tmp < 1) {
+                nums[zero++] = 0;
             }
         }
     }

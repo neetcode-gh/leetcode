@@ -215,6 +215,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} threshold
+     * @return {number}
+     */
+    numOfSubarrays(arr: number[], k: number, threshold: number): number {
+        let res = 0,
+            l = 0;
+
+        for (let r = k - 1; r < arr.length; r++) {
+            let sum = 0;
+            for (let i = l; i <= r; i++) {
+                sum += arr[i];
+            }
+            if (sum / k >= threshold) {
+                res++;
+            }
+            l++;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +460,34 @@ impl Solution {
             l += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} threshold
+     * @return {number}
+     */
+    numOfSubarrays(arr: number[], k: number, threshold: number): number {
+        const prefixSum = new Int32Array(arr.length + 1);
+        for (let i = 0; i < arr.length; i++) {
+            prefixSum[i + 1] += prefixSum[i] + arr[i];
+        }
+
+        let res = 0,
+            l = 0;
+        for (let r = k - 1; r < arr.length; r++) {
+            const sum = prefixSum[r + 1] - prefixSum[l];
+            if (sum / k >= threshold) {
+                res++;
+            }
+            l++;
+        }
+        return res;
     }
 }
 ```
@@ -664,6 +719,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} threshold
+     * @return {number}
+     */
+    numOfSubarrays(arr: number[], k: number, threshold: number): number {
+        let res = 0;
+        let curSum = 0;
+
+        for (let i = 0; i < k - 1; i++) {
+            curSum += arr[i];
+        }
+
+        for (let L = 0; L <= arr.length - k; L++) {
+            curSum += arr[L + k - 1];
+            if (curSum / k >= threshold) {
+                res++;
+            }
+            curSum -= arr[L];
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -872,6 +956,33 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr
+     * @param {number} k
+     * @param {number} threshold
+     * @return {number}
+     */
+    numOfSubarrays(arr: number[], k: number, threshold: number): number {
+        threshold *= k;
+        let res = 0,
+            curSum = 0;
+
+        for (let R = 0; R < arr.length; R++) {
+            curSum += arr[R];
+            if (R >= k - 1) {
+                if (curSum >= threshold) {
+                    res++;
+                }
+                curSum -= arr[R - k + 1];
+            }
+        }
+        return res;
     }
 }
 ```

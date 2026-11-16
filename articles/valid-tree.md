@@ -236,35 +236,35 @@ public class Solution {
 ```go
 func validTree(n int, edges [][]int) bool {
     if len(edges) > n-1 {
-		return false
-	}
+        return false
+    }
 
-	adj := make([][]int, n)
-	for _, edge := range edges {
-		u, v := edge[0], edge[1]
-		adj[u] = append(adj[u], v)
-		adj[v] = append(adj[v], u)
-	}
+    adj := make([][]int, n)
+    for _, edge := range edges {
+        u, v := edge[0], edge[1]
+        adj[u] = append(adj[u], v)
+        adj[v] = append(adj[v], u)
+    }
 
-	visit := make(map[int]bool)
-	var dfs func(node, parent int) bool
-	dfs = func(node, parent int) bool {
-		if visit[node] {
-			return false
-		}
-		visit[node] = true
-		for _, nei := range adj[node] {
-			if nei == parent {
-				continue
-			}
-			if !dfs(nei, node) {
-				return false
-			}
-		}
-		return true
-	}
+    visit := make(map[int]bool)
+    var dfs func(node, parent int) bool
+    dfs = func(node, parent int) bool {
+        if visit[node] {
+            return false
+        }
+        visit[node] = true
+        for _, nei := range adj[node] {
+            if nei == parent {
+                continue
+            }
+            if !dfs(nei, node) {
+                return false
+            }
+        }
+        return true
+    }
 
-	return dfs(0, -1) && len(visit) == n
+    return dfs(0, -1) && len(visit) == n
 }
 ```
 
@@ -371,6 +371,47 @@ impl Solution {
         }
 
         dfs(0, -1, &mut visit, &adj) && visit.len() == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @returns {boolean}
+     */
+    validTree(n: number, edges: number[][]): boolean {
+        if (edges.length > n - 1) {
+            return false;
+        }
+
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const visit = new Set<number>();
+        const dfs = (node: number, parent: number): boolean => {
+            if (visit.has(node)) {
+                return false;
+            }
+
+            visit.add(node);
+            for (const nei of adj[node]) {
+                if (nei === parent) {
+                    continue;
+                }
+                if (!dfs(nei, node)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        return dfs(0, -1) && visit.size === n;
     }
 }
 ```
@@ -606,37 +647,37 @@ public class Solution {
 ```go
 func validTree(n int, edges [][]int) bool {
     if len(edges) > n-1 {
-		return false
-	}
+        return false
+    }
 
-	adj := make([][]int, n)
-	for _, edge := range edges {
-		u, v := edge[0], edge[1]
-		adj[u] = append(adj[u], v)
-		adj[v] = append(adj[v], u)
-	}
+    adj := make([][]int, n)
+    for _, edge := range edges {
+        u, v := edge[0], edge[1]
+        adj[u] = append(adj[u], v)
+        adj[v] = append(adj[v], u)
+    }
 
-	visit := make(map[int]bool)
-	q := [][2]int{{0, -1}} // (current node, parent node)
-	visit[0] = true
+    visit := make(map[int]bool)
+    q := [][2]int{{0, -1}} // (current node, parent node)
+    visit[0] = true
 
-	for len(q) > 0 {
-		node, parent := q[0][0], q[0][1]
-		q = q[1:]
+    for len(q) > 0 {
+        node, parent := q[0][0], q[0][1]
+        q = q[1:]
 
-		for _, nei := range adj[node] {
-			if nei == parent {
-				continue
-			}
-			if visit[nei] {
-				return false
-			}
-			visit[nei] = true
-			q = append(q, [2]int{nei, node})
-		}
-	}
+        for _, nei := range adj[node] {
+            if nei == parent {
+                continue
+            }
+            if visit[nei] {
+                return false
+            }
+            visit[nei] = true
+            q = append(q, [2]int{nei, node})
+        }
+    }
 
-	return len(visit) == n
+    return len(visit) == n
 }
 ```
 
@@ -744,6 +785,43 @@ impl Solution {
         }
 
         visit.len() == n
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @returns {boolean}
+     */
+    validTree(n: number, edges: number[][]): boolean {
+        if (edges.length > n - 1) {
+            return false;
+        }
+
+        const adj: number[][] = Array.from({ length: n }, () => []);
+        for (const [u, v] of edges) {
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        const visit = new Set<number>();
+        const q = new Queue([[0, -1]]); // [current node, parent node]
+        visit.add(0);
+
+        while (!q.isEmpty()) {
+            const [node, parent]: number[] = q.pop();
+            for (const nei of adj[node]) {
+                if (nei === parent) continue;
+                if (visit.has(nei)) return false;
+                visit.add(nei);
+                q.push([nei, node]);
+            }
+        }
+
+        return visit.size === n;
     }
 }
 ```
@@ -1072,57 +1150,57 @@ public class Solution {
 
 ```go
 type DSU struct {
-	Parent []int
-	Size   []int
-	Comps  int
+    Parent []int
+    Size   []int
+    Comps  int
 }
 
 func NewDSU(n int) *DSU {
-	parent := make([]int, n+1)
-	size := make([]int, n+1)
-	for i := 0; i <= n; i++ {
-		parent[i] = i
-		size[i] = 1
-	}
-	return &DSU{Parent: parent, Size: size, Comps: n}
+    parent := make([]int, n+1)
+    size := make([]int, n+1)
+    for i := 0; i <= n; i++ {
+        parent[i] = i
+        size[i] = 1
+    }
+    return &DSU{Parent: parent, Size: size, Comps: n}
 }
 
 func (dsu *DSU) Find(node int) int {
-	if dsu.Parent[node] != node {
-		dsu.Parent[node] = dsu.Find(dsu.Parent[node])
-	}
-	return dsu.Parent[node]
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.Find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
 }
 
 func (dsu *DSU) Union(u, v int) bool {
-	pu, pv := dsu.Find(u), dsu.Find(v)
-	if pu == pv {
-		return false
-	}
-	dsu.Comps--
-	if dsu.Size[pu] < dsu.Size[pv] {
-		pu, pv = pv, pu
-	}
-	dsu.Size[pu] += dsu.Size[pv]
-	dsu.Parent[pv] = pu
-	return true
+    pu, pv := dsu.Find(u), dsu.Find(v)
+    if pu == pv {
+        return false
+    }
+    dsu.Comps--
+    if dsu.Size[pu] < dsu.Size[pv] {
+        pu, pv = pv, pu
+    }
+    dsu.Size[pu] += dsu.Size[pv]
+    dsu.Parent[pv] = pu
+    return true
 }
 
 func (dsu *DSU) Components() int {
-	return dsu.Comps
+    return dsu.Comps
 }
 
 func validTree(n int, edges [][]int) bool {
     if len(edges) > n-1 {
-		return false
-	}
-	dsu := NewDSU(n)
-	for _, edge := range edges {
-		if !dsu.Union(edge[0], edge[1]) {
-			return false
-		}
-	}
-	return dsu.Components() == 1
+        return false
+    }
+    dsu := NewDSU(n)
+    for _, edge := range edges {
+        if !dsu.Union(edge[0], edge[1]) {
+            return false
+        }
+    }
+    return dsu.Components() == 1
 }
 ```
 
@@ -1281,6 +1359,77 @@ impl Solution {
             }
         }
         dsu.comps == 1
+    }
+}
+```
+
+```typescript
+class DSU {
+    private comps: number;
+    private Parent: number[];
+    private Size: number[];
+
+    constructor(n: number) {
+        this.comps = n;
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] < this.Size[pv]) {
+            [pu, pv] = [pv, pu];
+        }
+        this.comps--;
+        this.Size[pu] += this.Size[pv];
+        this.Parent[pv] = pu;
+        return true;
+    }
+
+    /**
+     * @return {number}
+     */
+    components(): number {
+        return this.comps;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @returns {boolean}
+     */
+    validTree(n: number, edges: number[][]): boolean {
+        if (edges.length > n - 1) {
+            return false;
+        }
+
+        const dsu = new DSU(n);
+        for (const [u, v] of edges) {
+            if (!dsu.union(u, v)) {
+                return false;
+            }
+        }
+        return dsu.components() === 1;
     }
 }
 ```

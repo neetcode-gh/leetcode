@@ -471,6 +471,67 @@ impl Twitter {
 }
 ```
 
+```typescript
+class Twitter {
+    private time: number;
+    private followMap: Map<number, Set<number>>;
+    private tweetMap: Map<number, number[][]>;
+
+    constructor() {
+        this.time = 0;
+        this.followMap = new Map();
+        this.tweetMap = new Map();
+    }
+
+    /**
+     * @param {number} userId
+     * @param {number} tweetId
+     * @return {void}
+     */
+    postTweet(userId: number, tweetId: number): void {
+        if (!this.tweetMap.has(userId)) this.tweetMap.set(userId, []);
+        this.tweetMap.get(userId)!.push([this.time++, tweetId]);
+    }
+
+    /**
+     * @param {number} userId
+     * @return {number[]}
+     */
+    getNewsFeed(userId: number): number[] {
+        let feed = [...(this.tweetMap.get(userId) || [])];
+        (this.followMap.get(userId) || new Set<number>()).forEach((followeeId) => {
+            feed.push(...(this.tweetMap.get(followeeId) || []));
+        });
+        feed.sort((a, b) => b[0] - a[0]);
+        return feed.slice(0, 10).map((x) => x[1]);
+    }
+
+    /**
+     * @param {number} followerId
+     * @param {number} followeeId
+     * @return {void}
+     */
+    follow(followerId: number, followeeId: number): void {
+        if (followerId !== followeeId) {
+            if (!this.followMap.has(followerId))
+                this.followMap.set(followerId, new Set());
+            this.followMap.get(followerId)!.add(followeeId);
+        }
+    }
+
+    /**
+     * @param {number} followerId
+     * @param {number} followeeId
+     * @return {void}
+     */
+    unfollow(followerId: number, followeeId: number): void {
+        if (this.followMap.has(followerId)) {
+            this.followMap.get(followerId)!.delete(followeeId);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1150,6 +1211,95 @@ impl Twitter {
     fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
         if let Some(set) = self.follow_map.get_mut(&follower_id) {
             set.remove(&followee_id);
+        }
+    }
+}
+```
+
+```typescript
+class Twitter {
+    private count: number;
+    private tweetMap: Map<number, number[][]>;
+    private followMap: Map<number, Set<number>>;
+
+    constructor() {
+        this.count = 0;
+        this.tweetMap = new Map(); // userId -> array of [count, tweetId]
+        this.followMap = new Map(); // userId -> set of followeeIds
+    }
+
+    /**
+     * @param {number} userId
+     * @param {number} tweetId
+     * @return {void}
+     */
+    postTweet(userId: number, tweetId: number): void {
+        if (!this.tweetMap.has(userId)) {
+            this.tweetMap.set(userId, []);
+        }
+        this.tweetMap.get(userId)!.push([this.count, tweetId]);
+        this.count -= 1;
+    }
+
+    /**
+     * @param {number} userId
+     * @return {number[]}
+     */
+    getNewsFeed(userId: number): number[] {
+        const res: number[] = [];
+        if (!this.followMap.has(userId)) {
+            this.followMap.set(userId, new Set());
+        }
+        this.followMap.get(userId)!.add(userId);
+        const minHeap = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]);
+
+        for (const followeeId of this.followMap.get(userId)!) {
+            if (this.tweetMap.has(followeeId)) {
+                const tweets = this.tweetMap.get(followeeId)!;
+                const index = tweets.length - 1;
+                const [count, tweetId] = tweets[index];
+                minHeap.enqueue([count, tweetId, followeeId, index - 1]);
+            }
+        }
+
+        while (!minHeap.isEmpty() && res.length < 10) {
+            const [count, tweetId, followeeId, nextIndex]: number[] = minHeap.dequeue();
+            res.push(tweetId);
+            if (nextIndex >= 0) {
+                const [olderCount, olderTweetId] =
+                    this.tweetMap.get(followeeId)![nextIndex];
+                minHeap.enqueue([
+                    olderCount,
+                    olderTweetId,
+                    followeeId,
+                    nextIndex - 1,
+                ]);
+            }
+        }
+
+        return res;
+    }
+
+    /**
+     * @param {number} followerId
+     * @param {number} followeeId
+     * @return {void}
+     */
+    follow(followerId: number, followeeId: number): void {
+        if (!this.followMap.has(followerId)) {
+            this.followMap.set(followerId, new Set());
+        }
+        this.followMap.get(followerId)!.add(followeeId);
+    }
+
+    /**
+     * @param {number} followerId
+     * @param {number} followeeId
+     * @return {void}
+     */
+    unfollow(followerId: number, followeeId: number): void {
+        if (this.followMap.has(followerId)) {
+            this.followMap.get(followerId)!.delete(followeeId);
         }
     }
 }
@@ -2059,6 +2209,109 @@ impl Twitter {
     fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
         if let Some(set) = self.follow_map.get_mut(&follower_id) {
             set.remove(&followee_id);
+        }
+    }
+}
+```
+
+```typescript
+class Twitter {
+    private count: number;
+    private tweetMap: Map<number, number[][]>;
+    private followMap: Map<number, Set<number>>;
+
+    constructor() {
+        this.count = 0;
+        this.tweetMap = new Map();
+        this.followMap = new Map();
+    }
+
+    /**
+     * @param {number} userId
+     * @param {number} tweetId
+     * @return {void}
+     */
+    postTweet(userId: number, tweetId: number): void {
+        if (!this.tweetMap.has(userId)) {
+            this.tweetMap.set(userId, []);
+        }
+        const tweets = this.tweetMap.get(userId)!;
+        tweets.push([this.count, tweetId]);
+        if (tweets.length > 10) {
+            tweets.shift();
+        }
+        this.count--;
+    }
+
+    /**
+     * @param {number} userId
+     * @return {number[]}
+     */
+    getNewsFeed(userId: number): number[] {
+        const res: number[] = [];
+        if (!this.followMap.has(userId)) {
+            this.followMap.set(userId, new Set());
+        }
+        this.followMap.get(userId)!.add(userId);
+        const minHeap = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]);
+
+        if (this.followMap.get(userId)!.size >= 10) {
+            const maxHeap = new PriorityQueue((a: number[], b: number[]) => a[0] - b[0]);
+            for (const followeeId of this.followMap.get(userId)!) {
+                if (!this.tweetMap.has(followeeId)) continue;
+                const tweets = this.tweetMap.get(followeeId)!;
+                const idx = tweets.length - 1;
+                const [cnt, tId] = tweets[idx];
+                maxHeap.enqueue([-cnt, tId, followeeId, idx - 1]);
+                if (maxHeap.size() > 10) {
+                    maxHeap.dequeue();
+                }
+            }
+            while (maxHeap.size() > 0) {
+                const [negCount, tId, fId, idx]: number[] = maxHeap.dequeue();
+                minHeap.enqueue([-negCount, tId, fId, idx]);
+            }
+        } else {
+            for (const followeeId of this.followMap.get(userId)!) {
+                if (!this.tweetMap.has(followeeId)) continue;
+                const tweets = this.tweetMap.get(followeeId)!;
+                const idx = tweets.length - 1;
+                const [cnt, tId] = tweets[idx];
+                minHeap.enqueue([cnt, tId, followeeId, idx - 1]);
+            }
+        }
+
+        while (minHeap.size() > 0 && res.length < 10) {
+            const [cnt, tId, fId, idx]: number[] = minHeap.dequeue();
+            res.push(tId);
+            if (idx >= 0) {
+                const [olderCount, olderTId] = this.tweetMap.get(fId)![idx];
+                minHeap.enqueue([olderCount, olderTId, fId, idx - 1]);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * @param {number} followerId
+     * @param {number} followeeId
+     * @return {void}
+     */
+    follow(followerId: number, followeeId: number): void {
+        if (!this.followMap.has(followerId)) {
+            this.followMap.set(followerId, new Set());
+        }
+        this.followMap.get(followerId)!.add(followeeId);
+    }
+
+    /**
+     * @param {number} followerId
+     * @param {number} followeeId
+     * @return {void}
+     */
+    unfollow(followerId: number, followeeId: number): void {
+        if (this.followMap.has(followerId)) {
+            this.followMap.get(followerId)!.delete(followeeId);
         }
     }
 }

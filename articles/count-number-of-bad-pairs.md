@@ -174,6 +174,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    countBadPairs(nums: number[]): number {
+        let n = nums.length,
+            res = 0;
+        for (let i = 0; i < n - 1; i++) {
+            for (let j = i + 1; j < n; j++) {
+                if (j - i !== nums[j] - nums[i]) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +370,27 @@ impl Solution {
             total += i as i64;
         }
         total - good
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    countBadPairs(nums: number[]): number {
+        let count = new Map<number, number>();
+        let total = 0,
+            good = 0;
+        for (let i = 0; i < nums.length; i++) {
+            let key = nums[i] - i;
+            good += count.get(key) || 0;
+            count.set(key, (count.get(key) || 0) + 1);
+            total += i;
+        }
+        return total - good;
     }
 }
 ```

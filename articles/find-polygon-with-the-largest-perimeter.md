@@ -254,6 +254,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    largestPerimeter(nums: number[]): number {
+        const n = nums.length;
+        let res = -1;
+
+        for (let i = 0; i < n; i++) {
+            const large = nums[i];
+            let cur = 0;
+
+            for (let j = 0; j < n; j++) {
+                if (i !== j && nums[j] <= large) {
+                    cur += nums[j];
+                }
+            }
+
+            if (cur > large) {
+                res = Math.max(res, cur + large);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -448,6 +478,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    largestPerimeter(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+        let res = -1;
+        let total = 0;
+
+        for (let num of nums) {
+            if (total > num) {
+                res = total + num;
+            }
+            total += num;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,7 +600,7 @@ class Solution {
         });
 
         while (maxHeap.size() > 2) {
-            const largest = maxHeap.dequeue().element;
+            const largest = maxHeap.dequeue();
             total -= largest;
             if (largest < total) return total + largest;
         }
@@ -737,6 +790,31 @@ impl Solution {
         }
 
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    largestPerimeter(nums: number[]): number {
+        const maxHeap = new MaxPriorityQueue();
+        let total = 0;
+
+        nums.forEach((num) => {
+            total += num;
+            maxHeap.enqueue(num);
+        });
+
+        while (maxHeap.size() > 2) {
+            const largest: number = maxHeap.dequeue();
+            total -= largest;
+            if (largest < total) return total + largest;
+        }
+        return -1;
     }
 }
 ```

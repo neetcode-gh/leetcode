@@ -244,6 +244,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} bank
+     * @return {number}
+     */
+    numberOfBeams(bank: string[]): number {
+        const countOnes = (s: string): number => {
+            let cnt = 0;
+            for (let c of s) {
+                if (c === '1') cnt += 1;
+            }
+            return cnt;
+        };
+
+        let prev = countOnes(bank[0]);
+        let res = 0;
+
+        for (let i = 1; i < bank.length; i++) {
+            let curr = countOnes(bank[i]);
+            if (curr > 0) {
+                res += prev * curr;
+                prev = curr;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

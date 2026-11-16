@@ -288,53 +288,53 @@ public class Solution {
 
 ```go
 func leastInterval(tasks []byte, n int) int {
-	count := make([]int, 26)
-	for _, task := range tasks {
-		count[task-'A']++
-	}
+    count := make([]int, 26)
+    for _, task := range tasks {
+        count[task-'A']++
+    }
 
-	arr := [][]int{}
-	for i := 0; i < 26; i++ {
-		if count[i] > 0 {
-			arr = append(arr, []int{count[i], i})
-		}
-	}
+    arr := [][]int{}
+    for i := 0; i < 26; i++ {
+        if count[i] > 0 {
+            arr = append(arr, []int{count[i], i})
+        }
+    }
 
-	time := 0
-	processed := []int{}
-	for len(arr) > 0 {
-		maxi := -1
-		for i := 0; i < len(arr); i++ {
-			canProcess := true
-			for j := max(0, time-n); j < time && canProcess; j++ {
-				if processed[j] == arr[i][1] {
-					canProcess = false
-				}
-			}
-			if canProcess && (maxi == -1 || arr[maxi][0] < arr[i][0]) {
-				maxi = i
-			}
-		}
+    time := 0
+    processed := []int{}
+    for len(arr) > 0 {
+        maxi := -1
+        for i := 0; i < len(arr); i++ {
+            canProcess := true
+            for j := max(0, time-n); j < time && canProcess; j++ {
+                if processed[j] == arr[i][1] {
+                    canProcess = false
+                }
+            }
+            if canProcess && (maxi == -1 || arr[maxi][0] < arr[i][0]) {
+                maxi = i
+            }
+        }
 
-		time++
-		cur := -1
-		if maxi != -1 {
-			cur = arr[maxi][1]
-			arr[maxi][0]--
-			if arr[maxi][0] == 0 {
-				arr = append(arr[:maxi], arr[maxi+1:]...)
-			}
-		}
-		processed = append(processed, cur)
-	}
-	return time
+        time++
+        cur := -1
+        if maxi != -1 {
+            cur = arr[maxi][1]
+            arr[maxi][0]--
+            if arr[maxi][0] == 0 {
+                arr = append(arr[:maxi], arr[maxi+1:]...)
+            }
+        }
+        processed = append(processed, cur)
+    }
+    return time
 }
 
 func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+    if a > b {
+        return a
+    }
+    return b
 }
 ```
 
@@ -470,6 +470,60 @@ impl Solution {
             processed.push(cur);
         }
         time
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[]} tasks
+     * @param {number} n
+     * @return {number}
+     */
+    leastInterval(tasks: string[], n: number): number {
+        const count: number[] = new Array(26).fill(0);
+        for (const task of tasks) {
+            count[task.charCodeAt(0) - 'A'.charCodeAt(0)]++;
+        }
+
+        const arr: number[][] = [];
+        for (let i = 0; i < 26; i++) {
+            if (count[i] > 0) {
+                arr.push([count[i], i]);
+            }
+        }
+
+        let time = 0;
+        const processed: number[] = [];
+        while (arr.length > 0) {
+            let maxi = -1;
+            for (let i = 0; i < arr.length; i++) {
+                let ok = true;
+                for (let j = Math.max(0, time - n); j < time; j++) {
+                    if (j < processed.length && processed[j] === arr[i][1]) {
+                        ok = false;
+                        break;
+                    }
+                }
+                if (!ok) continue;
+                if (maxi === -1 || arr[maxi][0] < arr[i][0]) {
+                    maxi = i;
+                }
+            }
+
+            time++;
+            let cur = -1;
+            if (maxi !== -1) {
+                cur = arr[maxi][1];
+                arr[maxi][0]--;
+                if (arr[maxi][0] === 0) {
+                    arr.splice(maxi, 1);
+                }
+            }
+            processed.push(cur);
+        }
+        return time;
     }
 }
 ```
@@ -870,6 +924,47 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[]} tasks
+     * @param {number} n
+     * @return {number}
+     */
+    leastInterval(tasks: string[], n: number): number {
+        let count: number[] = new Array(26).fill(0);
+        for (let task of tasks) {
+            count[task.charCodeAt(0) - 'A'.charCodeAt(0)]++;
+        }
+
+        let maxHeap = new MaxPriorityQueue();
+        for (let i = 0; i < 26; i++) {
+            if (count[i] > 0) maxHeap.push(count[i]);
+        }
+
+        let time = 0;
+        let q = new Queue();
+
+        while (maxHeap.size() > 0 || q.size() > 0) {
+            time++;
+
+            if (maxHeap.size() > 0) {
+                let cnt: number = maxHeap.pop() - 1;
+                if (cnt !== 0) {
+                    q.push([cnt, time + n]);
+                }
+            }
+
+            if (q.size() > 0 && q.front()[1] === time) {
+                maxHeap.push(q.pop()[0]);
+            }
+        }
+
+        return time;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1117,6 +1212,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {character[]} tasks
+     * @param {number} n
+     * @return {number}
+     */
+    leastInterval(tasks: string[], n: number): number {
+        const count: number[] = new Array(26).fill(0);
+        for (const task of tasks) {
+            count[task.charCodeAt(0) - 'A'.charCodeAt(0)]++;
+        }
+
+        count.sort((a, b) => a - b);
+        const maxf = count[25];
+        let idle = (maxf - 1) * n;
+
+        for (let i = 24; i >= 0; i--) {
+            idle -= Math.min(maxf - 1, count[i]);
+        }
+        return Math.max(0, idle) + tasks.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1349,6 +1469,33 @@ impl Solution {
 
         let time = (maxf - 1) * (n + 1) + max_count;
         time.max(tasks.len() as i32)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {character[]} tasks
+     * @param {number} n
+     * @return {number}
+     */
+    leastInterval(tasks: string[], n: number): number {
+        const count: number[] = new Array(26).fill(0);
+        for (const task of tasks) {
+            count[task.charCodeAt(0) - 'A'.charCodeAt(0)]++;
+        }
+
+        const maxf = Math.max(...count);
+        let maxCount = 0;
+        for (const i of count) {
+            if (i === maxf) {
+                maxCount++;
+            }
+        }
+
+        const time = (maxf - 1) * (n + 1) + maxCount;
+        return Math.max(tasks.length, time);
     }
 }
 ```

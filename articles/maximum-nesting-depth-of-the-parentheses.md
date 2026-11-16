@@ -277,6 +277,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxDepth(s: string): number {
+        let res = 0;
+
+        const dfs = (i: number): number => {
+            if (i === s.length) {
+                return 0;
+            }
+
+            let cur = dfs(i + 1);
+            if (s[i] === '(') {
+                cur += 1;
+            } else if (s[i] === ')') {
+                cur -= 1;
+            }
+
+            res = Math.max(res, Math.abs(cur));
+            return cur;
+        };
+
+        dfs(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -483,6 +514,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxDepth(s: string): number {
+        let res = 0;
+        let stack: string[] = [];
+
+        for (let c of s) {
+            if (c === '(') {
+                stack.push(c);
+                res = Math.max(res, stack.length);
+            } else if (c === ')') {
+                stack.pop();
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -685,6 +740,30 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxDepth(s: string): number {
+        let res = 0,
+            cur = 0;
+
+        for (let c of s) {
+            if (c === '(') {
+                cur++;
+            } else if (c === ')') {
+                cur--;
+            }
+            res = Math.max(res, cur);
+        }
+
+        return res;
     }
 }
 ```

@@ -301,6 +301,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    evaluateTree(root: TreeNode | null): boolean {
+        if (!root!.left) {
+            return root!.val === 1;
+        }
+
+        if (root!.val === 2) {
+            return (
+                this.evaluateTree(root!.left) || this.evaluateTree(root!.right)
+            );
+        }
+
+        if (root!.val === 3) {
+            return (
+                this.evaluateTree(root!.left) && this.evaluateTree(root!.right)
+            );
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,6 +737,40 @@ impl Solution {
 
         let root_key = Rc::as_ptr(root.as_ref().unwrap());
         value[&root_key]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @return {boolean}
+     */
+    evaluateTree(root: TreeNode | null): boolean {
+        const stack: TreeNode[] = [root!];
+        const value = new Map<TreeNode, boolean>();
+
+        while (stack.length) {
+            const node = stack.pop()!;
+
+            if (!node.left) {
+                value.set(node, node.val === 1);
+            } else if (value.has(node.left)) {
+                const leftValue = value.get(node.left)!;
+                const rightValue = value.get(node.right!)!;
+
+                if (node.val === 2) {
+                    value.set(node, leftValue || rightValue);
+                } else if (node.val === 3) {
+                    value.set(node, leftValue && rightValue);
+                }
+            } else {
+                stack.push(node, node.right!, node.left);
+            }
+        }
+
+        return value.get(root!)!;
     }
 }
 ```

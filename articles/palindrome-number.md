@@ -118,6 +118,19 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {boolean}
+     */
+    isPalindrome(x: number): boolean {
+        const s = String(x);
+        return s === s.split('').reverse().join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,6 +289,25 @@ impl Solution {
             }
         }
         true
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {boolean}
+     */
+    isPalindrome(x: number): boolean {
+        const s = String(x);
+        let n = s.length;
+        for (let i = 0; i < n >> 1; i++) {
+            if (s.charAt(i) != s.charAt(n - i - 1)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ```
@@ -465,6 +497,29 @@ impl Solution {
             num /= 10;
         }
         rev == x as i64
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {boolean}
+     */
+    isPalindrome(x: number): boolean {
+        if (x < 0) {
+            return false;
+        }
+
+        let rev = 0,
+            num = x;
+        while (num !== 0) {
+            rev = rev * 10 + (num % 10);
+            num = Math.floor(num / 10);
+        }
+
+        return rev === x;
     }
 }
 ```
@@ -718,6 +773,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {boolean}
+     */
+    isPalindrome(x: number): boolean {
+        if (x < 0) {
+            return false;
+        }
+
+        let div = 1;
+        while (x >= 10 * div) {
+            div *= 10;
+        }
+
+        while (x !== 0) {
+            if (Math.floor(x / div) !== x % 10) {
+                return false;
+            }
+            x = Math.floor((x % div) / 10);
+            div = Math.floor(div / 100);
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -907,6 +991,28 @@ impl Solution {
             num /= 10;
         }
         num == rev || num == rev / 10
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} x
+     * @return {boolean}
+     */
+    isPalindrome(x: number): boolean {
+        if (x < 0 || (x !== 0 && x % 10 === 0)) {
+            return false;
+        }
+
+        let rev = 0;
+        while (x > rev) {
+            rev = rev * 10 + (x % 10);
+            x = Math.floor(x / 10);
+        }
+
+        return x === rev || x === Math.floor(rev / 10);
     }
 }
 ```

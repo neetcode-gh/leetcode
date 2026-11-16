@@ -220,7 +220,7 @@ impl Solution {
                 let ones_digit = (bytes[j] - b'0') as i32;
                 if ones_digit & 1 == 1 {
                     let cur = &num[i..=j];
-                    if res.len() < cur.len() || (res.len() == cur.len() && res < *cur) {
+                    if res.len() < cur.len() || (res.len() == cur.len() && res.as_str() < cur) {
                         res = cur.to_string();
                     }
                 }
@@ -228,6 +228,35 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @return {string}
+     */
+    largestOddNumber(num: string): string {
+        let res = '';
+        const n = num.length;
+
+        for (let i = 0; i < n; i++) {
+            for (let j = i; j < n; j++) {
+                const onesDigit = num[j].charCodeAt(0) - '0'.charCodeAt(0);
+                if (onesDigit & 1) {
+                    const cur = num.slice(i, j + 1);
+                    if (
+                        res.length < cur.length ||
+                        (res.length === cur.length && res < cur)
+                    ) {
+                        res = cur;
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -372,6 +401,23 @@ impl Solution {
             }
         }
         String::new()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} num
+     * @return {string}
+     */
+    largestOddNumber(num: string): string {
+        for (let i = num.length - 1; i >= 0; i--) {
+            if (parseInt(num[i]) % 2 === 1) {
+                return num.slice(0, i + 1);
+            }
+        }
+        return '';
     }
 }
 ```

@@ -351,6 +351,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {TreeNode}
+     */
+    lowestCommonAncestor(
+        root: TreeNode | null,
+        p: TreeNode | null,
+        q: TreeNode | null,
+    ): TreeNode | null {
+        let lca: TreeNode | null = null;
+        const dfs = (node: TreeNode | null): boolean[] => {
+            if (!node || lca) return [false, false];
+            const left = dfs(node.left);
+            const right = dfs(node.right);
+            const foundP = left[0] || right[0] || node === p;
+            const foundQ = left[1] || right[1] || node === q;
+            if (foundP && foundQ && !lca) {
+                lca = node;
+            }
+            return [foundP, foundQ];
+        };
+        dfs(root);
+        return lca;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -617,6 +648,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {TreeNode}
+     */
+    lowestCommonAncestor(
+        root: TreeNode | null,
+        p: TreeNode | null,
+        q: TreeNode | null,
+    ): TreeNode | null {
+        if (!root || root === p || root === q) {
+            return root;
+        }
+        const left = this.lowestCommonAncestor(root.left, p, q);
+        const right = this.lowestCommonAncestor(root.right, p, q);
+        return left && right ? root : left || right;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -867,22 +921,12 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
     parent[root] = nil
     queue := []*TreeNode{root}
 
-    for _, hasP := parent[p]; !hasP; _, hasP = parent[p] {
-        if _, hasQ := parent[q]; hasQ {
+    for {
+        _, hasP := parent[p]
+        _, hasQ := parent[q]
+        if hasP && hasQ {
             break
         }
-        node := queue[0]
-        queue = queue[1:]
-        if node.Left != nil {
-            parent[node.Left] = node
-            queue = append(queue, node.Left)
-        }
-        if node.Right != nil {
-            parent[node.Right] = node
-            queue = append(queue, node.Right)
-        }
-    }
-    for _, hasQ := parent[q]; !hasQ; _, hasQ = parent[q] {
         node := queue[0]
         queue = queue[1:]
         if node.Left != nil {
@@ -1061,6 +1105,48 @@ impl Solution {
             cur_val = parent.get(&val).and_then(|p| p.as_ref().map(|n| n.borrow().val));
         }
         None
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {TreeNode}
+     */
+    lowestCommonAncestor(
+        root: TreeNode | null,
+        p: TreeNode | null,
+        q: TreeNode | null,
+    ): TreeNode | null {
+        if (!root) return null;
+        const parent = new Map<TreeNode, TreeNode | null>();
+        const queue = new Queue([root]);
+        parent.set(root, null);
+        while (!parent.has(p!) || !parent.has(q!)) {
+            const node: TreeNode = queue.pop();
+            if (node.left) {
+                parent.set(node.left, node);
+                queue.push(node.left);
+            }
+            if (node.right) {
+                parent.set(node.right, node);
+                queue.push(node.right);
+            }
+        }
+
+        const ancestors = new Set<TreeNode>();
+        while (p) {
+            ancestors.add(p);
+            p = parent.get(p)!;
+        }
+        while (!ancestors.has(q!)) {
+            q = parent.get(q!)!;
+        }
+        return q;
     }
 }
 ```

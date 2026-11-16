@@ -288,6 +288,42 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} goal
+     * @param {number} k
+     * @return {number}
+     */
+    numMusicPlaylists(n: number, goal: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: goal + 1 }, () =>
+            Array(n + 1).fill(-1),
+        );
+
+        const count = (curGoal: number, oldSongs: number): number => {
+            if (curGoal === 0 && oldSongs === n) return 1;
+            if (curGoal === 0 || oldSongs > n) return 0;
+            if (dp[curGoal][oldSongs] !== -1) return dp[curGoal][oldSongs];
+
+            let res = ((n - oldSongs) * count(curGoal - 1, oldSongs + 1)) % MOD;
+            if (oldSongs > k) {
+                res =
+                    (res +
+                        (((oldSongs - k) * count(curGoal - 1, oldSongs)) %
+                            MOD)) %
+                    MOD;
+            }
+            dp[curGoal][oldSongs] = res;
+            return res;
+        };
+
+        return count(goal, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -524,6 +560,39 @@ impl Solution {
         }
 
         dp[goal][n] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} goal
+     * @param {number} k
+     * @return {number}
+     */
+    numMusicPlaylists(n: number, goal: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[][] = Array.from({ length: goal + 1 }, () =>
+            Array(n + 1).fill(0),
+        );
+        dp[0][0] = 1;
+
+        for (let curGoal = 1; curGoal <= goal; curGoal++) {
+            for (let oldSongs = 1; oldSongs <= n; oldSongs++) {
+                let res =
+                    (dp[curGoal - 1][oldSongs - 1] * (n - oldSongs + 1)) % MOD;
+                if (oldSongs > k) {
+                    res =
+                        (res + dp[curGoal - 1][oldSongs] * (oldSongs - k)) %
+                        MOD;
+                }
+                dp[curGoal][oldSongs] = res;
+            }
+        }
+
+        return dp[goal][n];
     }
 }
 ```
@@ -771,6 +840,35 @@ impl Solution {
         }
 
         dp[n] as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number} goal
+     * @param {number} k
+     * @return {number}
+     */
+    numMusicPlaylists(n: number, goal: number, k: number): number {
+        const MOD = 1e9 + 7;
+        const dp: number[] = new Array(n + 1).fill(0);
+
+        for (let curGoal = 1; curGoal <= goal; curGoal++) {
+            let prev = curGoal === 1 ? 1 : 0;
+            for (let oldSongs = 1; oldSongs <= n; oldSongs++) {
+                let res = (prev * (n - oldSongs + 1)) % MOD;
+                if (oldSongs > k) {
+                    res = (res + dp[oldSongs] * (oldSongs - k)) % MOD;
+                }
+                prev = dp[oldSongs];
+                dp[oldSongs] = res;
+            }
+        }
+
+        return dp[n];
     }
 }
 ```

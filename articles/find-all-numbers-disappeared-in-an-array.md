@@ -154,7 +154,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_disappeared_numbers(nums: Vec<i32>) -> Vec<i32> {
@@ -166,6 +165,26 @@ impl Solution {
         }
 
         store.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findDisappearedNumbers(nums: number[]): number[] {
+        const n = nums.length;
+        const store = new Set<number>();
+        for (let i = 1; i <= n; i++) store.add(i);
+
+        for (let num of nums) {
+            store.delete(num);
+        }
+
+        return Array.from(store);
     }
 }
 ```
@@ -281,7 +300,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindDisappearedNumbers(int[] nums) {
+    public List<int> FindDisappearedNumbers(int[] nums) {
         int n = nums.Length;
         bool[] mark = new bool[n];
 
@@ -361,7 +380,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_disappeared_numbers(nums: Vec<i32>) -> Vec<i32> {
@@ -379,6 +397,31 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findDisappearedNumbers(nums: number[]): number[] {
+        const n = nums.length;
+        const mark: boolean[] = new Array(n).fill(false);
+
+        for (let num of nums) {
+            mark[num - 1] = true;
+        }
+
+        const res: number[] = [];
+        for (let i = 1; i <= n; i++) {
+            if (!mark[i - 1]) {
+                res.push(i);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -574,7 +617,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_disappeared_numbers(mut nums: Vec<i32>) -> Vec<i32> {
@@ -592,6 +634,30 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findDisappearedNumbers(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+
+        const res: number[] = [];
+        let idx = 0;
+        for (let num = 1; num <= nums.length; num++) {
+            while (idx < nums.length && nums[idx] < num) {
+                idx++;
+            }
+            if (idx === nums.length || nums[idx] > num) {
+                res.push(num);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -780,7 +846,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_disappeared_numbers(mut nums: Vec<i32>) -> Vec<i32> {
@@ -796,6 +861,29 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findDisappearedNumbers(nums: number[]): number[] {
+        for (let num of nums) {
+            let i = Math.abs(num) - 1;
+            nums[i] = -Math.abs(nums[i]);
+        }
+
+        const res: number[] = [];
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                res.push(i + 1);
+            }
+        }
+        return res;
     }
 }
 ```

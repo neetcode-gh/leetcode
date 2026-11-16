@@ -192,6 +192,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numRows
+     * @return {number[][]}
+     */
+    generate(numRows: number): number[][] {
+        let res: number[][] = [];
+        for (let n = 0; n < numRows; n++) {
+            let row = [1];
+            let val = 1;
+            for (let k = 1; k <= n; k++) {
+                val = (val * (n - k + 1)) / k;
+                row.push(val);
+            }
+            res.push(row);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +421,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} numRows
+     * @return {number[][]}
+     */
+    generate(numRows: number): number[][] {
+        let res: number[][] = [[1]];
+
+        for (let i = 0; i < numRows - 1; i++) {
+            let temp = [0, ...res[res.length - 1], 0];
+            let row: number[] = [];
+            for (let j = 0; j < res[res.length - 1].length + 1; j++) {
+                row.push(temp[j] + temp[j + 1]);
+            }
+            res.push(row);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,7 +594,7 @@ class Solution {
         var res = [[Int]]()
         for i in 0..<numRows {
             var row = [Int](repeating: 1, count: i + 1)
-            for j in 1..<i {
+            for j in stride(from: 1, to: i, by: 1) {
                 row[j] = res[i - 1][j - 1] + res[i - 1][j]
             }
             res.append(row)
@@ -573,6 +617,27 @@ impl Solution {
             res.push(row);
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} numRows
+     * @return {number[][]}
+     */
+    generate(numRows: number): number[][] {
+        let res: number[][] = Array.from({ length: numRows }, (_, i) =>
+            Array(i + 1).fill(1),
+        );
+
+        for (let i = 2; i < numRows; i++) {
+            for (let j = 1; j < i; j++) {
+                res[i][j] = res[i - 1][j - 1] + res[i - 1][j];
+            }
+        }
+        return res;
     }
 }
 ```

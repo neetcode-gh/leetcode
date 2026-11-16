@@ -196,6 +196,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    majorityElement(nums: number[]): number[] {
+        const res = new Set<number>();
+        for (const num of nums) {
+            let count = 0;
+            for (const i of nums) {
+                if (i === num) count++;
+            }
+            if (count > Math.floor(nums.length / 3)) {
+                res.add(num);
+            }
+        }
+        return Array.from(res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +455,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    majorityElement(nums: number[]): number[] {
+        nums.sort((a, b) => a - b);
+        const res: number[] = [];
+        const n = nums.length;
+
+        let i = 0;
+        while (i < n) {
+            let j = i + 1;
+            while (j < n && nums[i] === nums[j]) {
+                j++;
+            }
+            if (j - i > Math.floor(n / 3)) {
+                res.push(nums[i]);
+            }
+            i = j;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -630,6 +680,30 @@ impl Solution {
             .filter(|&(_, v)| v > n / 3)
             .map(|(k, _)| k)
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    majorityElement(nums: number[]): number[] {
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+
+        const res: number[] = [];
+        for (const [key, value] of count.entries()) {
+            if (value > Math.floor(nums.length / 3)) {
+                res.push(key);
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -1027,6 +1101,51 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    majorityElement(nums: number[]): number[] {
+        const n = nums.length;
+        let num1 = -1,
+            num2 = -1,
+            cnt1 = 0,
+            cnt2 = 0;
+
+        for (const num of nums) {
+            if (num === num1) {
+                cnt1++;
+            } else if (num === num2) {
+                cnt2++;
+            } else if (cnt1 === 0) {
+                cnt1 = 1;
+                num1 = num;
+            } else if (cnt2 === 0) {
+                cnt2 = 1;
+                num2 = num;
+            } else {
+                cnt1--;
+                cnt2--;
+            }
+        }
+
+        cnt1 = cnt2 = 0;
+        for (const num of nums) {
+            if (num === num1) cnt1++;
+            else if (num === num2) cnt2++;
+        }
+
+        const res: number[] = [];
+        if (cnt1 > Math.floor(n / 3)) res.push(num1);
+        if (cnt2 > Math.floor(n / 3)) res.push(num2);
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1229,6 +1348,111 @@ public class Solution {
 }
 ```
 
+```go
+func majorityElement(nums []int) []int {
+    count := make(map[int]int)
+
+    for _, num := range nums {
+        count[num]++
+
+        if len(count) > 2 {
+            newCount := make(map[int]int)
+            for key, val := range count {
+                if val > 1 {
+                    newCount[key] = val - 1
+                }
+            }
+            count = newCount
+        }
+    }
+
+    res := []int{}
+    for key := range count {
+        frequency := 0
+        for _, num := range nums {
+            if num == key {
+                frequency++
+            }
+        }
+        if frequency > len(nums)/3 {
+            res = append(res, key)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun majorityElement(nums: IntArray): List<Int> {
+        var count = HashMap<Int, Int>()
+
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+
+            if (count.size > 2) {
+                val newCount = HashMap<Int, Int>()
+                for ((key, value) in count) {
+                    if (value > 1) {
+                        newCount[key] = value - 1
+                    }
+                }
+                count = newCount
+            }
+        }
+
+        val res = mutableListOf<Int>()
+        for (key in count.keys) {
+            var frequency = 0
+            for (num in nums) {
+                if (num == key) frequency++
+            }
+            if (frequency > nums.size / 3) {
+                res.add(key)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func majorityElement(_ nums: [Int]) -> [Int] {
+        var count = [Int: Int]()
+
+        for num in nums {
+            count[num, default: 0] += 1
+
+            if count.count > 2 {
+                var newCount = [Int: Int]()
+                for (key, val) in count {
+                    if val > 1 {
+                        newCount[key] = val - 1
+                    }
+                }
+                count = newCount
+            }
+        }
+
+        var res = [Int]()
+        for key in count.keys {
+            var frequency = 0
+            for num in nums {
+                if num == key { frequency += 1 }
+            }
+            if frequency > nums.count / 3 {
+                res.append(key)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ```rust
 impl Solution {
     pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
@@ -1252,6 +1476,42 @@ impl Solution {
             .filter(|&&k| nums.iter().filter(|&&x| x == k).count() > n / 3)
             .copied()
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    majorityElement(nums: number[]): number[] {
+        let count = new Map<number, number>();
+
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+
+            if (count.size > 2) {
+                const newCount = new Map<number, number>();
+                for (const [key, value] of count.entries()) {
+                    if (value > 1) {
+                        newCount.set(key, value - 1);
+                    }
+                }
+                count = newCount;
+            }
+        }
+
+        const res: number[] = [];
+        for (const [key] of count.entries()) {
+            const frequency = nums.filter((num) => num === key).length;
+            if (frequency > Math.floor(nums.length / 3)) {
+                res.push(key);
+            }
+        }
+
+        return res;
     }
 }
 ```

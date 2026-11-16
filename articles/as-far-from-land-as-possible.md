@@ -486,6 +486,66 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maxDistance(grid: number[][]): number {
+        const N = grid.length;
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+
+        const bfs = (row: number, col: number): number => {
+            const q = new Queue([[row, col]]);
+            const visit: boolean[][] = Array.from({ length: N }, () => Array(N).fill(false));
+            visit[row][col] = true;
+            let dist = 0;
+
+            while (!q.isEmpty()) {
+                dist++;
+                for (let i = q.size(); i > 0; i--) {
+                    const [r, c]: number[] = q.pop();
+                    for (let d = 0; d < 4; d++) {
+                        let newR = r + direct[d][0],
+                            newC = c + direct[d][1];
+                        if (
+                            newR < 0 ||
+                            newC < 0 ||
+                            newR >= N ||
+                            newC >= N ||
+                            visit[newR][newC]
+                        )
+                            continue;
+                        if (grid[newR][newC] === 1) return dist;
+
+                        visit[newR][newC] = true;
+                        q.push([newR, newC]);
+                    }
+                }
+            }
+            return -1;
+        };
+
+        let res = -1;
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 0) {
+                    res = Math.max(res, bfs(r, c));
+                    if (res === -1) return res;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -821,6 +881,53 @@ impl Solution {
             }
         }
         if res > 1 { res - 1 } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maxDistance(grid: number[][]): number {
+        const N = grid.length;
+        const q = new Queue();
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    q.push([r, c]);
+                }
+            }
+        }
+
+        let res = -1;
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        while (!q.isEmpty()) {
+            const [r, c]: number[] = q.pop();
+            res = grid[r][c];
+            for (let d = 0; d < 4; d++) {
+                let newR = r + direct[d][0],
+                    newC = c + direct[d][1];
+                if (
+                    newR >= 0 &&
+                    newC >= 0 &&
+                    newR < N &&
+                    newC < N &&
+                    grid[newR][newC] === 0
+                ) {
+                    q.push([newR, newC]);
+                    grid[newR][newC] = grid[r][c] + 1;
+                }
+            }
+        }
+        return res > 1 ? res - 1 : -1;
     }
 }
 ```
@@ -1190,6 +1297,52 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maxDistance(grid: number[][]): number {
+        const N = grid.length;
+        const direct = [0, 1, 0, -1, 0];
+        const visit: boolean[][] = Array.from({ length: N }, () => Array(N).fill(false));
+        const q = new Queue();
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) {
+                    visit[r][c] = true;
+                    q.push([r, c]);
+                }
+            }
+        }
+
+        let res = 0;
+        while (!q.isEmpty()) {
+            res++;
+            for (let i = q.size(); i > 0; i--) {
+                const [r, c]: number[] = q.pop();
+                for (let d = 0; d < 4; d++) {
+                    let newR = r + direct[d],
+                        newC = c + direct[d + 1];
+                    if (
+                        newR >= 0 &&
+                        newC >= 0 &&
+                        newR < N &&
+                        newC < N &&
+                        !visit[newR][newC]
+                    ) {
+                        q.push([newR, newC]);
+                        visit[newR][newC] = true;
+                    }
+                }
+            }
+        }
+        return res > 1 ? res - 1 : -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1501,6 +1654,44 @@ impl Solution {
         }
 
         if res < inf { res - 1 } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maxDistance(grid: number[][]): number {
+        const N = grid.length,
+            INF = 1000000;
+
+        for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+                if (grid[r][c] === 1) continue;
+                grid[r][c] = INF;
+                if (r > 0)
+                    grid[r][c] = Math.min(grid[r][c], grid[r - 1][c] + 1);
+                if (c > 0)
+                    grid[r][c] = Math.min(grid[r][c], grid[r][c - 1] + 1);
+            }
+        }
+
+        let res = 0;
+        for (let r = N - 1; r >= 0; r--) {
+            for (let c = N - 1; c >= 0; c--) {
+                if (grid[r][c] === 1) continue;
+                if (r < N - 1)
+                    grid[r][c] = Math.min(grid[r][c], grid[r + 1][c] + 1);
+                if (c < N - 1)
+                    grid[r][c] = Math.min(grid[r][c], grid[r][c + 1] + 1);
+                res = Math.max(res, grid[r][c]);
+            }
+        }
+
+        return res < INF ? res - 1 : -1;
     }
 }
 ```
@@ -1828,6 +2019,44 @@ impl Solution {
             }
         }
         if res < inf { res } else { -1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number}
+     */
+    maxDistance(grid: number[][]): number {
+        const N = grid.length;
+        const INF = 1000000;
+        let res = -1;
+        let dp: number[][] = Array.from({ length: N + 2 }, () => Array(N + 2).fill(INF));
+
+        for (let r = 1; r <= N; r++) {
+            for (let c = 1; c <= N; c++) {
+                if (grid[r - 1][c - 1] === 1) {
+                    dp[r][c] = 0;
+                } else {
+                    dp[r][c] = Math.min(dp[r - 1][c], dp[r][c - 1]) + 1;
+                }
+            }
+        }
+
+        for (let r = N; r > 0; r--) {
+            for (let c = N; c > 0; c--) {
+                if (grid[r - 1][c - 1] === 0) {
+                    dp[r][c] = Math.min(
+                        dp[r][c],
+                        Math.min(dp[r + 1][c], dp[r][c + 1]) + 1,
+                    );
+                    res = Math.max(res, dp[r][c]);
+                }
+            }
+        }
+        return res < INF ? res : -1;
     }
 }
 ```

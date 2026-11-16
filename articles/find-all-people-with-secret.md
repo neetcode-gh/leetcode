@@ -188,7 +188,7 @@ class Solution {
 public class Solution {
     private HashSet<int> secrets, visit;
 
-    public IList<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
+    public List<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
         secrets = new HashSet<int> { 0, firstPerson };
         visit = new HashSet<int>();
         var time_map = new Dictionary<int, Dictionary<int, List<int>>>();
@@ -355,7 +355,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_all_people(n: i32, meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
@@ -398,6 +397,50 @@ impl Solution {
         }
 
         secrets.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @param {number} firstPerson
+     * @return {number[]}
+     */
+    findAllPeople(n: number, meetings: number[][], firstPerson: number): number[] {
+        const secrets = new Set<number>([0, firstPerson]);
+        let visit = new Set<number>();
+        let time_map = new Map<number, Map<number, number[]>>();
+
+        for (let [src, dst, t] of meetings) {
+            if (!time_map.has(t)) time_map.set(t, new Map());
+            if (!time_map.get(t)!.has(src)) time_map.get(t)!.set(src, []);
+            if (!time_map.get(t)!.has(dst)) time_map.get(t)!.set(dst, []);
+            time_map.get(t)!.get(src)!.push(dst);
+            time_map.get(t)!.get(dst)!.push(src);
+        }
+        const dfs = (src: number, adj: Map<number, number[]>): void => {
+            if (visit.has(src)) return;
+            visit.add(src);
+            secrets.add(src);
+            for (let nei of adj.get(src) || []) {
+                dfs(nei, adj);
+            }
+        };
+
+        let timeKeys = [...time_map.keys()].sort((a, b) => a - b);
+        for (let t of timeKeys) {
+            visit.clear();
+            for (let src of time_map.get(t)!.keys()) {
+                if (secrets.has(src)) {
+                    dfs(src, time_map.get(t)!);
+                }
+            }
+        }
+
+        return [...secrets];
     }
 }
 ```
@@ -599,7 +642,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
+    public List<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
         var secrets = new HashSet<int> { 0, firstPerson };
         var time_map = new SortedDictionary<int, Dictionary<int, List<int>>>();
 
@@ -780,7 +823,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_all_people(n: i32, meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
@@ -819,6 +861,54 @@ impl Solution {
         }
 
         secrets.into_iter().collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @param {number} firstPerson
+     * @return {number[]}
+     */
+    findAllPeople(n: number, meetings: number[][], firstPerson: number): number[] {
+        const secrets = new Set<number>([0, firstPerson]);
+        const time_map = new Map<number, Map<number, number[]>>();
+
+        for (let [src, dst, t] of meetings) {
+            if (!time_map.has(t)) time_map.set(t, new Map());
+            if (!time_map.get(t)!.has(src)) time_map.get(t)!.set(src, []);
+            if (!time_map.get(t)!.has(dst)) time_map.get(t)!.set(dst, []);
+            time_map.get(t)!.get(src)!.push(dst);
+            time_map.get(t)!.get(dst)!.push(src);
+        }
+
+        for (let t of [...time_map.keys()].sort((a, b) => a - b)) {
+            let visit = new Set<number>();
+            const q = new Queue();
+
+            for (let src of time_map.get(t)!.keys()) {
+                if (secrets.has(src)) {
+                    q.push(src);
+                    visit.add(src);
+                }
+            }
+
+            while (!q.isEmpty()) {
+                let node: number = q.pop();
+                secrets.add(node);
+                for (let nei of time_map.get(t)!.get(node)!) {
+                    if (!visit.has(nei)) {
+                        visit.add(nei);
+                        q.push(nei);
+                    }
+                }
+            }
+        }
+
+        return [...secrets];
     }
 }
 ```
@@ -1031,7 +1121,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
+    public List<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
         Array.Sort(meetings, (a, b) => a[2].CompareTo(b[2]));
         bool[] secrets = new bool[n];
         secrets[0] = secrets[firstPerson] = true;
@@ -1220,7 +1310,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn find_all_people(n: i32, mut meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
@@ -1260,6 +1349,59 @@ impl Solution {
         }
 
         (0..n as i32).filter(|&j| secrets[j as usize]).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @param {number} firstPerson
+     * @return {number[]}
+     */
+    findAllPeople(n: number, meetings: number[][], firstPerson: number): number[] {
+        meetings.sort((a, b) => a[2] - b[2]);
+        const secrets: boolean[] = new Array(n).fill(false);
+        secrets[0] = secrets[firstPerson] = true;
+
+        let i = 0,
+            m = meetings.length;
+        while (i < m) {
+            const time = meetings[i][2];
+            const adj = new Map<number, number[]>();
+            const visited = new Set<number>();
+
+            while (i < m && meetings[i][2] === time) {
+                const [u, v] = meetings[i];
+                if (!adj.has(u)) adj.set(u, []);
+                if (!adj.has(v)) adj.set(v, []);
+                adj.get(u)!.push(v);
+                adj.get(v)!.push(u);
+                if (secrets[u]) visited.add(u);
+                if (secrets[v]) visited.add(v);
+                i++;
+            }
+
+            const stack = [...visited];
+            while (stack.length) {
+                const node = stack.pop()!;
+                for (const nei of adj.get(node) || []) {
+                    if (!visited.has(nei)) {
+                        visited.add(nei);
+                        stack.push(nei);
+                        secrets[nei] = true;
+                    }
+                }
+            }
+        }
+
+        let res: number[] = [];
+        for (let i = 0; i < n; i++) {
+            if (secrets[i]) res.push(i);
+        }
+        return res;
     }
 }
 ```
@@ -1602,7 +1744,7 @@ public class DSU {
 }
 
 public class Solution {
-    public IList<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
+    public List<int> FindAllPeople(int n, int[][] meetings, int firstPerson) {
         Array.Sort(meetings, (a, b) => a[2].CompareTo(b[2]));
         DSU dsu = new DSU(n);
         dsu.Union(0, firstPerson);
@@ -1839,7 +1981,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 struct DSU {
     parent: Vec<usize>,
@@ -1910,6 +2051,95 @@ impl Solution {
         (0..n as i32)
             .filter(|&j| dsu.find(j as usize) == root)
             .collect()
+    }
+}
+```
+
+```typescript
+class DSU {
+    private Parent: number[];
+    private Size: number[];
+
+    /**
+     * @constructor
+     * @param {number} n
+     */
+    constructor(n: number) {
+        this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
+        this.Size = Array(n + 1).fill(1);
+    }
+
+    /**
+     * @param {number} node
+     * @return {number}
+     */
+    find(node: number): number {
+        if (this.Parent[node] !== node) {
+            this.Parent[node] = this.find(this.Parent[node]);
+        }
+        return this.Parent[node];
+    }
+
+    /**
+     * @param {number} u
+     * @param {number} v
+     * @return {boolean}
+     */
+    union(u: number, v: number): boolean {
+        let pu = this.find(u);
+        let pv = this.find(v);
+        if (pu === pv) return false;
+        if (this.Size[pu] >= this.Size[pv]) {
+            this.Size[pu] += this.Size[pv];
+            this.Parent[pv] = pu;
+        } else {
+            this.Size[pv] += this.Size[pu];
+            this.Parent[pu] = pv;
+        }
+        return true;
+    }
+
+    /**
+     * @param {number} node
+     * @return {void}
+     */
+    reset(node: number): void {
+        this.Parent[node] = node;
+        this.Size[node] = 1;
+    }
+}
+
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} meetings
+     * @param {number} firstPerson
+     * @return {number[]}
+     */
+    findAllPeople(n: number, meetings: number[][], firstPerson: number): number[] {
+        meetings.sort((a, b) => a[2] - b[2]);
+        let dsu = new DSU(n);
+        dsu.union(0, firstPerson);
+
+        for (let i = 0; i < meetings.length; ) {
+            let time = meetings[i][2];
+            let group = new Set<number>();
+
+            for (; i < meetings.length && meetings[i][2] === time; i++) {
+                let [u, v] = meetings[i];
+                dsu.union(u, v);
+                group.add(u);
+                group.add(v);
+            }
+
+            group.forEach((node) => {
+                if (dsu.find(node) !== dsu.find(0)) {
+                    dsu.reset(node);
+                }
+            });
+        }
+
+        return [...Array(n).keys()].filter((i) => dsu.find(i) === dsu.find(0));
     }
 }
 ```

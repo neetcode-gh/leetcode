@@ -360,6 +360,46 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stoneValue
+     * @return {string}
+     */
+    stoneGameIII(stoneValue: number[]): string {
+        const n = stoneValue.length;
+        const dp: (number | null)[][] = Array.from({ length: n }, () => [
+            null,
+            null,
+        ]);
+
+        const dfs = (i: number, alice: number): number => {
+            if (i >= n) return 0;
+            if (dp[i][alice] !== null) return dp[i][alice]!;
+
+            let res = alice === 1 ? -Infinity : Infinity;
+            let score = 0;
+            for (let j = i; j < Math.min(i + 3, n); j++) {
+                if (alice === 1) {
+                    score += stoneValue[j];
+                    res = Math.max(res, score + dfs(j + 1, 0));
+                } else {
+                    score -= stoneValue[j];
+                    res = Math.min(res, score + dfs(j + 1, 1));
+                }
+            }
+
+            dp[i][alice] = res;
+            return res;
+        };
+
+        const result = dfs(0, 1);
+        if (result === 0) return 'Tie';
+        return result > 0 ? 'Alice' : 'Bob';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,6 +703,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stoneValue
+     * @return {string}
+     */
+    stoneGameIII(stoneValue: number[]): string {
+        const n = stoneValue.length;
+        const dp: number[] = new Array(n);
+
+        const dfs = (i: number): number => {
+            if (i >= n) return 0;
+            if (dp[i] !== undefined) return dp[i];
+
+            let res = -Infinity,
+                total = 0;
+            for (let j = i; j < Math.min(i + 3, n); j++) {
+                total += stoneValue[j];
+                res = Math.max(res, total - dfs(j + 1));
+            }
+
+            dp[i] = res;
+            return res;
+        };
+
+        const result = dfs(0);
+        if (result === 0) return 'Tie';
+        return result > 0 ? 'Alice' : 'Bob';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -909,6 +981,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stoneValue
+     * @return {string}
+     */
+    stoneGameIII(stoneValue: number[]): string {
+        const n = stoneValue.length;
+        const dp: number[] = new Array(n + 1).fill(-Infinity);
+        dp[n] = 0;
+
+        for (let i = n - 1; i >= 0; i--) {
+            let total = 0;
+            dp[i] = -Infinity;
+            for (let j = i; j < Math.min(i + 3, n); j++) {
+                total += stoneValue[j];
+                dp[i] = Math.max(dp[i], total - dp[j + 1]);
+            }
+        }
+
+        const result = dp[0];
+        if (result === 0) return 'Tie';
+        return result > 0 ? 'Alice' : 'Bob';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1132,6 +1231,31 @@ impl Solution {
         } else {
             "Bob".to_string()
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} stoneValue
+     * @return {string}
+     */
+    stoneGameIII(stoneValue: number[]): string {
+        const n = stoneValue.length;
+        const dp: number[] = new Array(4).fill(0);
+
+        for (let i = n - 1; i >= 0; i--) {
+            let total = 0;
+            dp[i % 4] = -Infinity;
+            for (let j = i; j < Math.min(i + 3, n); j++) {
+                total += stoneValue[j];
+                dp[i % 4] = Math.max(dp[i % 4], total - dp[(j + 1) % 4]);
+            }
+        }
+
+        if (dp[0] === 0) return 'Tie';
+        return dp[0] > 0 ? 'Alice' : 'Bob';
     }
 }
 ```
